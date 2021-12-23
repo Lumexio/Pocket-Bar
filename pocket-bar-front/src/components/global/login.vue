@@ -7,14 +7,7 @@
             ><code class="font-weight-light">Pocket</code
             ><strong>bar</strong></v-card-title
           >
-          <v-text-field
-            v-model="email"
-            label="correo"
-            :error-messages="emailErrors"
-            required
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-          ></v-text-field>
+          <v-text-field v-model="name" label="Nombre" required></v-text-field>
           <v-text-field
             :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
             v-model="password"
@@ -47,7 +40,7 @@
 </template>
 
 <script>
-const { required, email, minLength } = require("vuelidate/lib/validators");
+const { required, minLength } = require("vuelidate/lib/validators");
 import axios from "axios";
 
 import store from "@/store";
@@ -56,15 +49,16 @@ import router from "@/router";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
 export default {
-  email: "crearusuario",
+  name: "crearusuario",
   data: () => ({
+    name: "",
     email: "", //a@a.com//b@b.com
     password: "", //12345678
     show3: false,
   }),
 
   validations: {
-    email: { required, email },
+    name: { required },
     password: { required, minLength: minLength(8) },
   },
   computed: {
@@ -74,13 +68,6 @@ export default {
       !this.$v.password.minLength &&
         errors.push("La contraseña debe ser 8 caracteres de largo, minimo.");
       !this.$v.password.required && errors.push("Contaseña requerida.");
-      return errors;
-    },
-    emailErrors() {
-      const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.email && errors.push("Debe ingresar un correo valido");
-      !this.$v.email.required && errors.push("Ingresar un correo es requerido");
       return errors;
     },
     progress() {
@@ -95,7 +82,7 @@ export default {
     async login() {
       this.$v.$touch();
       let enviar = {
-        email: this.email,
+        name: this.name,
         password: this.password,
       };
       axios
@@ -132,7 +119,7 @@ export default {
     },
 
     clear() {
-      this.email = "";
+      this.name = "";
       this.password = "";
     },
   },

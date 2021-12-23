@@ -40,20 +40,14 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12" sm="6" md="4">
+                      <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.name"
                           label="Nombre"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.email"
-                          type="email"
-                          label="Correo"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
+
+                      <v-col cols="12">
                         <v-select
                           v-model="selectrol"
                           :items="itemsrol"
@@ -65,14 +59,13 @@
                       </v-col>
                     </v-row>
                     <v-row>
-                      <v-col cols="12" sm="4" md="6">
+                      <v-col cols="12">
                         <v-text-field
                           :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
                           v-model="editedItem.password"
                           :type="show3 ? 'text' : 'password'"
                           hint="Minimo 8 caracteres"
                           :counter="8"
-                          :rules="[rules.required, rules.min]"
                           @click:append="show3 = !show3"
                           label="Contraseña"
                           placeholder="Contraseña"
@@ -133,257 +126,255 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import store from "@/store";
-  import { upperConverter } from "@/special/uppercases-converter.js";
-  //axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = "http://127.0.0.1:8000/";
-  export default {
-    name: "tabla-usuarios",
-    data: () => ({
-      dialog: false,
-      dialogDelete: false,
-      search: "",
+import axios from "axios";
+import store from "@/store";
+import { upperConverter } from "@/special/uppercases-converter.js";
+//axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://127.0.0.1:8000/";
+export default {
+  name: "tabla-usuarios",
+  data: () => ({
+    dialog: false,
+    dialogDelete: false,
+    search: "",
+    password: "",
+    cargando: true,
+    show3: false,
+
+    headers: [
+      {
+        text: "Nombre",
+        align: "start",
+        sortable: false,
+        value: "name",
+      },
+
+      { text: "Rol", value: "name_rol" },
+
+      { text: "Acciones", value: "actions", sortable: false },
+    ],
+
+    usersArray: [],
+    //variable en la que se deposita la posicion en el selector
+    selectrol: null, //Rol
+
+    //Array en el que se deposita de los selectores.
+    itemsrol: [], //Rol
+
+    editedIndex: -1,
+    editedItem: {
+      id: "",
+      name: "",
+
       password: "",
-      cargando: true,
-      show3: false,
-      rules: {
-        min: (v) => v.length >= 8 || "Necesitas 8 caracteres minimo",
-      },
-      headers: [
-        {
-          text: "Nombre",
-          align: "start",
-          sortable: false,
-          value: "name",
-        },
-        { text: "Correo", value: "email" },
-        { text: "Rol", value: "name_rol" },
+      name_rol: "",
+    },
+    defaultItem: {
+      id: "",
+      name: "",
 
-        { text: "Acciones", value: "actions", sortable: false },
-      ],
+      password: "",
+      name_rol: "",
+    },
+  }),
 
-      usersArray: [],
-      //variable en la que se deposita la posicion en el selector
-      selectrol: null, //Rol
+  mounted() {
+    this.onFocus();
+    window.Echo.channel("users").listen("userCreated", (e) => {
+      this.usersArray = e.users;
+    });
+    window.Echo.channel("roles").listen("rolCreated", (e) => {
+      this.itemsrol = e.roles;
+    });
 
-      //Array en el que se deposita de los selectores.
-      itemsrol: [], //Rol
+    axios
+      .get("api/user")
+      .then((response) => {
+        let user = response.data;
 
-      editedIndex: -1,
-      editedItem: {
-        id: "",
-        name: "",
-        email: "",
-        password: "",
-        name_rol: "",
-      },
-      defaultItem: {
-        id: "",
-        name: "",
-        email: "",
-        password: "",
-        name_rol: "",
-      },
-    }),
+        user.forEach((element) => {
+          let datos = {
+            id: element.id,
+            name: element.name,
 
-    mounted() {
-      this.onFocus();
-      window.Echo.channel("users").listen("userCreated", (e) => {
-        this.usersArray = e.users;
-      });
-      window.Echo.channel("roles").listen("rolCreated", (e) => {
-        this.itemsrol = e.roles;
-      });
-
-      axios
-        .get("api/user")
-        .then((response) => {
-          let user = response.data;
-
-          user.forEach((element) => {
-            let datos = {
-              id: element.id,
-              name: element.name,
-              email: element.email,
-              name_rol: element.name_rol,
-            };
-            if (!datos) return;
-            this.usersArray.push(datos);
-          });
-          this.cargando = false;
-        })
-        .catch((error) => console.log(error));
-
-      axios
-        .get("api/rol")
-        .then((response) => {
-          let categorias = response.data;
-
-          categorias.forEach((element) => {
-            let datos = {
-              rol_id: element.id,
-              name_rol: element.name_rol,
-            };
-
-            if (!datos) return;
-            this.itemsrol.push(datos);
-          });
-          this.cargando = false;
-        })
-        .catch((e) => {
-          console.log(e.message);
+            name_rol: element.name_rol,
+          };
+          if (!datos) return;
+          this.usersArray.push(datos);
         });
+        this.cargando = false;
+      })
+      .catch((error) => console.log(error));
+
+    axios
+      .get("api/rol")
+      .then((response) => {
+        let categorias = response.data;
+
+        categorias.forEach((element) => {
+          let datos = {
+            rol_id: element.id,
+            name_rol: element.name_rol,
+          };
+
+          if (!datos) return;
+          this.itemsrol.push(datos);
+        });
+        this.cargando = false;
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  },
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Item" : "Editar usuario";
     },
-
-    computed: {
-      formTitle() {
-        return this.editedIndex === -1 ? "New Item" : "Editar usuario";
-      },
-      progress() {
-        return Math.min(100, this.editedItem.password.length * 13);
-      },
-      color() {
-        return ["error", "warning", "success"][Math.floor(this.progress / 40)];
-      },
+    progress() {
+      return Math.min(100, this.editedItem.password.length * 13);
     },
-
-    watch: {
-      dialog(val) {
-        val || this.close();
-      },
-      dialogDelete(val) {
-        val || this.closeDelete();
-      },
+    color() {
+      return ["error", "warning", "success"][Math.floor(this.progress / 40)];
     },
+  },
 
-    created() {},
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
+  },
 
-    methods: {
-      onFocus() {
-        let stext = document.getElementById("onsearch");
-        stext;
-        stext = addEventListener("keydown", (e) => {
-          if (e.altKey) {
-            document.getElementById("onsearch").focus();
+  created() {},
+
+  methods: {
+    onFocus() {
+      let stext = document.getElementById("onsearch");
+      stext;
+      stext = addEventListener("keydown", (e) => {
+        if (e.altKey) {
+          document.getElementById("onsearch").focus();
+        }
+      });
+    },
+    getColor(status) {
+      if (status === "Adminstrador") return "cyan darken-1";
+      else if (status === "Empleado") return "cyan lighten-3";
+    },
+    filterOnlyCapsText(value, search) {
+      return (
+        value != null &&
+        search != null &&
+        typeof value === "string" &&
+        value.toString().toLocaleUpperCase().indexOf(search) !== -1
+      );
+    },
+    usersync(recived) {
+      var tempid = null;
+      var tempname = null;
+      tempname;
+      if (this.itemsrol) {
+        let rol = this.itemsrol;
+        rol.forEach((element) => {
+          let datos = {
+            rol_id: element.rol_id,
+            name_rol: element.name_rol,
+          };
+          if (datos.name_rol === recived) {
+            tempid = datos.rol_id;
+            tempname = datos.name_rol;
+
+            this.selectrol = tempid;
           }
         });
-      },
-      getColor(status) {
-        if (status === "Adminstrador") return "cyan darken-1";
-        else if (status === "Empleado") return "cyan lighten-3";
-      },
-      filterOnlyCapsText(value, search) {
-        return (
-          value != null &&
-          search != null &&
-          typeof value === "string" &&
-          value.toString().toLocaleUpperCase().indexOf(search) !== -1
-        );
-      },
-      usersync(recived) {
-        var tempid = null;
-        var tempname = null;
-        tempname;
-        if (this.itemsrol) {
-          let rol = this.itemsrol;
-          rol.forEach((element) => {
-            let datos = {
-              rol_id: element.rol_id,
-              name_rol: element.name_rol,
-            };
-            if (datos.name_rol === recived) {
-              tempid = datos.rol_id;
-              tempname = datos.name_rol;
+      }
 
-              this.selectrol = tempid;
-            }
-          });
-        }
-
-        return tempid;
-      },
-
-      editItem(item) {
-        this.editedIndex = this.usersArray.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-
-        if (this.editedItem.name_rol) {
-          //categoria
-          this.usersync(this.editedItem.name_rol);
-        }
-
-        this.dialog = true;
-      },
-
-      deleteItem(item) {
-        this.editedIndex = this.usersArray.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        this.dialogDelete = true;
-        let id = this.editedItem.id;
-        axios.delete("api/user/" + id).catch((error) => console.log(error));
-      },
-
-      deleteItemConfirm() {
-        this.usersArray.splice(this.editedIndex, 1);
-        this.closeDelete();
-      },
-
-      close() {
-        this.dialog = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      closeDelete() {
-        this.dialogDelete = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      save() {
-        if (this.editedIndex > -1) {
-          Object.assign(this.usersArray[this.editedIndex], this.editedItem);
-          let send = this.editedItem;
-          send.name = upperConverter(send.name);
-          let url = "api/user/";
-
-          url = url + send.id;
-          url = `${url}?${"name=" + send.name}&${"email=" + send.email}&${
-            "password=" + send.password
-          }&${"rol_id=" + this.selectrol}`;
-
-          axios
-            .put(url)
-            .then((response) => {
-              response;
-              store.commit("increment", 1);
-            })
-            .catch((error) => console.log(error));
-          window.Echo.channel("users").listen("userCreated", (e) => {
-            this.usersArray = e.users;
-          });
-          window.Echo.channel("roles").listen("rolCreated", (e) => {
-            this.itemsrol = e.roles;
-          });
-        } else {
-          this.usersArray.push(this.editedItem);
-        }
-        this.close();
-      },
+      return tempid;
     },
-  };
+
+    editItem(item) {
+      this.editedIndex = this.usersArray.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+
+      if (this.editedItem.name_rol) {
+        //categoria
+        this.usersync(this.editedItem.name_rol);
+      }
+
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      this.editedIndex = this.usersArray.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+      let id = this.editedItem.id;
+      axios.delete("api/user/" + id).catch((error) => console.log(error));
+    },
+
+    deleteItemConfirm() {
+      this.usersArray.splice(this.editedIndex, 1);
+      this.closeDelete();
+    },
+
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.usersArray[this.editedIndex], this.editedItem);
+        let send = this.editedItem;
+        send.name = upperConverter(send.name);
+        let url = "api/user/";
+
+        url = url + send.id;
+        url = `${url}?${"name=" + send.name}&${"password=" + send.password}&${
+          "rol_id=" + this.selectrol
+        }`;
+
+        axios
+          .put(url)
+          .then((response) => {
+            response;
+            store.commit("increment", 1);
+          })
+          .catch((error) => console.log(error));
+        window.Echo.channel("users").listen("userCreated", (e) => {
+          this.usersArray = e.users;
+        });
+        window.Echo.channel("roles").listen("rolCreated", (e) => {
+          this.itemsrol = e.roles;
+        });
+      } else {
+        this.usersArray.push(this.editedItem);
+      }
+      this.close();
+    },
+  },
+};
 </script>
 
 <style scoped>
-  #tabla {
-    width: 60rem;
-  }
-  .tabla {
-    width: 60rem;
-  }
+#tabla {
+  width: 60rem;
+}
+.tabla {
+  width: 60rem;
+}
 </style>

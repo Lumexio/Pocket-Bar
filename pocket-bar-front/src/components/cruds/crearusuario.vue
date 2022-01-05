@@ -28,11 +28,11 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row
+      <!-- <v-row
         ><v-col sm="6" md="12" lx="13">
           <v-text-field v-model="email" label="Correo" required></v-text-field>
         </v-col>
-      </v-row>
+      </v-row> -->
       <v-row
         ><v-col sm="6" md="12" lx="13">
           <v-text-field
@@ -65,83 +65,83 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import store from "@/store";
-  axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = "http://127.0.0.1:8000/";
-  export default {
-    name: "crearusuario",
-    props: {
-      dialogusuarios: { dafault: false },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      name: "",
-      email: "",
-      password: "",
+import axios from "axios";
+import store from "@/store";
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://127.0.0.1:8000/";
+export default {
+  name: "crearusuario",
+  props: {
+    dialogusuarios: { dafault: false },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    name: "",
+    email: "",
+    password: "",
 
-      selectrol: null,
-      itemsrol: [],
-    }),
-    mounted() {
-      window.Echo.channel("roles").listen("rolCreated", (e) => {
-        this.itemsrol = e.roles;
+    selectrol: null,
+    itemsrol: [],
+  }),
+  mounted() {
+    window.Echo.channel("roles").listen("rolCreated", (e) => {
+      this.itemsrol = e.roles;
+    });
+    axios
+      .get("api/rol")
+      .then((response) => {
+        let rol = response.data;
+
+        rol.forEach((element) => {
+          let datos = {
+            rol_id: element.id,
+            name_rol: element.name_rol,
+          };
+
+          if (!datos) return;
+          this.itemsrol.push(datos);
+        });
+      })
+      .catch((e) => {
+        console.log(e.message);
       });
+  },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialogusuarios", false);
+    },
+    submit() {
+      //this.$emit("dialogFromChild", false);
+      store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", false);
+      let enviar = {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+        rol_id: this.selectrol,
+      };
+
       axios
-        .get("api/rol")
+        .post("api/user", enviar)
         .then((response) => {
-          let rol = response.data;
-
-          rol.forEach((element) => {
-            let datos = {
-              rol_id: element.id,
-              name_rol: element.name_rol,
-            };
-
-            if (!datos) return;
-            this.itemsrol.push(datos);
-          });
+          if (response.statusText === "Created") {
+            store.commit("setsuccess", true);
+          }
         })
         .catch((e) => {
           console.log(e.message);
+          store.commit("setdanger", true);
         });
     },
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialogusuarios", false);
-      },
-      submit() {
-        //this.$emit("dialogFromChild", false);
-        store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-        store.commit("setdanger", false);
-        let enviar = {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-          rol_id: this.selectrol,
-        };
-
-        axios
-          .post("api/user", enviar)
-          .then((response) => {
-            if (response.statusText === "Created") {
-              store.commit("setsuccess", true);
-            }
-          })
-          .catch((e) => {
-            console.log(e.message);
-            store.commit("setdanger", true);
-          });
-      },
-      clear() {
-        (this.name = ""), (this.email = ""), (this.password = "");
-      },
+    clear() {
+      (this.name = ""), (this.email = ""), (this.password = "");
     },
-  };
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

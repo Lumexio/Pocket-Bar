@@ -24,8 +24,8 @@ class UsuarioValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|alpha',
-            'email' => 'required|email',
+            'name' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'email' => 'nullable|email',
             'password' => 'required',
             'rol_id' => 'required'
         ];

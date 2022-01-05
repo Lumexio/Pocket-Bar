@@ -76,7 +76,7 @@ class UserController extends Controller
 
     function login(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('name', $request->name)->first();
         // print_r($data);
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([

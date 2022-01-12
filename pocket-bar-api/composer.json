@@ -18,11 +18,11 @@
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.9",
         "laravel/tinker": "^2.5",
-        "laravel/valet": "^2.16",
         "phpdocumentor/reflection-docblock": "^5.2",
         "pusher/pusher-php-server": "~3.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.11",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",

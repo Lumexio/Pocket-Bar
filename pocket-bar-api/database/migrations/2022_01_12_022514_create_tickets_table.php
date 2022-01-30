@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TicketsTbl extends Migration
+class CreateTicketsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -22,7 +22,9 @@ class TicketsTbl extends Migration
             $table->dateTime("ticket_date");
             $table->bigInteger("user_id")->nullable(false);
             $table->decimal("tax", 10, 2);
+            $table->decimal("discounts", 10, 2);
             $table->decimal("tip", 10, 2);
+            $table->decimal("min_tip", 10, 2);
             $table->string("table_name");
             $table->bigInteger("table_id");
             $table->string("status")->default("Solicitado");

@@ -13,8 +13,9 @@ class CreateWorkshift extends Migration
      */
     public function up()
     {
-        Schema::create('workshift', function (Blueprint $table) {
+        Schema::create('workshifts', function (Blueprint $table) {
             $table->id();
+            $table->boolean("active");
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
   <v-navigation-drawer permanent app>
     <v-list nav expand dense>
       <v-list-item-title style="font-size: 20px" class="text-uppercase">
-        <code class="font-weight-light">Pocket</code><strong>bar</strong>
+        <code class="font-weight-light">Pocket</code><strong>stock</strong>
         <v-divider></v-divider>
       </v-list-item-title>
       <v-list-item-group color="primary">
@@ -15,6 +15,7 @@
             v-shortkey="{
               usuarios: ['ctrl', 'u'],
               articulos: ['ctrl', 'a'],
+              historial: ['ctrl', 'h'],
             }"
             @shortkey="paths"
           >
@@ -125,6 +126,11 @@ export default {
         title: "Artículos",
         icon: "mdi-folder-multiple",
       },
+      {
+        path: "/historial",
+        title: "Historial",
+        icon: "mdi-folder-multiple",
+      },
     ],
     itemsemp: [
       {
@@ -181,6 +187,9 @@ export default {
           break;
         case "articulos":
           router.push("/articulos").catch(() => {});
+          break;
+        case "historial":
+          router.push("/historial").catch(() => {});
           break;
         case "categorias":
           router.push("/categorias").catch(() => {});

@@ -8,19 +8,21 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.0|^8.0",
+        "php": "^7.4|^8.0",
         "beyondcode/laravel-websockets": "^1.12",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.9",
         "laravel/tinker": "^2.5",
         "laravel/valet": "^2.16",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "pusher/pusher-php-server": "~3.0"
+        "pusher/pusher-php-server": "^4.0|^5.0|^6.0|^7.0",
+        "spatie/laravel-activitylog": "^4.4",
+        "symfony/mailer": "^6.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -33,7 +35,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "extra": {
         "laravel": {

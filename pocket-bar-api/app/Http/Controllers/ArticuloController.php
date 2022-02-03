@@ -8,8 +8,9 @@ use \Illuminate\Http\Response;
 use App\Models\Articulo;
 use App\Events\articuloCreated;
 use App\Http\Requests\ArticuleValidationRequest;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
+//use Illuminate\Http\File;
+use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Storage;
 
 class ArticuloController extends Controller
 {
@@ -23,6 +24,7 @@ class ArticuloController extends Controller
 
 
         $dat = DB::table('articulos_tbl')
+            ->leftJoin('users', 'articulos_tbl.user_id', '=', 'users.id')
             ->leftJoin('categorias_tbl', 'articulos_tbl.categoria_id', '=', 'categorias_tbl.id')
             ->leftJoin('marcas_tbl', 'articulos_tbl.marca_id', '=', 'marcas_tbl.id')
             ->leftJoin('proveedores_tbl', 'articulos_tbl.proveedor_id', '=', 'proveedores_tbl.id')
@@ -30,7 +32,7 @@ class ArticuloController extends Controller
             ->leftJoin('tipos_tbl', 'articulos_tbl.tipo_id', '=', 'tipos_tbl.id')
             ->leftJoin('rack_tbl', 'articulos_tbl.rack_id', '=', 'rack_tbl.id')
             ->leftJoin('travesano_tbl', 'articulos_tbl.travesano_id', '=', 'travesano_tbl.id')
-            ->select('articulos_tbl.id', 'articulos_tbl.nombre_articulo', 'articulos_tbl.cantidad_articulo', 'articulos_tbl.descripcion_articulo', 'articulos_tbl.foto_articulo', 'categorias_tbl.nombre_categoria', 'marcas_tbl.nombre_marca', 'proveedores_tbl.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo', 'travesano_tbl.nombre_travesano', 'rack_tbl.nombre_rack')
+            ->select('articulos_tbl.id', 'articulos_tbl.nombre_articulo', 'articulos_tbl.cantidad_articulo', 'articulos_tbl.descripcion_articulo', 'articulos_tbl.foto_articulo', 'users.name', 'categorias_tbl.nombre_categoria', 'marcas_tbl.nombre_marca', 'proveedores_tbl.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo', 'travesano_tbl.nombre_travesano', 'rack_tbl.nombre_rack')
             ->get()
             ->map(
                 function ($item) {
@@ -57,6 +59,7 @@ class ArticuloController extends Controller
     public function store(ArticuleValidationRequest $request)
     {
 
+
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
             return response([
                 'message' => ['Uno de los parametros ya exite.']
@@ -64,6 +67,8 @@ class ArticuloController extends Controller
         } else {
             $photo = $request->file('foto_articulo');
             $articulo = $request->all();
+            $articulo['user_id'] = Auth::id();
+
             if (isset($photo)) {
                 $extension = $request->file('foto_articulo')->guessExtension();
                 $name_foto = $request->nombre_articulo . '.' . $extension;
@@ -98,11 +103,9 @@ class ArticuloController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $articulo = Articulo::find($id);
-
         $articulo->update($request->all());
-
+        $articulo['user_id'] = Auth::id();
         return $articulo;
     }
 

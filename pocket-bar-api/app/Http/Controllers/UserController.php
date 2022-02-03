@@ -9,6 +9,7 @@ use \Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\userCreated;
 use App\Http\Requests\UsuarioValidationRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -76,7 +77,13 @@ class UserController extends Controller
 
     function login(Request $request)
     {
+        $credentials = $request->validate([
+            'name' => ['required'],
+            'password' => ['required'],
+        ]);
+
         $user = User::where('name', $request->name)->first();
+
         // print_r($data);
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
@@ -84,13 +91,20 @@ class UserController extends Controller
             ], 404);
         }
 
-        $token = $user->createToken('my-app-token')->plainTextToken;
 
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
+        if (Auth::attempt($credentials)) {
+            $token = $user->createToken('my-app-token')->plainTextToken;
+            //Auth::setUser($user);
+            auth()->setUser($user);
+            $request->session()->regenerate();
+            $response = [
+                'user' => $user,
+                'token' => $token,
+            ];
 
-        return response($response, 201);
+            Auth::login($user, true);
+            $request->session()->save();
+            return response($response, 200);
+        }
     }
 }

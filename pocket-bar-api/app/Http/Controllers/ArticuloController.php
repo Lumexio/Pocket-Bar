@@ -20,8 +20,6 @@ class ArticuloController extends Controller
      */
     public function index()
     {
-
-
         $dat = DB::table('articulos_tbl')
             ->leftJoin('categorias_tbl', 'articulos_tbl.categoria_id', '=', 'categorias_tbl.id')
             ->leftJoin('marcas_tbl', 'articulos_tbl.marca_id', '=', 'marcas_tbl.id')

@@ -77,13 +77,16 @@ class TicketController extends Controller
     }
 
 
-    public function update($request, $ticket): JsonResponse
+    public function index(Request $request, int $page): JsonResponse
     {
+        $tickets = Ticket::with(['user', 'table', 'ticketDetails', "workshift", "table", "payments"])
+        ->paginate(50, ['*'], 'page', $page);
+
         return response()->json([
             "status" => 200,
             "error" => 0,
-            "message" => "Ticket actualizado correctamente",
-            "data" => null
+            "message" => "Listado de tickets",
+            "data" => $tickets
         ], 200);
     }
 }

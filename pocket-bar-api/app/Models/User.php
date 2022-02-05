@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
-
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {
     use
         HasApiTokens,
         HasFactory,
-        Notifiable;
+        Notifiable,
+        LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +30,13 @@ class User extends Authenticatable
         'password',
         'rol_id',
     ];
+    //ACtivity log system
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'rol_id']);
+        // Chain fluent methods for configuration options
+    }
     /**
      * Encripta la clave de usuario al ser creado
      * @var array
@@ -35,6 +44,10 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
+    }
+    public function articulo()
+    {
+        return $this->hasMany(Articulo::class);
     }
 
     /**

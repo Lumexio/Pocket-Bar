@@ -15,13 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
-
         DB::table('rols_tbl')->insert([
             'name_rol' => 'Administrativo',
         ]);
         DB::table('rols_tbl')->insert([
-            'name_rol' => 'Empleado',
+            'name_rol' => 'Cajer@',
+        ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Meser@',
+        ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Bartender',
+        ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Intendencia',
         ]);
         DB::table('status_tbl')->insert([
             'nombre_status' => 'Disponible',

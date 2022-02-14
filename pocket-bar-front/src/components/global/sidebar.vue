@@ -46,9 +46,33 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
+        <v-list v-else-if="hasrol === 3" flat>
+          <v-list-item
+            v-for="item in itemscajero"
+            :key="item.title"
+            link
+            :to="item.path"
+            v-shortkey="{
+              articulos: ['ctrl', 'a'],
+            }"
+            @shortkey="paths"
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
       </v-list-item-group>
 
-      <v-list-group :value="true" no-action sub-group>
+      <v-list-group
+        v-if="hasrol === 2 || hasrol === 1"
+        :value="true"
+        no-action
+        sub-group
+      >
         <template v-slot:activator>
           <v-list-item-content>
             <v-list-item-title>Catálogos </v-list-item-title>
@@ -75,7 +99,12 @@
           </v-list-item-icon>
         </v-list-item>
       </v-list-group>
-      <v-list-group :value="true" no-action sub-group>
+      <v-list-group
+        v-if="hasrol === 2 || hasrol === 1"
+        :value="true"
+        no-action
+        sub-group
+      >
         <template v-slot:activator>
           <v-list-item-content>
             <v-list-item-title>Ubicaciones </v-list-item-title>
@@ -136,6 +165,13 @@ export default {
       {
         path: "/articulos",
         title: "Artículos",
+        icon: "mdi-folder-multiple",
+      },
+    ],
+    itemscajero: [
+      {
+        path: "/ordenes",
+        title: "Ordenes",
         icon: "mdi-folder-multiple",
       },
     ],

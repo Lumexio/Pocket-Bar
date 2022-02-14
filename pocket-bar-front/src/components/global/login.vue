@@ -94,16 +94,25 @@ export default {
             .then((response) => {
               let rol = response.data.user.rol_id;
               store.commit("setrol", rol);
-
+              console.log(rol);
               let validado = response.request.withCredentials;
               if (validado == true) {
                 store.state.token = response.data.token;
                 let token = store.state.token;
                 store.dispatch("login", { token });
-                if (rol === 1) {
-                  router.push("/usuarios").catch(() => {});
-                } else if (rol === 2) {
-                  router.push("/articulos").catch(() => {});
+                switch (rol) {
+                  case 1:
+                    router.push("/usuarios").catch(() => {});
+                    break;
+                  case 2:
+                    router.push("/articulos").catch(() => {});
+                    break;
+                  case 3:
+                    router.push("/ordenes").catch(() => {});
+                    break;
+                  default:
+                    alert("Cuanta no existe o es incorrecta");
+                    break;
                 }
               } else if (validado == false) {
                 alert("Cuanta no existe o es incorrecta");

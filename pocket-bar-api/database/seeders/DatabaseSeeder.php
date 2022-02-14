@@ -69,35 +69,44 @@ class DatabaseSeeder extends Seeder
          * *Cuentas de usuario de prueba
          */
         DB::table('users')->insert([
-            'name' => 'francisco',
+            'name' => 'admin',
             'email' => 'a@a.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '1',
         ]);
         DB::table('users')->insert([
-            'name' => 'cajero',
-            'email' => 'b@b.com',
+            'name' => 'adminb',
+            'email' => 'ab@ab.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '2',
         ]);
         DB::table('users')->insert([
-            'name' => 'mesero',
+            'name' => 'cajero',
             'email' => 'c@c.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '3',
         ]);
         DB::table('users')->insert([
-            'name' => 'bartender',
-            'email' => 'd@d.com',
+            'name' => 'mesero',
+            'email' => 'm@m.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '4',
         ]);
         DB::table('users')->insert([
-            'name' => 'intendenci',
-            'email' => 'e@e.com',
+            'name' => 'bartender',
+            'email' => 'b@b.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '5',
         ]);
+        // DB::table('users')->insert([
+        //     'name' => 'intendencia',
+        //     'email' => 'i@i.com',
+        //     'password' => Hash::make('12345678'),
+        //     'rol_id' => '6',
+        // ]);
+        /**
+         * [Insersiones a categorias]
+         */
         DB::table('categorias_tbl')->insert([
             'nombre_categoria' => 'Plomería',
         ]);

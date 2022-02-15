@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             'name_rol' => 'Administrativo',
         ]);
         DB::table('rols_tbl')->insert([
+            'name_rol' => 'Gerencia',
+        ]);
+        DB::table('rols_tbl')->insert([
             'name_rol' => 'Cajer@',
         ]);
         DB::table('rols_tbl')->insert([

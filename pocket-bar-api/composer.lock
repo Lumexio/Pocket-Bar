@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ff9f3ef6a2b50649df54fdd5dd1842c",
+    "content-hash": "54a1daa470db02373cc74dcf591422e6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2189,77 +2189,6 @@
             "time": "2022-01-10T08:52:49+00:00"
         },
         {
-            "name": "laravel/valet",
-            "version": "v2.18.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/valet.git",
-                "reference": "cf5d765637262f2a734dc6c61dfe987420de8baa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/valet/zipball/cf5d765637262f2a734dc6c61dfe987420de8baa",
-                "reference": "cf5d765637262f2a734dc6c61dfe987420de8baa",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.0|^7.4",
-                "illuminate/container": "~5.1|^6.0|^7.0|^8.0|^9.0",
-                "mnapoli/silly": "^1.0",
-                "php": "^5.6|^7.0|^8.0",
-                "symfony/process": "^3.0|^4.0|^5.0|^6.0",
-                "tightenco/collect": "^5.3|^6.0|^7.0|^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2.3",
-                "yoast/phpunit-polyfills": "^0.2.0"
-            },
-            "bin": [
-                "valet"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "cli/includes/compatibility.php",
-                    "cli/includes/facades.php",
-                    "cli/includes/helpers.php"
-                ],
-                "psr-4": {
-                    "Valet\\": "cli/Valet/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                },
-                {
-                    "name": "Adam Wathan",
-                    "email": "adam.wathan@gmail.com"
-                }
-            ],
-            "description": "A more enjoyable local development experience for Mac.",
-            "keywords": [
-                "laravel",
-                "wwdhhd",
-                "zonda"
-            ],
-            "support": {
-                "issues": "https://github.com/laravel/valet/issues",
-                "source": "https://github.com/laravel/valet/tree/v2.18.9"
-            },
-            "time": "2022-02-01T15:20:28+00:00"
-        },
-        {
             "name": "league/commonmark",
             "version": "2.2.1",
             "source": {
@@ -2594,66 +2523,6 @@
                 }
             ],
             "time": "2021-11-21T11:48:40+00:00"
-        },
-        {
-            "name": "mnapoli/silly",
-            "version": "1.7.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mnapoli/silly.git",
-                "reference": "e437baa502c3e1691d342374e71446d4bac1cad5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/silly/zipball/e437baa502c3e1691d342374e71446d4bac1cad5",
-                "reference": "e437baa502c3e1691d342374e71446d4bac1cad5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "php-di/invoker": "~2.0",
-                "psr/container": "^1.0|^2.0",
-                "symfony/console": "~3.0|~4.0|~5.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.12",
-                "mnapoli/phpunit-easymock": "~1.0",
-                "phpunit/phpunit": "~6.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Silly\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Silly CLI micro-framework based on Symfony Console",
-            "keywords": [
-                "PSR-11",
-                "cli",
-                "console",
-                "framework",
-                "micro-framework",
-                "silly"
-            ],
-            "support": {
-                "issues": "https://github.com/mnapoli/silly/issues",
-                "source": "https://github.com/mnapoli/silly/tree/1.7.3"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/mnapoli",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/mnapoli/silly",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-12-13T09:21:21+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3320,61 +3189,6 @@
                 "source": "https://github.com/paragonie/sodium_compat/tree/v1.17.0"
             },
             "time": "2021-08-10T02:43:50+00:00"
-        },
-        {
-            "name": "php-di/invoker",
-            "version": "2.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHP-DI/Invoker.git",
-                "reference": "cd6d9f267d1a3474bdddf1be1da079f01b942786"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/cd6d9f267d1a3474bdddf1be1da079f01b942786",
-                "reference": "cd6d9f267d1a3474bdddf1be1da079f01b942786",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.3",
-                "psr/container": "^1.0|^2.0"
-            },
-            "require-dev": {
-                "athletic/athletic": "~0.1.8",
-                "mnapoli/hard-mode": "~0.3.0",
-                "phpunit/phpunit": "^9.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Invoker\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Generic and extensible callable invoker",
-            "homepage": "https://github.com/PHP-DI/Invoker",
-            "keywords": [
-                "callable",
-                "dependency",
-                "dependency-injection",
-                "injection",
-                "invoke",
-                "invoker"
-            ],
-            "support": {
-                "issues": "https://github.com/PHP-DI/Invoker/issues",
-                "source": "https://github.com/PHP-DI/Invoker/tree/2.3.3"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/mnapoli",
-                    "type": "github"
-                }
-            ],
-            "time": "2021-12-13T09:22:56+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -7784,60 +7598,6 @@
             "time": "2022-01-17T16:30:37+00:00"
         },
         {
-            "name": "tightenco/collect",
-            "version": "v8.81.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tighten/collect.git",
-                "reference": "2b629c5095c89f3e96488f4bde8ac11642465200"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tighten/collect/zipball/2b629c5095c89f3e96488f4bde8ac11642465200",
-                "reference": "2b629c5095c89f3e96488f4bde8ac11642465200",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3|^8.0",
-                "symfony/var-dumper": "^3.4 || ^4.0 || ^5.0 || ^6.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.0",
-                "nesbot/carbon": "^2.23.0",
-                "phpunit/phpunit": "^8.3"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/Collect/Support/helpers.php",
-                    "src/Collect/Support/alias.php"
-                ],
-                "psr-4": {
-                    "Tightenco\\Collect\\": "src/Collect"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylorotwell@gmail.com"
-                }
-            ],
-            "description": "Collect - Illuminate Collections as a separate package.",
-            "keywords": [
-                "collection",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/tighten/collect/issues",
-                "source": "https://github.com/tighten/collect/tree/v8.81.0"
-            },
-            "time": "2022-01-25T22:55:34+00:00"
-        },
-        {
             "name": "tijsverkoyen/css-to-inline-styles",
             "version": "2.2.4",
             "source": {
@@ -10402,5 +10162,5 @@
         "php": "^7.4|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

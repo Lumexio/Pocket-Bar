@@ -15,14 +15,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
-
+        /**
+         * *Rol de usuarios
+         */
         DB::table('rols_tbl')->insert([
             'name_rol' => 'Administrativo',
         ]);
         DB::table('rols_tbl')->insert([
-            'name_rol' => 'Empleado',
+            'name_rol' => 'Gerencia',
         ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Cajer@',
+        ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Meser@',
+        ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Bartender',
+        ]);
+        DB::table('rols_tbl')->insert([
+            'name_rol' => 'Intendencia',
+        ]);
+        /**
+         * *Status de articulos
+         */
         DB::table('status_tbl')->insert([
             'nombre_status' => 'Disponible',
         ]);
@@ -32,6 +48,9 @@ class DatabaseSeeder extends Seeder
         DB::table('status_tbl')->insert([
             'nombre_status' => 'En uso',
         ]);
+        /**
+         * *Ubicaciones de prueba
+         */
         DB::table('travesano_tbl')->insert([
             'nombre_travesano' => '1',
         ]);
@@ -48,17 +67,91 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory(10)->create();
 
+
+        /**
+         * *Cuentas de usuario de prueba
+         */
         DB::table('users')->insert([
-            'name' => 'francisco',
+            'name' => 'admin',
             'email' => 'a@a.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '1',
         ]);
         DB::table('users')->insert([
-            'name' => 'darkfrancisco',
-            'email' => 'b@b.com',
+            'name' => 'adminb',
+            'email' => 'ab@ab.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '2',
         ]);
+        DB::table('users')->insert([
+            'name' => 'cajero',
+            'email' => 'c@c.com',
+            'password' => Hash::make('12345678'),
+            'rol_id' => '3',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'mesero',
+            'email' => 'm@m.com',
+            'password' => Hash::make('12345678'),
+            'rol_id' => '4',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'bartender',
+            'email' => 'b@b.com',
+            'password' => Hash::make('12345678'),
+            'rol_id' => '5',
+        ]);
+        // DB::table('users')->insert([
+        //     'name' => 'intendencia',
+        //     'email' => 'i@i.com',
+        //     'password' => Hash::make('12345678'),
+        //     'rol_id' => '6',
+        // ]);
+        /**
+         * [Insersiones a categorias]
+         */
+        DB::table('categorias_tbl')->insert([
+            'nombre_categoria' => 'Plomería',
+        ]);
+        DB::table('categorias_tbl')->insert([
+            'nombre_categoria' => 'Electrícidad',
+        ]);
+        DB::table('categorias_tbl')->insert([
+            'nombre_categoria' => 'General',
+        ]);
+
+
+        DB::table('marcas_tbl')->insert([
+            'nombre_marca' => 'Honda',
+        ]);
+        DB::table('marcas_tbl')->insert([
+            'nombre_marca' => 'Yamaha',
+        ]);
+        DB::table('marcas_tbl')->insert([
+            'nombre_marca' => 'Asus',
+        ]);
+
+
+        DB::table('tipos_tbl')->insert([
+            'nombre_tipo' => 'Consumible',
+        ]);
+        DB::table('tipos_tbl')->insert([
+            'nombre_tipo' => 'Herramienta',
+        ]);
+        DB::table('tipos_tbl')->insert([
+            'nombre_tipo' => 'General',
+        ]);
+
+
+        DB::table('proveedores_tbl')->insert([
+            'nombre_proveedor' => 'Davila',
+        ]);
+        DB::table('proveedores_tbl')->insert([
+            'nombre_proveedor' => 'Ortíz',
+        ]);
+        DB::table('proveedores_tbl')->insert([
+            'nombre_proveedor' => 'Desconocido',
+        ]);
+        \App\Models\Articulo::factory(10)->create();
     }
 }

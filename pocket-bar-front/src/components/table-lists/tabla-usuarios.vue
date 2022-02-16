@@ -261,8 +261,18 @@ export default {
       });
     },
     getColor(status) {
-      if (status === "Adminstrador") return "cyan darken-1";
-      else if (status === "Empleado") return "cyan lighten-3";
+      console.log("dato de status:", status);
+      if (status == "Administrativo") {
+        return "amber lighten-1";
+      } else if (status == "Meser@") {
+        return "cyan darken-1";
+      } else if (status == "Cajer@") {
+        return "purple darken-1";
+      } else if (status == "Bartender") {
+        return "pink darken-1";
+      } else if (status == "Intendencia") {
+        return "indigo lighten-1";
+      }
     },
     filterOnlyCapsText(value, search) {
       return (

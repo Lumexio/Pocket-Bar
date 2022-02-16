@@ -66,15 +66,12 @@ class ArticuloController extends Controller
             $photo = $request->file('foto_articulo');
             $articulo = $request->all();
             $articulo['user_id'] = Auth::id();
-
             if (isset($photo)) {
                 $extension = $request->file('foto_articulo')->guessExtension();
-                $name_foto = $request->nombre_articulo . '.' . $extension;
+                $name_foto =  $request->nombre_articulo . '.' . $extension;
                 $request->foto_articulo->move(public_path('images'), $name_foto);
                 $articulo["foto_articulo"] = $name_foto;
             }
-
-
             $articulo = Articulo::create($articulo);
             articuloCreated::dispatch($articulo);
             return $articulo;
@@ -115,7 +112,12 @@ class ArticuloController extends Controller
      */
     public function destroy($id)
     {
+        $articulo = Articulo::find($id);
+        $filename = $articulo->foto_articulo;
+        $path = public_path("/images/$filename");
+        unlink($path);
         $articulo = Articulo::destroy($id);
+
         return $articulo;
     }
 }

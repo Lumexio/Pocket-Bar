@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6" md="4">
         <v-text-field
           v-model="search"
-          label="Buscar actividad"
+          label="Buscar orden"
           class="mx-4"
           id="onsearch"
         ></v-text-field>
@@ -30,7 +30,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Tabla historial</v-toolbar-title>
+            <v-toolbar-title>Tabla de ordenes</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
           </v-toolbar>

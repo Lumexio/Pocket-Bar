@@ -63,3 +63,9 @@ Mostrar un registro no */
 });
 
 Route::post('login', [UserController::class, 'login']);
+
+
+Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'tickets'], function () {
+    Route::get('/{?page}', 'TicketController@index');
+    Route::post('/', 'TicketController@store');
+});

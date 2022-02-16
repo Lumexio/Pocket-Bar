@@ -57,7 +57,7 @@ const routes = [
 
     }
   },
-  //Cruds 
+  //Cruds
   {
     path: '/crearusuario',
     name: 'crearusuario',
@@ -273,6 +273,29 @@ const routes = [
         next({ name: 'login' });
       }
 
+    }
+  },
+  {
+    path: '/punto-de-venta',
+    name: 'punto-de-venta',
+    component: () => import('../views/main-pos.vue'),
+    meta: {
+      authenticated: true
+    },
+    beforeEnter: (to, from, next) => {
+      let validado = to.matched.some(record => record.meta.authenticated);
+      if (store.state.token) {
+        next();
+        if (validado == true && from.path !== '/') {
+          next();
+        }
+      }
+      else if (!validado) {
+        next({ name: 'login' });
+      }
+      else {
+        next({ name: 'login' });
+      }
     }
   },
   {

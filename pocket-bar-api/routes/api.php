@@ -22,13 +22,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    /*Crear  si
-Eliminar no
-Mostrar un registro no */
-    Route::resource('articulo', 'ArticuloController');
-    /*Crear  si
-Eliminar no
-Mostrar un registro no */
+
+    Route::prefix('articulo')->group(function () {
+        Route::post('/create', 'ArticuloController@store');
+        Route::put('/update/{id}', 'ArticuloController@update');
+        Route::get('/list', 'ArticuloController@index');
+        Route::delete('/delete/{id}', 'ArticuloController@destroy');
+    });
+    Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
+
     Route::resource('rol', 'RolController');
     /*Crear  si
 Eliminar no

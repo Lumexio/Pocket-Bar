@@ -22,7 +22,7 @@
         :headers="headers"
         show-expand
         :expanded.sync="expanded"
-        :items="activitylogArray"
+        :items="ticketsArray"
         sort-by="cantidad_articulo"
         class="elevation-1"
         :search="search"
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getActivitylog } from "@/api/activitylog.js";
+import { getTickets } from "@/api/tickets.js";
 
 export default {
   name: "tabla-activitylog",
@@ -85,14 +85,14 @@ export default {
       { text: "Descripción", align: "start", value: "data-table-expand" },
     ],
 
-    activitylogArray: [],
+    ticketsArray: [],
   }),
   mounted() {
     this.onFocus();
     // window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
-    //   this.activitylogArray = e.activitylog;
+    //   this.ticketsArray = e.activitylog;
     // });
-    getActivitylog(this.activitylogArray)
+    getTickets(this.ticketsArray)
       .then((response) => {
         if (response.stats === 200) {
           this.cargando = false;

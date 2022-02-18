@@ -171,7 +171,7 @@
             max-width="600"
           >
             <template v-slot:default="dialogDetail">
-              <v-card>
+              <v-card :key="count">
                 <v-card-text>
                   <v-toolbar flat>
                     <v-card-title>
@@ -187,6 +187,19 @@
                   ></v-img>
                 </v-card-text>
                 <v-card-actions class="justify-end">
+                  <v-file-input
+                    v-model="photo"
+                    prepend-icon="mdi-camera"
+                    hide-input
+                    label="File input"
+                  ></v-file-input>
+                  <v-btn
+                    v-show="photo != null"
+                    text
+                    color="orange"
+                    @click="photochange()"
+                    >Subir Imagen</v-btn
+                  >
                   <v-btn text @click="dialogDetail.value = false">Close</v-btn>
                 </v-card-actions>
               </v-card>
@@ -220,11 +233,13 @@
 <script>
 //import axios from "axios";
 import store from "@/store";
+import { postPhoto } from "@/api/photohandler.js";
 import {
   getArticulos,
   deleteArticulos,
   editArticulos,
 } from "@/api/articulos.js";
+
 import { getCategorias } from "@/api/categorias.js";
 import { getMarcas } from "@/api/marcas.js";
 import { getProveedores } from "@/api/proveedores.js";
@@ -291,6 +306,7 @@ export default {
     itemstst: [], //status
     itemsr: [], //rack
     itemsT: [], //travesaño
+    photo: null,
 
     editedIndex: -1,
     editedItem: {
@@ -375,6 +391,12 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Editar articulo";
+    },
+    count() {
+      return store.getters.counter;
+    },
+    hasrol() {
+      return store.getters.hasrol;
     },
   },
 
@@ -468,6 +490,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.dialogDetail = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -481,14 +504,29 @@ export default {
         this.editedIndex = -1;
       });
     },
+    photochange() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
+        let send = this.editedItem;
+        let url = "api/updatephoto/" + send.id;
 
+        if (this.photo != null) {
+          const formdata = new FormData();
+          formdata.append("foto_articulo", this.photo);
+          postPhoto(url, formdata);
+        }
+      } else {
+        this.articulosArray.push(this.editedItem);
+      }
+      this.close();
+    },
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
         let send = this.editedItem;
         send.nombre_articulo = upperConverter(send.nombre_articulo);
-        let url = "api/articulo/";
-        url = url + send.id;
+        let url = "api/articulo/update/" + send.id;
+
         url = `${url}?${"nombre_articulo=" + send.nombre_articulo}&${
           "cantidad_articulo=" + send.cantidad_articulo
         }&${"descripcion_articulo=" + send.descripcion_articulo}&${
@@ -498,7 +536,10 @@ export default {
         }&${"status_id=" + this.selectst}&${"rack_id=" + this.selectr}&${
           "travesano_id=" + this.selectT
         }`;
+
         editArticulos(url);
+        //Sub sistema de eliminación de photos del articulo
+
         window.Echo.channel("articulos").listen("articuloCreated", (e) => {
           this.articulosArray = e.articulos;
         });

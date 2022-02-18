@@ -8,6 +8,7 @@ use \Illuminate\Http\Response;
 use App\Models\Articulo;
 use App\Events\articuloCreated;
 use App\Http\Requests\ArticuleValidationRequest;
+use File;
 //use Illuminate\Http\File;
 use Illuminate\Support\Facades\Auth;
 //use Illuminate\Support\Facades\Storage;
@@ -104,6 +105,7 @@ class ArticuloController extends Controller
         return $articulo;
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
@@ -115,7 +117,7 @@ class ArticuloController extends Controller
         $articulo = Articulo::find($id);
         $filename = $articulo->foto_articulo;
         $path = public_path("/images/$filename");
-        unlink($path);
+        File::delete($path);
         $articulo = Articulo::destroy($id);
 
         return $articulo;

@@ -100,6 +100,17 @@ class ArticuloController extends Controller
     public function update(Request $request, $id)
     {
         $articulo = Articulo::find($id);
+        //Obtener nombre venidero
+        $newname = $request->nombre_articulo;
+        //newname de archivo ya guardado
+        $filename = $articulo->foto_articulo;
+
+        //lugar donde esta guardado el archivo existente
+        $oldpath = public_path("/images/$filename");
+        $filename =  $newname . '.' . "jpg";
+        $newpath = public_path("/images/$filename");
+        rename($oldpath, $newpath);
+        $articulo["foto_articulo"] = $filename;
         $articulo->update($request->all());
         $articulo['user_id'] = Auth::id();
         return $articulo;

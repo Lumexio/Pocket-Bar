@@ -20,16 +20,16 @@ class CreateTicketsTable extends Migration
             $table->integer("item_count")->nullable(false);
             $table->string("user_name");
             $table->dateTime("ticket_date");
-            $table->bigInteger("user_id")->nullable(false);
+            $table->foreignId("user_id")->nullable(false)->references("id")->on("users");
             $table->decimal("tax", 10, 2);
             $table->decimal("discounts", 10, 2);
             $table->decimal("tip", 10, 2);
             $table->decimal("min_tip", 10, 2);
             $table->string("table_name");
-            $table->bigInteger("table_id");
+            $table->foreignId("table_id")->nullable(false)->references("id")->on("tables");
             $table->string("status")->default("Solicitado");
             $table->boolean("closed")->default(false);
-            $table->bigInteger("workshift_id")->nullable(false);
+            $table->foreignId("workshift_id")->nullable(false)->references("id")->on("workshifts");
             $table->timestamps();
         });
     }

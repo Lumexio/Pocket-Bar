@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "delete-branch-local": "git branch -D",
-    "delete-branch-remote": "git push origin --delete"
+    "delete-branch-remote": "git push origin --delete",
+    "and": "&&"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0-alpha.32",

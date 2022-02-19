@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "delete-branch-local": "git branch -D",
+    "delete-branch-remote": "git push origin --delete"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0-alpha.32",

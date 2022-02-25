@@ -23,7 +23,7 @@ class ArticuloFactory extends Factory
     public function definition()
     {
         return [
-            'nombre_articulo' => Str::random(4),
+            'nombre_articulo' => $this->faker->name(),
             'cantidad_articulo' => $this->faker->numberBetween(1, 100),
             'categoria_id' => $this->faker->unique(true)->numberBetween(1, 3),
             'status_id' => $this->faker->unique(true)->numberBetween(1, 3),

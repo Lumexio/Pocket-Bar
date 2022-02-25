@@ -62,12 +62,15 @@ Eliminar no
 Mostrar un registro no */
     Route::resource('user', 'UserController');
     Route::resource('activitylog', 'ActivitylogController');
+    
+
+    Route::group([ 'prefix' => 'tickets'], function () {
+        Route::get('/list', 'TicketController@index');
+        Route::post('/create', 'TicketController@store');
+    });
 });
 
 Route::post('login', [UserController::class, 'login']);
 
 
-Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'tickets'], function () {
-    Route::get('/{?page}', 'TicketController@index');
-    Route::post('/', 'TicketController@store');
-});
+

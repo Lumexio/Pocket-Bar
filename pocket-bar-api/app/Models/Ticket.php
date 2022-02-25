@@ -11,7 +11,9 @@ class Ticket extends Model
 
     protected $table = "tickets_tbl";
 
-    public function Details()
+    protected $fillable = ["*"];
+
+    public function details()
     {
         return $this->hasMany(TicketDetail::class, 'ticket_id');
     }

@@ -23,7 +23,7 @@ class UserController extends Controller
         $loggeduser = Auth::id();
         $dat = DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'rols_tbl.name_rol')->get();
 
-        // $dat = DB::table('users')->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'rols_tbl.name_rol')->get();
+
         return $dat;
     }
 

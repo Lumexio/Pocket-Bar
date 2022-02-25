@@ -40,6 +40,7 @@ class TicketController extends Controller
             $ticket->user_id = auth()->user()->id;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
+            $ticket->tip = $request->input('tip');
             $ticket->min_tip = $subtotal >= 500 ? $subtotal * 0.10 : $subtotal;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
@@ -77,10 +78,12 @@ class TicketController extends Controller
     }
 
 
-    public function index(Request $request, int $page): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $tickets = Ticket::with(['user', 'table', 'ticketDetails', "workshift", "table", "payments"])
-        ->paginate(50, ['*'], 'page', $page);
+        $tickets = Ticket::with(['user', 'table', 'details', "workshift", "payments"])
+            ->orderBy("ticket_date", "desc")
+            ->get();
+        // ->paginate(50, ['*'], 'page', $request->input('page', 1));
 
         return response()->json([
             "status" => 200,

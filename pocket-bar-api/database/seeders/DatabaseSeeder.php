@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Ticket;
+use App\Models\TicketDetail;
+use Database\Factories\TicketFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -152,6 +155,33 @@ class DatabaseSeeder extends Seeder
         DB::table('proveedores_tbl')->insert([
             'nombre_proveedor' => 'Desconocido',
         ]);
+
+        //Mesas
+
+        for ($i=1; $i < 11; $i++) { 
+            DB::table("tables")->insert([
+                "name" => $i,
+            ]);
+        }
+
+        DB::table("workshifts")->insert([
+            "active" => 1,
+        ]);
+        
         \App\Models\Articulo::factory(10)->create();
+
+        $tickets = TicketFactory::new()->times(10)->raw();
+
+        foreach ($tickets as $ticket) {
+            $ticketToInsert = $ticket;
+            unset($ticketToInsert["items"]);
+            
+            $id = Ticket::insertGetId($ticketToInsert);
+            foreach ($ticket["items"] as $item) {
+                $item["ticket_id"] = $id;
+                TicketDetail::insert($item);
+            }
+        }
+        
     }
 }

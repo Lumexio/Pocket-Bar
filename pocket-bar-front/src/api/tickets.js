@@ -5,22 +5,27 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/";
 
 
 export function getTickets(ticketsArray) {
+
   return new Promise((resolve, reject) => {
     axios
-      .get("api/ticket/" + 1)
+      .get("api/tickets/list")
       .then(response => {
-        console.log(response);
-        const tickets = response.data;
+
+        const tickets = response.data.data;
         const stats = response.status;
+
         tickets.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_categoria: element.nombre_categoria,
-            descripcion_categoria: element.descripcion_categoria,
+            nombre_mesero: element.user_name,
+            ticket_date: element.ticket_date,
+            monto_total: element.total,
+            status_ticket: element.status,
           };
           if (!datos) return;
           ticketsArray.push(datos);
         });
+
         resolve({
           stats, ticketsArray
         });

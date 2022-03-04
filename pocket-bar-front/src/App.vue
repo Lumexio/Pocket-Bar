@@ -85,7 +85,6 @@ span {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #333333;
-  height: 100%;
 }
 /* Scroller classes */
 ::-webkit-scrollbar {

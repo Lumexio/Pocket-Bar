@@ -11,6 +11,7 @@ import Echo from 'laravel-echo';
 import store from '@/store';
 import 'bulma/css/bulma.css';
 import Alpine from 'alpinejs'
+import './registerServiceWorker'
 Vue.use(Vuelidate)
 Vue.use(VueAxios, Axios)
 Vue.use(Vuex)

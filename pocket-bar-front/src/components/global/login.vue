@@ -110,6 +110,9 @@ export default {
                   case 3:
                     router.push("/ordenes").catch(() => {});
                     break;
+                  case 4:
+                    router.push("/mesero").catch(() => {});
+                    break;
                   default:
                     alert("Cuanta no existe o es incorrecta");
                     break;

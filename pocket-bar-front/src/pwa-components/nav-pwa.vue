@@ -15,9 +15,18 @@
           <v-icon>mdi-bell</v-icon>
         </v-btn>
 
-        <v-btn icon>
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn flat text v-bind="attrs" v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, index) in itemss" :key="index">
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
         <template v-slot:extension>
           <v-tabs
             style="padding-right: 0px; width: 1%"
@@ -69,6 +78,12 @@ export default {
   name: "navbarPwa",
   data() {
     return {
+      itemss: [
+        { title: "Click Me" },
+        { title: "Click Me" },
+        { title: "Click Me" },
+        { title: "Click Me 2" },
+      ],
       type: null,
       tabs: null,
       items: [

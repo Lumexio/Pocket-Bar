@@ -1,12 +1,30 @@
 <template>
-  <v-app> </v-app>
+  <div><ordenesBarras /></div>
 </template>
 
 <script>
+//import store from "@/store";
+
+import ordenesBarras from "@/pwa-components/tables/ordenes-barras.vue";
 export default {
   name: "MainBarra",
+  components: { ordenesBarras },
+  data: () => ({}),
+
+  created() {
+    /*para ejecutar lo que yo quiera automaticamente*/
+  },
+  //  count() {
+  //   return store.getters.counter;
+  // },
+  // hasrol() {
+  //   return store.getters.hasrol;
+  // },
 };
 </script>
 
-<style>
+<style scoped>
+.size-table {
+  max-width: 90%;
+}
 </style>

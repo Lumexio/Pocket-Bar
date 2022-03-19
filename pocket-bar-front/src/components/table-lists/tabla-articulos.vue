@@ -170,6 +170,7 @@
             transition="dialog-bottom-transition"
             max-width="600"
           >
+          
             <template v-slot:default="dialogDetail">
               <v-card :key="count">
                 <v-card-text>

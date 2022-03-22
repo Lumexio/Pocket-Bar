@@ -62,10 +62,11 @@ Eliminar no
 Mostrar un registro no */
     Route::resource('user', 'UserController');
     Route::resource('activitylog', 'ActivitylogController');
-    
+
 
     Route::group([ 'prefix' => 'tickets'], function () {
         Route::get('/list', 'TicketController@index');
+        Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
     });
 });

@@ -28,6 +28,16 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function barTender()
+    {
+        return $this->belongsTo(User::class, 'barTender_id');
+    }
+
+    public function waiter()
+    {
+        return $this->belongsTo(User::class, 'waiter_id');
+    }
+
     public function workshift()
     {
         return $this->belongsTo(Workshift::class, 'workshift_id');

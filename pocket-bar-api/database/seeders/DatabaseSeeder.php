@@ -98,18 +98,21 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'rol_id' => '4',
         ]);
+
         DB::table('users')->insert([
             'name' => 'bartender',
             'email' => 'b@b.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '5',
         ]);
-        // DB::table('users')->insert([
-        //     'name' => 'intendencia',
-        //     'email' => 'i@i.com',
-        //     'password' => Hash::make('12345678'),
-        //     'rol_id' => '6',
-        // ]);
+
+        DB::table('users')->insert([
+            'name' => 'bartender1',
+            'email' => 'b1@b.com',
+            'password' => Hash::make('12345678'),
+            'rol_id' => '5',
+        ]);
+
         /**
          * [Insersiones a categorias]
          */
@@ -158,7 +161,7 @@ class DatabaseSeeder extends Seeder
 
         //Mesas
 
-        for ($i=1; $i < 11; $i++) { 
+        for ($i=1; $i < 11; $i++) {
             DB::table("tables")->insert([
                 "name" => $i,
             ]);
@@ -167,7 +170,7 @@ class DatabaseSeeder extends Seeder
         DB::table("workshifts")->insert([
             "active" => 1,
         ]);
-        
+
         \App\Models\Articulo::factory(10)->create();
 
         $tickets = TicketFactory::new()->times(10)->raw();
@@ -175,13 +178,13 @@ class DatabaseSeeder extends Seeder
         foreach ($tickets as $ticket) {
             $ticketToInsert = $ticket;
             unset($ticketToInsert["items"]);
-            
+
             $id = Ticket::insertGetId($ticketToInsert);
             foreach ($ticket["items"] as $item) {
                 $item["ticket_id"] = $id;
                 TicketDetail::insert($item);
             }
         }
-        
+
     }
 }

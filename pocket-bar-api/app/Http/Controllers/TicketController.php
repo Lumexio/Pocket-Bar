@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketCreateRequest;
+use App\Http\Requests\TicketListPwaRequest;
 use App\Models\Table;
 use App\Models\Workshift;
+use App\Models\User;
 use DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 
 class TicketController extends Controller
 {
@@ -36,7 +39,8 @@ class TicketController extends Controller
             $ticket = new Ticket();
             $ticket->table_id = $table->id;
             $ticket->table_name = $table->name;
-            $ticket->status = "Pedido nuevo";
+            $ticket->status = "Por entregar";
+            $ticket->client_name = $request->input('client_name');
             $ticket->user_id = auth()->user()->id;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
@@ -80,10 +84,49 @@ class TicketController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $tickets = Ticket::with(['user', 'table', 'details', "workshift", "payments"])
+        $tickets = Ticket::with(['details', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->get();
         // ->paginate(50, ['*'], 'page', $request->input('page', 1));
+
+        return response()->json([
+            "status" => 200,
+            "error" => 0,
+            "message" => "Listado de tickets",
+            "data" => $tickets
+        ], 200);
+    }
+
+    public function indexPwa(TicketListPwaRequest $request): JsonResponse
+    {
+        /**
+         * @var User
+         */
+        $user = auth()->user();
+        $actualWorkshift = Workshift::where("active", 1)->first();
+
+        $tickets = Ticket::with(['user', 'table', 'details', "workshift", "payments"])
+            ->orderBy("ticket_date", "desc")
+            ->where("status", $request->input("status"))
+            ->where("user_id", $user->id)
+            ->where("workshift_id", $actualWorkshift->id ?? null)
+            ->get()
+            ->map(function (Ticket $ticket) {
+                $data = [];
+                $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
+                $data["id"] = $ticket->id;
+                $data["table"] = $ticket->table_name;
+                $data["status"] = $ticket->status;
+                $data["client_name"] = $ticket->client_name;
+                $data["total"] = $ticket->total;
+                $data["ticket_date"] = $date->toDateString();
+                $data["count_ticket"] = $ticket->details->count();
+                $data["time"] = $date->toTimeString("minute");
+                $data["items"] = $ticket->details;
+                $data["payments"] = $ticket->payments;
+
+                return $data;
+            });
 
         return response()->json([
             "status" => 200,

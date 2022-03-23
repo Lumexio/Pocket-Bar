@@ -100,7 +100,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'name' => 'bartender',
+            'name' => 'barra',
             'email' => 'b@b.com',
             'password' => Hash::make('12345678'),
             'rol_id' => '5',
@@ -161,7 +161,7 @@ class DatabaseSeeder extends Seeder
 
         //Mesas
 
-        for ($i=1; $i < 11; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table("tables")->insert([
                 "name" => $i,
             ]);
@@ -185,6 +185,5 @@ class DatabaseSeeder extends Seeder
                 TicketDetail::insert($item);
             }
         }
-
     }
 }

@@ -64,7 +64,7 @@ Mostrar un registro no */
     Route::resource('activitylog', 'ActivitylogController');
 
 
-    Route::group([ 'prefix' => 'tickets'], function () {
+    Route::group(['prefix' => 'tickets'], function () {
         Route::get('/list', 'TicketController@index');
         Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
@@ -72,6 +72,3 @@ Mostrar un registro no */
 });
 
 Route::post('login', [UserController::class, 'login']);
-
-
-

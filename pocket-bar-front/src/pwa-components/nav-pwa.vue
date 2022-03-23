@@ -22,7 +22,11 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item v-for="(item, index) in itemss" :key="index">
+            <v-list-item
+              v-for="(item, index) in itemss"
+              :key="index"
+              :to="item.path"
+            >
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -78,12 +82,7 @@ export default {
   name: "navbarPwa",
   data() {
     return {
-      itemss: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" },
-      ],
+      itemss: [{ title: "Cerrar sessión", path: "/login" }],
       type: null,
       tabs: null,
       items: [

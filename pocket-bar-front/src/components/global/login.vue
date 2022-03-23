@@ -94,7 +94,6 @@ export default {
             .then((response) => {
               let rol = response.data.user.rol_id;
               store.commit("setrol", rol);
-              console.log(rol);
               let validado = response.request.withCredentials;
               if (validado == true) {
                 store.state.token = response.data.token;
@@ -112,6 +111,9 @@ export default {
                     break;
                   case 4:
                     router.push("/mesero").catch(() => {});
+                    break;
+                  case 5:
+                    router.push("/barra").catch(() => {});
                     break;
                   default:
                     alert("Cuanta no existe o es incorrecta");

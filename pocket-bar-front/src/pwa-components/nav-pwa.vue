@@ -44,27 +44,6 @@
             <v-tab style="padding: 2px" v-for="item in items" :key="item.id">
               {{ item.title }}
             </v-tab>
-            <!-- <v-btn
-              @click="type = 1"
-              v-bind:color="type === 1 ? 'primary' : 'normal'"
-              style="cursor: pointer; padding-left: 15px; padding-right: 0px"
-              text
-              >Por entregar</v-btn
-            >
-            <v-btn
-              @click="type = 2"
-              v-bind:color="type === 2 ? 'primary' : 'normal'"
-              style="cursor: pointer"
-              text
-              >Entregadas</v-btn
-            >
-            <v-btn
-              @click="type = 3"
-              v-bind:color="type === 3 ? 'primary' : 'normal'"
-              style="cursor: pointer"
-              text
-              >Cerradas</v-btn
-            > -->
           </v-tabs>
           <v-fab-transition>
             <v-btn small fab dark depressed bottom right>

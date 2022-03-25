@@ -34,7 +34,6 @@ export function getTickets(ticketsArray) {
   });
 }
 export function postTickets(enviar) {
-
   axios
     .post("api/ticket/", enviar, {
       headers: {

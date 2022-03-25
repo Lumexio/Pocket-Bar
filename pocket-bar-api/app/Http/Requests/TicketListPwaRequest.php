@@ -13,7 +13,6 @@ class TicketListPwaRequest extends FormRequest
      */
     public function authorize()
     {
-        dd(auth());
         return true;
     }
 

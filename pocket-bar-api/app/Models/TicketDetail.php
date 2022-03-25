@@ -12,4 +12,14 @@ class TicketDetail extends Model
     protected $table = "ticket_details_tbl";
 
     protected $fillable = ["*"];
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class, "ticket_id");
+    }
+
+    public function articulo()
+    {
+        return $this->belongsTo(Articulo::class, "articulos_tbl_id");
+    }
 }

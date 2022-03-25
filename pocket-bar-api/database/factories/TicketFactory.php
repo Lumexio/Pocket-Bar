@@ -52,6 +52,7 @@ class TicketFactory extends Factory
 
 
         $date = $this->faker->dateTimeBetween('-2 hours', 'now');
+        $statusTicket = $this->faker->randomElement(['Entregado', 'Por entregar', 'Cerrado']);
         return [
             'total' => $total,
             'subtotal' => $subtotal,
@@ -67,9 +68,9 @@ class TicketFactory extends Factory
             "min_tip" => $subtotal >= 500 ? $subtotal * 0.10 : $subtotal,
             "table_id" => $table,
             "table_name" => $table,
-            "status" => "Por entregar",
+            "status" => $statusTicket, 
             "workshift_id" => 1,
-            "closed" => 0,
+            "closed" => $statusTicket == "Cerrado" ? true : false,	
             "created_at" => $date,
             'items' => $items,
         ];

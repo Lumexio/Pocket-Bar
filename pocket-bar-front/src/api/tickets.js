@@ -55,4 +55,35 @@ export function postTickets(enviar) {
 }
 
 
-export default { getTickets, postTickets }
+export function getTicketsPWA(ticketsPWAArray, status) {
+  status = "Por entregar"
+  return new Promise((resolve, reject) => {
+    axios
+      .get("api/tickets/pwa/list", {
+        params: {
+          status: status
+        }
+      })
+      .then(response => {
+
+        const tickets = response.data.data;
+        const stats = response.status;
+        console.log("Datos ticket pwa:", tickets);
+        tickets.forEach((element) => {
+          let datos = {
+            id: element.id,
+          };
+          if (!datos) return;
+          ticketsPWAArray.push(datos);
+        });
+
+        resolve({
+          stats, ticketsPWAArray
+        });
+      })
+      .catch((error) => { console.log(error); reject(error); });
+  });
+}
+
+
+export default { getTickets, postTickets, getTicketsPWA }

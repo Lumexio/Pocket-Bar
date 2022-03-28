@@ -1,12 +1,33 @@
 <template>
   <v-expansion-panels popout>
-    <v-expansion-panel v-for="(item, index) in items" :key="index">
+    <v-expansion-panel v-for="item in ticketsPWAArray" :key="item.id">
       <v-expansion-panel-header>
         <span> Titular:{{ item.titular }} Mesa:{{ item.mesa }} </span>
-        <span>Toma de orden:{{ item.fecha_de_creacion }}</span>
+        <span>Toma de orden:{{ item.fecha }}</span>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        Subtotal:{{ item.precio_total }}
+        <v-simple-table dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Nombre</th>
+                <th class="text-left">Cantidad</th>
+                <th class="text-left">Precio</th>
+
+                <th class="text-left">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="producto in item.productos" :key="producto.id">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>{{ producto.precio }}</td>
+                <td>{{ producto.total }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        Subtotal:{{ item.total_actual }}
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -18,57 +39,6 @@ export default {
   name: "ordenesBarra",
   data: () => ({
     ticketsPWAArray: [],
-    items: [
-      {
-        id: 1,
-        estatus: "pendiente",
-        titular: "Jorge",
-        mesa: 13,
-        fecha_de_creacion: "10/03/22",
-        productos: [{ id: 1, nombre: "coca cola", precio: 20 }],
-        precio_total: 200.0,
-        precio_subtotal: 200.01,
-      },
-      {
-        id: 2,
-        estatus: "pendiente",
-        titular: "Ericka",
-        mesa: 2,
-        fecha_de_creacion: "10/03/22",
-        productos: [{ id: 1, nombre: "coca cola", precio: 20 }],
-        precio_total: 200.0,
-        precio_subtotal: 200.01,
-      },
-      {
-        id: 3,
-        estatus: "pendiente",
-        titular: "Manuel",
-        mesa: 3,
-        fecha_de_creacion: "10/03/22",
-        productos: [{ id: 1, nombre: "coca cola", precio: 20 }],
-        precio_total: 200.0,
-        precio_subtotal: 200.01,
-      },
-      {
-        id: 4,
-        estatus: "pendiente",
-        titular: "Monica",
-        mesa: 4,
-        fecha_de_creacion: "10/03/22",
-        productos: [{ id: 1, nombre: "coca cola", precio: 20 }],
-        precio_total: 200.0,
-        precio_subtotal: 200.01,
-      },
-      {
-        id: 5,
-        titular: "Diana",
-        mesa: 5,
-        fecha_de_creacion: "10/03/22",
-        productos: [{ id: 1, nombre: "coca cola", precio: 20 }],
-        precio_total: 200.0,
-        precio_subtotal: 200.01,
-      },
-    ],
   }),
   mounted() {
     getTicketsPWA(this.ticketsPWAArray);

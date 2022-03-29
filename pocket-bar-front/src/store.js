@@ -12,6 +12,7 @@ const getDefaultState = () => {
   token: null,
   recharge: 0,
   rol: null,
+  status: "Por entregar",
   notiLike: null,
   notiDanger: null,
  };
@@ -30,6 +31,7 @@ export default new Vuex.Store({
   hasrol(state) { return state.rol },
   hassuccess(state) { return state.notiLike },
   hasdanger(state) { return state.notiDanger },
+  hasstatus(state) { return state.status },
  },
 
  mutations: {
@@ -43,6 +45,7 @@ export default new Vuex.Store({
   setrol(state, payload) { state.rol = payload },
   setsuccess(state, payload) { state.notiLike = payload },
   setdanger(state, payload) { state.notiDanger = payload },
+  setstatus(state, payload) { state.status = payload },
   RESET: state => {
    Object.assign(state, getDefaultState());
   }
@@ -57,6 +60,9 @@ export default new Vuex.Store({
   },
   setsuccess({ commit }) {
    commit('setsuccess')
+  },
+  setstatus({ commit }) {
+   commit('setstatus')
   },
   login: ({ commit, dispatch }, { token }) => {
 

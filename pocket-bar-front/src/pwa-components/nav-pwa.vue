@@ -42,7 +42,9 @@
             left
           >
             <v-tab style="padding: 2px" v-for="item in items" :key="item.id">
-              {{ item.title }}
+              <v-btn @click="statuschange(item.status)" text>
+                {{ item.title }}</v-btn
+              >
             </v-tab>
           </v-tabs>
           <v-fab-transition>
@@ -57,6 +59,7 @@
 </template>
 
 <script>
+import store from "@/store";
 export default {
   name: "navbarPwa",
   data() {
@@ -64,12 +67,20 @@ export default {
       itemss: [{ title: "Cerrar sessión", path: "/login" }],
       type: null,
       tabs: null,
+
       items: [
-        { id: 1, title: "Por entregar" },
-        { id: 2, title: "Entregadas" },
-        { id: 3, title: "Cerradas" },
+        { id: 1, title: "Por entregar", status: "Por entregar" },
+        { id: 2, title: "Entregadas", status: "Entregado" },
+        { id: 3, title: "Cerradas", status: "Cerrado" },
       ],
     };
+  },
+  methods: {
+    statuschange(title) {
+      store.commit("setstatus", title);
+      store.commit("increment", 1);
+      console.log("En nav:", store.getters.hasstatus);
+    },
   },
 };
 </script>

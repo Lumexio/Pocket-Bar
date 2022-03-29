@@ -56,7 +56,8 @@ export function postTickets(enviar) {
 
 
 export function getTicketsPWA(ticketsPWAArray, status) {
-  status = "Por entregar"
+
+  console.log("Datos pwa api:", status);
   return new Promise((resolve, reject) => {
     axios
       .get("api/tickets/pwa/list", {
@@ -81,7 +82,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
           if (!datos) return;
           ticketsPWAArray.push(datos);
         });
-        console.log("Datos ticket pwa:", ticketsPWAArray);
+
 
         resolve({
           stats, ticketsPWAArray

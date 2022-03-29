@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-expansion-panels popout>
     <v-expansion-panel v-for="item in ticketsPWAArray" :key="item.id">
       <v-expansion-panel-header>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import store from "@/store";
 import { getTicketsPWA } from "@/api/tickets.js";
 export default {
   name: "ordenesBarra",
@@ -41,7 +42,7 @@ export default {
     ticketsPWAArray: [],
   }),
   mounted() {
-    getTicketsPWA(this.ticketsPWAArray);
+    getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
   },
 };
 </script>

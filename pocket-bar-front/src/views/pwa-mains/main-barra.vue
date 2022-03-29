@@ -1,9 +1,9 @@
 <template>
-  <div><ordenesBarras /></div>
+  <div><ordenesBarras :key="count" /></div>
 </template>
 
 <script>
-//import store from "@/store";
+import store from "@/store";
 
 import ordenesBarras from "@/pwa-components/tables/ordenes-barras.vue";
 export default {
@@ -14,9 +14,12 @@ export default {
   created() {
     /*para ejecutar lo que yo quiera automaticamente*/
   },
-  //  count() {
-  //   return store.getters.counter;
-  // },
+  computed: {
+    count() {
+      return store.getters.counter;
+    },
+  },
+
   // hasrol() {
   //   return store.getters.hasrol;
   // },

@@ -1,22 +1,60 @@
-<template>
+<template >
   <v-expansion-panels popout>
-    <v-expansion-panel v-for="(item, i) in 12" :key="i">
-      <v-expansion-panel-header>Item </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
+    <v-expansion-panel v-for="item in ticketsPWAArray" :key="item.id">
+      <v-expansion-panel-header>
+        <span>
+          <span> <b>Titular: </b>{{ item.titular }}</span>
+          <br />
+          <span><b>Mesa: </b>{{ item.mesa }}</span>
+          <br />
+          <span> <b>Fecha: </b>{{ item.fecha }}</span>
+        </span>
+      </v-expansion-panel-header>
+      <v-expansion-panel-content class="pa-0">
+        <v-simple-table dense calculate-widths>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Nombre</th>
+                <th class="text-left">Cantidad</th>
+                <th class="text-left">Precio</th>
+
+                <th class="text-left">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="producto in item.productos" :key="producto.id">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>{{ producto.precio }}</td>
+                <td>{{ producto.total }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        Subtotal:{{ item.total_actual }}
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
 <script>
+import store from "@/store";
+import { getTicketsPWA } from "@/api/tickets.js";
 export default {
-  name: "ordenesMesero",
+  name: "ordenesBarra",
+  data: () => ({
+    ticketsPWAArray: [],
+  }),
+  mounted() {
+    getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
+  },
 };
 </script>
 
-<style>
+<style scoped>
+.row {
+  display: flex;
+  flex-direction: row;
+}
 </style>

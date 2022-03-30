@@ -22,12 +22,10 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item
-              v-for="(item, index) in itemss"
-              :key="index"
-              :to="item.path"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item v-for="item in itemss" :key="item.id" :to="item.path">
+              <v-list-item-title v-on="hasstatus == item.status">{{
+                item.title
+              }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -79,7 +77,11 @@ export default {
     statuschange(title) {
       store.commit("setstatus", title);
       store.commit("increment", 1);
-      console.log("En nav:", store.getters.hasstatus);
+    },
+  },
+  computed: {
+    hasstatus() {
+      return store.getters.hasstatus;
     },
   },
 };

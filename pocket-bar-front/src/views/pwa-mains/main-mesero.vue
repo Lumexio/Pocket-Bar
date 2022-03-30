@@ -1,9 +1,9 @@
 <template>
-  <div><ordenes-meseros /></div>
+  <div><ordenes-meseros :key="count" /></div>
 </template>
 
 <script>
-//import store from "@/store";
+import store from "@/store";
 
 import OrdenesMeseros from "../../pwa-components/tables/ordenes-meseros.vue";
 export default {
@@ -14,12 +14,11 @@ export default {
   created() {
     /*para ejecutar lo que yo quiera automaticamente*/
   },
-  //  count() {
-  //   return store.getters.counter;
-  // },
-  // hasrol() {
-  //   return store.getters.hasrol;
-  // },
+  computed: {
+    count() {
+      return store.getters.counter;
+    },
+  },
 };
 </script>
 

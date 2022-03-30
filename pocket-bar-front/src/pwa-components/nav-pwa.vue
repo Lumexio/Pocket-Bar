@@ -46,25 +46,39 @@
             </v-tab>
           </v-tabs>
           <v-fab-transition>
-            <v-btn small fab dark depressed bottom right>
+            <v-btn
+              small
+              fab
+              dark
+              depressed
+              bottom
+              right
+              @click="dialogorden = true"
+            >
               <v-icon icon>mdi-plus</v-icon>
             </v-btn>
           </v-fab-transition>
         </template>
       </v-toolbar>
     </v-card>
+    <tomarorden :dialogorden.sync="dialogorden" />
   </nav>
 </template>
 
 <script>
+import tomarorden from "@/pwa-components/forms/crear-orden.vue";
 import store from "@/store";
 export default {
   name: "navbarPwa",
+  components: {
+    tomarorden,
+  },
   data() {
     return {
       itemss: [{ title: "Cerrar sessión", path: "/login" }],
       type: null,
       tabs: null,
+      dialogorden: false,
 
       items: [
         { id: 1, title: "Por entregar", status: "Por entregar" },

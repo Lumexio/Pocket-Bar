@@ -56,8 +56,6 @@ export function postTickets(enviar) {
 
 
 export function getTicketsPWA(ticketsPWAArray, status) {
-
-  console.log("Datos pwa api:", status);
   return new Promise((resolve, reject) => {
     axios
       .get("api/tickets/pwa/list", {

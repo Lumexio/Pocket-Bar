@@ -17,6 +17,7 @@ class CreateArticulosTable extends Migration
             $table->id();
             $table->string('nombre_articulo');
             $table->integer('cantidad_articulo');
+            $table->decimal('precio_articulo', 10, 2)->nullable('NULL');
             $table->longText('descripcion_articulo')->nullable('NULL');
             $table->foreignId('categoria_id')->nullable('NULL')->references('id')->on('categorias_tbl');
             $table->foreignId('marca_id')->nullable('NULL')->references('id')->on('marcas_tbl');

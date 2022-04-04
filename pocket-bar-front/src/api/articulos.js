@@ -12,12 +12,14 @@ export function getArticulos(articulosArray) {
       .then((response) => {
         const articulos = response.data;
         const stats = response.status;
+        console.log("Articulos:", articulos);
         articulos.forEach((element) => {
           let datos = {
             id: element.id,
             nombre_articulo: element.nombre_articulo,
             cantidad_articulo: element.cantidad_articulo,
             descripcion_articulo: element.descripcion_articulo, //pendiente
+            precio_articulo: element.precio_articulo, //pendiente
             nombre_categoria: element.nombre_categoria,
             nombre_tipo: element.nombre_tipo,
             nombre_marca: element.nombre_marca,

@@ -73,7 +73,7 @@
               <template v-slot:default="props">
                 <v-row>
                   <v-col v-for="item in props.items" :key="item.name" cols="6">
-                    <v-card>
+                    <v-card v-on:click.prevent>
                       <v-img
                         v-bind:lazy-src="item.foto_articulo"
                         max-height="500"

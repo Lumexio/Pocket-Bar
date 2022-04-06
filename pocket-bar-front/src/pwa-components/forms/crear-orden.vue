@@ -74,6 +74,12 @@
                 <v-row>
                   <v-col v-for="item in props.items" :key="item.name" cols="6">
                     <v-card>
+                      <v-img
+                        v-bind:lazy-src="item.foto_articulo"
+                        max-height="500"
+                        max-width="600"
+                        v-bind:src="item.foto_articulo"
+                      ></v-img>
                       <v-card-title class="subheading font-weight-bold">
                         {{ item.nombre_articulo }}
                       </v-card-title>

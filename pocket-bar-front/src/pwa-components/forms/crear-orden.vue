@@ -10,23 +10,34 @@
         <v-btn icon dark @click="close()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
+
         <v-toolbar-title>Nueva orden</v-toolbar-title>
+
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark text @click="close()"> Procesar </v-btn>
+          <v-tab>
+            <v-badge
+              bottom
+              left
+              overlap
+              color="green"
+              v-if="countproductos != 0"
+              :content="countproductos"
+            >
+            </v-badge>
+          </v-tab>
         </v-toolbar-items>
       </v-toolbar>
       <v-stepper fill-height v-model="e6" editable>
         <v-stepper-items>
           <v-stepper-header>
             <v-stepper-step :complete="e6 > 1" step="1">
-              Select an app
-              <small>Summarize if needed</small>
+              Seleccionar productos
             </v-stepper-step>
+
             <v-divider></v-divider>
-            <v-stepper-step step="2">
-              Configure analytics for this app
-            </v-stepper-step>
+
+            <v-stepper-step step="2"> Lista de productos </v-stepper-step>
           </v-stepper-header>
 
           <v-stepper-content class="pa-0" step="1">
@@ -73,7 +84,7 @@
               <template v-slot:default="props">
                 <v-row>
                   <v-col v-for="item in props.items" :key="item.name" cols="6">
-                    <v-card v-on:click.prevent>
+                    <v-card @click="cajaProductos(item)">
                       <v-img
                         v-bind:lazy-src="item.foto_articulo"
                         max-height="500"
@@ -111,11 +122,17 @@
           </v-stepper-content>
 
           <v-stepper-content step="2">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            ></v-card>
+            <v-card class="ma-6" v-for="item in pedidoArray" :key="item.id">
+              <v-row
+                ><v-col
+                  ><span>{{ item.nombre_articulo }}</span></v-col
+                ><v-spacer></v-spacer
+                ><v-col
+                  ><span>{{ item.precio_articulo }}</span></v-col
+                ></v-row
+              >
+            </v-card>
+
             <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
             <v-btn text @click="e6 = 1"> Cancel </v-btn>
           </v-stepper-content>
@@ -135,7 +152,8 @@ export default {
   data() {
     return {
       dialog: false,
-
+      pedidoArray: [],
+      countproductos: 0,
       e6: 1,
       steps: 2,
       itemsPerPageArray: [4, 8, 12],
@@ -263,6 +281,11 @@ export default {
   methods: {
     close() {
       this.$emit("update:dialogorden", false);
+    },
+    cajaProductos(producto) {
+      this.pedidoArray.push(producto);
+      this.countproductos = this.pedidoArray.length;
+      console.log("Pedido:", this.pedidoArray);
     },
     nextStep(n) {
       if (n === this.steps) {

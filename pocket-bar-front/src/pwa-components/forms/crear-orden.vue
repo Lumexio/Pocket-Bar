@@ -122,13 +122,22 @@
           </v-stepper-content>
 
           <v-stepper-content step="2">
-            <v-card class="ma-6" v-for="item in pedidoArray" :key="item.id">
+            <v-card
+              class="ma-6"
+              v-for="(item, index) in pedidoArray"
+              :key="index"
+            >
               <v-row
                 ><v-col
                   ><span>{{ item.nombre_articulo }}</span></v-col
                 ><v-spacer></v-spacer
                 ><v-col
                   ><span>{{ item.precio_articulo }}</span></v-col
+                >
+                <v-col>
+                  <v-btn icon @click="deleteProduct(index)">
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn></v-col
                 ></v-row
               >
             </v-card>
@@ -279,6 +288,11 @@ export default {
     };
   },
   methods: {
+    deleteProduct(producto) {
+      this.countproductos -= 1;
+      this.pedidoArray.splice(producto, 1);
+      console.log("Eliminando producto:", this.pedidoArray);
+    },
     close() {
       this.$emit("update:dialogorden", false);
     },

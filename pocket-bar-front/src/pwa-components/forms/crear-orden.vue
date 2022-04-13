@@ -6,7 +6,7 @@
     transition="dialog-bottom-transition"
   >
     <v-card>
-      <v-toolbar dark color="primary">
+      <v-toolbar dark>
         <v-btn icon dark @click="close()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -30,7 +30,7 @@
       </v-toolbar>
       <v-stepper fill-height v-model="e6" editable>
         <v-stepper-items>
-          <v-stepper-header>
+          <v-stepper-header style="box-shadow: none">
             <v-stepper-step :complete="e6 > 1" step="1">
               Seleccionar productos
             </v-stepper-step>
@@ -41,6 +41,18 @@
           </v-stepper-header>
 
           <v-stepper-content class="pa-0" step="1">
+            <v-btn dark v-if="pedidoArray.length > 0" @click="cancelarPedido()">
+              cancelar pedido
+            </v-btn>
+            <v-btn
+              dark
+              v-if="pedidoArray.length > 0"
+              class="boton"
+              color="primary"
+              @click="e6 = 2"
+            >
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
             <v-data-iterator
               :items="articulosArray"
               :items-per-page.sync="itemsPerPage"
@@ -117,8 +129,6 @@
               </template>
             </v-data-iterator>
             <v-spacer class="pb-6"></v-spacer>
-            <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
-            <v-btn text> Cancel </v-btn>
           </v-stepper-content>
 
           <v-stepper-content step="2">
@@ -141,9 +151,12 @@
                 ></v-row
               >
             </v-card>
-
-            <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
-            <v-btn text @click="e6 = 1"> Cancel </v-btn>
+            <v-btn text @click="e6 = 1">
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn dark color="red" class="boton-prcess" @click="e6 = 2">
+              Procesar pedido
+            </v-btn>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -288,6 +301,9 @@ export default {
     };
   },
   methods: {
+    cancelarPedido() {
+      return (this.pedidoArray = []), (this.countproductos = 0);
+    },
     deleteProduct(producto) {
       this.countproductos -= 1;
       this.pedidoArray.splice(producto, 1);
@@ -350,5 +366,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.boton {
+  left: 10%;
+  right: 0%;
+}
+.boton-prcess {
+  left: 16%;
+  right: 0%;
+}
 </style>

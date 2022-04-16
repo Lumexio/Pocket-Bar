@@ -34,12 +34,10 @@ export function getTickets(ticketsArray) {
   });
 }
 export function postTickets(enviar) {
+
+  console.log("Creando ticket:", enviar);
   axios
-    .post("api/ticket/", enviar, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    .post("api/tickets/create", enviar)
     .then((response) => {
 
       if (response.statusText === "Created") {

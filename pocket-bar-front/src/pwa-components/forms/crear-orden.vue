@@ -132,6 +132,12 @@
           </v-stepper-content>
 
           <v-stepper-content step="2">
+            <v-text-field
+              label="Titular"
+              class="ma-2"
+              v-model="titular"
+              outlined
+            ></v-text-field>
             <v-card
               class="ma-6"
               v-for="(item, index) in pedidoArray"
@@ -150,11 +156,19 @@
                   </v-btn></v-col
                 ></v-row
               >
+              <v-row :key="refresher"
+                ><v-btn text @click="sumaresta('resta', item, index)"
+                  ><v-icon>mdi-chevron-left</v-icon></v-btn
+                ><span class="ma-2">{{ item.piezas }} </span
+                ><v-btn text @click="sumaresta('suma', item, index)"
+                  ><v-icon>mdi-chevron-right</v-icon></v-btn
+                ></v-row
+              >
             </v-card>
             <v-btn text @click="e6 = 1">
               <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
-            <v-btn dark color="red" class="boton-prcess" @click="e6 = 2">
+            <v-btn dark color="red" class="boton-prcess" @click="crearTicket()">
               Procesar pedido
             </v-btn>
           </v-stepper-content>
@@ -166,6 +180,7 @@
 
 <script>
 import { getArticulos } from "@/api/articulos.js";
+import { postTickets } from "@/api/tickets.js";
 import store from "@/store";
 export default {
   props: {
@@ -176,6 +191,8 @@ export default {
       dialog: false,
       pedidoArray: [],
       countproductos: 0,
+      refresher: 0,
+      titular: "",
       e6: 1,
       steps: 2,
       itemsPerPageArray: [4, 8, 12],
@@ -301,21 +318,40 @@ export default {
     };
   },
   methods: {
+    crearTicket() {
+      let mesa = 2;
+      var presend = {
+        productos: this.pedidoArray,
+        titular: this.titular,
+        mesa: mesa,
+      };
+
+      postTickets(presend);
+    },
+    sumaresta(operacion, producto, index) {
+      if (operacion == "suma") {
+        producto.piezas += 1;
+        this.refresher += 1;
+      } else if (operacion == "resta") {
+        producto.piezas -= 1;
+        this.refresher -= 1;
+      }
+      this.pedidoArray[index] = producto;
+    },
     cancelarPedido() {
       return (this.pedidoArray = []), (this.countproductos = 0);
     },
     deleteProduct(producto) {
       this.countproductos -= 1;
       this.pedidoArray.splice(producto, 1);
-      console.log("Eliminando producto:", this.pedidoArray);
     },
     close() {
       this.$emit("update:dialogorden", false);
     },
     cajaProductos(producto) {
+      producto.piezas = 1;
       this.pedidoArray.push(producto);
       this.countproductos = this.pedidoArray.length;
-      console.log("Pedido:", this.pedidoArray);
     },
     nextStep(n) {
       if (n === this.steps) {

@@ -12,7 +12,6 @@ export function getArticulos(articulosArray) {
       .then((response) => {
         const articulos = response.data;
         const stats = response.status;
-        console.log("Articulos:", articulos);
         articulos.forEach((element) => {
           let datos = {
             id: element.id,

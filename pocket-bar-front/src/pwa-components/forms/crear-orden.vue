@@ -107,7 +107,7 @@
                         {{ item.nombre_articulo }}
                       </v-card-title>
                       <v-card-text class="text font-weight-light">
-                        {{ item.precio_articulo }}
+                        ${{ item.precio_articulo }}
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -131,7 +131,7 @@
             <v-spacer class="pb-6"></v-spacer>
           </v-stepper-content>
 
-          <v-stepper-content step="2">
+          <v-stepper-content class="pa-0" step="2">
             <v-text-field
               label="Titular"
               class="ma-2"
@@ -139,16 +139,17 @@
               outlined
             ></v-text-field>
             <v-card
-              class="ma-6"
+              class="mt-4 mb-4"
+              style="width: 100%"
               v-for="(item, index) in pedidoArray"
               :key="index"
             >
               <v-row
-                ><v-col
+                ><v-col cols="6"
                   ><span>{{ item.nombre_articulo }}</span></v-col
                 ><v-spacer></v-spacer
                 ><v-col
-                  ><span>{{ item.precio_articulo }}</span></v-col
+                  ><span>${{ item.precio_articulo }}</span></v-col
                 >
                 <v-col>
                   <v-btn icon @click="deleteProduct(index)">
@@ -156,19 +157,30 @@
                   </v-btn></v-col
                 ></v-row
               >
-              <v-row :key="refresher"
-                ><v-btn text @click="sumaresta('resta', item, index)"
+              <v-card-actions :key="refresher" class="arrowscounter">
+                <v-btn
+                  v-if="item.piezas > 1"
+                  text
+                  @click="sumaresta('resta', item, index)"
                   ><v-icon>mdi-chevron-left</v-icon></v-btn
                 ><span class="ma-2">{{ item.piezas }} </span
                 ><v-btn text @click="sumaresta('suma', item, index)"
                   ><v-icon>mdi-chevron-right</v-icon></v-btn
-                ></v-row
-              >
+                >
+              </v-card-actions>
             </v-card>
-            <v-btn text @click="e6 = 1">
+            <div class="pa-5">
+              <b>Total:</b><span> ${{ totalPedido }}</span>
+            </div>
+            <v-btn text @click="e6 = 1" class="mb-4">
               <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
-            <v-btn dark color="red" class="boton-prcess" @click="crearTicket()">
+            <v-btn
+              dark
+              color="red"
+              class="boton-prcess mb-4"
+              @click="crearTicket()"
+            >
               Procesar pedido
             </v-btn>
           </v-stepper-content>
@@ -193,6 +205,7 @@ export default {
       countproductos: 0,
       refresher: 0,
       titular: "",
+      totalPedido: 0,
       e6: 1,
       steps: 2,
       itemsPerPageArray: [4, 8, 12],
@@ -213,6 +226,7 @@ export default {
         "Iron",
       ],
       articulosArray: [],
+      ticketParaenviar: [],
       items: [
         {
           name: "Frozen Yogurt",
@@ -332,18 +346,30 @@ export default {
       if (operacion == "suma") {
         producto.piezas += 1;
         this.refresher += 1;
+        this.pedidoArray[index] = producto;
+        this.totalPedido += parseFloat(this.pedidoArray[index].precio_articulo);
+        return this.pedidoArray;
       } else if (operacion == "resta") {
         producto.piezas -= 1;
         this.refresher -= 1;
+        this.pedidoArray[index] = producto;
+        this.totalPedido -= parseFloat(this.pedidoArray[index].precio_articulo);
+        return this.pedidoArray;
       }
-      this.pedidoArray[index] = producto;
     },
     cancelarPedido() {
-      return (this.pedidoArray = []), (this.countproductos = 0);
+      return (
+        (this.pedidoArray = []),
+        (this.countproductos = 0),
+        (this.totalPedido = 0)
+      );
     },
-    deleteProduct(producto) {
+    deleteProduct(index) {
       this.countproductos -= 1;
-      this.pedidoArray.splice(producto, 1);
+      this.totalPedido -=
+        parseFloat(this.pedidoArray[index].precio_articulo) *
+        this.pedidoArray[index].piezas;
+      this.pedidoArray.splice(index, 1);
     },
     close() {
       this.$emit("update:dialogorden", false);
@@ -352,6 +378,9 @@ export default {
       producto.piezas = 1;
       this.pedidoArray.push(producto);
       this.countproductos = this.pedidoArray.length;
+      this.totalPedido += parseFloat(producto.precio_articulo);
+
+      return this.pedidoArray, this.countproductos;
     },
     nextStep(n) {
       if (n === this.steps) {
@@ -410,5 +439,10 @@ export default {
 .boton-prcess {
   left: 16%;
   right: 0%;
+}
+.arrowscounter {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
 }
 </style>

@@ -12,21 +12,6 @@
         </v-btn>
 
         <v-toolbar-title>Nueva orden</v-toolbar-title>
-
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-tab>
-            <v-badge
-              bottom
-              left
-              overlap
-              color="green"
-              v-if="countproductos != 0"
-              :content="countproductos"
-            >
-            </v-badge>
-          </v-tab>
-        </v-toolbar-items>
       </v-toolbar>
       <v-stepper fill-height v-model="e6" editable>
         <v-stepper-items>
@@ -41,18 +26,27 @@
           </v-stepper-header>
 
           <v-stepper-content class="pa-0" step="1">
-            <v-btn dark v-if="pedidoArray.length > 0" @click="cancelarPedido()">
-              cancelar pedido
-            </v-btn>
-            <v-btn
-              dark
-              v-if="pedidoArray.length > 0"
-              class="boton"
-              color="primary"
-              @click="e6 = 2"
-            >
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
+            <div class="ma-2 buttonsproced">
+              <v-btn
+                dark
+                color="red"
+                v-if="pedidoArray.length > 0"
+                @click="cancelarPedido()"
+              >
+                limpiar
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-badge
+                overlap
+                color="green"
+                v-if="countproductos != 0"
+                :content="countproductos"
+              >
+                <v-btn dark v-if="pedidoArray.length > 0" @click="e6 = 2">
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+              </v-badge>
+            </div>
             <v-data-iterator
               :items="articulosArray"
               :items-per-page.sync="itemsPerPage"
@@ -132,6 +126,11 @@
           </v-stepper-content>
 
           <v-stepper-content class="pa-0" step="2">
+            <div class="back">
+              <v-btn dark @click="e6 = 1" class="mb-4 ml-2">
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+            </div>
             <v-text-field
               label="Titular"
               class="ma-2"
@@ -172,9 +171,7 @@
             <div class="pa-5">
               <b>Total:</b><span> ${{ totalPedido }}</span>
             </div>
-            <v-btn text @click="e6 = 1" class="mb-4">
-              <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
+
             <v-btn
               dark
               color="red"
@@ -422,6 +419,11 @@ export default {
     },
   },
   watch: {
+    pedidoArray(val) {
+      if (this.pedidoArray.length < 1) {
+        this.e6 = 1;
+      }
+    },
     steps(val) {
       if (this.e1 > val) {
         this.e1 = val;
@@ -434,7 +436,6 @@ export default {
 <style scoped>
 .boton {
   left: 10%;
-  right: 0%;
 }
 .boton-prcess {
   left: 16%;
@@ -444,5 +445,14 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: end;
+}
+.buttonsproced {
+  display: flex;
+  flex-direction: row;
+}
+.back {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 </style>

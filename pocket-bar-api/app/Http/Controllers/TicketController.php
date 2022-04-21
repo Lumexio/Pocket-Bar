@@ -17,10 +17,10 @@ class TicketController extends Controller
 {
     public function store(TicketCreateRequest $request): JsonResponse
     {
-        $items = collect($request->input('items'));
+        $items = collect($request->input('productos'));
 
         $subtotal = $items->sum(function ($item) {
-            return $item['quantity'] * $item['price'];
+            return $item['piezas'] * $item['precio_articulo'];
         });
 
         $tax = $items->sum(function ($item) {
@@ -28,7 +28,7 @@ class TicketController extends Controller
         });
 
         $discounts = $items->sum(function ($item) {
-            return $item['discount'];
+            return $item['descuento'];
         });
 
         $total = $subtotal + $tax - $discounts;
@@ -40,11 +40,11 @@ class TicketController extends Controller
             $ticket->table_id = $table->id;
             $ticket->table_name = $table->name;
             $ticket->status = "Por entregar";
-            $ticket->client_name = $request->input('client_name');
+            $ticket->client_name = $request->input('titular');
             $ticket->user_id = auth()->user()->id;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
-            $ticket->tip = $request->input('tip');
+            $ticket->tip = $request->input('tip', 0);
             $ticket->min_tip = $subtotal >= 500 ? $subtotal * 0.10 : $subtotal;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
@@ -56,13 +56,13 @@ class TicketController extends Controller
 
             foreach ($items as $item) {
                 $ticketDetail = new \App\Models\TicketDetail();
-                $ticketDetail->units = $item['quantity'];
-                $ticketDetail->unit_price = $item['price'];
+                $ticketDetail->units = $item['piezas'];
+                $ticketDetail->unit_price = $item['precio_articulo'];
                 $ticketDetail->tax = $item['tax'];
-                $ticketDetail->discounts = $item['discount'];
-                $ticketDetail->total = $item['quantity'] * $item['price'] + $item['tax'] - $item['discount'];
+                $ticketDetail->discounts = $item['descuento'];
+                $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
                 $ticketDetail->articulos_tbl_id = $item['id'];
-                $ticketDetail->articulos_img = $item["image"];
+                $ticketDetail->articulos_img = $item["foto_articulo"];
                 $ticketDetail->attended = 0;
                 $ticketDetail->ticket_id = $ticket->id;
                 throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");

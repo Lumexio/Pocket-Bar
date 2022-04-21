@@ -130,7 +130,7 @@ import axios from "axios";
 import store from "@/store";
 import { upperConverter } from "@/special/uppercases-converter.js";
 //axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export default {
   name: "tabla-usuarios",
   data: () => ({

@@ -170,7 +170,6 @@
             transition="dialog-bottom-transition"
             max-width="600"
           >
-          
             <template v-slot:default="dialogDetail">
               <v-card :key="count">
                 <v-card-text>
@@ -259,7 +258,7 @@ import {
   proveedorsync,
 } from "@/special/sync-indexitems.js";
 
-//axios.defaults.baseURL = "http://127.0.0.1:8000/";
+//axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export default {
   name: "tabla-articulos",
   data: () => ({

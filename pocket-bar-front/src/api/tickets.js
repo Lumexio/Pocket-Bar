@@ -42,8 +42,6 @@ export function postTickets(enviar) {
       if (response.status == 200) {
         store.commit("setsuccess", true);
         resp.status = 200;
-        console.log("Entro si es :", resp.status);
-
         setTimeout(function () {
           store.commit("setsuccess", null);
         }, 2000);

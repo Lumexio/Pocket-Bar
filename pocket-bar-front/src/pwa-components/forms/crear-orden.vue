@@ -89,7 +89,7 @@
 
               <template v-slot:default="props">
                 <v-row>
-                  <v-col v-for="item in props.items" :key="item.name" cols="6">
+                  <v-col v-for="item in props.items" :key="item.id" cols="6">
                     <v-card @click="cajaProductos(item)">
                       <v-img
                         v-bind:lazy-src="item.foto_articulo"
@@ -338,12 +338,11 @@ export default {
       };
       var resp = postTickets(presend);
       let t = resp.status;
-      console.log("para limpiar:", t);
+      t;
       if (t == 200) {
-        console.log("Entro para limpiar:", resp);
-
+        t;
         this.cancelarPedido();
-        store.commit("increment", 1);
+        // store.commit("increment", 1);
       }
     },
     sumaresta(operacion, producto, index) {

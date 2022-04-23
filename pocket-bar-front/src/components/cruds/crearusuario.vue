@@ -112,8 +112,8 @@ export default {
     },
     submit() {
       //this.$emit("dialogFromChild", false);
-      store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-      store.commit("setdanger", false);
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
       let enviar = {
         name: this.name,
         email: this.email,

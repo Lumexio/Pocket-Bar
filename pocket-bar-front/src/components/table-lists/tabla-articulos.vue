@@ -371,8 +371,8 @@ export default {
       .then((response) => {
         if (response.stats === 200) {
           this.cargando = false;
-          store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-          store.commit("setdanger", false);
+          store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+          store.commit("setdanger", null);
         }
       })
       .catch((e) => {

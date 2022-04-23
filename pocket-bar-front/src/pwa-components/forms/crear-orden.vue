@@ -336,8 +336,15 @@ export default {
         titular: this.titular,
         mesa: mesa,
       };
+      var resp = postTickets(presend);
+      let t = resp.status;
+      console.log("para limpiar:", t);
+      if (t == 200) {
+        console.log("Entro para limpiar:", resp);
 
-      postTickets(presend);
+        this.cancelarPedido();
+        store.commit("increment", 1);
+      }
     },
     sumaresta(operacion, producto, index) {
       if (operacion == "suma") {
@@ -355,11 +362,11 @@ export default {
       }
     },
     cancelarPedido() {
-      return (
-        (this.pedidoArray = []),
-        (this.countproductos = 0),
-        (this.totalPedido = 0)
-      );
+      this.pedidoArray = [];
+      this.countproductos = 0;
+      this.totalPedido = 0;
+      this.titular = "";
+      this.e1 = 1;
     },
     deleteProduct(index) {
       this.countproductos -= 1;
@@ -373,6 +380,8 @@ export default {
     },
     cajaProductos(producto) {
       producto.piezas = 1;
+      producto.tax = 0;
+      producto.descuento = 0;
       this.pedidoArray.push(producto);
       this.countproductos = this.pedidoArray.length;
       this.totalPedido += parseFloat(producto.precio_articulo);
@@ -401,8 +410,8 @@ export default {
       .then((response) => {
         if (response.stats === 200) {
           this.cargando = false;
-          store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-          store.commit("setdanger", false);
+          store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+          store.commit("setdanger", null);
         }
       })
       .catch((e) => {
@@ -420,6 +429,7 @@ export default {
   },
   watch: {
     pedidoArray(val) {
+      val;
       if (this.pedidoArray.length < 1) {
         this.e6 = 1;
       }

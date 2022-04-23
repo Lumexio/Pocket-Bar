@@ -64,8 +64,8 @@ export default {
     },
     submit() {
       //this.$emit("dialogFromChild", false);
-      store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-      store.commit("setdanger", false);
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
 
       const formdata = new FormData();
       formdata.append("name_rol", this.name_rol);

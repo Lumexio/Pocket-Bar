@@ -3,7 +3,7 @@ import store from "@/store";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 
-
+var resp = {};
 export function getTickets(ticketsArray) {
 
   return new Promise((resolve, reject) => {
@@ -35,14 +35,21 @@ export function getTickets(ticketsArray) {
 }
 export function postTickets(enviar) {
 
-  console.log("Creando ticket:", enviar);
   axios
     .post("api/tickets/create", enviar)
     .then((response) => {
 
-      if (response.statusText === "Created") {
+      if (response.status == 200) {
         store.commit("setsuccess", true);
+        resp.status = 200;
+        console.log("Entro si es :", resp.status);
+
+        setTimeout(function () {
+          store.commit("setsuccess", null);
+        }, 2000);
+
       }
+
     })
     .catch((e) => {
       console.log(e.message);
@@ -50,6 +57,8 @@ export function postTickets(enviar) {
         store.commit("setdanger", true);
       }
     });
+  return resp;
+
 }
 
 

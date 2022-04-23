@@ -41,44 +41,44 @@
 </template>
 
 <script>
-  import store from "@/store";
-  import { postTravesano } from "@/api/travesanos.js";
+import store from "@/store";
+import { postTravesano } from "@/api/travesanos.js";
 
-  export default {
-    name: "crearmarca",
-    props: {
-      dialogtravesaño: { default: false },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      nombre_travesano: null,
-    }),
+export default {
+  name: "crearmarca",
+  props: {
+    dialogtravesaño: { default: false },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    nombre_travesano: null,
+  }),
 
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialogtravesaño", false);
-      },
-      submit() {
-        store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-        store.commit("setdanger", false);
-        let enviar_travesaño = {
-          nombre_travesano: this.nombre_travesano,
-        };
-        const formdata = new FormData();
-        formdata.append("nombre_travesano", this.nombre_travesano);
-        postTravesano(enviar_travesaño);
-        this.clear();
-      },
-
-      clear() {
-        this.nombre_travesano = null;
-      },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialogtravesaño", false);
     },
-  };
+    submit() {
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
+      let enviar_travesaño = {
+        nombre_travesano: this.nombre_travesano,
+      };
+      const formdata = new FormData();
+      formdata.append("nombre_travesano", this.nombre_travesano);
+      postTravesano(enviar_travesaño);
+      this.clear();
+    },
+
+    clear() {
+      this.nombre_travesano = null;
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

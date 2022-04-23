@@ -12,6 +12,7 @@ use App\Models\User;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
+use App\Events\ticketCreated;
 
 class TicketController extends Controller
 {
@@ -33,7 +34,7 @@ class TicketController extends Controller
 
         $total = $subtotal + $tax - $discounts;
 
-        $table = Table::find($request->input('tableId'));
+        $table = Table::find($request->input('mesa'));
         DB::beginTransaction();
         try {
             $ticket = new Ticket();
@@ -42,12 +43,15 @@ class TicketController extends Controller
             $ticket->status = "Por entregar";
             $ticket->client_name = $request->input('titular');
             $ticket->user_id = auth()->user()->id;
+            $ticket->user_name = auth()->user()->name;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
             $ticket->tip = $request->input('tip', 0);
             $ticket->min_tip = $subtotal >= 500 ? $subtotal * 0.10 : $subtotal;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
+            $ticket->item_count = $items->count();
+            $ticket->timezone = "America/Denver";
             $ticket->total = $total;
             $ticket->workshift_id = Workshift::where("active", 1)->firstOrFail()->id;
 
@@ -60,10 +64,12 @@ class TicketController extends Controller
                 $ticketDetail->unit_price = $item['precio_articulo'];
                 $ticketDetail->tax = $item['tax'];
                 $ticketDetail->discounts = $item['descuento'];
+                $ticketDetail->subtotal = $item['piezas'] * $item['precio_articulo'];
+                $ticketDetail->waiter_id = auth()->user()->id;
                 $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
                 $ticketDetail->articulos_tbl_id = $item['id'];
                 $ticketDetail->articulos_img = $item["foto_articulo"];
-                $ticketDetail->attended = 0;
+                $ticketDetail->status = "Solicitado";
                 $ticketDetail->ticket_id = $ticket->id;
                 throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
             }
@@ -72,7 +78,7 @@ class TicketController extends Controller
             DB::rollBack();
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
         }
-
+        ticketCreated::dispatch($ticket);
         return response()->json([
             "status" => 200,
             "error" => 0,
@@ -122,17 +128,17 @@ class TicketController extends Controller
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");
-                $data["productos"] = $ticket->details->map(function ($item){
-                   return [
-                       "id" => $item->id,
-                       "nombre" => $item->articulo->nombre_articulo,
-                       "cantidad" => $item->units,
-                       "precio" => $item->unit_price,
-                       "subtotal" => $item->subtotal,
-                       "total" => $item->total,
-                       "descuento" => $item->discounts,
-                       "iva" => $item->tax,
-                   ];
+                $data["productos"] = $ticket->details->map(function ($item) {
+                    return [
+                        "id" => $item->id,
+                        "nombre" => $item->articulo->nombre_articulo,
+                        "cantidad" => $item->units,
+                        "precio" => $item->unit_price,
+                        "subtotal" => $item->subtotal,
+                        "total" => $item->total,
+                        "descuento" => $item->discounts,
+                        "iva" => $item->tax,
+                    ];
                 });
                 $data["pagos"] = $ticket->payments ?? null;
 

@@ -56,45 +56,45 @@
 </template>
 
 <script>
-  import { postMarcas } from "@/api/marcas.js";
-  import store from "@/store";
-  import { upperConverter } from "@/special/uppercases-converter.js";
-  export default {
-    name: "crearmarca",
-    props: {
-      dialogmarca: { default: false },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      nombre_marca: "",
-      descripcion_marca: "",
-    }),
+import { postMarcas } from "@/api/marcas.js";
+import store from "@/store";
+import { upperConverter } from "@/special/uppercases-converter.js";
+export default {
+  name: "crearmarca",
+  props: {
+    dialogmarca: { default: false },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    nombre_marca: "",
+    descripcion_marca: "",
+  }),
 
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialogmarca", false);
-      },
-      submit() {
-        //this.$emit("dialogFromChild", false);
-        store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-        store.commit("setdanger", false);
-
-        this.nombre_marca = upperConverter(this.nombre_marca);
-        const formdata = new FormData();
-        formdata.append("nombre_marca", this.nombre_marca);
-        formdata.append("descripcion_marca", this.descripcion_marca);
-        postMarcas(formdata);
-        this.clear();
-      },
-      clear() {
-        (this.nombre_marca = ""), (this.descripcion_marca = "");
-      },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialogmarca", false);
     },
-  };
+    submit() {
+      //this.$emit("dialogFromChild", false);
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
+
+      this.nombre_marca = upperConverter(this.nombre_marca);
+      const formdata = new FormData();
+      formdata.append("nombre_marca", this.nombre_marca);
+      formdata.append("descripcion_marca", this.descripcion_marca);
+      postMarcas(formdata);
+      this.clear();
+    },
+    clear() {
+      (this.nombre_marca = ""), (this.descripcion_marca = "");
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

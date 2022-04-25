@@ -90,7 +90,7 @@
               <template v-slot:default="props">
                 <v-row>
                   <v-col v-for="item in props.items" :key="item.id" cols="6">
-                    <v-card @click="cajaProductos(item)">
+                    <v-card :dark="cambio(item)" @click="cajaProductos(item)">
                       <v-img
                         v-bind:lazy-src="item.foto_articulo"
                         max-height="500"
@@ -377,15 +377,22 @@ export default {
     close() {
       this.$emit("update:dialogorden", false);
     },
+    cambio(producto) {
+      if (this.pedidoArray.includes(producto) === true) {
+        return true;
+      }
+    },
     cajaProductos(producto) {
-      producto.piezas = 1;
-      producto.tax = 0;
-      producto.descuento = 0;
-      this.pedidoArray.push(producto);
-      this.countproductos = this.pedidoArray.length;
-      this.totalPedido += parseFloat(producto.precio_articulo);
+      if (this.pedidoArray.includes(producto) === false) {
+        producto.piezas = 1;
+        producto.tax = 0;
+        producto.descuento = 0;
+        this.pedidoArray.push(producto);
+        this.countproductos = this.pedidoArray.length;
+        this.totalPedido += parseFloat(producto.precio_articulo);
 
-      return this.pedidoArray, this.countproductos;
+        return this.pedidoArray, this.countproductos;
+      }
     },
     nextStep(n) {
       if (n === this.steps) {

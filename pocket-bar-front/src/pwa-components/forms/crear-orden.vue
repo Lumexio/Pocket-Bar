@@ -197,6 +197,7 @@ export default {
   } /*data de llegado de componente padre creacion*/,
   data() {
     return {
+      resp: null,
       dialog: false,
       pedidoArray: [],
       countproductos: 0,
@@ -336,13 +337,13 @@ export default {
         titular: this.titular,
         mesa: mesa,
       };
-      var resp = postTickets(presend);
-      let t = resp.status;
-      t;
-      if (t == 200) {
-        t;
+      postTickets(presend);
+      if (store.getters.hasstatcode == 200) {
+        console.log("Entro");
         this.cancelarPedido();
         // store.commit("increment", 1);
+      } else {
+        this.e6 = 1;
       }
     },
     sumaresta(operacion, producto, index) {
@@ -361,11 +362,14 @@ export default {
       }
     },
     cancelarPedido() {
-      this.pedidoArray = [];
-      this.countproductos = 0;
-      this.totalPedido = 0;
-      this.titular = "";
-      this.e1 = 1;
+      return (
+        (this.pedidoArray = []),
+        (this.countproductos = 0),
+        (this.totalPedido = 0),
+        (this.titular = ""),
+        (this.e1 = 1),
+        store.commit("setstatcode", null)
+      );
     },
     deleteProduct(index) {
       this.countproductos -= 1;

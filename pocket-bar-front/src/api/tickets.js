@@ -3,7 +3,7 @@ import store from "@/store";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 
-var resp = {};
+
 export function getTickets(ticketsArray) {
 
   return new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ export function postTickets(enviar) {
 
       if (response.status == 200) {
         store.commit("setsuccess", true);
-        resp.status = 200;
+        store.commit("setstatcode", 200);
         setTimeout(function () {
           store.commit("setsuccess", null);
         }, 2000);
@@ -55,7 +55,6 @@ export function postTickets(enviar) {
         store.commit("setdanger", true);
       }
     });
-  return resp;
 
 }
 

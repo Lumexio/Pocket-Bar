@@ -16,7 +16,6 @@ export default {
     navbar,
     //ButtonCreate,
   },
-  data: () => ({}),
 };
 </script>
  

@@ -96,7 +96,7 @@ export default {
               store.commit("setrol", rol);
               let validado = response.request.withCredentials;
               if (validado == true) {
-                store.state.token = response.data.token;
+                store.commit("SET_TOKEN", response.data.token);
                 let token = store.state.token;
                 store.dispatch("login", { token });
                 switch (rol) {

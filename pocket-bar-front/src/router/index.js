@@ -28,6 +28,17 @@ const routes = [
     meta: {
       layout: 'auth',
       name: 'auth'
+    }, beforeEnter(to, from, next) {
+
+      if ((to.path === '/login' || to.path === '/') && store.state.token === null) {
+
+        next();
+      } else if (store.state.token != null && to.path === '/login') {
+
+        next({
+          path: from.path
+        });
+      }
     }
   },
   {
@@ -357,6 +368,7 @@ const routes = [
       name: 'pwa'
     },
     beforeEnter: (to, from, next) => {
+
       let validado = to.matched.some(record => record.meta.authenticated);
       if (store.state.token) {
         next();

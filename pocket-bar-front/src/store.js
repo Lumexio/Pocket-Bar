@@ -30,6 +30,7 @@ export default new Vuex.Store({
   },
   counter(state) { return state.recharge },
   hasrol(state) { return state.rol },
+  hastoken(state) { return state.token },
   hassuccess(state) { return state.notiLike },
   hasdanger(state) { return state.notiDanger },
   hasstatus(state) { return state.status },

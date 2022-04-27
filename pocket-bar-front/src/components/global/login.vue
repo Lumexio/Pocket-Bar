@@ -81,10 +81,12 @@ export default {
   methods: {
     async login() {
       this.$v.$touch();
+      this.name = this.name.trim();
       let enviar = {
         name: this.name,
         password: this.password,
       };
+      console.log(enviar);
       axios
         .get("sanctum/csrf-cookie")
         .then((response) => {

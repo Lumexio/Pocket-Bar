@@ -29,8 +29,9 @@ const routes = [
       layout: 'auth',
       name: 'auth'
     }, beforeEnter(to, from, next) {
-
-      if ((to.path === '/login' || to.path === '/') && store.state.token === null) {
+      /*if (store.state.token != null && (to.path === '/login' && from.path === '/')) {
+        next({});
+      } else*/ if ((to.path === '/login' || to.path === '/') && store.state.token === null) {
 
         next();
       } else if (store.state.token != null && to.path === '/login') {
@@ -39,6 +40,7 @@ const routes = [
           path: from.path
         });
       }
+
     }
   },
   {

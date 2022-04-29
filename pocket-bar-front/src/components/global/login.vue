@@ -86,7 +86,7 @@ export default {
         name: this.name,
         password: this.password,
       };
-      console.log(enviar);
+
       axios
         .get("sanctum/csrf-cookie")
         .then((response) => {

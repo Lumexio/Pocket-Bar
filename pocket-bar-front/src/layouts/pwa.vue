@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
     <navbar />
-    <v-container>
+    <v-container class="pa-0">
       <router-view /><!--Renderisa cualquier vista que este activa-->
     </v-container>
   </v-app>

@@ -1,5 +1,5 @@
 <template>
-  <div><ordenes-meseros :key="count" /></div>
+  <ordenes-meseros :key="count" />
 </template>
 
 <script>
@@ -21,9 +21,5 @@ export default {
   },
 };
 </script>
-
 <style scoped>
-.size-table {
-  max-width: 90%;
-}
 </style>

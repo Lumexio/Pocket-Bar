@@ -1,6 +1,10 @@
 <template >
-  <v-expansion-panels popout>
-    <v-expansion-panel v-for="item in ticketsPWAArray" :key="item.id">
+  <v-expansion-panels class="sizes" popout>
+    <v-expansion-panel
+      class="sizes"
+      v-for="item in ticketsPWAArray"
+      :key="item.id"
+    >
       <v-expansion-panel-header>
         <span>
           <span> <b>Titular: </b>{{ item.titular }}</span>
@@ -10,7 +14,7 @@
           <span> <b>Fecha: </b>{{ item.fecha }}</span>
         </span>
       </v-expansion-panel-header>
-      <v-expansion-panel-content class="pa-0">
+      <v-expansion-panel-content class="expansion-panel">
         <v-simple-table dense calculate-widths>
           <template v-slot:default>
             <thead>
@@ -24,10 +28,10 @@
             </thead>
             <tbody>
               <tr v-for="producto in item.productos" :key="producto.id">
-                <td>{{ producto.nombre }}</td>
-                <td>{{ producto.cantidad }}</td>
-                <td>{{ producto.precio }}</td>
-                <td>{{ producto.total }}</td>
+                <td class="text-left">{{ producto.nombre }}</td>
+                <td class="text-left">{{ producto.cantidad }}</td>
+                <td class="text-left">{{ producto.precio }}</td>
+                <td class="text-left">{{ producto.total }}</td>
               </tr>
             </tbody>
           </template>
@@ -59,5 +63,8 @@ export default {
 .row {
   display: flex;
   flex-direction: row;
+}
+.sizes {
+  max-width: calc(100% - 0px) !important;
 }
 </style>

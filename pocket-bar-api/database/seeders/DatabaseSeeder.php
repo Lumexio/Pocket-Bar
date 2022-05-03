@@ -106,12 +106,7 @@ class DatabaseSeeder extends Seeder
             'rol_id' => '5',
         ]);
 
-        DB::table('users')->insert([
-            'name' => 'bartender1',
-            'email' => 'b1@b.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '5',
-        ]);
+
 
         /**
          * [Insersiones a categorias]

@@ -34,11 +34,47 @@ const routes = [
       } else*/ if ((to.path === '/login' || to.path === '/') && store.state.token === null) {
 
         next();
-      } else if (store.state.token != null && to.path === '/login') {
+      } else if (store.state.token != null && (to.path === '/login' || to.path === '/')) {
 
-        next({
-          path: from.path
-        });
+        switch (store.getters.hasrol) {
+          case 1:
+
+            next({
+              path: "/usuarios"
+            });
+            break;
+          case 2:
+
+            next({
+              path: "/articulos"
+            });
+            break;
+          case 3:
+
+            next({
+              path: "/historial"
+            });
+            break;
+          case 4:
+
+            next({
+              path: "/mesero"
+            });
+            break;
+          case 5:
+
+            next({
+              path: "/barra"
+            });
+            break;
+
+          default:
+            next({
+              path: from.path
+            });
+            break;
+        }
+
       }
 
     }

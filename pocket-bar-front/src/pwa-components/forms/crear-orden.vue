@@ -66,24 +66,6 @@
                     prepend-inner-icon="mdi-magnify"
                     label="Buscar"
                   ></v-text-field>
-                  <!-- <v-select
-                    v-model="sortBy"
-                    flat
-                    solo-inverted
-                    hide-details
-                    :items="keys"
-                    prepend-inner-icon="mdi-magnify"
-                    label="Sort by"
-                  ></v-select>
-
-                  <v-btn-toggle v-model="sortDesc" mandatory>
-                    <v-btn large depressed color="blue" :value="false">
-                      <v-icon>mdi-arrow-up</v-icon>
-                    </v-btn>
-                    <v-btn large depressed color="blue" :value="true">
-                      <v-icon>mdi-arrow-down</v-icon>
-                    </v-btn>
-                  </v-btn-toggle> -->
                 </v-toolbar>
               </template>
 
@@ -385,6 +367,8 @@ export default {
     cambio(producto) {
       if (this.pedidoArray.includes(producto) === true) {
         return true;
+      } else {
+        return false;
       }
     },
     cajaProductos(producto) {
@@ -397,6 +381,14 @@ export default {
         this.totalPedido += parseFloat(producto.precio_articulo);
 
         return this.pedidoArray, this.countproductos;
+      } else if (this.pedidoArray.includes(producto) === true) {
+        this.pedidoArray.forEach((element) => {
+          if (element.id === producto.id) {
+            this.pedidoArray.splice(this.pedidoArray.indexOf(element), 1);
+          }
+        });
+        this.countproductos = this.pedidoArray.length;
+        this.cambio(producto);
       }
     },
     nextStep(n) {

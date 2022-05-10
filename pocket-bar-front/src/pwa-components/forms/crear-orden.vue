@@ -322,8 +322,12 @@ export default {
       console.log(presend);
       postTickets(presend);
       if (store.getters.hasstatcode == 200) {
-        console.log("Entro");
-        this.cancelarPedido();
+        this.pedidoArray = [];
+        this.countproductos = 0;
+        this.totalPedido = 0;
+        this.titular = "";
+        this.e1 = 1;
+        store.commit("setstatcode", null);
         // store.commit("increment", 1);
       } else {
         this.e6 = 1;

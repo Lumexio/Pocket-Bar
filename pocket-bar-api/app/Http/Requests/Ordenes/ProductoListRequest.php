@@ -13,7 +13,7 @@ class ProductoListRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->authorize();
+        return true;
     }
 
     /**

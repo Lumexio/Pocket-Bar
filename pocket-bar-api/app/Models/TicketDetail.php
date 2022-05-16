@@ -45,13 +45,13 @@ class TicketDetail extends Model
             ->selectRaw("ticket_details_tbl.*");
 
         if ($user->rol_id == 5) {
-            $ticketDetails = $ticketDetails->whereIn("status", ["En espera", "En preparacion", "Preparado"]);
+            $ticketDetails = $ticketDetails->whereIn("ticket_details_tbl.status", ["En espera", "En preparacion", "Preparado"]);
         } else {
-            $ticketDetails = $ticketDetails->where("status", "Preparado");
+            $ticketDetails = $ticketDetails->where("ticket_details_tbl.status", "Preparado");
         }
 
         if ($status) {
-            $ticketDetails = $ticketDetails->where("status", $status);
+            $ticketDetails = $ticketDetails->where("ticket_details_tbl.status", $status);
         }
 
         return $ticketDetails->get();

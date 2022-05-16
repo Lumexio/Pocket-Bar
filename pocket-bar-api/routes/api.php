@@ -64,14 +64,14 @@ Mostrar un registro no */
     Route::resource('activitylog', 'ActivitylogController');
 
 
-    Route::group(['prefix' => 'tickets'], function () {
+    Route::prefix('tickets')->group(function () {
         Route::get('/list', 'TicketController@index');
         Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
     });
 
-    Route::group(['prefix' => 'oredenes'], function () {
-        Route::get('/productos', 'OrdenesController@index');
+    Route::prefix('ordenes')->group(function () {
+        Route::get('/notificacion/productos', 'OrdenesController@index');
         Route::put('/productos', 'OrdenesController@updateStatus');
     });
 });

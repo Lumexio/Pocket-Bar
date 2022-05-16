@@ -93,6 +93,38 @@ export function getTicketsPWA(ticketsPWAArray, status) {
       .catch((error) => { console.log(error); reject(error); });
   });
 }
+export function getTicketsNotiPWA(ticketsPWANotiArray) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get("api/ordenes/notificacion/productos")
+      .then(response => {
+
+        console.log("Data noti:", response);
+        const tickets = response.data.data;
 
 
-export default { getTickets, postTickets, getTicketsPWA }
+        tickets.forEach((element) => {
+          let datos = {
+            id: element.id,
+            fecha: element.fecha,
+            titular: element.titular,
+            total_actual: element.total,
+            productos: element.productos,
+            mesa: element.mesa,
+          };
+          if (!datos) return;
+          ticketsPWANotiArray.push(datos);
+        });
+
+
+        resolve({
+          ticketsPWANotiArray
+        });
+      })
+      .catch((error) => { console.log(error); reject(error); });
+  });
+}
+
+
+
+export default { getTickets, postTickets, getTicketsPWA, getTicketsNotiPWA }

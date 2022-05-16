@@ -1,11 +1,9 @@
 <template>
-  <v-card-text>
-    <v-fab-transition>
-      <v-btn ligth absolute top right fab>
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </v-fab-transition>
-  </v-card-text>
+  <v-fab-transition>
+    <v-btn ligth absolute top right fab>
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+  </v-fab-transition>
 </template>
 
 <script>

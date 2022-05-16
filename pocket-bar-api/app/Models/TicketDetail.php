@@ -37,12 +37,18 @@ class TicketDetail extends Model
             array_push($users, ...array_column(User::where("rol_id", 4)->get(["id"])->toArray(), "id"));
         }
 
-        $ticketDetails = self::whereIn("user_id", $users)->where("status", "!=", "Recibido")
+        $ticketDetails = self::whereIn("user_id", $users)
             ->join("tickets_tbl", function ($join) use ($actualWorkshift) {
                 $join->on("tickets_tbl.id", "=", "ticket_details_tbl.ticket_id")
                     ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id);
             })
             ->selectRaw("ticket_details_tbl.*");
+
+        if ($user->rol_id == 5) {
+            $ticketDetails = $ticketDetails->whereIn("status", ["En espera", "En preparacion", "Preparado"]);
+        } else {
+            $ticketDetails = $ticketDetails->where("status", "Preparado");
+        }
 
         if ($status) {
             $ticketDetails = $ticketDetails->where("status", $status);
@@ -65,7 +71,7 @@ class TicketDetail extends Model
         $products = isset($countOfStatusOfTicket) ? $countOfStatusOfTicket : self::countOfStatusOfTicket($ticketId);
         $status =  array_flip(array_column($products->toArray(), "status"));
 
-        if (isset($status["En espera"]) or isset($status["En preparacion"]) or isset($status["En preparacion"])) {
+        if (isset($status["En espera"]) or isset($status["En preparacion"]) or isset($status["Preparado"])) {
             return "En espera";
         }
 

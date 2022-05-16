@@ -1,5 +1,12 @@
 <template>
   <nav>
+    <div class="title-user">
+      <v-card-title class="fade-in-title" style="font-size: 2rem"
+        ><code class="font-weight-light">Pocket</code
+        ><strong>bar</strong></v-card-title
+      >
+      <v-chip class="ml-6" color="pink" label outlined>{{ typeUser }}</v-chip>
+    </div>
     <v-toolbar ligth flat>
       <v-text-field
         flat
@@ -10,7 +17,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon>
+      <v-btn @click="dialoglistorden = true" icon>
         <v-icon>mdi-bell</v-icon>
       </v-btn>
 
@@ -63,16 +70,19 @@
     </v-toolbar>
 
     <tomarorden :dialogorden.sync="dialogorden" />
+    <notiorden :dialoglistorden.sync="dialoglistorden" />
   </nav>
 </template>
 
 <script>
 import tomarorden from "@/pwa-components/forms/crear-orden.vue";
+import notiorden from "@/pwa-components/tables/lista-notificaciones-ordenes.vue";
 import store from "@/store";
 export default {
   name: "navbarPwa",
   components: {
     tomarorden,
+    notiorden,
   },
   data() {
     return {
@@ -80,6 +90,7 @@ export default {
       type: null,
       tabs: null,
       dialogorden: false,
+      dialoglistorden: false,
 
       items: [
         { id: 1, title: "Por entregar", status: "Por entregar" },
@@ -99,6 +110,25 @@ export default {
     },
   },
   computed: {
+    typeUser() {
+      var rol = "";
+      rol;
+      store.getters.hasrol;
+
+      console.log(store.getters.hasrol);
+      switch (store.getters.hasrol) {
+        case 4:
+          rol = "Meser@";
+          break;
+        case 5:
+          rol = "Bartender";
+          break;
+
+        default:
+          break;
+      }
+      return rol;
+    },
     hasstatus() {
       return store.getters.hasstatus;
     },
@@ -107,4 +137,60 @@ export default {
 </script>
 
 <style scoped>
+.title-user {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.fade-in-title {
+  animation: fadeIn 5s;
+  -webkit-animation: fadeIn 5s;
+  -moz-animation: fadeIn 5s;
+  -o-animation: fadeIn 5s;
+  -ms-animation: fadeIn 5s;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 </style>

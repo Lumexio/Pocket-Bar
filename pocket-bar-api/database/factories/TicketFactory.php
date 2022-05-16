@@ -68,9 +68,9 @@ class TicketFactory extends Factory
             "min_tip" => $subtotal >= 500 ? $subtotal * 0.10 : $subtotal,
             "table_id" => $table,
             "table_name" => $table,
-            "status" => $statusTicket, 
+            "status" => $statusTicket,
             "workshift_id" => 1,
-            "closed" => $statusTicket == "Cerrado" ? true : false,	
+            "closed" => $statusTicket == "Cerrado" ? true : false,
             "created_at" => $date,
             'items' => $items,
         ];

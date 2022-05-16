@@ -8,10 +8,8 @@ use App\Http\Requests\Ordenes\ProductoListRequest;
 use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
-use App\Models\User;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 class OrdenesController extends Controller
 {

@@ -33,7 +33,7 @@ class TicketFactory extends Factory
             $subtotal += $units * $price;
             $tax += $units * $price * 0.16;
             $total += $units * $price + (($units * $price) * 0.16);
-            $status = $this->faker->randomElement(['Solicitado', 'En proceso', 'Entregado']);
+            $status = $this->faker->randomElement(['En espera', 'En preparacion', "Preparado", 'Recibido']);
             $items[] = [
                 "units" => $units,
                 "unit_price" => $price,
@@ -44,7 +44,7 @@ class TicketFactory extends Factory
                 "articulos_tbl_id" => $this->faker->numberBetween(1, 10),
                 "articulos_img" => "https://via.placeholder.com/500x500",
                 "status" => $status,
-                "barTender_id" => $status == "Solicitado" ? null : $this->faker->randomElement([15, 16]),
+                "barTender_id" => $status == "En espera" ? null : $this->faker->randomElement([15, 16]),
                 "waiter_id" => $this->faker->numberBetween(1, 10),
                 "created_at" => now(),
             ];

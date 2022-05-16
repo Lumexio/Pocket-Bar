@@ -69,6 +69,11 @@ Mostrar un registro no */
         Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
     });
+
+    Route::group(['prefix' => 'oredenes'], function () {
+        Route::get('/productos', 'OrdenesController@index');
+        Route::put('/productos', 'OrdenesController@updateStatus');
+    });
 });
 
 Route::post('login', [UserController::class, 'login']);

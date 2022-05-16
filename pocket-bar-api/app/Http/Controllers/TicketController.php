@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BarraEvents;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketCreateRequest;
@@ -13,6 +14,7 @@ use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Events\ticketCreated;
+use App\Models\TicketDetail;
 
 class TicketController extends Controller
 {
@@ -73,6 +75,7 @@ class TicketController extends Controller
                 $ticketDetail->ticket_id = $ticket->id;
                 throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
             }
+            BarraEvents::dispatch();
             DB::commit();
         } catch (\Exception $th) {
             DB::rollBack();
@@ -86,7 +89,6 @@ class TicketController extends Controller
             "data" => $ticket
         ], 200);
     }
-
 
     public function index(Request $request): JsonResponse
     {

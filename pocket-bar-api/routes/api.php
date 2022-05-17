@@ -4,6 +4,7 @@
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 //use Spatie\Activitylog\Models\Activity;
 
 /*
@@ -17,12 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-
     Route::prefix('articulo')->group(function () {
         Route::post('/create', 'ArticuloController@store');
         Route::put('/update/{id}', 'ArticuloController@update');
@@ -33,16 +33,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::resource('rol', 'RolController');
     /*Crear  si
-Eliminar no
-Mostrar un registro no */
+    Eliminar no
+    Mostrar un registro no */
     Route::resource('marca', 'MarcaController');
     /*Crear  si
-Eliminar no
-Mostrar un registro no */
+    Eliminar no
+    Mostrar un registro no */
     Route::resource('categoria', 'CategoriaController');
     /*Crear  si
-Eliminar no
-Mostrar un registro no */
+    Eliminar no
+    Mostrar un registro no */
     Route::resource('travesano', 'TravesañoController');
     Route::resource('rack', 'RackController');
     /*Crear  si
@@ -62,7 +62,6 @@ Eliminar no
 Mostrar un registro no */
     Route::resource('user', 'UserController');
     Route::resource('activitylog', 'ActivitylogController');
-
 
     Route::prefix('tickets')->group(function () {
         Route::get('/list', 'TicketController@index');

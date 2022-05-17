@@ -71,7 +71,7 @@ class TicketController extends Controller
                 $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
                 $ticketDetail->articulos_tbl_id = $item['id'];
                 $ticketDetail->articulos_img = $item["foto_articulo"];
-                $ticketDetail->status = "Solicitado";
+                $ticketDetail->status = "En espera";
                 $ticketDetail->ticket_id = $ticket->id;
                 throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
             }

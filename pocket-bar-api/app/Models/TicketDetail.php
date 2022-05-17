@@ -37,7 +37,7 @@ class TicketDetail extends Model
             array_push($users, ...array_column(User::where("rol_id", 4)->get(["id"])->toArray(), "id"));
         }
 
-        $ticketDetails = self::whereIn("user_id", $users)
+        $ticketDetails = self::with("articulo")->whereIn("user_id", $users)
             ->join("tickets_tbl", function ($join) use ($actualWorkshift) {
                 $join->on("tickets_tbl.id", "=", "ticket_details_tbl.ticket_id")
                     ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id);

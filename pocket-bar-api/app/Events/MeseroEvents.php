@@ -45,8 +45,6 @@ class MeseroEvents implements ShouldBroadcast
                     $this->TicketsARecibir[] = $ticket;
                 }
             }
-            t
-
         }
     }
 

@@ -99,19 +99,20 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
       .get("api/ordenes/notificacion/productos")
       .then(response => {
 
-        console.log("Data noti:", response);
-        const tickets = response.data.data;
 
-
+        const tickets = response.data;
+        console.log(tickets);
         tickets.forEach((element) => {
           let datos = {
+            nombre_articulo: element.articulo.nombre_articulo,
             id: element.id,
-            fecha: element.fecha,
-            titular: element.titular,
-            total_actual: element.total,
-            productos: element.productos,
-            mesa: element.mesa,
+            units: element.units,
+            status: element.status,
           };
+          if (element.mesero) {
+            datos.nombre_mesero = element.mesero.name;
+          }
+
           if (!datos) return;
           ticketsPWANotiArray.push(datos);
         });
@@ -123,6 +124,26 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
       })
       .catch((error) => { console.log(error); reject(error); });
   });
+}
+export function postTicketsNotiPWA(enviar) {
+  axios
+    .put("api/ordenes/notificacion/productos", enviar)
+    .then((response) => {
+      if (response.status == 200) {
+        store.commit("setsuccess", true);
+        store.commit("setstatcode", 200);
+        setTimeout(function () {
+          store.commit("setsuccess", null);
+        }, 2000);
+      }
+    })
+    .catch((e) => {
+      console.log(e.message);
+      if (e) {
+        store.commit("setdanger", true);
+      }
+    });
+
 }
 
 

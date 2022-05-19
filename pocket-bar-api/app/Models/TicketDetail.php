@@ -24,6 +24,16 @@ class TicketDetail extends Model
         return $this->belongsTo(Articulo::class, "articulos_tbl_id");
     }
 
+    public function mesero()
+    {
+        return $this->belongsTo(User::class, "waiter_id");
+    }
+
+    public function barra()
+    {
+        return $this->belongsTo(User::class, "barTender_id");
+    }
+
     public static function getListForWebSockets(?string $status = null)
     {
         /**
@@ -33,14 +43,23 @@ class TicketDetail extends Model
 
         $actualWorkshift = Workshift::where('active', 1)->first();
         $users = [$user->id];
+        $relations = ["articulo", "barra", "mesero"];
+
         if ($user->rol_id == 5) {
-            array_push($users, ...array_column(User::where("rol_id", 4)->get(["id"])->toArray(), "id"));
+            array_push($users, ...array_column(User::where("rol_id", "!=", 5)->get(["id"])->toArray(), "id"));
+            $relations = ["articulo", "mesero"];
+            $ticketDetails = self::with($relations)
+                ->whereIn("waiter_id", $users);
+        } else {
+            $ticketDetails = self::with($relations)
+                ->where("waiter_id", $user->id);
         }
 
-        $ticketDetails = self::with("articulo")->whereIn("user_id", $users)
+        $ticketDetails = $ticketDetails
             ->join("tickets_tbl", function ($join) use ($actualWorkshift) {
                 $join->on("tickets_tbl.id", "=", "ticket_details_tbl.ticket_id")
-                    ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id);
+                    ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id)
+                    ->where("tickets_tbl.status", "!=", "Cerrado");
             })
             ->selectRaw("ticket_details_tbl.*");
 

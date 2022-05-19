@@ -69,9 +69,9 @@ Mostrar un registro no */
         Route::post('/create', 'TicketController@store');
     });
 
-    Route::prefix('ordenes')->group(function () {
+    Route::prefix('ordenes')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
         Route::get('/notificacion/productos', 'OrdenesController@index');
-        Route::put('/productos', 'OrdenesController@updateStatus');
+        Route::put('/notificacion/productos', 'OrdenesController@updateStatus');
     });
 });
 

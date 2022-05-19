@@ -54,8 +54,6 @@ class OrdenesController extends Controller
         }
 
         try {
-            DB::beginTransaction();
-
             if (in_array($ticketDetail->status, ["En espera", "Preparado"])) {
                 $ticketDetail->barTender_id = $user->id;
             }
@@ -70,18 +68,17 @@ class OrdenesController extends Controller
             if ($previousStatus != $ticket->status) {
                 throw_if(!$ticket->save(), "Error al guardar en base de datos");
             }
-            DB::commit();
-            MeseroEvents::dispatch();
-            BarraEvents::dispatch();
-
-
-
-            return response()->json($ticketDetail);
         } catch (\Throwable $th) {
-            DB::rollBack();
+            dd($th);
             return response()->json([
                 "error" => $th->getMessage()
             ], 500);
         }
+
+
+        // MeseroEvents::dispatch();
+        // BarraEvents::dispatch();
+
+        return response()->json($ticketDetail);
     }
 }

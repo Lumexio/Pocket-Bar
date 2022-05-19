@@ -13,7 +13,7 @@ class ProductoUpdateStatusRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->authorize();
+        return in_array(auth()->user()->rol_id, [5, 4]);
     }
 
     /**
@@ -24,7 +24,7 @@ class ProductoUpdateStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            "id" => "required|integer|exists:ticket_details,id",
+            "id" => "required|integer|exists:ticket_details_tbl,id",
             "status" => "required|string|in:En espera,En preparacion,Preparado,Recibido",
         ];
     }

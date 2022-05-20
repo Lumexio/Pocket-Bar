@@ -17,13 +17,13 @@ class BarraEvents implements ShouldBroadcast
     use InteractsWithSockets;
     use SerializesModels;
 
-    public array $tickets;
+    public array $notificacionesBarra;
 
     public bool $afterCommit = true;
 
     public function __construct()
     {
-        $this->tickets = TicketDetail::getListForWebSockets()->toArray();
+        $this->notificacionesBarra = TicketDetail::getListForWebSockets()->toArray();
     }
 
     /**

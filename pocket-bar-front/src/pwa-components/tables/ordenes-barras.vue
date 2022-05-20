@@ -47,6 +47,9 @@ export default {
     ticketsPWAArray: [],
   }),
   mounted() {
+    window.Echo.channel("tickets").listen("ticketCreated", (e) => {
+      this.ticketsPWAArray = e.tickets;
+    });
     getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
   },
 };

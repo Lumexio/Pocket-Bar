@@ -69,15 +69,15 @@ class OrdenesController extends Controller
                 throw_if(!$ticket->save(), "Error al guardar en base de datos");
             }
         } catch (\Throwable $th) {
-            dd($th);
+
             return response()->json([
                 "error" => $th->getMessage()
             ], 500);
         }
 
 
-        // MeseroEvents::dispatch();
-        // BarraEvents::dispatch();
+        MeseroEvents::dispatch();
+        BarraEvents::dispatch();
 
         return response()->json($ticketDetail);
     }

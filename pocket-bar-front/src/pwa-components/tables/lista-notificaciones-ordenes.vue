@@ -33,18 +33,24 @@
           <v-chip dark :color="colorchange(item.status)">{{
             item.status
           }}</v-chip>
+
+          <v-btn
+            dark
+            v-if="item.status === 'En espera' && hasrol === 'mesero'"
+            @click="sendStatusPrep(item.id, 'En preparacion')"
+            >Preparar</v-btn
+          >
+          <v-btn
+            dark
+            v-if="item.status === 'En preparacion' && hasrol === 'mesero'"
+            @click="sendStatusPrep(item.id, 'Preparado')"
+            >Terminar</v-btn
+          >
           <v-btn
             dark
             v-if="item.status === 'Preparado' && hasrol === 'bartender'"
             @click="sendStatusRecived(item.id, item.status)"
             >Recibir</v-btn
-          >
-
-          <v-btn
-            dark
-            v-if="item.status === 'En espera' && hasrol === 'mesero'"
-            @click="sendStatusPrep(item.id, item.status)"
-            >Preparar</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -86,19 +92,28 @@ export default {
       }
       return st;
     },
+
     sendStatusPrep(id, status) {
       this.sendStatusPrepBox.id = id;
-      this.sendStatusPrepBox.status = "Preparado";
+      this.sendStatusPrepBox.status = status;
       this.refresher += 1;
       console.log("Preparado barra:", this.sendStatusPrepBox);
       postTicketsNotiPWA(this.sendStatusPrepBox);
+
+      window.Echo.channel("barra").listen("barraEvents", (e) => {
+        this.ticketsPWANotiArray = e.barra;
+      });
     },
-    sendStatusRecived(id, status) {
+    sendStatusRecived(id) {
       this.sendStatusRecivedBox.id = id;
       this.sendStatusRecivedBox.status = "Recibido";
       this.refresher -= 1;
       console.log("Preparado barra:", this.sendStatusRecivedBox);
       postTicketsNotiPWA(this.sendStatusRecivedBox);
+
+      window.Echo.channel("meseros").listen("MeseroEvents", (e) => {
+        this.ticketsPWANotiArray = e.meseros;
+      });
     },
     close() {
       this.$emit("update:dialoglistorden", false);
@@ -117,6 +132,18 @@ export default {
     },
   },
   mounted() {
+    if (this.$store.getters.hasrol == 4) {
+      window.Echo.channel("mesero").listen("MeseroEvents", (e) => {
+        console.log("Mesero:", e);
+        this.ticketsPWANotiArray = e.TicketsARecibir;
+      });
+    } else if (this.$store.getters.hasrol == 5) {
+      window.Echo.channel("barra").listen("barraEvents", (e) => {
+        console.log("Barra:", e);
+        this.ticketsPWANotiArray = e.notificacionesBarra;
+      });
+    }
+
     getTicketsNotiPWA(this.ticketsPWANotiArray)
       .then((response) => {
         console.log(response);

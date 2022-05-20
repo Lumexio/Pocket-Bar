@@ -413,6 +413,9 @@ export default {
     },
   },
   mounted() {
+    window.Echo.channel("articulos").listen("articuloCreated", (e) => {
+      this.articulosArray = e.articulos;
+    });
     getArticulos(this.articulosArray)
       .then((response) => {
         if (response.stats === 200) {

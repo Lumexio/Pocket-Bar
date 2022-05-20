@@ -101,22 +101,27 @@ export default {
       postTicketsNotiPWA(this.sendStatusPrepBox);
 
       window.Echo.channel("barra").listen("barraEvents", (e) => {
-        this.ticketsPWANotiArray = e.barra;
+        this.ticketsPWANotiArray = e.notificacionesBarra;
       });
     },
     sendStatusRecived(id) {
       this.sendStatusRecivedBox.id = id;
       this.sendStatusRecivedBox.status = "Recibido";
-      this.refresher -= 1;
+      this.refresher += 1;
       console.log("Preparado barra:", this.sendStatusRecivedBox);
       postTicketsNotiPWA(this.sendStatusRecivedBox);
 
       window.Echo.channel("meseros").listen("MeseroEvents", (e) => {
-        this.ticketsPWANotiArray = e.meseros;
+        this.ticketsPWANotiArray = e.TicketsARecibir;
       });
     },
     close() {
       this.$emit("update:dialoglistorden", false);
+    },
+  },
+  watch: {
+    ticketsPWANotiArray() {
+      return (this.refresher += 1);
     },
   },
   computed: {
@@ -139,7 +144,7 @@ export default {
       });
     } else if (this.$store.getters.hasrol == 5) {
       window.Echo.channel("barra").listen("barraEvents", (e) => {
-        console.log("Barra:", e);
+        console.log("hola:", e);
         this.ticketsPWANotiArray = e.notificacionesBarra;
       });
     }

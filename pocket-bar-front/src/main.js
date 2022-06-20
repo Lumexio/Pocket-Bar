@@ -36,12 +36,11 @@ window.Echo = new Echo({
   key: 'local',
   wsHost: window.location.hostname,
   wsPort: 6001,
-  //cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+  cluster: 'mt1',
   forceTLS: false,
   disableStats: true,
   //encrypted: true,
 });
-
 
 
 new Vue({

@@ -91,7 +91,6 @@ export default {
       tabs: null,
       dialogorden: false,
       dialoglistorden: false,
-
       items: [
         { id: 1, title: "Por entregar", status: "Por entregar" },
         { id: 2, title: "Entregadas", status: "Entregado" },

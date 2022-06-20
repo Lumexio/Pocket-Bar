@@ -1,6 +1,6 @@
 <template >
   <v-expansion-panels popout>
-    <v-expansion-panel v-for="item in ticketsPWAArray" :key="item.id">
+    <v-expansion-panel class="m-12p" style="margin:0 0 12px" v-for="item in ticketsPWAArray" :key="item.id">
       <v-expansion-panel-header>
         <span>
           <span> <b>Titular: </b>{{ item.titular }}</span>

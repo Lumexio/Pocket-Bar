@@ -34,7 +34,10 @@ class MeseroEvents implements ShouldBroadcast
         $user = auth()->user();
 
         $actualWorkshift = Workshift::where('active', 1)->first();
-        $tickets = Ticket::where('user_id', $user->id)->where('workshift_id', $actualWorkshift->id)->with('details')->get();
+        $tickets = Ticket::where('user_id', $user->id)
+        ->where('workshift_id', $actualWorkshift->id)
+        ->with('details')
+        ->get();
 
         foreach ($tickets as $ticket) {
             $countOfStatusOfTicket = TicketDetail::countOfStatusOfTicket($ticket->id);

@@ -2,9 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Ticket;
 use App\Models\TicketDetail;
-use App\Models\Workshift;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -13,13 +11,11 @@ use Illuminate\Queue\SerializesModels;
 
 class BarraEvents implements ShouldBroadcast
 {
-    use Dispatchable;
-    use InteractsWithSockets;
-    use SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public array $notificacionesBarra;
+    public $notificacionesBarra;
 
-    public bool $afterCommit = true;
+    public $afterCommit = true;
 
     public function __construct()
     {

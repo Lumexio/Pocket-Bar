@@ -75,12 +75,13 @@ class TicketController extends Controller
                 $ticketDetail->ticket_id = $ticket->id;
                 throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
             }
-            BarraEvents::dispatch();
             DB::commit();
         } catch (\Exception $th) {
             DB::rollBack();
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
         }
+
+        BarraEvents::dispatch($ticket);
         ticketCreated::dispatch($ticket);
         return response()->json([
             "status" => 200,

@@ -1,7 +1,8 @@
 <template >
-  <v-expansion-panels :dark="darkonchange" class="sizes" popout>
+  <v-expansion-panels popout>
     <v-expansion-panel
-      class="sizes"
+      class="m-12p"
+      style="margin: 0 0 12px"
       v-for="item in ticketsPWAArray"
       :key="item.id"
     >

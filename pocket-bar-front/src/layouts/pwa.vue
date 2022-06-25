@@ -17,7 +17,11 @@ export default {
     navbar,
     //ButtonCreate,
   },
-  computed: {},
+  computed: {
+    darkflag() {
+      return this.$store.getters.hasdarkflag;
+    },
+  },
 };
 </script>
 
@@ -28,7 +32,7 @@ export default {
   display: flex;
 }
 
-.v-expansion-panels{
+.v-expansion-panels {
   gap: 10px;
 }
 /* your style */

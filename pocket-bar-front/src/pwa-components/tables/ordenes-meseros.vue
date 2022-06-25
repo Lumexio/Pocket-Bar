@@ -56,6 +56,11 @@ export default {
     });
     getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
   },
+  computed: {
+    darkonchange() {
+      return store.getters.hasdarkflag;
+    },
+  },
 };
 </script>
 

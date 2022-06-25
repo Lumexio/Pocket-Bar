@@ -95,6 +95,7 @@ span {
 }
 ::-webkit-scrollbar-track {
   background: #eeeeee;
+
   /* border-radius: 5px; */
 }
 ::-webkit-scrollbar-thumb {

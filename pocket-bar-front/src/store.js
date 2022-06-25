@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 const getDefaultState = () => {
  return {
+  darkflag: false,
   token: null,
   recharge: 0,
   rol: null,
@@ -35,6 +36,7 @@ export default new Vuex.Store({
   hasdanger(state) { return state.notiDanger },
   hasstatus(state) { return state.status },
   hasstatcode(state) { return state.statcode },
+  hasdarkflag(state) { return state.darkflag },
  },
 
  mutations: {
@@ -50,6 +52,7 @@ export default new Vuex.Store({
   setdanger(state, payload) { state.notiDanger = payload },
   setstatus(state, payload) { state.status = payload },
   setstatcode(state, payload) { state.statcode = payload },
+  setdarkflag(state, payload) { state.darkflag = payload },
   RESET: state => {
    Object.assign(state, getDefaultState());
   }
@@ -70,6 +73,9 @@ export default new Vuex.Store({
   },
   setstatcode({ commit }) {
    commit('setstatcode')
+  },
+  setdarkflag({ commit }) {
+   commit('setdarkflag')
   },
   login: ({ commit, dispatch }, { token }) => {
 

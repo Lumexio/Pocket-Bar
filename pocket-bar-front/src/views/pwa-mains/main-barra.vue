@@ -1,14 +1,14 @@
 <template>
-  <div><ordenesBarras :key="count" /></div>
+  <ordenes-barras :key="count" />
 </template>
 
 <script>
 import store from "@/store";
 
-import ordenesBarras from "@/pwa-components/tables/ordenes-barras.vue";
+import OrdenesBarras from "@/pwa-components/tables/ordenes-barras.vue";
 export default {
   name: "MainBarra",
-  components: { ordenesBarras },
+  components: { OrdenesBarras },
   data: () => ({}),
 
   created() {
@@ -27,7 +27,4 @@ export default {
 </script>
 
 <style scoped>
-.size-table {
-  max-width: 90%;
-}
 </style>

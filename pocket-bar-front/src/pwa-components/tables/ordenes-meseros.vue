@@ -1,5 +1,5 @@
 <template >
-  <v-expansion-panels class="sizes" popout>
+  <v-expansion-panels :dark="darkonchange" class="sizes" popout>
     <v-expansion-panel
       class="sizes"
       v-for="item in ticketsPWAArray"
@@ -46,7 +46,7 @@
 import store from "@/store";
 import { getTicketsPWA } from "@/api/tickets.js";
 export default {
-  name: "ordenesBarra",
+  name: "ordenesMesero",
   data: () => ({
     ticketsPWAArray: [],
   }),
@@ -66,5 +66,6 @@ export default {
 }
 .sizes {
   max-width: calc(100% - 0px) !important;
+  min-width: calc(100% - 0px) !important;
 }
 </style>

@@ -1,13 +1,26 @@
 <template>
   <nav>
-    <div class="title-user">
-      <v-card-title class="fade-in-title" style="font-size: 2rem"
-        ><code class="font-weight-light">Pocket</code
-        ><strong>bar</strong></v-card-title
+    <div
+      :class="[
+        $store.getters.hasdarkflag === true ? 'title-user-dark' : 'title-user',
+      ]"
+    >
+      <v-card-title
+        class="fade-in-title font-weight-light"
+        :class="[
+          $store.getters.hasdarkflag === true
+            ? 'title-user-letter-dark'
+            : 'title-user-letter-ligth',
+        ]"
+        style="font-size: 2rem"
+        ><code>Pocket</code
+        ><code class="font-weight-bold">bar</code></v-card-title
       >
       <v-chip class="ml-6" color="pink" label outlined>{{ typeUser }}</v-chip>
+      <v-spacer></v-spacer>
+      <v-switch v-model="switchdark" flat></v-switch>
     </div>
-    <v-toolbar ligth flat>
+    <v-toolbar :dark="darkonchange" flat>
       <v-text-field
         flat
         hide-details
@@ -21,7 +34,7 @@
         <v-icon>mdi-bell</v-icon>
       </v-btn>
 
-      <v-menu offset-y>
+      <v-menu :dark="darkonchange" offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn text v-bind="attrs" v-on="on">
             <v-icon>mdi-dots-vertical</v-icon>
@@ -91,7 +104,7 @@ export default {
       tabs: null,
       dialogorden: false,
       dialoglistorden: false,
-
+      switchdark: false,
       items: [
         { id: 1, title: "Por entregar", status: "Por entregar" },
         { id: 2, title: "Entregadas", status: "Entregado" },
@@ -99,7 +112,25 @@ export default {
       ],
     };
   },
+  // created() {
+  //   this.hasdarkflag();
+  // },
+  watch: {
+    switchdark(val) {
+      console.log(val);
+      store.commit("setdarkflag", val);
+      this.hasdarkflag();
+    },
+  },
   methods: {
+    hasdarkflag() {
+      this.switchdark = this.$store.getters.hasdarkflag;
+      if (this.$store.getters.hasdarkflag === true) {
+        console.log("si es true");
+      }
+
+      /*Checa bandera de dark mode*/
+    },
     clear() {
       store.commit("RESET");
       store.commit("SET_TOKEN", null);
@@ -110,6 +141,10 @@ export default {
     },
   },
   computed: {
+    darkonchange() {
+      return store.getters.hasdarkflag;
+    },
+
     typeUser() {
       var rol = "";
       rol;
@@ -141,6 +176,18 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.title-user-dark {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #272727;
+}
+.title-user-letter-dark {
+  color: aliceblue;
+}
+.title-user-letter-ligth {
+  color: #272727;
 }
 .fade-in-title {
   animation: fadeIn 5s;

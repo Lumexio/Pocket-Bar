@@ -1,5 +1,6 @@
 <template>
   <v-app id="inspire">
+    {{ darkflag }}
     <navbar />
     <v-container class="pa-0">
       <router-view /><!--Renderisa cualquier vista que este activa-->
@@ -16,6 +17,7 @@ export default {
     navbar,
     //ButtonCreate,
   },
+  computed: {},
 };
 </script>
  

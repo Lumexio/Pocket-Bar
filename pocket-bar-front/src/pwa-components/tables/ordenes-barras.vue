@@ -1,8 +1,7 @@
 <template >
-  <v-expansion-panels popout>
+  <v-expansion-panels :dark="darkonchange" popout>
     <v-expansion-panel
-      class="m-12p"
-      style="margin: 0 0 12px"
+      class="sizes"
       v-for="item in ticketsPWAArray"
       :key="item.id"
     >
@@ -50,16 +49,16 @@ export default {
   data: () => ({
     ticketsPWAArray: [],
   }),
-  computed: {
-    darkonchange() {
-      return store.getters.hasdarkflag;
-    },
-  },
   mounted() {
     window.Echo.channel("tickets").listen("ticketCreated", (e) => {
       this.ticketsPWAArray = e.tickets;
     });
     getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
+  },
+  computed: {
+    darkonchange() {
+      return store.getters.hasdarkflag;
+    },
   },
 };
 </script>

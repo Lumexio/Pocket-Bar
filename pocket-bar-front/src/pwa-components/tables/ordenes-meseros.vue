@@ -1,5 +1,5 @@
 <template >
-  <v-expansion-panels :dark="darkonchange" class="sizes" popout>
+  <v-expansion-panels :dark="darkonchange" popout>
     <v-expansion-panel
       class="sizes"
       v-for="item in ticketsPWAArray"

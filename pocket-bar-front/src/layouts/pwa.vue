@@ -1,8 +1,12 @@
 <template>
   <v-app id="inspire">
-    {{ darkflag }}
     <navbar />
-    <v-container class="pa-0 fullWidth">
+    <v-container
+      class="pa-0 fullWidth"
+      :class="[
+        $store.getters.hasdarkflag === true ? 'black-main' : 'white-main',
+      ]"
+    >
       <router-view /><!--Renderisa cualquier vista que este activa-->
     </v-container>
   </v-app>
@@ -29,11 +33,15 @@ export default {
 /* This is for documentation purposes and will not be needed in your application */
 .fullWidth {
   width: 100vw;
+  height: 100vh;
   display: flex;
 }
-
-.v-expansion-panels {
-  gap: 10px;
+.black-main {
+  background-color: #272727;
 }
+.white-main {
+  background-color: #fff;
+}
+
 /* your style */
 </style>

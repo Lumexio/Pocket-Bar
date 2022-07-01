@@ -106,4 +106,9 @@ span {
 ::-webkit-scrollbar-thumb:hover {
   background: #bdbdbd;
 }
+.v-expansion-panels {
+  gap: 10px;
+  max-height: calc(30% - 0px) !important;
+  min-height: calc(30% - 0px) !important;
+}
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :class="[$store.getters.hasdarkflag === true ? 'black-main' : 'white-main']"
+  >
     <v-snackbar
       :value="hassuccess"
       :timeout="timeout"
@@ -42,6 +45,9 @@ export default {
     },
     hasdanger() {
       return store.getters.hasdanger;
+    },
+    darkflag() {
+      return this.$store.getters.hasdarkflag;
     },
   },
   created() {
@@ -110,5 +116,11 @@ span {
   gap: 10px;
   max-height: calc(30% - 0px) !important;
   min-height: calc(30% - 0px) !important;
+}
+.black-main {
+  background-color: #272727;
+}
+.white-main {
+  background-color: #fff;
 }
 </style>

@@ -118,18 +118,24 @@ export default {
   watch: {
     switchdark(val) {
       console.log(val);
+
+      if (this.$store.getters.hasdarkflag === val) {
+        this.switchdark == true;
+      }
       store.commit("setdarkflag", val);
       this.hasdarkflag();
     },
   },
+  created() {
+    this.checkDark();
+  },
   methods: {
-    hasdarkflag() {
-      this.switchdark = this.$store.getters.hasdarkflag;
-      if (this.$store.getters.hasdarkflag === true) {
-        console.log("si es true");
+    checkDark() {
+      console.log("Si entra.");
+      if (this.$store.getters.hasdarkflag === this.switchdark) {
+        console.log("Si entra.");
+        this.switchdark == true;
       }
-
-      /*Checa bandera de dark mode*/
     },
     clear() {
       store.commit("RESET");

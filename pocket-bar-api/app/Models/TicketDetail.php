@@ -34,14 +34,22 @@ class TicketDetail extends Model
         return $this->belongsTo(User::class, "barTender_id");
     }
 
-    public static function getListForWebSockets(?string $status = null)
+    public static function getListForWebSockets(?string $status = null, bool $fromBarraEvent = false)
     {
+        $actualWorkshift = Workshift::where('active', 1)->first();
+        if ($fromBarraEvent) {
+            return self::join("tickets_tbl", function ($join) use ($actualWorkshift) {
+                $join->on("tickets_tbl.id", "=", "ticket_details_tbl.ticket_id")
+                    ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id)
+                    ->where("tickets_tbl.status", "!=", "Cerrado");
+            })
+                ->selectRaw("ticket_details_tbl.*")->count();
+        }
+
         /**
          * @var \App\Models\User $user
          */
         $user = auth()->user();
-
-        $actualWorkshift = Workshift::where('active', 1)->first();
         $users = [$user->id];
         $relations = ["articulo", "barra", "mesero"];
 

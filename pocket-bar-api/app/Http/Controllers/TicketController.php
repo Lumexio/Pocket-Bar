@@ -81,8 +81,8 @@ class TicketController extends Controller
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
         }
 
-        BarraEvents::dispatch($ticket);
-        ticketCreated::dispatch($ticket);
+        broadcast(new BarraEvents())->toOthers();
+        ticketCreated::dispatch();
         return response()->json([
             "status" => 200,
             "error" => 0,

@@ -5,6 +5,7 @@ namespace App\Events;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
 use App\Models\Workshift;
+use BeyondCode\LaravelWebSockets\WebSockets\Channels\PrivateChannel;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -24,8 +25,6 @@ class MeseroEvents implements ShouldBroadcast
      */
     public array $TicketsARecibir;
 
-    public bool $afterCommit = true;
-
     public function __construct()
     {
         /**
@@ -35,9 +34,9 @@ class MeseroEvents implements ShouldBroadcast
 
         $actualWorkshift = Workshift::where('active', 1)->first();
         $tickets = Ticket::where('user_id', $user->id)
-        ->where('workshift_id', $actualWorkshift->id)
-        ->with('details')
-        ->get();
+            ->where('workshift_id', $actualWorkshift->id)
+            ->with('details')
+            ->get();
 
         foreach ($tickets as $ticket) {
             $countOfStatusOfTicket = TicketDetail::countOfStatusOfTicket($ticket->id);
@@ -58,6 +57,6 @@ class MeseroEvents implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('mesero');
+        return new PrivateChannel('mesero');
     }
 }

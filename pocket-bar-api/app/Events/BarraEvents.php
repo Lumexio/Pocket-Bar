@@ -19,7 +19,7 @@ class BarraEvents implements ShouldBroadcast
 
     public function __construct()
     {
-        $this->notificacionesBarra = TicketDetail::getListForWebSockets()->toArray();
+        $this->notificacionesBarra = TicketDetail::getListForWebSockets(null, true);
     }
 
     /**

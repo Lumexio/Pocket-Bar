@@ -5,16 +5,11 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-
-use App\Models\Workshift;
-
 use Illuminate\Support\Carbon;
-
-use App\Http\Requests\TicketCreateRequest;
+use App\Models\Workshift;
 use App\Models\Ticket;
 
 class ticketCreated implements ShouldBroadcast

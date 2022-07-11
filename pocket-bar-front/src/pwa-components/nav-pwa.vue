@@ -117,13 +117,7 @@ export default {
   // },
   watch: {
     switchdark(val) {
-      console.log(val);
-
-      if (this.$store.getters.hasdarkflag === val) {
-        this.switchdark == true;
-      }
       store.commit("setdarkflag", val);
-      this.hasdarkflag();
     },
   },
   created() {
@@ -131,10 +125,8 @@ export default {
   },
   methods: {
     checkDark() {
-      console.log("Si entra.");
-      if (this.$store.getters.hasdarkflag === this.switchdark) {
-        console.log("Si entra.");
-        this.switchdark == true;
+      if (this.$store.getters.hasdarkflag === true) {
+        this.switchdark = true;
       }
     },
     clear() {

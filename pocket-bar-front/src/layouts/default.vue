@@ -1,8 +1,19 @@
 <template>
-  <v-app>
+  <v-app
+    :class="[
+      this.$store.getters.hasdarkflag === true ? 'black-main' : 'white-main',
+    ]"
+  >
     <sidebar />
     <v-main class="background">
-      <v-container fluid>
+      <v-container
+        fluid
+        :class="[
+          this.$store.getters.hasdarkflag === true
+            ? 'black-main'
+            : 'white-main',
+        ]"
+      >
         <router-view /><!--Renderisa cualquier vista que este activa-->
       </v-container>
     </v-main>
@@ -41,5 +52,11 @@ export default {
   background-size: auto;
   background-attachment: auto;
   border-bottom: 1px solid #eaeaeb;
+}
+.black-main {
+  background-color: #272727;
+}
+.white-main {
+  background-color: #fff;
 }
 </style>

@@ -261,7 +261,6 @@ export default {
       });
     },
     getColor(status) {
-      console.log("dato de status:", status);
       if (status == "Administrativo") {
         return "amber lighten-1";
       } else if (status == "Meser@") {

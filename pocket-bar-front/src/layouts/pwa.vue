@@ -1,5 +1,8 @@
 <template>
-  <v-app id="inspire">
+  <v-app
+    id="inspire"
+    :class="[$store.getters.hasdarkflag === true ? 'black-main' : 'white-main']"
+  >
     <navbar />
     <v-container
       class="pa-0 fullWidth"
@@ -33,14 +36,16 @@ export default {
 /* This is for documentation purposes and will not be needed in your application */
 .fullWidth {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
 }
 .black-main {
   background-color: #272727;
+  min-height: 100vh;
 }
 .white-main {
   background-color: #fff;
+  min-height: 100vh;
 }
 
 /* your style */

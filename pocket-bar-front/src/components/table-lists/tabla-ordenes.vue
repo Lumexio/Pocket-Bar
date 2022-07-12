@@ -3,6 +3,7 @@
     <v-row>
       <v-col cols="12" sm="6" md="4">
         <v-text-field
+          :dark="this.$store.getters.hasdarkflag"
           v-model="search"
           label="Buscar orden"
           class="mx-4"
@@ -10,41 +11,40 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-app id="inspire">
-      <v-progress-linear
-        height="6"
-        indeterminate
-        color="cyan"
-        :active="cargando"
-      ></v-progress-linear>
-      <v-data-table
-        id="tabla"
-        :headers="headers"
-        show-expand
-        :expanded.sync="expanded"
-        :items="ticketsArray"
-        sort-by="cantidad_articulo"
-        class="elevation-1"
-        :search="search"
-        :custom-filter="filterOnlyCapsText.toUpperCase"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Tabla de ordenes</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
-            <v-spacer></v-spacer>
-          </v-toolbar>
-        </template>
-        <template v-slot:no-data>
-          <span>Datos no disponibles.</span>
-        </template>
-        <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">
-            {{ item.properties }}
-          </td>
-        </template>
-      </v-data-table>
-    </v-app>
+
+    <v-data-table
+      :dark="this.$store.getters.hasdarkflag"
+      id="tabla"
+      :headers="headers"
+      show-expand
+      :expanded.sync="expanded"
+      :items="ticketsArray"
+      sort-by="cantidad_articulo"
+      :search="search"
+      :custom-filter="filterOnlyCapsText.toUpperCase"
+    >
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>Tabla de ordenes</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-progress-linear
+          height="6"
+          indeterminate
+          color="cyan"
+          :active="cargando"
+        ></v-progress-linear>
+      </template>
+      <template v-slot:no-data>
+        <span>Datos no disponibles.</span>
+      </template>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          {{ item.properties }}
+        </td>
+      </template>
+    </v-data-table>
   </div>
 </template>
 

@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div
+    :class="[
+      this.$store.getters.hasdarkflag === true ? 'black-main' : 'white-main',
+    ]"
+  >
     <div class="container-login">
       <router-view />
     </div>
@@ -15,4 +19,10 @@ export default {
  
 <style>
 /* your style */
+.black-main {
+  background-color: #272727;
+}
+.white-main {
+  background-color: #fff;
+}
 </style>

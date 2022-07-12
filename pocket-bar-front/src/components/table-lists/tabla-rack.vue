@@ -18,6 +18,7 @@
         :active="cargando"
       ></v-progress-linear>
       <v-data-table
+        :dark="this.$store.getters.hasdarkflag"
         id="tabla"
         :headers="headers"
         :items="rackArray"
@@ -95,147 +96,147 @@
 </template>
 
 <script>
-  import { getRack, deleteRack, editRack } from "@/api/racks.js";
-  import { upperConverter } from "@/special/uppercases-converter.js";
-  export default {
-    nombre_rack: "tabla-rack",
-    data: () => ({
-      dialog: false,
-      dialogDelete: false,
-      search: "",
-      cargando: true,
-      headers: [
-        {
-          text: "Rack",
-          align: "start",
-          sortable: false,
-          value: "nombre_rack",
-        },
-
-        { text: "Acciones", value: "actions", sortable: false },
-      ],
-
-      rackArray: [],
-      //variable en la que se deposita la posicion en el selector
-
-      editedIndex: -1,
-      editedItem: {
-        id: "",
-        nombre_rack: "",
+import { getRack, deleteRack, editRack } from "@/api/racks.js";
+import { upperConverter } from "@/special/uppercases-converter.js";
+export default {
+  nombre_rack: "tabla-rack",
+  data: () => ({
+    dialog: false,
+    dialogDelete: false,
+    search: "",
+    cargando: true,
+    headers: [
+      {
+        text: "Rack",
+        align: "start",
+        sortable: false,
+        value: "nombre_rack",
       },
-      defaultItem: {
-        id: "",
-        nombre_rack: "",
-      },
-    }),
-    mounted() {
-      this.onFocus();
-      window.Echo.channel("racks").listen("rackCreated", (e) => {
-        this.rackArray = e.racks;
-      });
-      getRack(this.rackArray).then((response) => {
-        if (response.stats === 200) {
-          this.cargando = false;
+
+      { text: "Acciones", value: "actions", sortable: false },
+    ],
+
+    rackArray: [],
+    //variable en la que se deposita la posicion en el selector
+
+    editedIndex: -1,
+    editedItem: {
+      id: "",
+      nombre_rack: "",
+    },
+    defaultItem: {
+      id: "",
+      nombre_rack: "",
+    },
+  }),
+  mounted() {
+    this.onFocus();
+    window.Echo.channel("racks").listen("rackCreated", (e) => {
+      this.rackArray = e.racks;
+    });
+    getRack(this.rackArray).then((response) => {
+      if (response.stats === 200) {
+        this.cargando = false;
+      }
+    });
+  },
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Item" : "Editar rack";
+    },
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
+  },
+
+  created() {},
+
+  methods: {
+    onFocus() {
+      let stext = document.getElementById("onsearch");
+      stext;
+      stext = addEventListener("keydown", (e) => {
+        if (e.altKey) {
+          document.getElementById("onsearch").focus();
         }
       });
     },
-
-    computed: {
-      formTitle() {
-        return this.editedIndex === -1 ? "New Item" : "Editar rack";
-      },
+    filterOnlyCapsText(value, search) {
+      return (
+        value != null &&
+        search != null &&
+        typeof value === "string" &&
+        value.toString().toLocaleUpperCase().indexOf(search) !== -1
+      );
     },
 
-    watch: {
-      dialog(val) {
-        val || this.close();
-      },
-      dialogDelete(val) {
-        val || this.closeDelete();
-      },
+    editItem(item) {
+      this.editedIndex = this.rackArray.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+
+      this.dialog = true;
     },
 
-    created() {},
+    deleteItem(item) {
+      this.editedIndex = this.rackArray.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
 
-    methods: {
-      onFocus() {
-        let stext = document.getElementById("onsearch");
-        stext;
-        stext = addEventListener("keydown", (e) => {
-          if (e.altKey) {
-            document.getElementById("onsearch").focus();
-          }
-        });
-      },
-      filterOnlyCapsText(value, search) {
-        return (
-          value != null &&
-          search != null &&
-          typeof value === "string" &&
-          value.toString().toLocaleUpperCase().indexOf(search) !== -1
-        );
-      },
-
-      editItem(item) {
-        this.editedIndex = this.rackArray.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-
-        this.dialog = true;
-      },
-
-      deleteItem(item) {
-        this.editedIndex = this.rackArray.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        this.dialogDelete = true;
-
-        let id = this.editedItem.id;
-        deleteRack(id);
-      },
-
-      deleteItemConfirm() {
-        this.rackArray.splice(this.editedIndex, 1);
-        this.closeDelete();
-      },
-
-      close() {
-        this.dialog = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      closeDelete() {
-        this.dialogDelete = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      save() {
-        if (this.editedIndex > -1) {
-          Object.assign(this.rackArray[this.editedIndex], this.editedItem);
-          let send = this.editedItem;
-          send.nombre_rack = upperConverter(send.nombre_rack);
-          let url = "api/rack/";
-          url = url + send.id;
-          url = `${url}?${"nombre_rack=" + send.nombre_rack}`;
-          editRack(url);
-        } else {
-          this.rackArray.push(this.editedItem);
-        }
-        this.close();
-      },
+      let id = this.editedItem.id;
+      deleteRack(id);
     },
-  };
+
+    deleteItemConfirm() {
+      this.rackArray.splice(this.editedIndex, 1);
+      this.closeDelete();
+    },
+
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.rackArray[this.editedIndex], this.editedItem);
+        let send = this.editedItem;
+        send.nombre_rack = upperConverter(send.nombre_rack);
+        let url = "api/rack/";
+        url = url + send.id;
+        url = `${url}?${"nombre_rack=" + send.nombre_rack}`;
+        editRack(url);
+      } else {
+        this.rackArray.push(this.editedItem);
+      }
+      this.close();
+    },
+  },
+};
 </script>
 
 <style scoped>
-  #tabla {
-    width: 60rem;
-  }
-  .tabla {
-    width: 60rem;
-  }
+#tabla {
+  width: 60rem;
+}
+.tabla {
+  width: 60rem;
+}
 </style>

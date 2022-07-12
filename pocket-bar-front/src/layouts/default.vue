@@ -55,8 +55,10 @@ export default {
 }
 .black-main {
   background-color: #272727;
+  min-height: 100vh;
 }
 .white-main {
   background-color: #fff;
+  min-height: 100vh;
 }
 </style>

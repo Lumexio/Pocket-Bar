@@ -19,6 +19,7 @@
         :active="cargando"
       ></v-progress-linear>
       <v-data-table
+        :dark="this.$store.getters.hasdarkflag"
         id="tabla"
         :headers="headers"
         :items="usersArray"

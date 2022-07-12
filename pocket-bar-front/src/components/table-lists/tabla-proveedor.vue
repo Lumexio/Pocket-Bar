@@ -18,6 +18,7 @@
         :active="cargando"
       ></v-progress-linear>
       <v-data-table
+        :dark="this.$store.getters.hasdarkflag"
         id="tabla"
         :headers="headers"
         show-expand
@@ -103,164 +104,164 @@
 </template>
 
 <script>
-  import {
-    getProveedores,
-    deleteProveedores,
-    editProveedores,
-  } from "@/api/proveedores.js";
-  import { upperConverter } from "@/special/uppercases-converter.js";
-  export default {
-    nombre_proveedor: "tabla-proveedor",
-    data: () => ({
-      dialog: false,
-      dialogDelete: false,
-      search: "",
-      cargando: true,
-      expanded: [],
+import {
+  getProveedores,
+  deleteProveedores,
+  editProveedores,
+} from "@/api/proveedores.js";
+import { upperConverter } from "@/special/uppercases-converter.js";
+export default {
+  nombre_proveedor: "tabla-proveedor",
+  data: () => ({
+    dialog: false,
+    dialogDelete: false,
+    search: "",
+    cargando: true,
+    expanded: [],
 
-      headers: [
-        {
-          text: "Proveedores",
-          align: "start",
-          sortable: false,
-          value: "nombre_proveedor",
-        },
-        { text: "Acciones", value: "actions", sortable: false, align: "center" },
-        { text: "Descripción", align: "start", value: "data-table-expand" },
-      ],
-
-      proveedorArray: [],
-      //variable en la que se deposita la posicion en el selector
-      selectrol: null, //Rol
-
-      //Array en el que se deposita de los selectores.
-      itemsrol: [], //Rol
-
-      editedIndex: -1,
-      editedItem: {
-        id: "",
-        nombre_proveedor: "",
+    headers: [
+      {
+        text: "Proveedores",
+        align: "start",
+        sortable: false,
+        value: "nombre_proveedor",
       },
-      defaultItem: {
-        id: "",
-        nombre_proveedor: "",
-      },
-    }),
-    mounted() {
-      this.onFocus();
-      window.Echo.channel("proveedores").listen("proveedorCreated", (e) => {
-        this.proveedorArray = e.proveedores;
-      });
+      { text: "Acciones", value: "actions", sortable: false, align: "center" },
+      { text: "Descripción", align: "start", value: "data-table-expand" },
+    ],
 
-      getProveedores(this.proveedorArray)
-        .then((response) => {
-          if (response.stats === 200) {
-            this.cargando = false;
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-          this.cargando = true;
-        });
+    proveedorArray: [],
+    //variable en la que se deposita la posicion en el selector
+    selectrol: null, //Rol
+
+    //Array en el que se deposita de los selectores.
+    itemsrol: [], //Rol
+
+    editedIndex: -1,
+    editedItem: {
+      id: "",
+      nombre_proveedor: "",
     },
-
-    computed: {
-      formTitle() {
-        return this.editedIndex === -1 ? "New Item" : "Editar proveedor";
-      },
+    defaultItem: {
+      id: "",
+      nombre_proveedor: "",
     },
+  }),
+  mounted() {
+    this.onFocus();
+    window.Echo.channel("proveedores").listen("proveedorCreated", (e) => {
+      this.proveedorArray = e.proveedores;
+    });
 
-    watch: {
-      dialog(val) {
-        val || this.close();
-      },
-      dialogDelete(val) {
-        val || this.closeDelete();
-      },
-    },
-
-    created() {},
-
-    methods: {
-      onFocus() {
-        let stext = document.getElementById("onsearch");
-        stext;
-        stext = addEventListener("keydown", (e) => {
-          if (e.altKey) {
-            document.getElementById("onsearch").focus();
-          }
-        });
-      },
-      filterOnlyCapsText(value, search) {
-        return (
-          value != null &&
-          search != null &&
-          typeof value === "string" &&
-          value.toString().toLocaleUpperCase().indexOf(search) !== -1
-        );
-      },
-
-      editItem(item) {
-        this.editedIndex = this.proveedorArray.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-
-        this.dialog = true;
-      },
-
-      deleteItem(item) {
-        this.editedIndex = this.proveedorArray.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        this.dialogDelete = true;
-
-        let id = this.editedItem.id;
-        deleteProveedores(id);
-      },
-
-      deleteItemConfirm() {
-        this.proveedorArray.splice(this.editedIndex, 1);
-        this.closeDelete();
-      },
-
-      close() {
-        this.dialog = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      closeDelete() {
-        this.dialogDelete = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      save() {
-        if (this.editedIndex > -1) {
-          Object.assign(this.proveedorArray[this.editedIndex], this.editedItem);
-          let send = this.editedItem;
-          send.nombre_proveedor = upperConverter(send.nombre_proveedor);
-          let url = "api/proveedor/";
-
-          url = url + send.id;
-          url = `${url}?${"nombre_proveedor=" + send.nombre_proveedor}`;
-          editProveedores(url);
-        } else {
-          this.proveedorArray.push(this.editedItem);
+    getProveedores(this.proveedorArray)
+      .then((response) => {
+        if (response.stats === 200) {
+          this.cargando = false;
         }
-        this.close();
-      },
+      })
+      .catch((e) => {
+        console.log(e);
+        this.cargando = true;
+      });
+  },
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Item" : "Editar proveedor";
     },
-  };
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
+  },
+
+  created() {},
+
+  methods: {
+    onFocus() {
+      let stext = document.getElementById("onsearch");
+      stext;
+      stext = addEventListener("keydown", (e) => {
+        if (e.altKey) {
+          document.getElementById("onsearch").focus();
+        }
+      });
+    },
+    filterOnlyCapsText(value, search) {
+      return (
+        value != null &&
+        search != null &&
+        typeof value === "string" &&
+        value.toString().toLocaleUpperCase().indexOf(search) !== -1
+      );
+    },
+
+    editItem(item) {
+      this.editedIndex = this.proveedorArray.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      this.editedIndex = this.proveedorArray.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+
+      let id = this.editedItem.id;
+      deleteProveedores(id);
+    },
+
+    deleteItemConfirm() {
+      this.proveedorArray.splice(this.editedIndex, 1);
+      this.closeDelete();
+    },
+
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.proveedorArray[this.editedIndex], this.editedItem);
+        let send = this.editedItem;
+        send.nombre_proveedor = upperConverter(send.nombre_proveedor);
+        let url = "api/proveedor/";
+
+        url = url + send.id;
+        url = `${url}?${"nombre_proveedor=" + send.nombre_proveedor}`;
+        editProveedores(url);
+      } else {
+        this.proveedorArray.push(this.editedItem);
+      }
+      this.close();
+    },
+  },
+};
 </script>
 
 <style scoped>
-  #tabla {
-    width: 60rem;
-  }
-  .tabla {
-    width: 60rem;
-  }
+#tabla {
+  width: 60rem;
+}
+.tabla {
+  width: 60rem;
+}
 </style>

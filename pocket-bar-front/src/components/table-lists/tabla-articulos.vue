@@ -1,229 +1,227 @@
 <template>
-  <v-card :dark="this.$store.getters.hasdarkflag">
-    <v-toolbar color="transparent" flat>
-      <v-card-title>Tabla artículos</v-card-title>
-      <v-divider inset vertical></v-divider>
-      <v-spacer></v-spacer>
-      <v-text-field
-        :dark="this.$store.getters.hasdarkflag"
-        label="Buscar artículo"
-        placeholder="Nombre, cantidad, categoria, tipo ...."
-        class="mt-4"
-        v-model="search"
-        id="onsearch"
-      />
-    </v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="articulosArray"
-      :expanded.sync="expanded"
-      sort-by="cantidad_articulo"
-      class="elevation-2"
-      :search="search"
-      show-expand
-      :custom-filter="filterOnlyCapsText.toUpperCase"
-    >
+  <v-data-table
+    :dark="this.$store.getters.hasdarkflag"
+    :headers="headers"
+    :items="articulosArray"
+    :expanded.sync="expanded"
+    sort-by="cantidad_articulo"
+    class="elevation-1"
+    :search="search"
+    show-expand
+    :custom-filter="filterOnlyCapsText.toUpperCase"
+  >
+    <template v-slot:top>
+      <v-toolbar color="transparent" flat>
+        <v-card-title>Tabla artículos</v-card-title>
+        <v-divider inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-text-field
+          label="Buscar artículo"
+          placeholder="Nombre, cantidad, categoria, tipo ...."
+          class="mt-4"
+          v-model="search"
+          id="onsearch"
+        />
+      </v-toolbar>
       <v-progress-linear
         height="6"
         indeterminate
         color="cyan"
         :active="cargando"
       ></v-progress-linear>
-      <template v-slot:top>
-        <v-dialog v-model="dialog" min-width="300px" max-width="600px">
-          <v-card>
-            <v-card-title>
-              <h1 class="headline">{{ formTitle }}</h1>
-            </v-card-title>
+      <v-dialog v-model="dialog" min-width="300px" max-width="600px">
+        <v-card>
+          <v-card-title>
+            <h1 class="headline">{{ formTitle }}</h1>
+          </v-card-title>
 
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col sm="4" md="6">
-                    <v-text-field
-                      v-model="editedItem.nombre_articulo"
-                      label="Nombre"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col sm="1" md="2">
-                    <v-text-field
-                      v-model="editedItem.cantidad_articulo"
-                      type="number"
-                      label="Cantidad"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col sm="3" md="4">
-                    <v-select
-                      v-model="selectc"
-                      :items="itemsc"
-                      item-text="nombre_categoria"
-                      item-value="id"
-                      label="Categoría"
-                    ></v-select>
-                  </v-col>
-                  <v-col sm="4" md="6">
-                    <v-select
-                      v-model="selectt"
-                      :items="itemstt"
-                      item-text="nombre_tipo"
-                      item-value="id"
-                      label="Tipo"
-                    >
-                    </v-select>
-                  </v-col>
-                  <v-col sm="4" md="6">
-                    <v-select
-                      v-model="selectm"
-                      :items="itemstm"
-                      item-text="nombre_marca"
-                      item-value="id"
-                      label="Marca"
-                      required
-                    ></v-select>
-                  </v-col>
-                  <v-col sm="4" md="6">
-                    <v-select
-                      v-model="selectp"
-                      :items="itemsp"
-                      item-text="nombre_proveedor"
-                      item-value="id"
-                      label="Proveedor"
-                      required
-                    ></v-select>
-                  </v-col>
-                  <v-col sm="4" md="6">
-                    <v-select
-                      v-model="selectst"
-                      :items="itemstst"
-                      item-text="nombre_status"
-                      item-value="status_id"
-                      label="Estatus"
-                      required
-                    ></v-select>
-                  </v-col>
-                  <v-col sm="4" md="6">
-                    <v-select
-                      v-model="selectr"
-                      :items="itemsr"
-                      item-text="nombre_rack"
-                      item-value="id"
-                      label="Ubicación rack"
-                      required
-                    ></v-select>
-                  </v-col>
-                  <v-col sm="4" md="6">
-                    <v-select
-                      v-model="selectT"
-                      :items="itemsT"
-                      item-text="nombre_travesano"
-                      item-value="id"
-                      label="Ubicación travesaño"
-                      required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row
-                  ><v-col>
-                    <v-textarea
-                      v-model="editedItem.descripcion_articulo"
-                      label="Descrpción"
-                      type="text"
-                    ></v-textarea> </v-col
-                ></v-row>
-              </v-container>
-            </v-card-text>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col sm="4" md="6">
+                  <v-text-field
+                    v-model="editedItem.nombre_articulo"
+                    label="Nombre"
+                  ></v-text-field>
+                </v-col>
+                <v-col sm="1" md="2">
+                  <v-text-field
+                    v-model="editedItem.cantidad_articulo"
+                    type="number"
+                    label="Cantidad"
+                  ></v-text-field>
+                </v-col>
+                <v-col sm="3" md="4">
+                  <v-select
+                    v-model="selectc"
+                    :items="itemsc"
+                    item-text="nombre_categoria"
+                    item-value="id"
+                    label="Categoría"
+                  ></v-select>
+                </v-col>
+                <v-col sm="4" md="6">
+                  <v-select
+                    v-model="selectt"
+                    :items="itemstt"
+                    item-text="nombre_tipo"
+                    item-value="id"
+                    label="Tipo"
+                  >
+                  </v-select>
+                </v-col>
+                <v-col sm="4" md="6">
+                  <v-select
+                    v-model="selectm"
+                    :items="itemstm"
+                    item-text="nombre_marca"
+                    item-value="id"
+                    label="Marca"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col sm="4" md="6">
+                  <v-select
+                    v-model="selectp"
+                    :items="itemsp"
+                    item-text="nombre_proveedor"
+                    item-value="id"
+                    label="Proveedor"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col sm="4" md="6">
+                  <v-select
+                    v-model="selectst"
+                    :items="itemstst"
+                    item-text="nombre_status"
+                    item-value="status_id"
+                    label="Estatus"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col sm="4" md="6">
+                  <v-select
+                    v-model="selectr"
+                    :items="itemsr"
+                    item-text="nombre_rack"
+                    item-value="id"
+                    label="Ubicación rack"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col sm="4" md="6">
+                  <v-select
+                    v-model="selectT"
+                    :items="itemsT"
+                    item-text="nombre_travesano"
+                    item-value="id"
+                    label="Ubicación travesaño"
+                    required
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <v-row
+                ><v-col>
+                  <v-textarea
+                    v-model="editedItem.descripcion_articulo"
+                    label="Descrpción"
+                    type="text"
+                  ></v-textarea> </v-col
+              ></v-row>
+            </v-container>
+          </v-card-text>
 
-            <v-card-actions v-on:keyup.enter="save">
-              <v-spacer></v-spacer>
-              <v-btn color="grey darken-2" outlined @click="close">
-                Cancelar
-              </v-btn>
-              <v-btn color="yellow darken-2" outlined @click="save">
-                Guardar cambios
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+          <v-card-actions v-on:keyup.enter="save">
+            <v-spacer></v-spacer>
+            <v-btn color="grey darken-2" outlined @click="close">
+              Cancelar
+            </v-btn>
+            <v-btn color="yellow darken-2" outlined @click="save">
+              Guardar cambios
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="headline"
-              >Are you sure you want to delete this item?</v-card-title
+      <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-card>
+          <v-card-title class="headline"
+            >Are you sure you want to delete this item?</v-card-title
+          >
+          <v-card-actions v-on:keyup.enter="deleteItemConfirm">
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="closeDelete"
+              >Cancel</v-btn
             >
-            <v-card-actions v-on:keyup.enter="deleteItemConfirm">
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete"
-                >Cancel</v-btn
+            <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+              >OK</v-btn
+            >
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog
+        v-model="dialogDetail"
+        transition="dialog-bottom-transition"
+        max-width="600"
+      >
+        <template v-slot:default="dialogDetail">
+          <v-card :key="count">
+            <v-card-text>
+              <v-toolbar flat>
+                <v-card-title>
+                  Foto {{ editedItem.nombre_articulo }}</v-card-title
+                ></v-toolbar
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                >OK</v-btn
+              <v-img
+                :colspan="headers.length"
+                v-bind:lazy-src="editedItem.foto_articulo"
+                max-height="500"
+                max-width="600"
+                v-bind:src="editedItem.foto_articulo"
+              ></v-img>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-file-input
+                v-model="photo"
+                prepend-icon="mdi-camera"
+                hide-input
+                label="File input"
+              ></v-file-input>
+              <v-btn
+                v-show="photo != null"
+                text
+                color="orange"
+                @click="photochange()"
+                >Subir Imagen</v-btn
               >
-              <v-spacer></v-spacer>
+              <v-btn text @click="dialogDetail.value = false">Close</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
-        <v-dialog
-          v-model="dialogDetail"
-          transition="dialog-bottom-transition"
-          max-width="600"
-        >
-          <template v-slot:default="dialogDetail">
-            <v-card :key="count">
-              <v-card-text>
-                <v-toolbar flat>
-                  <v-card-title>
-                    Foto {{ editedItem.nombre_articulo }}</v-card-title
-                  ></v-toolbar
-                >
-                <v-img
-                  :colspan="headers.length"
-                  v-bind:lazy-src="editedItem.foto_articulo"
-                  max-height="500"
-                  max-width="600"
-                  v-bind:src="editedItem.foto_articulo"
-                ></v-img>
-              </v-card-text>
-              <v-card-actions class="justify-end">
-                <v-file-input
-                  v-model="photo"
-                  prepend-icon="mdi-camera"
-                  hide-input
-                  label="File input"
-                ></v-file-input>
-                <v-btn
-                  v-show="photo != null"
-                  text
-                  color="orange"
-                  @click="photochange()"
-                  >Subir Imagen</v-btn
-                >
-                <v-btn text @click="dialogDetail.value = false">Close</v-btn>
-              </v-card-actions>
-            </v-card>
-          </template>
-        </v-dialog>
-      </template>
+        </template>
+      </v-dialog>
+    </template>
 
-      <template v-slot:[`item.nombre_status`]="{ item }">
-        <v-chip :color="getColor(item.nombre_status)" dark>
-          {{ item.nombre_status }}
-        </v-chip>
-      </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-        <v-icon small @click="detailItem(item)"> mdi-file-eye-outline </v-icon>
-      </template>
-      <template v-slot:no-data>
-        <span>Datos no disponibles.</span>
-      </template>
-      <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">
-          {{ item.descripcion_articulo }}
-        </td>
-      </template>
-    </v-data-table>
-  </v-card>
+    <template v-slot:[`item.nombre_status`]="{ item }">
+      <v-chip :color="getColor(item.nombre_status)" dark>
+        {{ item.nombre_status }}
+      </v-chip>
+    </template>
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon small @click="detailItem(item)"> mdi-file-eye-outline </v-icon>
+    </template>
+    <template v-slot:no-data>
+      <span>Datos no disponibles.</span>
+    </template>
+    <template v-slot:expanded-item="{ headers, item }">
+      <td :colspan="headers.length">
+        {{ item.descripcion_articulo }}
+      </td>
+    </template>
+  </v-data-table>
 </template>
 
 <script>

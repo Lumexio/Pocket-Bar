@@ -3,7 +3,15 @@
     <v-list nav expand dense>
       <v-toolbar flat>
         <v-list-item-title style="font-size: 20px" class="text-uppercase">
-          <code class="font-weight-light">Pocket</code><strong>bar</strong>
+          <code class="font-weight-light">Pocket</code
+          ><strong
+            :class="[
+              this.$store.getters.hasdarkflag === true
+                ? 'black-mode-text'
+                : 'white-mode-text',
+            ]"
+            >bar</strong
+          >
         </v-list-item-title>
         <v-switch class="mt-6" v-model="switchdark" flat></v-switch
       ></v-toolbar>
@@ -295,5 +303,11 @@ export default {
       color: #ffffff;
     }
   }
+}
+.black-mode-text {
+  color: yellowgreen;
+}
+.white-mode-text {
+  color: black;
 }
 </style>

@@ -22,13 +22,13 @@
       :search="search"
       :custom-filter="filterOnlyCapsText.toUpperCase"
     >
-      <v-progress-linear
-        height="6"
-        indeterminate
-        color="cyan"
-        :active="cargando"
-      ></v-progress-linear>
       <template v-slot:top>
+        <v-progress-linear
+          height="6"
+          indeterminate
+          color="cyan"
+          :active="cargando"
+        ></v-progress-linear>
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
             <v-card-title>

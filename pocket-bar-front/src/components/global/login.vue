@@ -1,41 +1,49 @@
 <template>
   <div class="logcard">
-    <div id="app">
-      <v-app id="inspire">
-        <v-card v-on:keyup.enter="login()" class="cont-card" elevation="2">
-          <v-card-title class="fade-in-title" style="font-size: 3rem"
-            ><code class="font-weight-light">Pocket</code
-            ><strong>bar</strong></v-card-title
-          >
-          <v-text-field v-model="name" label="Nombre" required></v-text-field>
-          <v-text-field
-            :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
-            v-model="password"
-            :type="show3 ? 'text' : 'password'"
-            class="input-group--focused"
-            :counter="8"
-            label="contraseña"
-            :error-messages="passwordErrors"
-            required
-            @click:append="show3 = !show3"
-            @input="$v.password.$touch()"
-            @blur="$v.password.$touch()"
-            loading
-          >
-            <template v-slot:progress>
-              <v-progress-linear
-                :value="progress"
-                :color="color"
-                absolute
-                height="2"
-              ></v-progress-linear>
-            </template>
-          </v-text-field>
-          <v-btn class="mr-4" v-on:click="login()" text> Iniciar sesión </v-btn>
-          <v-btn @click="clear" text> limpiar </v-btn>
-        </v-card>
-      </v-app>
-    </div>
+    <v-card
+      v-on:keyup.enter="login()"
+      class="cont-card"
+      elevation="2"
+      :dark="this.$store.getters.hasdarkflag"
+    >
+      <v-card-title class="fade-in-title" style="font-size: 3rem"
+        ><code class="font-weight-light">Pocket</code
+        ><strong
+          :class="[
+            this.$store.getters.hasdarkflag === true
+              ? 'black-mode-text'
+              : 'white-mode-text',
+          ]"
+          >bar</strong
+        ></v-card-title
+      >
+      <v-text-field v-model="name" label="Nombre" required></v-text-field>
+      <v-text-field
+        :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
+        v-model="password"
+        :type="show3 ? 'text' : 'password'"
+        class="input-group--focused"
+        :counter="8"
+        label="contraseña"
+        :error-messages="passwordErrors"
+        required
+        @click:append="show3 = !show3"
+        @input="$v.password.$touch()"
+        @blur="$v.password.$touch()"
+        loading
+      >
+        <template v-slot:progress>
+          <v-progress-linear
+            :value="progress"
+            :color="color"
+            absolute
+            height="2"
+          ></v-progress-linear>
+        </template>
+      </v-text-field>
+      <v-btn class="mr-4" v-on:click="login()" text> Iniciar sesión </v-btn>
+      <v-btn @click="clear" text> limpiar </v-btn>
+    </v-card>
   </div>
 </template>
 
@@ -205,5 +213,11 @@ export default {
   100% {
     opacity: 1;
   }
+}
+.black-mode-text {
+  color: yellowgreen;
+}
+.white-mode-text {
+  color: black;
 }
 </style>

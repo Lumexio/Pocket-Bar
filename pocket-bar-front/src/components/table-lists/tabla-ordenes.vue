@@ -1,16 +1,17 @@
 <template>
-  <div class="tabla" id="app">
-    <v-row>
-      <v-col cols="12" sm="6" md="4">
-        <v-text-field
-          :dark="this.$store.getters.hasdarkflag"
-          v-model="search"
-          label="Buscar orden"
-          class="mx-4"
-          id="onsearch"
-        ></v-text-field>
-      </v-col>
-    </v-row>
+  <v-card :dark="this.$store.getters.hasdarkflag">
+    <v-toolbar flat color="transparent">
+      <v-toolbar-title>Tabla de ordenes</v-toolbar-title>
+      <v-divider inset vertical class="ml-4"></v-divider>
+      <v-spacer></v-spacer>
+      <v-text-field
+        :dark="this.$store.getters.hasdarkflag"
+        v-model="search"
+        label="Buscar orden"
+        class="mt-6"
+        id="onsearch"
+      ></v-text-field>
+    </v-toolbar>
 
     <v-data-table
       :dark="this.$store.getters.hasdarkflag"
@@ -24,11 +25,6 @@
       :custom-filter="filterOnlyCapsText.toUpperCase"
     >
       <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>Tabla de ordenes</v-toolbar-title>
-
-          <v-spacer></v-spacer>
-        </v-toolbar>
         <v-progress-linear
           height="6"
           indeterminate
@@ -45,7 +41,7 @@
         </td>
       </template>
     </v-data-table>
-  </div>
+  </v-card>
 </template>
 
 <script>

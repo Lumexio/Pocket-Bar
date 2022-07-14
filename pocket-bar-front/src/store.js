@@ -54,7 +54,13 @@ export default new Vuex.Store({
   setstatcode(state, payload) { state.statcode = payload },
   setdarkflag(state, payload) { state.darkflag = payload },
   RESET: state => {
-   Object.assign(state, getDefaultState());
+   state.token = null,
+    state.recharge = 0,
+    state.rol = null,
+    state.status = "Por entregar",
+    state.notiLike = null,
+    state.notiDanger = null,
+    state.statcode = null
   }
  },
 

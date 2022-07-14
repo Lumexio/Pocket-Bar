@@ -4,9 +4,14 @@
     v-model="dialograck"
     max-width="20rem"
     persistent
+    :dark="this.$store.getters.hasdarkflag"
   >
     <v-card class="cont-card" v-on:keyup.enter="submit()" elevation="1">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon

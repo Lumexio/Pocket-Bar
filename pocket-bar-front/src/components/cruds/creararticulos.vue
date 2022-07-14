@@ -1,12 +1,17 @@
 <template>
   <v-dialog
+    :dark="this.$store.getters.hasdarkflag"
     content-class="elevation-0"
     v-model="dialogarticulo"
     persistent
     max-width="40rem"
   >
     <v-card v-on:keyup.enter="submit()" class="cont-card">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon

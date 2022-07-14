@@ -111,7 +111,16 @@
           </v-btn>
         </v-row>-->
 
-    <v-row class="ma-2"><v-subheader>Ubicación</v-subheader></v-row>
+    <v-row class="ma-2"
+      ><v-subheader
+        :class="[
+          this.$store.getters.hasdarkflag === true
+            ? 'black-mode-text'
+            : 'white-mode-text',
+        ]"
+        >Ubicación</v-subheader
+      ></v-row
+    >
 
     <v-tooltip open-delay="500" left>
       <template v-slot:activator="{ on, attrs }">
@@ -214,4 +223,10 @@ export default {
 };
 </script>
 <style scoped>
+.black-mode-text {
+  color: yellowgreen;
+}
+.white-mode-text {
+  color: black;
+}
 </style>

@@ -18,7 +18,7 @@
       >
       <v-chip class="ml-6" color="pink" label outlined>{{ typeUser }}</v-chip>
       <v-spacer></v-spacer>
-      <v-switch v-model="switchdark" flat></v-switch>
+      <v-switch v-model="switchdark" color="success" flat></v-switch>
     </div>
     <v-toolbar :dark="darkonchange" flat>
       <v-text-field

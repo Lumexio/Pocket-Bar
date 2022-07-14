@@ -13,7 +13,12 @@
             >bar</strong
           >
         </v-list-item-title>
-        <v-switch class="mt-6" v-model="switchdark" flat></v-switch
+        <v-switch
+          class="mt-6"
+          v-model="switchdark"
+          color="success"
+          flat
+        ></v-switch
       ></v-toolbar>
 
       <v-divider></v-divider>

@@ -4,7 +4,7 @@
     fullscreen
     hide-overlay
     transition="dialog-bottom-transition"
-    ><v-card>
+    ><v-card :dark="this.$store.getters.hasdarkflag">
       <v-toolbar dark>
         <v-btn icon dark @click="close()">
           <v-icon>mdi-close</v-icon>

@@ -64,12 +64,16 @@ export default {
 </script>
 
 <style scoped>
+.v-expansion-panels {
+  gap: 10px;
+
+  max-height: 10% !important;
+}
 .row {
   display: flex;
   flex-direction: row;
 }
 .sizes {
   max-width: calc(100% - 0px) !important;
-  min-width: calc(100% - 0px) !important;
 }
 </style>

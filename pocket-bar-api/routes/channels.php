@@ -19,10 +19,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 
-Broadcast::channel('barra', function ($user) {
-    return (Auth::check()) and (Auth::user()->rol_id == 5);
+Broadcast::channel('barra.{id}', function ($user, $id) {
+    return (Auth::check()) and (Auth::user()->rol_id == 5) and (Auth::user()->id == $id);
 });
 
-Broadcast::channel('mesero', function ($user) {
-    return (Auth::check()) and (in_array(Auth::user()->rol_id, [5, 4]));
+Broadcast::channel('mesero.{id}', function ($user, $id) {
+    return (Auth::check()) and (in_array(Auth::user()->rol_id, [4])) and (Auth::user()->id == $id);
 });

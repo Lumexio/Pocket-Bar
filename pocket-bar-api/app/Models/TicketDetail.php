@@ -34,33 +34,24 @@ class TicketDetail extends Model
         return $this->belongsTo(User::class, "barTender_id");
     }
 
-    public static function getListForWebSockets(?string $status = null, bool $fromBarraEvent = false)
+    public static function getListForWebSockets(?string $status = null, int $userId, int $roleId): Collection
     {
         $actualWorkshift = Workshift::where('active', 1)->first();
-        if ($fromBarraEvent) {
-            return self::join("tickets_tbl", function ($join) use ($actualWorkshift) {
-                $join->on("tickets_tbl.id", "=", "ticket_details_tbl.ticket_id")
-                    ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id)
-                    ->where("tickets_tbl.status", "!=", "Cerrado");
-            })
-                ->selectRaw("ticket_details_tbl.*")->count();
-        }
 
-        /**
-         * @var \App\Models\User $user
-         */
-        $user = auth()->user();
-        $users = [$user->id];
+        $users = [$userId];
         $relations = ["articulo", "barra", "mesero"];
 
-        if ($user->rol_id == 5) {
+        /**
+         * Preguntamos si es un barra o un mesero
+         */
+        if ($roleId == 5) {
             array_push($users, ...array_column(User::where("rol_id", "!=", 5)->get(["id"])->toArray(), "id"));
             $relations = ["articulo", "mesero"];
             $ticketDetails = self::with($relations)
                 ->whereIn("waiter_id", $users);
         } else {
             $ticketDetails = self::with($relations)
-                ->where("waiter_id", $user->id);
+                ->where("waiter_id", $userId);
         }
 
         $ticketDetails = $ticketDetails
@@ -71,7 +62,7 @@ class TicketDetail extends Model
             })
             ->selectRaw("ticket_details_tbl.*");
 
-        if ($user->rol_id == 5) {
+        if ($roleId == 5) {
             $ticketDetails = $ticketDetails->whereIn("ticket_details_tbl.status", ["En espera", "En preparacion", "Preparado"]);
         } else {
             $ticketDetails = $ticketDetails->where("ticket_details_tbl.status", "Preparado");

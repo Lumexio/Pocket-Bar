@@ -103,7 +103,10 @@ export default {
             .post("api/login", enviar)
             .then((response) => {
               let rol = response.data.user.rol_id;
+              let userId = response.data.user.id;
+              console.log(userId);
               store.commit("setrol", rol);
+              store.commit("setUserId", userId);
               let validado = response.request.withCredentials;
               if (validado == true) {
                 store.commit("SET_TOKEN", response.data.token);

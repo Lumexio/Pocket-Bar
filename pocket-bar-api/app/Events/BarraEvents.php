@@ -15,11 +15,14 @@ class BarraEvents implements ShouldBroadcast
 
     public $notificacionesBarra;
 
+    public $user_id;
+
     public $afterCommit = true;
 
-    public function __construct()
+    public function __construct(int $userId, int $roleId)
     {
-        $this->notificacionesBarra = TicketDetail::getListForWebSockets(null, true);
+        $this->user_id = $userId;
+        $this->notificacionesBarra = TicketDetail::getListForWebSockets(null, $userId, $roleId)->toArray();
     }
 
     /**
@@ -29,6 +32,6 @@ class BarraEvents implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('barra');
+        return new Channel('barra.' . $this->user_id);
     }
 }

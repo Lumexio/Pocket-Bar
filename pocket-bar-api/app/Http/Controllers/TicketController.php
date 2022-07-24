@@ -18,6 +18,14 @@ use App\Models\TicketDetail;
 
 class TicketController extends Controller
 {
+    public static function sendNotificationsToBarthenders()
+    {
+        $bartenders = User::where("rol_id", 5)->get();
+        foreach ($bartenders as $bartender) {
+            broadcast(new BarraEvents($bartender->id, 5))->toOthers();
+        }
+    }
+
     public function store(TicketCreateRequest $request): JsonResponse
     {
         $items = collect($request->input('productos'));
@@ -81,7 +89,8 @@ class TicketController extends Controller
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
         }
 
-        broadcast(new BarraEvents())->toOthers();
+        $this->sendNotificationsToBarthenders();
+
         ticketCreated::dispatch();
         return response()->json([
             "status" => 200,

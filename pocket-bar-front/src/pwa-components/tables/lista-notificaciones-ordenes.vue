@@ -54,8 +54,8 @@
           >
         </v-card-actions>
       </v-card>
-    </v-card></v-dialog
-  >
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -99,10 +99,6 @@ export default {
       this.refresher += 1;
       console.log("Preparado barra:", this.sendStatusPrepBox);
       postTicketsNotiPWA(this.sendStatusPrepBox);
-
-      window.Echo.channel("barra").listen("barraEvents", (e) => {
-        this.ticketsPWANotiArray = e.notificacionesBarra;
-      });
     },
     sendStatusRecived(id) {
       this.sendStatusRecivedBox.id = id;
@@ -110,10 +106,6 @@ export default {
       this.refresher += 1;
       console.log("Preparado barra:", this.sendStatusRecivedBox);
       postTicketsNotiPWA(this.sendStatusRecivedBox);
-
-      window.Echo.channel("meseros").listen("MeseroEvents", (e) => {
-        this.ticketsPWANotiArray = e.TicketsARecibir;
-      });
     },
     close() {
       this.$emit("update:dialoglistorden", false);
@@ -138,15 +130,21 @@ export default {
   },
   mounted() {
     if (this.$store.getters.hasrol == 4) {
-      window.Echo.channel("mesero").listen("MeseroEvents", (e) => {
-        console.log("Mesero:", e);
-        this.ticketsPWANotiArray = e.TicketsARecibir;
-      });
+      window.Echo.channel("mesero." + this.$store.getters.getUserId).listen(
+        "MeseroEvents",
+        (e) => {
+          console.log("Mesero:", e);
+          this.ticketsPWANotiArray = e.TicketsARecibir;
+        }
+      );
     } else if (this.$store.getters.hasrol == 5) {
-      window.Echo.channel("barra").listen("barraEvents", (e) => {
-        console.log("hola:", e);
-        this.ticketsPWANotiArray = e.notificacionesBarra;
-      });
+      window.Echo.channel("barra." + this.$store.getters.getUserId).listen(
+        "barraEvents",
+        (e) => {
+          console.log("hola:", e);
+          this.ticketsPWANotiArray = e.notificacionesBarra;
+        }
+      );
     }
 
     getTicketsNotiPWA(this.ticketsPWANotiArray)

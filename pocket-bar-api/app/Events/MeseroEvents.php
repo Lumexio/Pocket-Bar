@@ -23,17 +23,15 @@ class MeseroEvents implements ShouldBroadcast
      *
      * @return void
      */
-    public array $TicketsARecibir;
+    public $TicketsARecibir;
 
-    public function __construct()
+    public $userId;
+
+    public function __construct(int $userId)
     {
-        /**
-         * @var User
-         */
-        $user = auth()->user();
-
+        $this->userId = $userId;
         $actualWorkshift = Workshift::where('active', 1)->first();
-        $tickets = Ticket::where('user_id', $user->id)
+        $tickets = Ticket::where('user_id', $userId)
             ->where('workshift_id', $actualWorkshift->id)
             ->with('details')
             ->get();
@@ -57,6 +55,6 @@ class MeseroEvents implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('mesero');
+        return new Channel('mesero.' . $this->userId);
     }
 }

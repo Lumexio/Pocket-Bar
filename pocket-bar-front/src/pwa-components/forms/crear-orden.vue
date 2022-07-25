@@ -5,9 +5,13 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <v-card>
-      <v-toolbar dark>
-        <v-btn icon dark @click="close()">
+    <v-card :dark="this.$store.getters.hasdarkflag === true">
+      <v-toolbar color="transparent">
+        <v-btn
+          icon
+          :dark="this.$store.getters.hasdarkflag === true"
+          @click="close()"
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
 
@@ -57,7 +61,13 @@
               hide-default-footer
             >
               <template v-slot:header>
-                <v-toolbar flat light class="mb-1">
+                <v-toolbar
+                  flat
+                  light
+                  class="mb-1"
+                  :dark="$store.getters.hasdarkflag"
+                  color="transparent"
+                >
                   <v-text-field
                     v-model="search"
                     clearable
@@ -70,23 +80,35 @@
               </template>
 
               <template v-slot:default="props">
-                <v-row>
-                  <v-col v-for="item in props.items" :key="item.id" cols="6">
-                    <v-card :dark="cambio(item)" @click="cajaProductos(item)">
-                      <v-img
-                        v-bind:lazy-src="item.foto_articulo"
-                        max-height="500"
-                        max-width="600"
-                        v-bind:src="item.foto_articulo"
-                      ></v-img>
-                      <v-card-title class="subheading font-weight-bold">
-                        {{ item.nombre_articulo }}
-                      </v-card-title>
-                      <v-card-text class="text font-weight-light">
-                        ${{ item.precio_articulo }}
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
+                <v-row v-for="item in props.items" :key="item.id" class="mb-3">
+                  <v-card
+                    :color="cambio(item)"
+                    @click="cajaProductos(item)"
+                    class="card-p ml-5"
+                  >
+                    <v-img
+                      v-bind:lazy-src="item.foto_articulo"
+                      max-height="500"
+                      max-width="600"
+                      v-bind:src="item.foto_articulo"
+                    ></v-img>
+                    <v-card-title
+                      class="subheading font-weight-bold card-prod"
+                      :class="[cambio(item) === '#272727' ? 'wt' : 'blt']"
+                    >
+                      {{ item.nombre_articulo }}
+                    </v-card-title>
+                    <v-card-text
+                      class="text font-weight-regular"
+                      style="text-align: end"
+                    >
+                      <span
+                        :class="[cambio(item) === '#272727' ? 'wt' : 'blt']"
+                      >
+                        ${{ item.precio_articulo }}</span
+                      >
+                    </v-card-text>
+                  </v-card>
                 </v-row>
               </template>
 
@@ -370,8 +392,17 @@ export default {
     },
     cambio(producto) {
       if (this.pedidoArray.includes(producto) === true) {
-        return true;
-      } else {
+        if (store.getters.hasdarkflag === true) {
+          return "success";
+        } else if (store.getters.hasdarkflag === false) {
+          return "#272727";
+        }
+      } else if (this.pedidoArray.includes(producto) === false) {
+        if (store.getters.hasdarkflag === true) {
+          return "#272727";
+        } else {
+          return "#FFF";
+        }
         return false;
       }
     },
@@ -474,5 +505,18 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+.card-p {
+  min-width: 90%;
+  max-width: 90%;
+}
+.card-prod {
+  text-align: start;
+}
+.blt {
+  color: #272727;
+}
+.wt {
+  color: #fff;
 }
 </style>

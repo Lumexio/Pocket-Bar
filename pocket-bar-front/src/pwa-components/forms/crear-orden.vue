@@ -94,7 +94,11 @@
                     ></v-img>
                     <v-card-title
                       class="subheading font-weight-bold card-prod"
-                      :class="[cambio(item) === '#272727' ? 'wt' : 'blt']"
+                      :class="[
+                        cambio(item) === '#272727' || cambio(item) === 'success'
+                          ? 'wt'
+                          : 'blt',
+                      ]"
                     >
                       {{ item.nombre_articulo }}
                     </v-card-title>
@@ -103,7 +107,12 @@
                       style="text-align: end"
                     >
                       <span
-                        :class="[cambio(item) === '#272727' ? 'wt' : 'blt']"
+                        :class="[
+                          cambio(item) === '#272727' ||
+                          cambio(item) === 'success'
+                            ? 'wt'
+                            : 'blt',
+                        ]"
                       >
                         ${{ item.precio_articulo }}</span
                       >

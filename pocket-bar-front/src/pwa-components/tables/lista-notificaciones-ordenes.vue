@@ -29,7 +29,7 @@
 						><span> {{ item.nombre_mesero }}</span>
 					</v-col>
 				</v-row>
-				<v-card-actions class="statusbuton" :key="refresher">
+				<v-card-actions class="statusbuton">
 					<v-chip dark :color="colorchange(item.status)">{{
 						item.status
 					}}</v-chip>
@@ -68,7 +68,7 @@ export default {
 	} /*data de llegado de componente padre creacion*/,
 	data: () => ({
 		ticketsPWANotiArray: [],
-		refresher: 0,
+
 		sendStatusPrepBox: { id: null, status: "Preparado" },
 		sendStatusRecivedBox: { id: null, status: "Recibido" },
 	}),
@@ -96,14 +96,13 @@ export default {
 		sendStatusPrep(id, status) {
 			this.sendStatusPrepBox.id = id;
 			this.sendStatusPrepBox.status = status;
-			this.refresher += 1;
-			console.log("Preparado barra:", this.sendStatusPrepBox);
+
 			postTicketsNotiPWA(this.sendStatusPrepBox);
 		},
 		sendStatusRecived(id) {
 			this.sendStatusRecivedBox.id = id;
 			this.sendStatusRecivedBox.status = "Recibido";
-			this.refresher += 1;
+
 			console.log("Preparado barra:", this.sendStatusRecivedBox);
 			postTicketsNotiPWA(this.sendStatusRecivedBox);
 		},
@@ -112,8 +111,8 @@ export default {
 		},
 	},
 	watch: {
-		ticketsPWANotiArray() {
-			return (this.refresher += 1);
+		ticketsPWANotiArray(val) {
+			console.log("whatcher:", val);
 		},
 	},
 	computed: {
@@ -129,23 +128,21 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.$store.getters.hasrol == 4) {
-			window.Echo.channel("mesero." + this.$store.getters.getUserId).listen(
-				"MeseroEvents",
-				(e) => {
-					console.log("Mesero:", e.mesero);
-					this.ticketsPWANotiArray = e.TicketsARecibir;
-				}
-			);
-		} else if (this.$store.getters.hasrol == 5) {
-			window.Echo.channel("barra." + this.$store.getters.getUserId).listen(
-				"barraEvents",
-				(e) => {
-					console.log(e);
-					this.ticketsPWANotiArray = e.notificacionesBarra;
-				}
-			);
-		}
+		window.Echo.channel("mesero" + this.$store.getters.getUserId).listen(
+			"MeseroEvents",
+			(e) => {
+				this.ticketsPWANotiArray = e.TicketsARecibir;
+				console.log("Special cambio:", this.ticketsPWANotiArray);
+			}
+		);
+
+		window.Echo.channel("barra." + this.$store.getters.getUserId).listen(
+			"barraEvents",
+			(e) => {
+				console.log(e);
+				this.ticketsPWANotiArray = e.notificacionesBarra;
+			}
+		);
 
 		getTicketsNotiPWA(this.ticketsPWANotiArray)
 			.then((response) => {

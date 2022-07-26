@@ -9,7 +9,6 @@ import Vuelidate from 'vuelidate';
 import Vuex from 'vuex';
 import Echo from 'laravel-echo';
 import store from '@/store';
-import 'bulma/css/bulma.css';
 import Alpine from 'alpinejs'
 import './registerServiceWorker'
 Vue.use(Vuelidate)
@@ -20,13 +19,8 @@ Vue.use(shortkey)
 window.Alpine = Alpine
 Alpine.start()
 Vue.config.productionTip = false
-
 window.Axios = require('axios')
-
-
 window.Pusher = require('pusher-js');
-
-
 Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 
 
@@ -46,8 +40,7 @@ window.Echo = new Echo({
 new Vue({
   vuetify,
   router,
-  Vuex, Echo, shortkey,
+  Vuex, shortkey,
   VueAxios, Axios, Vuelidate, store,
   render: h => h(App),
-
 }).$mount('#app')

@@ -46,6 +46,7 @@ class MeseroEvents implements ShouldBroadcast
                 }
             }
         }
+        return $tickets;
     }
 
     /**
@@ -55,6 +56,6 @@ class MeseroEvents implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('mesero.' . $this->userId);
+        return new Channel('mesero' . $this->userId);
     }
 }

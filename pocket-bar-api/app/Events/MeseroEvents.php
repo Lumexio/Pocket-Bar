@@ -27,26 +27,12 @@ class MeseroEvents implements ShouldBroadcast
 
     public $userId;
 
+    public $afterCommit = true;
+
     public function __construct(int $userId)
     {
         $this->userId = $userId;
-        $actualWorkshift = Workshift::where('active', 1)->first();
-        $tickets = Ticket::where('user_id', $userId)
-            ->where('workshift_id', $actualWorkshift->id)
-            ->with('details')
-            ->get();
-
-        foreach ($tickets as $ticket) {
-            $countOfStatusOfTicket = TicketDetail::countOfStatusOfTicket($ticket->id);
-            $count = $countOfStatusOfTicket->sum('cantidad');
-            $statusDisponibles = array_column($countOfStatusOfTicket->toArray(), 'status');
-            if (in_array('Preparado', $statusDisponibles)) {
-                if ($countOfStatusOfTicket->where('status', '==', 'Preparado')->first()->cantidad == $count) {
-                    $this->TicketsARecibir[] = $ticket;
-                }
-            }
-        }
-        return $tickets;
+        $this->TicketsARecibir = TicketDetail::getListForWebSockets(null, $userId, 4)->toArray();
     }
 
     /**

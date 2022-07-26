@@ -136,7 +136,7 @@ export default {
 			}
 		);
 
-		window.Echo.channel("barra." + this.$store.getters.getUserId).listen(
+		window.Echo.channel("barra" + this.$store.getters.getUserId).listen(
 			"barraEvents",
 			(e) => {
 				console.log(e);

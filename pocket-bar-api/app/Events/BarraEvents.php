@@ -32,6 +32,6 @@ class BarraEvents implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('barra.' . $this->user_id);
+        return new Channel('barra' . $this->user_id);
     }
 }

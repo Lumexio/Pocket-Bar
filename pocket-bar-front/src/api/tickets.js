@@ -98,10 +98,7 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
     axios
       .get("api/ordenes/notificacion/productos")
       .then(response => {
-
-
         const tickets = response.data;
-        console.log(tickets);
         tickets.forEach((element) => {
           let datos = {
             nombre_articulo: element.articulo.nombre_articulo,
@@ -116,33 +113,36 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
           if (!datos) return;
           ticketsPWANotiArray.push(datos);
         });
-
-
         resolve({
           ticketsPWANotiArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postTicketsNotiPWA(enviar) {
-  axios
-    .put("api/ordenes/notificacion/productos", enviar)
-    .then((response) => {
-      if (response.status == 200) {
-        store.commit("setsuccess", true);
-        store.commit("setstatcode", 200);
-        setTimeout(function () {
-          store.commit("setsuccess", null);
-        }, 2000);
-      }
-    })
-    .catch((e) => {
-      console.log(e.message);
-      if (e) {
-        store.commit("setdanger", true);
-      }
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .put("api/ordenes/notificacion/productos", enviar)
+      .then((response) => {
+        if (response.status == 200) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+          }, 2000);
+        }
+        resolve({
+          response
+        });
+      })
+      .catch((e) => {
+        reject(e);
+        if (e) {
+          store.commit("setdanger", true);
+        }
+      });
+  });
 
 }
 

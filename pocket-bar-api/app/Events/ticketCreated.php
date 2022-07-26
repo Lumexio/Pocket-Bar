@@ -22,9 +22,11 @@ class ticketCreated implements ShouldBroadcast
      * @return void
      */
     public $tickets;
+    public $userId;
     public $afterCommit = true;
-    public function __construct()
+    public function __construct($userId)
     {
+        $this->userId = $userId;
         /**
          * @var User
          */
@@ -73,6 +75,6 @@ class ticketCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('tickets');
+        return new Channel('tickets.' . $this->userId);
     }
 }

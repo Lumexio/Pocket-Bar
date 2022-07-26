@@ -52,9 +52,12 @@ export default {
 	}),
 
 	mounted() {
-		window.Echo.channel("tickets").listen("ticketCreated", (e) => {
-			this.ticketsPWAArray = e.tickets;
-		});
+		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+			"ticketCreated",
+			(e) => {
+				this.ticketsPWAArray = e;
+			}
+		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
 	},
 	computed: {

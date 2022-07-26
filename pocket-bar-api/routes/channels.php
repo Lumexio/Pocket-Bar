@@ -26,3 +26,7 @@ Broadcast::channel('barra.{id}', function ($user, $id) {
 Broadcast::channel('mesero.{id}', function ($user, $id) {
     return (Auth::check()) and (in_array(Auth::user()->rol_id, [4])) and (Auth::user()->id == $id);
 });
+
+Broadcast::channel('tickets.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});

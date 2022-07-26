@@ -13,9 +13,53 @@
 				<v-toolbar-title>Pedidos de {{ hasrol }} </v-toolbar-title>
 			</v-toolbar>
 			<v-card
+				v-show="ticketsPWANotiArrayBarra"
 				class="ml-1 mr-1 mt-4 mb-4 pa-1"
 				style="min-width: 96%; max-width: 97%; text-align: start"
-				v-for="(item, index) in ticketsPWANotiArray"
+				v-for="(item, index) in ticketsPWANotiArrayBarra"
+				:key="index"
+			>
+				<v-row
+					><v-col cols="1"
+						><span>{{ item.units }}</span></v-col
+					><v-col cols="5"
+						><span>{{ item.nombre_articulo }}</span>
+					</v-col>
+					<v-col cols="2"><span>para</span></v-col>
+					<v-col cols="4"
+						><span> {{ item.nombre_mesero }}</span>
+					</v-col>
+				</v-row>
+				<v-card-actions class="statusbuton">
+					<v-chip dark :color="colorchange(item.status)">{{
+						item.status
+					}}</v-chip>
+
+					<v-btn
+						dark
+						v-if="item.status === 'En espera' && hasrol === 'bartender'"
+						@click="sendStatusPrep(item.id, 'En preparacion')"
+						>Preparar</v-btn
+					>
+					<v-btn
+						dark
+						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"
+						@click="sendStatusPrep(item.id, 'Preparado')"
+						>Terminar</v-btn
+					>
+					<v-btn
+						dark
+						v-if="item.status === 'Preparado' && hasrol === 'mesero'"
+						@click="sendStatusRecived(item.id, item.status)"
+						>Recibir</v-btn
+					>
+				</v-card-actions>
+			</v-card>
+			<v-card
+				v-show="ticketsPWANotiArrayMesero"
+				class="ml-1 mr-1 mt-4 mb-4 pa-1"
+				style="min-width: 96%; max-width: 97%; text-align: start"
+				v-for="(item, index) in ticketsPWANotiArrayMesero"
 				:key="index"
 			>
 				<v-row
@@ -67,7 +111,8 @@ export default {
 		dialoglistorden: { default: false },
 	} /*data de llegado de componente padre creacion*/,
 	data: () => ({
-		ticketsPWANotiArray: [],
+		ticketsPWANotiArrayMesero: [],
+		ticketsPWANotiArrayBarra: [],
 
 		sendStatusPrepBox: { id: null, status: "Preparado" },
 		sendStatusRecivedBox: { id: null, status: "Recibido" },
@@ -111,7 +156,10 @@ export default {
 		},
 	},
 	watch: {
-		ticketsPWANotiArray(val) {
+		ticketsPWANotiArrayMesero(val) {
+			console.log("whatcher:", val);
+		},
+		ticketsPWANotiArrayBarra(val) {
 			console.log("whatcher:", val);
 		},
 	},
@@ -128,29 +176,43 @@ export default {
 		},
 	},
 	mounted() {
-		window.Echo.channel("mesero" + this.$store.getters.getUserId).listen(
+		window.Echo.channel("mesero." + this.$store.getters.getUserId).listen(
 			"MeseroEvents",
 			(e) => {
-				this.ticketsPWANotiArray = e.TicketsARecibir;
-				console.log("Special cambio:", this.ticketsPWANotiArray);
+				this.ticketsPWANotiArrayMesero = e.TicketsARecibir;
+				console.log("Special cambio mesero:", this.ticketsPWANotiArrayMesero);
 			}
 		);
 
-		window.Echo.channel("barra" + this.$store.getters.getUserId).listen(
+		window.Echo.channel("barra." + this.$store.getters.getUserId).listen(
 			"barraEvents",
 			(e) => {
 				console.log(e);
-				this.ticketsPWANotiArray = e.notificacionesBarra;
+				this.ticketsPWANotiArrayBarra = e.notificacionesBarra;
+				console.log("Special cambio barra:", this.ticketsPWANotiArrayBarra);
 			}
 		);
-
-		getTicketsNotiPWA(this.ticketsPWANotiArray)
-			.then((response) => {
-				console.log(response);
-			})
-			.catch((e) => {
-				console.log(e);
-			});
+		if (this.$store.getters.hasrol === 4) {
+			this.ticketsPWANotiArrayMesero = getTicketsNotiPWA(
+				this.ticketsPWANotiArrayMesero
+			)
+				.then((response) => {
+					console.log(response);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		} else if (this.$store.getters.hasrol === 5) {
+			this.ticketsPWANotiArrayBarra = getTicketsNotiPWA(
+				this.ticketsPWANotiArrayBarra
+			)
+				.then((response) => {
+					console.log(response);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		}
 	},
 };
 </script>

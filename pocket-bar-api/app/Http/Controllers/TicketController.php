@@ -22,7 +22,7 @@ class TicketController extends Controller
     {
         $bartenders = User::where("rol_id", 5)->get();
         foreach ($bartenders as $bartender) {
-            broadcast(new BarraEvents($bartender->id, 5))->toOthers();
+            broadcast((new BarraEvents($bartender->id, 5))->broadcastToEveryone());
         }
     }
 
@@ -89,9 +89,11 @@ class TicketController extends Controller
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
         }
 
+        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+
+
         $this->sendNotificationsToBarthenders();
 
-        ticketCreated::dispatch();
         return response()->json([
             "status" => 200,
             "error" => 0,

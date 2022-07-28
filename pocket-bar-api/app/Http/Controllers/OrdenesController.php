@@ -76,8 +76,8 @@ class OrdenesController extends Controller
             ], 500);
         }
 
+        broadcast((new MeseroEvents($ticketDetail->waiter_id))->broadcastToEveryone());
 
-        broadcast(new MeseroEvents($ticketDetail->waiter_id))->toOthers();
         TicketController::sendNotificationsToBarthenders();
 
 

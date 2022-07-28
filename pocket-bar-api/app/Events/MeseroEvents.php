@@ -11,6 +11,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class MeseroEvents implements ShouldBroadcast
 {
@@ -27,12 +28,11 @@ class MeseroEvents implements ShouldBroadcast
 
     public $userId;
 
-    public $afterCommit = true;
-
     public function __construct(int $userId)
     {
         $this->userId = $userId;
         $this->TicketsARecibir = TicketDetail::getListForWebSockets(null, $userId, 4)->toArray();
+        Log::info("Tickets a recibir para  " . json_encode($this->TicketsARecibir));
     }
 
     /**

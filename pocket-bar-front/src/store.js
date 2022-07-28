@@ -18,6 +18,7 @@ const getDefaultState = () => {
         notiLike: null,
         notiDanger: null,
         statcode: null,
+        ticketArray: [],
     };
 };
 
@@ -39,6 +40,7 @@ export default new Vuex.Store({
         hasstatcode(state) { return state.statcode },
         hasdarkflag(state) { return state.darkflag },
         getUserId(state) { return state.userId },
+        gettickets(state) { return state.ticketArray },
     },
 
     mutations: {
@@ -58,6 +60,8 @@ export default new Vuex.Store({
         setstatus(state, payload) { state.status = payload },
         setstatcode(state, payload) { state.statcode = payload },
         setdarkflag(state, payload) { state.darkflag = payload },
+        settickets(state, payload) { state.ticketArray = payload },
+        resetTicket: state => { state.ticketArray = [] },
         RESET: state => {
             state.token = null,
                 state.recharge = 0,
@@ -65,7 +69,8 @@ export default new Vuex.Store({
                 state.status = "Por entregar",
                 state.notiLike = null,
                 state.notiDanger = null,
-                state.statcode = null
+                state.statcode = null,
+                state.ticketArray = null
         }
     },
 
@@ -87,6 +92,9 @@ export default new Vuex.Store({
         },
         setdarkflag({ commit }) {
             commit('setdarkflag')
+        },
+        settickets({ commit }) {
+            commit('settickets')
         },
         login: ({ commit, dispatch }, { token }) => {
 

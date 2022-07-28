@@ -52,14 +52,15 @@ export default {
 	data: () => ({
 		ticketsPWAArray: [],
 	}),
-
-	mounted() {
-		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
-			"ticketCreated",
-			(e) => {
-				this.ticketsPWAArray = e;
+	whatch: {
+		ticketsPWAArray(val) {
+			val;
+			if (store.getters.hastickets) {
+				this.ticketsPWAArray = store.getters.hastickets;
 			}
-		);
+		},
+	},
+	mounted() {
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
 	},
 	computed: {

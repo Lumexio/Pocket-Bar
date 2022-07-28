@@ -24,7 +24,7 @@ class ticketCreated implements ShouldBroadcast
     public $tickets;
     public $userId;
     public $afterCommit = true;
-    public function __construct($userId)
+    public function __construct(int $userId)
     {
         $this->userId = $userId;
         /**

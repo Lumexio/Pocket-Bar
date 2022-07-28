@@ -172,6 +172,21 @@ export default {
 			} else if (this.$store.getters.hasrol === 5) {
 				rol = "bartender";
 			}
+			window.Echo.channel("mesero." + this.$store.getters.getUserId).listen(
+				"MeseroEvents",
+				(e) => {
+					this.ticketsPWANotiArrayMesero = e.TicketsARecibir;
+					console.log("Special cambio mesero:", this.ticketsPWANotiArrayMesero);
+				}
+			);
+			window.Echo.channel("barra." + this.$store.getters.getUserId).listen(
+				"barraEvents",
+				(e) => {
+					console.log(e);
+					this.ticketsPWANotiArrayBarra = e.notificacionesBarra;
+					console.log("Special cambio barra:", e.notificacionesBarra);
+				}
+			);
 			return rol;
 		},
 	},
@@ -189,25 +204,23 @@ export default {
 			(e) => {
 				console.log(e);
 				this.ticketsPWANotiArrayBarra = e.notificacionesBarra;
-				console.log("Special cambio barra:", this.ticketsPWANotiArrayBarra);
+				console.log("Special cambio barra:", e.notificacionesBarra);
 			}
 		);
 		if (this.$store.getters.hasrol === 4) {
-			this.ticketsPWANotiArrayMesero = getTicketsNotiPWA(
-				this.ticketsPWANotiArrayMesero
-			)
+			getTicketsNotiPWA(this.ticketsPWANotiArrayMesero)
 				.then((response) => {
-					console.log(response);
+					this.ticketsPWANotiArrayMesero = response.ticketsPWANotiArray;
+					console.log("Response meseros:", this.ticketsPWANotiArrayMesero);
 				})
 				.catch((e) => {
 					console.log(e);
 				});
 		} else if (this.$store.getters.hasrol === 5) {
-			this.ticketsPWANotiArrayBarra = getTicketsNotiPWA(
-				this.ticketsPWANotiArrayBarra
-			)
+			getTicketsNotiPWA(this.ticketsPWANotiArrayBarra)
 				.then((response) => {
-					console.log(response);
+					this.ticketsPWANotiArrayBarra = response.ticketsPWANotiArray;
+					console.log("Response meseros:", this.ticketsPWANotiArrayBarra);
 				})
 				.catch((e) => {
 					console.log(e);

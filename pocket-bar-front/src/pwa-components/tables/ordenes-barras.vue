@@ -22,7 +22,6 @@
 								<th class="text-left">Nombre</th>
 								<th class="text-left">Cantidad</th>
 								<th class="text-left">Precio</th>
-
 								<th class="text-left">Total</th>
 							</tr>
 						</thead>
@@ -52,9 +51,12 @@ export default {
 		ticketsPWAArray: [],
 	}),
 	mounted() {
-		window.Echo.channel("tickets").listen("ticketCreated", (e) => {
-			this.ticketsPWAArray = e.tickets;
-		});
+		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+			"ticketCreated",
+			(e) => {
+				this.ticketsPWAArray = e.tickets;
+			}
+		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
 	},
 	computed: {

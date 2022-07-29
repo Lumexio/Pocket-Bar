@@ -109,8 +109,7 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
           if (element.mesero) {
             datos.nombre_mesero = element.mesero.name;
           }
-
-          if (!datos) return;
+          
           ticketsPWANotiArray.push(datos);
         });
         resolve({

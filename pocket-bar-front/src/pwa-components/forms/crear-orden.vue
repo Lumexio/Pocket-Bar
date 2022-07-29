@@ -418,7 +418,6 @@ export default {
 				} else {
 					return "#FFF";
 				}
-				return false;
 			}
 		},
 		cajaProductos(producto) {

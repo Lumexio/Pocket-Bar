@@ -9,15 +9,12 @@ import Vuelidate from 'vuelidate';
 import Vuex from 'vuex';
 import Echo from 'laravel-echo';
 import store from '@/store';
-import Alpine from 'alpinejs'
 import './registerServiceWorker'
 Vue.use(Vuelidate)
 Vue.use(VueAxios, Axios)
 Vue.use(Vuex)
 Vue.use(store)
 Vue.use(shortkey)
-window.Alpine = Alpine
-Alpine.start()
 Vue.config.productionTip = false
 window.Axios = require('axios')
 window.Pusher = require('pusher-js');

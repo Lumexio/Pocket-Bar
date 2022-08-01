@@ -350,7 +350,6 @@ export default {
 				titular: (this.titular = this.titular.trim()),
 				mesa: mesa,
 			};
-			console.log(presend);
 			postTickets(presend);
 			window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
 				"ticketCreated",

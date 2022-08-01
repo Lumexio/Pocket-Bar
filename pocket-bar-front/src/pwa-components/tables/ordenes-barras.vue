@@ -53,6 +53,7 @@ export default {
 	whatch: {
 		ticketsPWAArray(val) {
 			val;
+
 			if (store.getters.hastickets) {
 				this.ticketsPWAArray = store.getters.hastickets;
 			}
@@ -63,6 +64,7 @@ export default {
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
+				console.log("Tickets from  barra socket:", this.ticketsPWAArray);
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);

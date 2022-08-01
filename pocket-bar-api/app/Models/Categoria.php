@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Articulo;
 
 class Categoria extends Model
 {
@@ -28,4 +28,9 @@ class Categoria extends Model
         'nombre_categoria',
         'descripcion_categoria'
     ];
+
+    public function articulo()
+    {
+        return $this->hasMany(Articulo::class);
+    }
 }

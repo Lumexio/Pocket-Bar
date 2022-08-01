@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Models\User;
+use App\Models\Categoria;
 use Illuminate\Support\Facades\Auth;
 
 class Articulo extends Model
@@ -53,5 +54,21 @@ class Articulo extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
+    public function marca()
+    {
+        return $this->belongsTo(Marca::class);
+    }
+    public function proveedor()
+    {
+        return $this->belongsTo(Proveedor::class);
+    }
+    public function rack()
+    {
+        return $this->belongsTo(Rack::class);
     }
 }

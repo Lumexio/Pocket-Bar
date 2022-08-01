@@ -50,6 +50,14 @@ export default {
 	data: () => ({
 		ticketsPWAArray: [],
 	}),
+	whatch: {
+		ticketsPWAArray(val) {
+			val;
+			if (store.getters.hastickets) {
+				this.ticketsPWAArray = store.getters.hastickets;
+			}
+		},
+	},
 	mounted() {
 		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
 			"ticketCreated",

@@ -112,12 +112,24 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Mesa
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Mesa newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Mesa newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Mesa query()
+ */
+	class Mesa extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Payment
  *
  * @property int $id
  * @property string $type
  * @property string $tip
  * @property string $total
+ * @property string|null $voucher
  * @property int $ticket_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -131,6 +143,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereVoucher($value)
  */
 	class Payment extends \Eloquent {}
 }
@@ -250,6 +263,8 @@ namespace App\Models{
  * @property string $min_tip
  * @property string $table_name
  * @property string $client_name
+ * @property string|null $cashier_name
+ * @property string|null $cashier_id
  * @property int $table_id
  * @property string $status
  * @property int $closed
@@ -257,6 +272,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $barTender
+ * @property-read \App\Models\User|null $cashier
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TicketDetail[] $details
  * @property-read int|null $details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Payment[] $payments
@@ -269,6 +285,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCashierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCashierName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereClientName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereClosed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCreatedAt($value)
@@ -314,6 +332,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Articulo $articulo
+ * @property-read \App\Models\User|null $barra
+ * @property-read \App\Models\User $mesero
  * @property-read \App\Models\Ticket $ticket
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail newQuery()

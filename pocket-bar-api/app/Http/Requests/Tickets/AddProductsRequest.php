@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Tickets;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TicketCreateRequest extends FormRequest
+class AddProductsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class TicketCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check();
+        return auth()->check() and (auth()->user()->rol_id == 4 or auth()->user()->rol_id == 5);
     }
 
     /**
@@ -23,10 +23,8 @@ class TicketCreateRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
-            "mesa" => "required|exists:tables,id",
-            "titular" => "required|string|max:255",
+            "ticket_id" => "required|exists:tickets,id",
             "productos" => "required|array|min:1",
             "productos.*.id" => "required|integer|exists:articulos_tbl,id",
             "productos.*.nombre_articulo" => "required|string",

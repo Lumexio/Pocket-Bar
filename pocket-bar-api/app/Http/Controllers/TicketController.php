@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\BarraEvents;
+use App\Events\MeseroEvents;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketCreateRequest;
@@ -14,7 +15,11 @@ use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Events\ticketCreated;
+use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
+use App\Http\Requests\Tickets\PayRequest;
+use App\Models\Payment;
 use App\Models\TicketDetail;
+use Illuminate\Support\Collection;
 
 class TicketController extends Controller
 {
@@ -26,10 +31,8 @@ class TicketController extends Controller
         }
     }
 
-    public function store(TicketCreateRequest $request): JsonResponse
+    public function calculateGeneralData(Collection $items): array
     {
-        $items = collect($request->input('productos'));
-
         $subtotal = $items->sum(function ($item) {
             return $item['piezas'] * $item['precio_articulo'];
         });
@@ -44,6 +47,13 @@ class TicketController extends Controller
 
         $total = $subtotal + $tax - $discounts;
 
+        return [$subtotal, $tax, $discounts, $total];
+    }
+
+    public function store(TicketCreateRequest $request): JsonResponse
+    {
+        $items = collect($request->input('productos'));
+        [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
         $table = Table::find($request->input('mesa'));
         DB::beginTransaction();
         try {
@@ -66,23 +76,7 @@ class TicketController extends Controller
             $ticket->workshift_id = Workshift::where("active", 1)->firstOrFail()->id;
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
-
-
-            foreach ($items as $item) {
-                $ticketDetail = new \App\Models\TicketDetail();
-                $ticketDetail->units = $item['piezas'];
-                $ticketDetail->unit_price = $item['precio_articulo'];
-                $ticketDetail->tax = $item['tax'];
-                $ticketDetail->discounts = $item['descuento'];
-                $ticketDetail->subtotal = $item['piezas'] * $item['precio_articulo'];
-                $ticketDetail->waiter_id = auth()->user()->id;
-                $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
-                $ticketDetail->articulos_tbl_id = $item['id'];
-                $ticketDetail->articulos_img = $item["foto_articulo"];
-                $ticketDetail->status = "En espera";
-                $ticketDetail->ticket_id = $ticket->id;
-                throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
-            }
+            $this->createTicketDetails($items, $ticket);
             DB::commit();
         } catch (\Exception $th) {
             DB::rollBack();
@@ -164,6 +158,173 @@ class TicketController extends Controller
             "error" => 0,
             "message" => "Listado de tickets",
             "data" => $tickets
+        ], 200);
+    }
+
+    private function createTicketDetails(Collection $items, Ticket $ticket)
+    {
+        foreach ($items as $item) {
+            $ticketDetail = new \App\Models\TicketDetail();
+            $ticketDetail->units = $item['piezas'];
+            $ticketDetail->unit_price = $item['precio_articulo'];
+            $ticketDetail->tax = $item['tax'];
+            $ticketDetail->discounts = $item['descuento'];
+            $ticketDetail->subtotal = $item['piezas'] * $item['precio_articulo'];
+            $ticketDetail->waiter_id = auth()->user()->id;
+            $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
+            $ticketDetail->articulos_tbl_id = $item['id'];
+            $ticketDetail->articulos_img = $item["foto_articulo"];
+            $ticketDetail->status = "En espera";
+            $ticketDetail->ticket_id = $ticket->id;
+            throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
+        }
+    }
+
+    public function addProducts(Request $request): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $ticket = Ticket::find($request->input('ticket_id'));
+
+
+            $this->createTicketDetails(collect($request->input("productos")), $ticket);
+            $items = $ticket->details->map(function ($item) {
+                return [
+                    "piezas" => $item->units,
+                    "precio_articulo" => $item->unit_price,
+                    "tax" => $item->tax,
+                    "descuento" => $item->discounts,
+                ];
+            });
+            [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
+            $ticket->subtotal = $subtotal;
+            $ticket->tax = $tax;
+            $ticket->discounts = $discounts;
+            $ticket->item_count = $items->count();
+            $ticket->total = $total;
+            throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
+            DB::commit();
+        } catch (\Exception $th) {
+            DB::rollBack();
+            return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
+        }
+
+        $this->sendNotificationsToBarthenders();
+
+        return response()->json([
+            "status" => 200,
+            "error" => 0,
+            "message" => "Producto agregado correctamente",
+        ], 200);
+    }
+
+    public function updateStatus(ProductoUpdateStatusRequest $request): JsonResponse
+    {
+        /**
+         * @var \App\Models\User $user
+         */
+        $user = $request->user();
+
+        if ($user->rol_id == 4 and $request->input("status") != "Recibido") {
+            return response()->json([
+                "error" => "No puedes cambiar el estado de un producto a menos que sea Recibido"
+            ], 400);
+        }
+
+        $ticketDetail = TicketDetail::find($request->input("id"));
+        $ticket = Ticket::find($ticketDetail->ticket_id);
+
+        if ($ticket->status == "Cerrado") {
+            return response()->json([
+                "error" => "No puedes cambiar el estado de un producto de un ticket cerrado"
+            ], 400);
+        }
+
+        if ($request->input("status") == "Recibido" and $ticketDetail->waiter_id != $user->id) {
+            return response()->json([
+                "error" => "No puedes cambiar el estado de un producto a Recibido pues no eres el mesero que lo solicitó"
+            ], 400);
+        }
+
+        if ($ticketDetail->status == "Recibido") {
+            return response()->json([
+                "error" => "No puedes cambiar el estado de un producto que ya ha sido recibido anteriormente"
+            ], 400);
+        }
+
+        try {
+            if (in_array($ticketDetail->status, ["En espera", "Preparado"])) {
+                $ticketDetail->barTender_id = $user->id;
+            }
+
+
+            $ticketDetail->status = $request->input("status");
+            throw_if(!$ticketDetail->save(), "Error al guardar en base de datos");
+
+            $countOfStatusOfTicket = TicketDetail::countOfStatusOfTicket($ticket->id);
+            $previousStatus = $ticketDetail->status;
+            $ticket->status = TicketDetail::lastStatusOfTicket($ticket->id, $countOfStatusOfTicket);
+            if ($previousStatus != $ticket->status) {
+                throw_if(!$ticket->save(), "Error al guardar en base de datos");
+            }
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                "error" => $th->getMessage()
+            ], 500);
+        }
+
+        broadcast((new MeseroEvents($ticketDetail->waiter_id))->broadcastToEveryone());
+
+        $this->sendNotificationsToBarthenders();
+
+        return response()->json($ticketDetail);
+    }
+
+    public function pay(PayRequest $request): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $ticket = Ticket::find($request->input("ticket_id"));
+            if ($ticket->status == "Cerrado") {
+                return response()->json([
+                    "error" => "No puedes pagar un ticket cerrado"
+                ], 422);
+            }
+
+            $payments = collect($request->payments);
+            $totalOfPayments = $payments->sum("amount");
+            if ($ticket->total != $totalOfPayments) {
+                return response()->json([
+                    "error" => "El total de los pagos no coincide con el total del ticket"
+                ], 422);
+            }
+
+            foreach ($payments as $paymentData) {
+                $payment = new Payment();
+                $payment->ticket_id = $ticket->id;
+                $payment->type = $paymentData["type"];
+                $payment->voucher = $paymentData["voucher"] ?? null;
+                $payment->tip = $paymentData["tip"] ?? null;
+                $payment->amount = $paymentData["amount"];
+                throw_if(!$payment->save(), \Exception::class, "Error al guardar el pago");
+            }
+            $ticket->status = "Cerrado";
+            $ticket->cashier_id = auth()->user()->id;
+            $ticket->cashier_name = auth()->user()->name;
+            throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                "error" => $th->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            "status" => 200,
+            "error" => 0,
+            "message" => "Pago realizado correctamente",
+            "data" => $ticket
         ], 200);
     }
 }

@@ -67,11 +67,13 @@ Mostrar un registro no */
         Route::get('/list', 'TicketController@index');
         Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
+        Route::put('/pay', 'TicketController@pay');
+        Route::put('/add/products', 'TicketController@addProducts');
     });
 
     Route::prefix('ordenes')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
         Route::get('/notificacion/productos', 'OrdenesController@index');
-        Route::put('/notificacion/productos', 'OrdenesController@updateStatus');
+        Route::put('/notificacion/productos', 'TicketController@updateStatus');
     });
 });
 

@@ -18,6 +18,7 @@ class CreatePaymentsTable extends Migration
             $table->string("type")->nullable(false);
             $table->decimal("tip", 10, 2)->nullable(false);
             $table->decimal("total", 10, 2)->nullable(false);
+            $table->string("voucher", 36)->nullable(true);
             $table->foreignId("ticket_id")->nullable(false)->references('id')->on('tickets_tbl');
             $table->timestamps();
         });

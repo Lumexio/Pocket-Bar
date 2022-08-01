@@ -61,6 +61,13 @@ export default {
 		},
 	},
 	mounted() {
+		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+			"ticketCreated",
+			(e) => {
+				this.ticketsPWAArray = e.tickets;
+				console.log("Tickets from  mesero socket:", this.ticketsPWAArray);
+			}
+		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
 	},
 	computed: {

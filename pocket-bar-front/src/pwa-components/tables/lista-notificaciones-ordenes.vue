@@ -141,14 +141,12 @@ export default {
 		sendStatusPrep(id, status) {
 			this.sendStatusPrepBox.id = id;
 			this.sendStatusPrepBox.status = status;
-
 			postTicketsNotiPWA(this.sendStatusPrepBox);
 		},
 		sendStatusRecived(id) {
 			this.sendStatusRecivedBox.id = id;
 			this.sendStatusRecivedBox.status = "Recibido";
 
-			console.log("Preparado barra:", this.sendStatusRecivedBox);
 			postTicketsNotiPWA(this.sendStatusRecivedBox);
 		},
 		close() {
@@ -176,7 +174,6 @@ export default {
 				event,
 				(e) => {
 					this[variableName] = this.parseNotifications(e[callbackVariableName]);
-					console.log("Connect to event: " + event, e);
 				}
 			);
 		},
@@ -191,14 +188,7 @@ export default {
 				});
 		},
 	},
-	watch: {
-		ticketsPWANotiArrayMesero(val) {
-			console.log("whatcher:", val);
-		},
-		ticketsPWANotiArrayBarra(val) {
-			console.log("whatcher:", val);
-		},
-	},
+
 	computed: {
 		hasrol() {
 			var rol = null;

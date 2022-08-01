@@ -75,6 +75,11 @@ Mostrar un registro no */
         Route::get('/notificacion/productos', 'OrdenesController@index');
         Route::put('/notificacion/productos', 'TicketController@updateStatus');
     });
+
+    Route::prefix("caja")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        Route::get('/mustbe', 'CajaController@getMustBe');
+        Route::post('/close', 'CajaController@close');
+    });
 });
 
 Route::post('login', [UserController::class, 'login']);

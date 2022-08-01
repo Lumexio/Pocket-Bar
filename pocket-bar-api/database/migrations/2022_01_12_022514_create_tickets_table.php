@@ -29,7 +29,7 @@ class CreateTicketsTable extends Migration
             $table->string("table_name");
             $table->string("client_name");
             $table->string("cashier_name")->nullable(true);
-            $table->string("cashier_id")->nullable(true)->references("id")->on("users");
+            $table->foreignId("cashier_id")->nullable(true)->references("id")->on("users");
             $table->foreignId("table_id")->nullable(false)->references("id")->on("tables");
             $table->string("status")->default("Solicitado");
             $table->boolean("closed")->default(false);

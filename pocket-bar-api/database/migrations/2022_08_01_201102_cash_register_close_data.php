@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentsTable extends Migration
+class CashRegisterCloseData extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreatePaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payments_tbl', function (Blueprint $table) {
+        Schema::create('cash_register_close_data_tbl', function (Blueprint $table) {
             $table->id();
             $table->string("type")->nullable(false);
-            $table->decimal("tip", 10, 2)->nullable(false);
+            $table->decimal("total_tip", 10, 2)->nullable(false);
             $table->decimal("total", 10, 2)->nullable(false);
-            $table->string("voucher", 36)->nullable(true);
-            $table->decimal("diff", 10, 2)->nullable(true);
-            $table->foreignId("ticket_id")->nullable(false)->references('id')->on('tickets_tbl');
+            $table->json("vouchers")->nullable(true);
+            $table->foreignId("cashier_id")->nullable(false)->references("id")->on("users");
             $table->timestamps();
         });
     }

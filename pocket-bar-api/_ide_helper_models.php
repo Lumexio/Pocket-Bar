@@ -43,6 +43,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \App\Models\Categoria|null $categoria
+ * @property-read \App\Models\Marca|null $marca
+ * @property-read \App\Models\Proveedor|null $proveedor
+ * @property-read \App\Models\Rack|null $rack
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ArticuloFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo newModelQuery()
@@ -70,6 +74,33 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\CashRegisterCloseData
+ *
+ * @property int $id
+ * @property string $type
+ * @property string $total_tip
+ * @property string $total
+ * @property string|null $vouchers
+ * @property int $cashier_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCashierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotalTip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereVouchers($value)
+ */
+	class CashRegisterCloseData extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Categoria
  *
  * @property int $id
@@ -77,6 +108,8 @@ namespace App\Models{
  * @property string|null $descripcion_categoria
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Categoria newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Categoria newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Categoria query()
@@ -98,6 +131,8 @@ namespace App\Models{
  * @property string|null $descripcion_marca
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Marca newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Marca newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Marca query()
@@ -157,6 +192,8 @@ namespace App\Models{
  * @property string|null $descripcion
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Proveedor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Proveedor newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Proveedor query()
@@ -177,6 +214,8 @@ namespace App\Models{
  * @property string $nombre_rack
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Rack newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rack newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rack query()
@@ -264,7 +303,7 @@ namespace App\Models{
  * @property string $table_name
  * @property string $client_name
  * @property string|null $cashier_name
- * @property string|null $cashier_id
+ * @property int|null $cashier_id
  * @property int $table_id
  * @property string $status
  * @property int $closed

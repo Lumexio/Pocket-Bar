@@ -24,7 +24,7 @@ class rackCreated implements ShouldBroadcast
     public $racks;
     public function __construct()
     {
-        $this->racks = Rack::all();
+        \App::call('App\Http\Controllers\RackController@index');
     }
 
     /**

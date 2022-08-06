@@ -16,8 +16,8 @@
 				v-show="ticketsPWANotiArrayBarra"
 				class="ml-1 mr-1 mt-4 mb-4 pa-1"
 				style="min-width: 96%; max-width: 97%; text-align: start"
-				v-for="(item, index) in ticketsPWANotiArrayBarra"
-				:key="index"
+				v-for="item in ticketsPWANotiArrayBarra"
+				:key="item.id"
 			>
 				<v-row
 					><v-col cols="1"
@@ -59,8 +59,8 @@
 				v-show="ticketsPWANotiArrayMesero"
 				class="ml-1 mr-1 mt-4 mb-4 pa-1"
 				style="min-width: 96%; max-width: 97%; text-align: start"
-				v-for="(item, index) in ticketsPWANotiArrayMesero"
-				:key="index"
+				v-for="item in ticketsPWANotiArrayMesero"
+				:key="item.id"
 			>
 				<v-row
 					><v-col cols="1"
@@ -117,6 +117,7 @@ export default {
 		sendStatusPrepBox: { id: null, status: "Preparado" },
 		sendStatusRecivedBox: { id: null, status: "Recibido" },
 	}),
+
 	methods: {
 		colorchange(status) {
 			var st = null;
@@ -181,7 +182,6 @@ export default {
 			getTicketsNotiPWA(this[variableName])
 				.then((response) => {
 					this[variableName] = response.ticketsPWANotiArray;
-					console.log("Response meseros:", this[variableName]);
 				})
 				.catch((e) => {
 					console.log(e);

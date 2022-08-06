@@ -53,8 +53,8 @@ export default {
 	whatch: {
 		ticketsPWAArray(val) {
 			val;
-
 			if (store.getters.hastickets) {
+				console.log("Tickets barra en wathcer:", store.getters.hastickets);
 				this.ticketsPWAArray = store.getters.hastickets;
 			}
 		},

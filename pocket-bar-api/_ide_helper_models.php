@@ -81,6 +81,7 @@ namespace App\Models{
  * @property string $total_tip
  * @property string $total
  * @property string|null $vouchers
+ * @property string $nominas
  * @property int $cashier_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -90,6 +91,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCashierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereNominas($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotalTip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereType($value)
@@ -164,7 +166,10 @@ namespace App\Models{
  * @property string $type
  * @property string $tip
  * @property string $total
- * @property string|null $voucher
+ * @property string|null $diff
+ * @property string|null $nominas_paid
+ * @property string|null $vouchers
+ * @property string $nominas
  * @property int $ticket_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -172,13 +177,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDiff($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereNominas($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereNominasPaid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTicketId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereVoucher($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereVouchers($value)
  */
 	class Payment extends \Eloquent {}
 }
@@ -307,6 +315,10 @@ namespace App\Models{
  * @property int $table_id
  * @property string $status
  * @property int $closed
+ * @property string|null $canceled_by_cashier_at
+ * @property int|null $canceled_by_cashier_id
+ * @property string|null $canceled_by_admin_at
+ * @property int|null $canceled_by_admin_id
  * @property int $workshift_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -324,6 +336,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByAdminAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByCashierAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByCashierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCashierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCashierName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereClientName($value)

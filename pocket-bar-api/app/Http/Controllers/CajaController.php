@@ -46,11 +46,18 @@ class CajaController extends Controller
                     $model->type = $key;
                     $model->amount = $cashierInfo[0]->amount;
                     $model->cashier_id = auth()->user()->id;
+                    if ($key == "card") {
+                        $model->vouchers = json_encode($cashierInfo[0]->vouchers);
+                    }
+
+                    $model->save();
                     throw_if(!$model->save(), "Error al guardar el registro");
                 } else {
                     throw new \Exception("El monto debe ser igual al de la base de datos");
                 }
             }
+
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

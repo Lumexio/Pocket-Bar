@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Rol;
 use App\Events\BarraEvents;
 use App\Events\MeseroEvents;
 use App\Models\Ticket;
@@ -16,7 +17,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Events\ticketCreated;
 use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
+use App\Http\Requests\Tickets\CancelTicketRequest;
 use App\Http\Requests\Tickets\PayRequest;
+use App\Models\Articulo;
 use App\Models\Payment;
 use App\Models\TicketDetail;
 use Illuminate\Support\Collection;
@@ -25,7 +28,7 @@ class TicketController extends Controller
 {
     public static function sendNotificationsToBarthenders()
     {
-        $bartenders = User::where("rol_id", 5)->get();
+        $bartenders = User::where("rol_id", Rol::Bartender)->get();
         foreach ($bartenders as $bartender) {
             broadcast((new BarraEvents($bartender->id, 5))->broadcastToEveryone());
         }
@@ -177,7 +180,16 @@ class TicketController extends Controller
             $ticketDetail->status = "En espera";
             $ticketDetail->ticket_id = $ticket->id;
             throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
+
+            $this->updateArticulo($item['id'], $item['piezas']);
         }
+    }
+
+    public function updateArticulo($id, $units)
+    {
+        $articulo = Articulo::find($id);
+        $articulo->units = $articulo->units - $units;
+        throw_if(!$articulo->save(), \Exception::class, "Error al actualizar el articulo");
     }
 
     public function addProducts(Request $request): JsonResponse
@@ -218,6 +230,61 @@ class TicketController extends Controller
         ], 200);
     }
 
+    public function cancelTicket(CancelTicketRequest $request): JsonResponse
+    {
+        $ticket = Ticket::find($request->input('ticket_id'));
+
+        if ($ticket->status == "Cancelado") {
+            return response()->json([
+                "status" => 500,
+                "error" => 1,
+                "message" => "El ticket ya ha sido cancelado",
+            ], 500);
+        }
+
+        if (auth()->user()->rol_id == Rol::Cajero and $ticket->canceled_by_cashier_at != null) {
+            return response()->json([
+                "status" => 500,
+                "error" => 1,
+                "message" => "El ticket ya ha sido cancelado por el cajero",
+            ], 500);
+        }
+
+        if (auth()->user()->rol_id == Rol::Administrativo and $ticket->canceled_by_admin_at != null) {
+            return response()->json([
+                "status" => 500,
+                "error" => 1,
+                "message" => "El ticket ya ha sido cancelado por el administrador",
+            ], 500);
+        }
+
+        if (auth()->user()->rol_id == Rol::Cajero) {
+            $ticket->canceled_by_cashier_at = Carbon::now();
+            $ticket->canceled_by_cashier_id = auth()->user()->id;
+        }
+
+        if (auth()->user()->rol_id == Rol::Administrativo) {
+            $ticket->canceled_by_admin_at = Carbon::now();
+            $ticket->canceled_by_admin_id = auth()->user()->id;
+            $ticket->status = "Cancelado";
+        }
+
+        if (!$ticket->save()) {
+            return response()->json([
+                "status" => 500,
+                "error" => 1,
+                "message" => "Error al cancelar el ticket",
+            ], 500);
+        }
+
+        $this->sendNotificationsToBarthenders();
+        return response()->json([
+            "status" => 200,
+            "error" => 0,
+            "message" => "Ticket cancelado correctamente",
+        ], 200);
+    }
+
     public function updateStatus(ProductoUpdateStatusRequest $request): JsonResponse
     {
         /**
@@ -225,7 +292,7 @@ class TicketController extends Controller
          */
         $user = $request->user();
 
-        if ($user->rol_id == 4 and $request->input("status") != "Recibido") {
+        if ($user->rol_id == Rol::Mesero and $request->input("status") != "Recibido") {
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto a menos que sea Recibido"
             ], 400);
@@ -257,8 +324,12 @@ class TicketController extends Controller
                 $ticketDetail->barTender_id = $user->id;
             }
 
+            if ($ticketDetail->waiter_id == $user->id and $request->input("status") == "Preparado" and $user->rol_id == Rol::Bartender) {
+                $ticketDetail->status = "Recibido";
+            } else {
+                $ticketDetail->status = $request->input("status");
+            }
 
-            $ticketDetail->status = $request->input("status");
             throw_if(!$ticketDetail->save(), "Error al guardar en base de datos");
 
             $countOfStatusOfTicket = TicketDetail::countOfStatusOfTicket($ticket->id);

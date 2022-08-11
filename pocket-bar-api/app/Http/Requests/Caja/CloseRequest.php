@@ -27,6 +27,7 @@ class CloseRequest extends FormRequest
             "data" => "required|array",
             "data.*.type" => "required|in:cash,card,usd",
             "data.*.amount" => "required|numeric",
+            "data.*.tip" => "nullable|numeric",
             "data.*.vouchers" => "required_if:data.*.type,card|array",
             "data.*.vouchers.*" => "required|string|max:36",
         ];

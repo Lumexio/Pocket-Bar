@@ -18,8 +18,8 @@ class CashRegisterCloseData extends Migration
             $table->string("type")->nullable(false);
             $table->decimal("total_tip", 10, 2)->nullable(false);
             $table->decimal("total", 10, 2)->nullable(false);
+            $table->decimal("total_with_tip", 10, 2)->nullable(false);
             $table->json("vouchers")->nullable(true);
-            $table->json("nominas")->nullable(false);
             $table->foreignId("cashier_id")->nullable(false)->references("id")->on("users");
             $table->timestamps();
         });

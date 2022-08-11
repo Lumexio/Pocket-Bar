@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TicketItemStatus;
+use App\Enums\TicketStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TicketChangeStatusRequest extends FormRequest
@@ -23,9 +25,10 @@ class TicketChangeStatusRequest extends FormRequest
      */
     public function rules()
     {
+        //",En preparación,Entregado,Recibido"
         return [
             "id" => "required|integer|exists:tickets_tbl,id",
-            "subStatus" => "required|string|in:En espera,En preparación,Entregado",
+            "subStatus" => "required|string|in:" . TicketItemStatus::Standby . "," . TicketItemStatus::InPreparation . "," . TicketItemStatus::Prepared . "," . TicketItemStatus::Received
         ];
     }
 }

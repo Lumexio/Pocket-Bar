@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Rol;
+use App\Enums\TicketItemStatus;
+use App\Enums\TicketStatus;
 use App\Events\BarraEvents;
 use App\Events\MeseroEvents;
 use App\Models\Ticket;
@@ -63,7 +65,7 @@ class TicketController extends Controller
             $ticket = new Ticket();
             $ticket->table_id = $table->id;
             $ticket->table_name = $table->name;
-            $ticket->status = "Por entregar";
+            $ticket->status = TicketStatus::Standby;
             $ticket->client_name = $request->input('titular');
             $ticket->user_id = auth()->user()->id;
             $ticket->user_name = auth()->user()->name;
@@ -87,7 +89,6 @@ class TicketController extends Controller
         }
 
         broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-
 
         $this->sendNotificationsToBarthenders();
 
@@ -177,7 +178,7 @@ class TicketController extends Controller
             $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
             $ticketDetail->articulos_tbl_id = $item['id'];
             $ticketDetail->articulos_img = $item["foto_articulo"];
-            $ticketDetail->status = "En espera";
+            $ticketDetail->status = TicketItemStatus::Standby;
             $ticketDetail->ticket_id = $ticket->id;
             throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
 
@@ -185,10 +186,14 @@ class TicketController extends Controller
         }
     }
 
-    public function updateArticulo($id, $units)
+    public function updateArticulo($id, $units, $sum = false)
     {
         $articulo = Articulo::find($id);
-        $articulo->units = $articulo->units - $units;
+        if ($sum) {
+            $articulo->units += $units;
+        } else {
+            $articulo->units -= $units;
+        }
         throw_if(!$articulo->save(), \Exception::class, "Error al actualizar el articulo");
     }
 
@@ -197,8 +202,6 @@ class TicketController extends Controller
         DB::beginTransaction();
         try {
             $ticket = Ticket::find($request->input('ticket_id'));
-
-
             $this->createTicketDetails(collect($request->input("productos")), $ticket);
             $items = $ticket->details->map(function ($item) {
                 return [
@@ -214,6 +217,7 @@ class TicketController extends Controller
             $ticket->discounts = $discounts;
             $ticket->item_count = $items->count();
             $ticket->total = $total;
+            $ticket->status = TicketStatus::Standby;
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
         } catch (\Exception $th) {
@@ -232,50 +236,65 @@ class TicketController extends Controller
 
     public function cancelTicket(CancelTicketRequest $request): JsonResponse
     {
-        $ticket = Ticket::find($request->input('ticket_id'));
+        DB::beginTransaction();
+        try {
+            $ticket = Ticket::with("details")->find($request->input('ticket_id'));
 
-        if ($ticket->status == "Cancelado") {
-            return response()->json([
-                "status" => 500,
-                "error" => 1,
-                "message" => "El ticket ya ha sido cancelado",
-            ], 500);
-        }
+            if ($ticket->status == TicketStatus::Canceled) {
+                return response()->json([
+                    "status" => 500,
+                    "error" => 1,
+                    "message" => "El ticket ya ha sido cancelado",
+                ], 500);
+            }
 
-        if (auth()->user()->rol_id == Rol::Cajero and $ticket->canceled_by_cashier_at != null) {
-            return response()->json([
-                "status" => 500,
-                "error" => 1,
-                "message" => "El ticket ya ha sido cancelado por el cajero",
-            ], 500);
-        }
+            if (auth()->user()->rol_id == Rol::Cajero and $ticket->canceled_by_cashier_at != null) {
+                return response()->json([
+                    "status" => 500,
+                    "error" => 1,
+                    "message" => "El ticket ya ha sido cancelado por el cajero",
+                ], 500);
+            }
 
-        if (auth()->user()->rol_id == Rol::Administrativo and $ticket->canceled_by_admin_at != null) {
-            return response()->json([
-                "status" => 500,
-                "error" => 1,
-                "message" => "El ticket ya ha sido cancelado por el administrador",
-            ], 500);
-        }
+            if (auth()->user()->rol_id == Rol::Administrativo and $ticket->canceled_by_admin_at != null) {
+                return response()->json([
+                    "status" => 500,
+                    "error" => 1,
+                    "message" => "El ticket ya ha sido cancelado por el administrador",
+                ], 500);
+            }
 
-        if (auth()->user()->rol_id == Rol::Cajero) {
-            $ticket->canceled_by_cashier_at = Carbon::now();
-            $ticket->canceled_by_cashier_id = auth()->user()->id;
-        }
+            if (auth()->user()->rol_id == Rol::Cajero) {
+                $ticket->canceled_by_cashier_at = Carbon::now();
+                $ticket->canceled_by_cashier_id = auth()->user()->id;
+            }
 
-        if (auth()->user()->rol_id == Rol::Administrativo) {
-            $ticket->canceled_by_admin_at = Carbon::now();
-            $ticket->canceled_by_admin_id = auth()->user()->id;
-            $ticket->status = "Cancelado";
-        }
+            if (in_array(auth()->user()->rol_id, [Rol::Administrativo, Rol::Gerencia])) {
+                $ticket->canceled_by_admin_at = Carbon::now();
+                $ticket->canceled_by_admin_id = auth()->user()->id;
+                $ticket->status = TicketStatus::Canceled;
+            }
 
-        if (!$ticket->save()) {
+            throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
+
+            if ($ticket->status == TicketStatus::Canceled) {
+                /**
+                 * @var TicketDetail $detail
+                 */
+                foreach ($ticket->details as $detail) {
+                    $this->updateArticulo($detail->articulos_tbl_id, $detail->units, true);
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
             return response()->json([
                 "status" => 500,
                 "error" => 1,
                 "message" => "Error al cancelar el ticket",
             ], 500);
         }
+
 
         $this->sendNotificationsToBarthenders();
         return response()->json([
@@ -301,31 +320,31 @@ class TicketController extends Controller
         $ticketDetail = TicketDetail::find($request->input("id"));
         $ticket = Ticket::find($ticketDetail->ticket_id);
 
-        if ($ticket->status == "Cerrado") {
+        if ($ticket->status == TicketStatus::Closed) {
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto de un ticket cerrado"
             ], 400);
         }
 
-        if ($request->input("status") == "Recibido" and $ticketDetail->waiter_id != $user->id) {
+        if ($request->input("status") == TicketItemStatus::Received and $ticketDetail->waiter_id != $user->id) {
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto a Recibido pues no eres el mesero que lo solicitó"
             ], 400);
         }
 
-        if ($ticketDetail->status == "Recibido") {
+        if ($ticketDetail->status == TicketItemStatus::Received) {
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto que ya ha sido recibido anteriormente"
             ], 400);
         }
 
         try {
-            if (in_array($ticketDetail->status, ["En espera", "Preparado"])) {
+            if (in_array($ticketDetail->status, [TicketItemStatus::Standby, TicketItemStatus::Prepared])) {
                 $ticketDetail->barTender_id = $user->id;
             }
 
-            if ($ticketDetail->waiter_id == $user->id and $request->input("status") == "Preparado" and $user->rol_id == Rol::Bartender) {
-                $ticketDetail->status = "Recibido";
+            if ($ticketDetail->waiter_id == $user->id and $request->input("status") == TicketItemStatus::Prepared and $user->rol_id == Rol::Bartender) {
+                $ticketDetail->status = TicketItemStatus::Received;
             } else {
                 $ticketDetail->status = $request->input("status");
             }
@@ -357,7 +376,7 @@ class TicketController extends Controller
         DB::beginTransaction();
         try {
             $ticket = Ticket::find($request->input("ticket_id"));
-            if ($ticket->status == "Cerrado") {
+            if ($ticket->status == TicketStatus::Closed) {
                 return response()->json([
                     "error" => "No puedes pagar un ticket cerrado"
                 ], 422);
@@ -380,7 +399,7 @@ class TicketController extends Controller
                 $payment->amount = $paymentData["amount"];
                 throw_if(!$payment->save(), \Exception::class, "Error al guardar el pago");
             }
-            $ticket->status = "Cerrado";
+            $ticket->status = TicketStatus::Closed;
             $ticket->cashier_id = auth()->user()->id;
             $ticket->cashier_name = auth()->user()->name;
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");

@@ -80,8 +80,8 @@ namespace App\Models{
  * @property string $type
  * @property string $total_tip
  * @property string $total
+ * @property string $total_with_tip
  * @property string|null $vouchers
- * @property string $nominas
  * @property int $cashier_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -91,9 +91,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCashierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereNominas($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotalTip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotalWithTip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereVouchers($value)
@@ -156,6 +156,31 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Mesa query()
  */
 	class Mesa extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Nomina
+ *
+ * @property int $id
+ * @property string $user_name
+ * @property int $user_id
+ * @property string $tips
+ * @property string $base
+ * @property string $paid
+ * @property int $workshift_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereBase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina wherePaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereTips($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereUserName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereWorkshiftId($value)
+ */
+	class Nomina extends \Eloquent {}
 }
 
 namespace App\Models{

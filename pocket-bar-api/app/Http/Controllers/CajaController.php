@@ -38,16 +38,19 @@ class CajaController extends Controller
         DB::beginTransaction();
         try {
             foreach ($dataSended as $key => $cashierInfo) {
+                $cashierInfo = $cashierInfo->first();
                 $databaseInfo = $dataInDatabase[$key][0];
-                $diff = $databaseInfo->amount - $cashierInfo[0]->amount;
+                $diff = $databaseInfo->amount - $cashierInfo->amount;
                 if ($diff >= -1 and $diff <= 1) {
                     $model = new CashRegisterCloseData();
                     $model->workshift_id = $activeWorkshift->id;
                     $model->type = $key;
-                    $model->amount = $cashierInfo[0]->amount;
+                    $model->total = $cashierInfo->amount;
+                    $model->total_tip = $cashierInfo->tip;
+                    $model->total_with_tip = $cashierInfo->amount + $cashierInfo->tip;
                     $model->cashier_id = auth()->user()->id;
                     if ($key == "card") {
-                        $model->vouchers = json_encode($cashierInfo[0]->vouchers);
+                        $model->vouchers = json_encode($cashierInfo->vouchers);
                     }
 
                     $model->save();

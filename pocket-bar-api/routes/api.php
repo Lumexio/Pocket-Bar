@@ -68,6 +68,7 @@ Mostrar un registro no */
         Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
         Route::put('/pay', 'TicketController@pay');
+        Route::delete("/cancel", 'TicketController@cancelTicket');
         Route::put('/add/products', 'TicketController@addProducts');
     });
 
@@ -79,6 +80,15 @@ Mostrar un registro no */
     Route::prefix("caja")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
         Route::get('/mustbe', 'CajaController@getMustBe');
         Route::post('/close', 'CajaController@close');
+    });
+
+    Route::prefix("nominas")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        Route::put('/pay', 'NominasController@pay');
+    });
+
+    Route::prefix("workshift")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        Route::post('/start', 'WorkshiftController@start');
+        Route::put('/close', 'WorkshiftController@close');
     });
 });
 

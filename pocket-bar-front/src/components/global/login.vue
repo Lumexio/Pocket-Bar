@@ -6,17 +6,20 @@
 			elevation="2"
 			:dark="this.$store.getters.hasdarkflag"
 		>
-			<v-card-title class="fade-in-title" style="font-size: 3rem"
-				><code class="font-weight-light">Pocket</code
-				><strong
-					:class="[
-						this.$store.getters.hasdarkflag === true
-							? 'black-mode-text'
-							: 'white-mode-text',
-					]"
-					>bar</strong
-				></v-card-title
-			>
+			<v-toolbar color="transparent" flat>
+				<v-card-title class="fade-in-title" style="font-size: 3rem"
+					><code class="font-weight-light">Pocket</code
+					><strong
+						:class="[
+							this.$store.getters.hasdarkflag === true
+								? 'black-mode-text'
+								: 'white-mode-text',
+						]"
+						>bar</strong
+					></v-card-title
+				>
+			</v-toolbar>
+
 			<v-text-field v-model="name" label="Nombre" required></v-text-field>
 			<v-text-field
 				:append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -46,6 +49,13 @@
 				<v-spacer></v-spacer>
 				<v-btn color="#9acd32" class="mr-4" v-on:click="login()" outlined>
 					Iniciar sesión
+					<v-progress-circular
+						v-show="cargando == true"
+						:active="cargando"
+						:indeterminate="cargando"
+						:size="20"
+						color="green"
+					></v-progress-circular>
 				</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -68,6 +78,7 @@ export default {
 		email: "", //a@a.com//b@b.com
 		password: "", //12345678
 		show3: false,
+		cargando: false,
 	}),
 
 	validations: {
@@ -100,6 +111,7 @@ export default {
 				password: this.password,
 			};
 
+			this.cargando = true;
 			axios
 				.get("sanctum/csrf-cookie")
 				.then((response) => {
@@ -113,7 +125,9 @@ export default {
 							store.commit("setrol", rol);
 							store.commit("setUserId", userId);
 							let validado = response.request.withCredentials;
+
 							if (validado == true) {
+								this.cargando = false;
 								store.commit("SET_TOKEN", response.data.token);
 								let token = store.state.token;
 								store.dispatch("login", { token });
@@ -142,7 +156,10 @@ export default {
 							}
 						})
 						.catch((e) => {
-							console.log(e);
+							if (e) {
+								this.cargando = false;
+								console.log("pppp", e);
+							}
 						});
 				})
 				.catch((e) => {

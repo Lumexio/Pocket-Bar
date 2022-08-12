@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :class="[$store.getters.hasdarkflag === true ? 'black-main' : 'white-main']"
+  >
     <v-snackbar
       :value="hassuccess"
       :timeout="timeout"
@@ -43,6 +46,9 @@ export default {
     hasdanger() {
       return store.getters.hasdanger;
     },
+    darkflag() {
+      return this.$store.getters.hasdarkflag;
+    },
   },
   created() {
     /*para ejecutar lo que yo quiera automaticamente*/
@@ -52,6 +58,9 @@ export default {
 };
 </script>
 <style >
+.v-expansion-panel-content__wrap {
+  padding: 0 !important;
+}
 .v-application--wrap {
   min-height: 0vh !important;
 }
@@ -85,7 +94,6 @@ span {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #333333;
-  height: 100%;
 }
 /* Scroller classes */
 ::-webkit-scrollbar {
@@ -93,6 +101,7 @@ span {
 }
 ::-webkit-scrollbar-track {
   background: #eeeeee;
+
   /* border-radius: 5px; */
 }
 ::-webkit-scrollbar-thumb {
@@ -102,5 +111,12 @@ span {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #bdbdbd;
+}
+
+.black-main {
+  background-color: #272727;
+}
+.white-main {
+  background-color: #fff;
 }
 </style>

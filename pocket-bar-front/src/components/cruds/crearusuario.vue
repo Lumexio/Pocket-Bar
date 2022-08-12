@@ -4,9 +4,14 @@
     v-model="dialogusuarios"
     max-width="25rem"
     persistent
+    :dark="this.$store.getters.hasdarkflag"
   >
     <v-card v-on:keyup.enter="submit()" class="cont-card">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon
@@ -68,7 +73,7 @@
 import axios from "axios";
 import store from "@/store";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export default {
   name: "crearusuario",
   props: {
@@ -112,8 +117,8 @@ export default {
     },
     submit() {
       //this.$emit("dialogFromChild", false);
-      store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-      store.commit("setdanger", false);
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
       let enviar = {
         name: this.name,
         email: this.email,

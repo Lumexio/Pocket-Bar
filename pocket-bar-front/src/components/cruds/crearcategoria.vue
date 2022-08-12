@@ -4,9 +4,14 @@
     v-model="dialogcategoria"
     max-width="40rem"
     persistent
+    :dark="this.$store.getters.hasdarkflag"
   >
     <v-card v-on:keyup.enter="submit()" class="cont-card">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon
@@ -60,43 +65,43 @@
 </template>
 
 <script>
-  import store from "@/store";
-  import { postCategorias } from "@/api/categorias.js";
-  import { upperConverter } from "@/special/uppercases-converter.js";
-  export default {
-    name: "crearcategoria",
-    props: {
-      dialogcategoria: { dafault: false },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      nombre_categoria: "",
-      descripcion_categoria: "",
-    }),
+import store from "@/store";
+import { postCategorias } from "@/api/categorias.js";
+import { upperConverter } from "@/special/uppercases-converter.js";
+export default {
+  name: "crearcategoria",
+  props: {
+    dialogcategoria: { dafault: false },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    nombre_categoria: "",
+    descripcion_categoria: "",
+  }),
 
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialogcategoria", false);
-      },
-      submit() {
-        store.commit("setsuccess", false);
-        store.commit("setdanger", false);
-        this.nombre_categoria = upperConverter(this.nombre_categoria);
-        const formdata = new FormData();
-        formdata.append("nombre_categoria", this.nombre_categoria);
-        formdata.append("descripcion_categoria", this.descripcion_categoria);
-        postCategorias(formdata);
-        this.clear();
-      },
-      clear() {
-        (this.nombre_categoria = ""), (this.descripcion_categoria = "");
-      },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialogcategoria", false);
     },
-  };
+    submit() {
+      store.commit("setsuccess", null);
+      store.commit("setdanger", null);
+      this.nombre_categoria = upperConverter(this.nombre_categoria);
+      const formdata = new FormData();
+      formdata.append("nombre_categoria", this.nombre_categoria);
+      formdata.append("descripcion_categoria", this.descripcion_categoria);
+      postCategorias(formdata);
+      this.clear();
+    },
+    clear() {
+      (this.nombre_categoria = ""), (this.descripcion_categoria = "");
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

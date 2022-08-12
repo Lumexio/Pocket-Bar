@@ -25,7 +25,7 @@ class userCreated implements ShouldBroadcast
     public $users;
     public function __construct()
     {
-        $this->users = DB::table('users')->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'rols_tbl.name_rol')->get();
+        \App::call('App\Http\Controllers\UserController@index');
     }
 
     /**

@@ -24,7 +24,7 @@ class statusCreated implements ShouldBroadcast
     public $status;
     public function __construct()
     {
-        $this->status = Status::all();
+        \App::call('App\Http\Controllers\StatusController@index');
     }
 
     /**

@@ -24,7 +24,7 @@ class tipoCreated implements ShouldBroadcast
     public $tipos;
     public function __construct()
     {
-        $this->tipos = Tipo::all();
+        \App::call('App\Http\Controllers\TipoController@index');
     }
 
     /**

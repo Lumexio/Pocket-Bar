@@ -12,11 +12,23 @@
 
 namespace App\Models{
 /**
+ * App\Models\Activitylog
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Activitylog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Activitylog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Activitylog query()
+ */
+	class Activitylog extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Articulo
  *
  * @property int $id
  * @property string $nombre_articulo
  * @property int $cantidad_articulo
+ * @property string|null $precio_articulo
  * @property string|null $descripcion_articulo
  * @property int|null $categoria_id
  * @property int|null $marca_id
@@ -26,8 +38,17 @@ namespace App\Models{
  * @property int|null $travesano_id
  * @property int|null $status_id
  * @property string|null $foto_articulo
+ * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Categoria|null $categoria
+ * @property-read \App\Models\Marca|null $marca
+ * @property-read \App\Models\Proveedor|null $proveedor
+ * @property-read \App\Models\Rack|null $rack
+ * @property-read \App\Models\User $user
+ * @method static \Database\Factories\ArticuloFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo query()
@@ -39,14 +60,45 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereMarcaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereNombreArticulo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Articulo wherePrecioArticulo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereProveedorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereRackId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereTipoId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereTravesanoId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Articulo whereUserId($value)
  */
 	class Articulo extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\CashRegisterCloseData
+ *
+ * @property int $id
+ * @property string $type
+ * @property string $total_tip
+ * @property string $total
+ * @property string $total_with_tip
+ * @property string|null $vouchers
+ * @property int $cashier_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCashierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotalTip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereTotalWithTip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegisterCloseData whereVouchers($value)
+ */
+	class CashRegisterCloseData extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -58,6 +110,8 @@ namespace App\Models{
  * @property string|null $descripcion_categoria
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Categoria newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Categoria newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Categoria query()
@@ -79,6 +133,8 @@ namespace App\Models{
  * @property string|null $descripcion_marca
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Marca newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Marca newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Marca query()
@@ -93,12 +149,52 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Mesa
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Mesa newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Mesa newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Mesa query()
+ */
+	class Mesa extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Nomina
+ *
+ * @property int $id
+ * @property string $user_name
+ * @property int $user_id
+ * @property string $tips
+ * @property string $base
+ * @property string $paid
+ * @property int $workshift_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereBase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina wherePaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereTips($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereUserName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Nomina whereWorkshiftId($value)
+ */
+	class Nomina extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Payment
  *
  * @property int $id
  * @property string $type
  * @property string $tip
  * @property string $total
+ * @property string|null $diff
+ * @property string|null $nominas_paid
+ * @property string|null $vouchers
+ * @property string $nominas
  * @property int $ticket_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -106,12 +202,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDiff($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereNominas($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereNominasPaid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTicketId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereVouchers($value)
  */
 	class Payment extends \Eloquent {}
 }
@@ -125,6 +225,8 @@ namespace App\Models{
  * @property string|null $descripcion
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Proveedor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Proveedor newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Proveedor query()
@@ -145,6 +247,8 @@ namespace App\Models{
  * @property string $nombre_rack
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @method static \Illuminate\Database\Eloquent\Builder|Rack newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rack newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rack query()
@@ -222,6 +326,7 @@ namespace App\Models{
  * @property string $subtotal
  * @property int $item_count
  * @property string $user_name
+ * @property string $timezone
  * @property string $ticket_date
  * @property int $user_id
  * @property string $tax
@@ -229,22 +334,40 @@ namespace App\Models{
  * @property string $tip
  * @property string $min_tip
  * @property string $table_name
+ * @property string $client_name
+ * @property string|null $cashier_name
+ * @property int|null $cashier_id
  * @property int $table_id
  * @property string $status
  * @property int $closed
+ * @property string|null $canceled_by_cashier_at
+ * @property int|null $canceled_by_cashier_id
+ * @property string|null $canceled_by_admin_at
+ * @property int|null $canceled_by_admin_id
  * @property int $workshift_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TicketDetail[] $Details
+ * @property-read \App\Models\User|null $barTender
+ * @property-read \App\Models\User|null $cashier
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TicketDetail[] $details
  * @property-read int|null $details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Payment[] $payments
  * @property-read int|null $payments_count
- * @property-read \App\Models\Table|null $table
- * @property-read \App\Models\User|null $user
- * @property-read \App\Models\Workshift|null $workshift
+ * @property-read \App\Models\Table $table
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $waiter
+ * @property-read \App\Models\Workshift $workshift
+ * @method static \Database\Factories\TicketFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByAdminAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByCashierAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCanceledByCashierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCashierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCashierName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereClientName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereClosed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereDiscounts($value)
@@ -257,6 +380,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereTableName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereTicketDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereTimezone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereTip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket whereUpdatedAt($value)
@@ -280,21 +404,28 @@ namespace App\Models{
  * @property string $total
  * @property int $articulos_tbl_id
  * @property string $articulos_img
- * @property int $attended
+ * @property string $status
+ * @property int|null $barTender_id
+ * @property int $waiter_id
  * @property int $ticket_id
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Articulo $articulo
+ * @property-read \App\Models\User|null $barra
+ * @property-read \App\Models\User $mesero
+ * @property-read \App\Models\Ticket $ticket
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail query()
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereArticulosImg($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereArticulosTblId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereAttended($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereBarTenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereDiscounts($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereSubtotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereTicketId($value)
@@ -302,6 +433,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereUnits($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TicketDetail whereWaiterId($value)
  */
 	class TicketDetail extends \Eloquent {}
 }
@@ -352,7 +484,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
- * @property string $email
+ * @property string|null $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -361,6 +493,10 @@ namespace App\Models{
  * @property string|null $two_factor_recovery_codes
  * @property string|null $remember_token
  * @property int|null $rol_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Articulo[] $articulo
+ * @property-read int|null $articulo_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens

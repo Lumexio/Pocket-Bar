@@ -23,15 +23,18 @@ class TicketCreateRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            "tableId" => "required|exists:tables,id",
-            "items" => "required|array|min:1",
-            "items.*.id" => "required|integer|exists:articulos_tbl,id",
-            "items.*.quantity" => "required|integer|min:1",
-            "items.*.price" => "required|numeric|min:0",
-            "items.*.discount" => "required|numeric|min:0",
-            "items.*.tax" => "required|numeric|min:0",
-            "items.*.image" => "required|string|max:300",
+            "mesa" => "required|exists:tables,id",
+            "titular" => "required|string|max:255",
+            "productos" => "required|array|min:1",
+            "productos.*.id" => "required|integer|exists:articulos_tbl,id",
+            "productos.*.nombre_articulo" => "required|string",
+            "productos.*.precio_articulo" => "required|numeric|min:0",
+            "productos.*.foto_articulo" => "nullable|string",
+            "productos.*.descuento" => "nullable|numeric|min:0",
+            "productos.*.tax" => "nullable|numeric|min:0",
+            "productos.*.piezas" => "required|numeric|min:1",
         ];
     }
 }

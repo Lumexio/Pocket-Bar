@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <div class="container-login">
-      <router-view />
-    </div>
+  <div
+    :class="[
+      this.$store.getters.hasdarkflag === true ? 'black-main' : 'white-main',
+    ]"
+  >
+    <router-view />
   </div>
 </template>
  
@@ -15,4 +17,12 @@ export default {
  
 <style>
 /* your style */
+.black-main {
+  background-color: #272727;
+  min-height: 100vh;
+}
+.white-main {
+  background-color: #fff;
+  min-height: 100%;
+}
 </style>

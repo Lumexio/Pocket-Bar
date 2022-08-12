@@ -4,9 +4,14 @@
     v-model="dialogproveedor"
     max-width="35rem"
     persistent
+    :dark="this.$store.getters.hasdarkflag"
   >
     <v-card v-on:keyup.enter="submit()" class="cont-card" elevation="2">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon
@@ -55,49 +60,49 @@
 </template>
 
 <script>
-  import store from "@/store";
-  import { postProveedores } from "@/api/proveedores.js";
-  import { upperConverter } from "@/special/uppercases-converter.js";
-  export default {
-    name: "crearproveedor",
-    props: {
-      dialogproveedor: { type: Boolean },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      nombre_proveedor: "",
-      descripcion: "",
-    }),
+import store from "@/store";
+import { postProveedores } from "@/api/proveedores.js";
+import { upperConverter } from "@/special/uppercases-converter.js";
+export default {
+  name: "crearproveedor",
+  props: {
+    dialogproveedor: { type: Boolean },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    nombre_proveedor: "",
+    descripcion: "",
+  }),
 
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialogproveedor", false);
-      },
-      submit() {
-        //this.$emit("dialogFromChild", false);
-        store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-        store.commit("setdanger", false);
-        let enviar = {
-          nombre_proveedor: this.nombre_proveedor,
-          descripcion: this.descripcion,
-        };
-        const formdata = new FormData();
-        formdata.append("nombre_proveedor", this.nombre_proveedor);
-        formdata.append("descripcion", this.descripcion);
-        enviar.nombre_proveedor = upperConverter(this.nombre_proveedor);
-
-        postProveedores(formdata);
-        this.clear();
-      },
-      clear() {
-        (this.nombre_proveedor = ""), (this.descripcion = "");
-      },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialogproveedor", false);
     },
-  };
+    submit() {
+      //this.$emit("dialogFromChild", false);
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
+      let enviar = {
+        nombre_proveedor: this.nombre_proveedor,
+        descripcion: this.descripcion,
+      };
+      const formdata = new FormData();
+      formdata.append("nombre_proveedor", this.nombre_proveedor);
+      formdata.append("descripcion", this.descripcion);
+      enviar.nombre_proveedor = upperConverter(this.nombre_proveedor);
+
+      postProveedores(formdata);
+      this.clear();
+    },
+    clear() {
+      (this.nombre_proveedor = ""), (this.descripcion = "");
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

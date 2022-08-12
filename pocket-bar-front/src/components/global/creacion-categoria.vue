@@ -27,28 +27,28 @@
 </template>
 
 <script>
-  import crearcategoria from "../cruds/crearcategoria.vue";
+import crearcategoria from "../cruds/crearcategoria.vue";
 
-  export default {
-    name: "crearlist",
+export default {
+  name: "crearlist",
 
-    components: {
-      crearcategoria,
-    },
+  components: {
+    crearcategoria,
+  },
 
-    data: () => ({
-      dialogcategoria: false,
-    }),
-  };
+  data: () => ({
+    dialogcategoria: false,
+  }),
+};
 </script>
 <style scoped>
-  .list-card {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    padding: 1em;
+.list-card {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 1em;
 
-    width: 7rem;
-    height: 3em;
-  }
+  width: 7rem;
+  height: 3em;
+}
 </style>

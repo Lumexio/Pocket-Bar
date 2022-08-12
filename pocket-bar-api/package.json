@@ -7,7 +7,12 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "back-serve": "php artisan serve",
+        "back-serve-prod": "php artisan serve --host=0.0.0.0 --port=8000",
+        "socket-serve": "php artisan websockets:serve",
+        "socket-serve-prod": "php artisan websockets:serve --host=0.0.0.0",
+        "migration-seed": "php artisan migrate:fresh --seed"
     },
     "devDependencies": {
         "axios": "^0.21",

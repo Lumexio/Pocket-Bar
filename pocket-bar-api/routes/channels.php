@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,4 +16,17 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+
+Broadcast::channel('barra.{id}', function ($user, $id) {
+    return (Auth::check()) and (Auth::user()->rol_id == 5) and (Auth::user()->id == $id);
+});
+
+Broadcast::channel('mesero.{id}', function ($user, $id) {
+    return (Auth::check()) and (in_array(Auth::user()->rol_id, [4])) and (Auth::user()->id == $id);
+});
+
+Broadcast::channel('tickets.{id}', function ($user, $id) {
+    return (Auth::check()) and (Auth::user()->rol_id == 5 or Auth::user()->rol_id == 4) and (Auth::user()->id == $id);
 });

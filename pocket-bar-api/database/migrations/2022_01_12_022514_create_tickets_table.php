@@ -19,6 +19,7 @@ class CreateTicketsTable extends Migration
             $table->decimal("subtotal", 10, 2)->nullable(false);
             $table->integer("item_count")->nullable(false);
             $table->string("user_name");
+            $table->string("timezone");
             $table->dateTime("ticket_date");
             $table->foreignId("user_id")->nullable(false)->references("id")->on("users");
             $table->decimal("tax", 10, 2);
@@ -26,9 +27,16 @@ class CreateTicketsTable extends Migration
             $table->decimal("tip", 10, 2);
             $table->decimal("min_tip", 10, 2);
             $table->string("table_name");
+            $table->string("client_name");
+            $table->string("cashier_name")->nullable(true);
+            $table->foreignId("cashier_id")->nullable(true)->references("id")->on("users");
             $table->foreignId("table_id")->nullable(false)->references("id")->on("tables");
             $table->string("status")->default("Solicitado");
             $table->boolean("closed")->default(false);
+            $table->dateTime("canceled_by_cashier_at")->nullable(true);
+            $table->foreignId("canceled_by_cashier_id")->nullable(true)->references("id")->on("users");
+            $table->dateTime("canceled_by_admin_at")->nullable(true);
+            $table->foreignId("canceled_by_admin_id")->nullable(true)->references("id")->on("users");
             $table->foreignId("workshift_id")->nullable(false)->references("id")->on("workshifts");
             $table->timestamps();
         });

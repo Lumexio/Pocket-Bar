@@ -1,10 +1,27 @@
 <template>
-  <v-navigation-drawer permanent app>
+  <v-navigation-drawer :dark="this.$store.getters.hasdarkflag" permanent app>
     <v-list nav expand dense>
-      <v-list-item-title style="font-size: 20px" class="text-uppercase">
-        <code class="font-weight-light">Pocket</code><strong>bar</strong>
-        <v-divider></v-divider>
-      </v-list-item-title>
+      <v-toolbar flat>
+        <v-list-item-title style="font-size: 20px" class="text-uppercase">
+          <code class="font-weight-light">Pocket</code
+          ><strong
+            :class="[
+              this.$store.getters.hasdarkflag === true
+                ? 'black-mode-text'
+                : 'white-mode-text',
+            ]"
+            >bar</strong
+          >
+        </v-list-item-title>
+        <v-switch
+          class="mt-6"
+          v-model="switchdark"
+          color="success"
+          flat
+        ></v-switch
+      ></v-toolbar>
+
+      <v-divider></v-divider>
       <v-list-item-group color="primary">
         <v-list v-if="hasrol === 1" flat>
           <v-list-item
@@ -147,6 +164,7 @@ export default {
   name: "sidebar",
   components: {},
   data: () => ({
+    switchdark: false,
     itemsmain: [
       //{ path: "/home", title: "Home", icon: "mdi-home" },
       { path: "/usuarios", title: "Usuarios", icon: "mdi-account-multiple" },
@@ -215,7 +233,20 @@ export default {
       return store.getters.hasrol;
     },
   },
+  watch: {
+    switchdark(val) {
+      this.$store.commit("setdarkflag", val);
+    },
+  },
+  created() {
+    this.checkDark();
+  },
   methods: {
+    checkDark() {
+      if (this.$store.getters.hasdarkflag === true) {
+        this.switchdark = true;
+      }
+    },
     paths(event) {
       switch (event.srcKey) {
         case "usuarios":
@@ -277,5 +308,11 @@ export default {
       color: #ffffff;
     }
   }
+}
+.black-mode-text {
+  color: yellowgreen;
+}
+.white-mode-text {
+  color: black;
 }
 </style>

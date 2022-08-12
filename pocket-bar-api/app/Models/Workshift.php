@@ -9,5 +9,5 @@ class Workshift extends Model
 {
     use HasFactory;
 
-    protected $table = "Workshifts";
+    protected $table = "workshifts";
 }

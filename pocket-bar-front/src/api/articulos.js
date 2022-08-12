@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "@/store";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 
 
 export function getArticulos(articulosArray) {
@@ -18,6 +18,7 @@ export function getArticulos(articulosArray) {
             nombre_articulo: element.nombre_articulo,
             cantidad_articulo: element.cantidad_articulo,
             descripcion_articulo: element.descripcion_articulo, //pendiente
+            precio_articulo: element.precio_articulo, //pendiente
             nombre_categoria: element.nombre_categoria,
             nombre_tipo: element.nombre_tipo,
             nombre_marca: element.nombre_marca,

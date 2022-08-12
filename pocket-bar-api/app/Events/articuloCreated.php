@@ -25,20 +25,7 @@ class articuloCreated implements ShouldBroadcast
     public $afterCommit = true;
     public function __construct()
     {
-        $this->articulos = DB::table('articulos_tbl')
-            ->leftJoin('categorias_tbl', 'articulos_tbl.categoria_id', '=', 'categorias_tbl.id')
-            ->leftJoin('marcas_tbl', 'articulos_tbl.marca_id', '=', 'marcas_tbl.id')
-            ->leftJoin('proveedores_tbl', 'articulos_tbl.proveedor_id', '=', 'proveedores_tbl.id')
-            ->leftJoin('status_tbl', 'articulos_tbl.status_id', '=', 'status_tbl.id')
-            ->leftJoin('tipos_tbl', 'articulos_tbl.tipo_id', '=', 'tipos_tbl.id')
-            ->leftJoin('rack_tbl', 'articulos_tbl.rack_id', '=', 'rack_tbl.id')
-            ->leftJoin('travesano_tbl', 'articulos_tbl.travesano_id', '=', 'travesano_tbl.id')
-            ->select('articulos_tbl.id', 'articulos_tbl.nombre_articulo', 'articulos_tbl.cantidad_articulo', 'articulos_tbl.descripcion_articulo', 'articulos_tbl.foto_articulo', 'categorias_tbl.nombre_categoria', 'marcas_tbl.nombre_marca', 'proveedores_tbl.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo', 'travesano_tbl.nombre_travesano', 'rack_tbl.nombre_rack')->get()->map(
-                function ($item) {
-                    $item->foto_articulo = url("images/{$item->foto_articulo}");
-                    return $item;
-                }
-            );
+        \App::call('App\Http\Controllers\ArticuloController@index');
     }
 
     /**

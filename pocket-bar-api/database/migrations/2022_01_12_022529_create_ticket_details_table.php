@@ -23,7 +23,9 @@ class CreateTicketDetailsTable extends Migration
             $table->decimal("total", 10, 2)->nullable(false);
             $table->foreignId("articulos_tbl_id")->nullable(false)->references('id')->on('articulos_tbl');
             $table->string("articulos_img", 300);
-            $table->boolean("attended")->default(true);
+            $table->string("status")->default("En espera");
+            $table->foreignId("barTender_id")->nullable(true)->references("id")->on("users");
+            $table->foreignId("waiter_id")->nullable(false)->references("id")->on("users");
             $table->foreignId("ticket_id")->nullable(false)->references('id')->on('tickets_tbl');
             $table->softDeletes();
             $table->timestamps();

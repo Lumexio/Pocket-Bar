@@ -24,7 +24,7 @@ class travesañoCreated implements ShouldBroadcast
     public $travesanos;
     public function __construct()
     {
-        $this->travesanos = Travesaño::all();
+        \App::call('App\Http\Controllers\TravesañoController@index');
     }
 
     /**

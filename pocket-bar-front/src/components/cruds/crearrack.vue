@@ -4,9 +4,14 @@
     v-model="dialograck"
     max-width="20rem"
     persistent
+    :dark="this.$store.getters.hasdarkflag"
   >
     <v-card class="cont-card" v-on:keyup.enter="submit()" elevation="1">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon
@@ -48,40 +53,40 @@
 </template>
 
 <script>
-  import store from "@/store";
-  import { postRack } from "@/api/racks.js";
+import store from "@/store";
+import { postRack } from "@/api/racks.js";
 
-  export default {
-    name: "crearrack",
-    props: {
-      dialograck: { dafault: false },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      nombre_rack: "",
-    }),
+export default {
+  name: "crearrack",
+  props: {
+    dialograck: { dafault: false },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    nombre_rack: "",
+  }),
 
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialograck", false);
-      },
-      submit() {
-        store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-        store.commit("setdanger", false);
-        const formdata = new FormData();
-        formdata.append("nombre_rack", this.nombre_rack);
-        postRack(formdata);
-        this.clear();
-      },
-      clear() {
-        this.nombre_rack = "";
-      },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialograck", false);
     },
-  };
+    submit() {
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
+      const formdata = new FormData();
+      formdata.append("nombre_rack", this.nombre_rack);
+      postRack(formdata);
+      this.clear();
+    },
+    clear() {
+      this.nombre_rack = "";
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

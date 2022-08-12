@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Articulo;
 
 class Proveedor extends Model
 {
@@ -20,4 +21,8 @@ class Proveedor extends Model
         'nombre_proveedor',
         'descripcion',
     ];
+    public function articulo()
+    {
+        return $this->hasMany(Articulo::class);
+    }
 }

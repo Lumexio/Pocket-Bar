@@ -4,9 +4,14 @@
     v-model="dialogtipo"
     max-width="40rem"
     persistent
+    :dark="this.$store.getters.hasdarkflag"
   >
     <v-card v-on:keyup.enter="submit()" class="cont-card" elevation="2">
-      <v-toolbar light flat>
+      <v-toolbar
+        :dark="this.$store.getters.hasdarkflag"
+        flat
+        color="transparent"
+      >
         <v-btn
           v-shortkey="['esc']"
           icon
@@ -56,43 +61,43 @@
 </template>
 
 <script>
-  import { postTipos } from "@/api/tipos.js";
-  import store from "@/store";
+import { postTipos } from "@/api/tipos.js";
+import store from "@/store";
 
-  export default {
-    name: "creartipo",
-    props: {
-      dialogtipo: { dafault: false },
-    } /*data de llegado de componente padre creacion*/,
-    data: () => ({
-      nombre_tipo: "",
-      descripcion_tipo: "",
-    }),
+export default {
+  name: "creartipo",
+  props: {
+    dialogtipo: { dafault: false },
+  } /*data de llegado de componente padre creacion*/,
+  data: () => ({
+    nombre_tipo: "",
+    descripcion_tipo: "",
+  }),
 
-    methods: {
-      onClose() {
-        /*Envia parametro de cierre a componente creación*/
-        this.$emit("update:dialogtipo", false);
-      },
-      submit() {
-        //this.$emit("dialogFromChild", false);
-        store.commit("setsuccess", false); //para resetear el valor de la notificion en una nueva entrada
-        store.commit("setdanger", false);
-        const formdata = new FormData();
-        formdata.append("nombre_tipo", this.nombre_tipo);
-        formdata.append("descripcion_tipo", this.descripcion_tipo);
-        postTipos(formdata);
-        this.clear();
-      },
-      clear() {
-        (this.nombre_tipo = ""), (this.descripcion_tipo = "");
-      },
+  methods: {
+    onClose() {
+      /*Envia parametro de cierre a componente creación*/
+      this.$emit("update:dialogtipo", false);
     },
-  };
+    submit() {
+      //this.$emit("dialogFromChild", false);
+      store.commit("setsuccess", null); //para resetear el valor de la notificion en una nueva entrada
+      store.commit("setdanger", null);
+      const formdata = new FormData();
+      formdata.append("nombre_tipo", this.nombre_tipo);
+      formdata.append("descripcion_tipo", this.descripcion_tipo);
+      postTipos(formdata);
+      this.clear();
+    },
+    clear() {
+      (this.nombre_tipo = ""), (this.descripcion_tipo = "");
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .cont-card {
-    padding: 1rem;
-  }
+.cont-card {
+  padding: 1rem;
+}
 </style>

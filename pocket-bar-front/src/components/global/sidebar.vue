@@ -312,13 +312,15 @@ export default {
 .black-mode-text {
 	color: yellowgreen;
 }
-.theme--dark.v-sheet {
+.theme--dark.v-item--active {
 	color: yellowgreen !important;
 }
-.theme--light.v-application {
-	color: rgba(0, 0, 0, 0.87);
+.theme--dark.v-list-item--active {
+	color: yellowgreen !important;
 }
-
+.theme--light.v-list-item--active {
+	color: black !important;
+}
 .white-mode-text {
 	color: black;
 }

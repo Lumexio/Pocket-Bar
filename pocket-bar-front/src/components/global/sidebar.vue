@@ -1,7 +1,7 @@
 <template>
 	<v-navigation-drawer :dark="this.$store.getters.hasdarkflag" permanent app>
 		<v-list nav expand dense>
-			<v-toolbar flat>
+			<v-toolbar flat color="transparent">
 				<v-list-item-title style="font-size: 20px" class="text-uppercase">
 					<code class="font-weight-light">Pocket</code
 					><strong

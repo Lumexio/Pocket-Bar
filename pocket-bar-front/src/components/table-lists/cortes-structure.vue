@@ -3,7 +3,15 @@
 </template>
 
 <script>
-export default { name: "cortes-structure" };
+import { getCotizado } from "@/api/cortes.js";
+
+export default {
+	name: "cortes-structure",
+	data: () => ({}),
+	mounted() {
+		getCotizado();
+	},
+};
 </script>
 
 <style scoped>

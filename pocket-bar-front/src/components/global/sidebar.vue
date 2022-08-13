@@ -192,6 +192,12 @@ export default {
 				title: "Ordenes",
 				icon: "mdi-folder-multiple",
 			},
+
+			{
+				path: "/pagos",
+				title: "Pagos y cuentas",
+				icon: "mdi-cash-multiple",
+			},
 		],
 		itemstable: [
 			{

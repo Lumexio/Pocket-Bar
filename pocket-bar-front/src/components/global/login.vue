@@ -6,19 +6,29 @@
 			elevation="2"
 			:dark="this.$store.getters.hasdarkflag"
 		>
-			<v-toolbar color="transparent" flat>
-				<v-card-title class="fade-in-title" style="font-size: 3rem"
-					><code class="font-weight-light">Pocket</code
-					><strong
-						:class="[
-							this.$store.getters.hasdarkflag === true
-								? 'black-mode-text'
-								: 'white-mode-text',
-						]"
-						>bar</strong
-					></v-card-title
+			<v-card-title class="fade-in-title" style="font-size: 3rem"
+				><code class="font-weight-light">Pocket</code
+				><strong
+					:class="[
+						this.$store.getters.hasdarkflag === true
+							? 'black-mode-text'
+							: 'white-mode-text',
+					]"
 				>
-			</v-toolbar>
+					bar
+				</strong>
+				<v-progress-circular
+					:class="[
+						this.$store.getters.hasdarkflag === true
+							? 'black-mode-text'
+							: 'white-mode-text',
+					]"
+					v-show="cargando == true"
+					:active="cargando"
+					:indeterminate="cargando"
+					:size="30"
+				></v-progress-circular
+			></v-card-title>
 
 			<v-text-field v-model="name" label="Nombre" required></v-text-field>
 			<v-text-field
@@ -49,13 +59,6 @@
 				<v-spacer></v-spacer>
 				<v-btn color="#9acd32" class="mr-4" v-on:click="login()" outlined>
 					Iniciar sesión
-					<v-progress-circular
-						v-show="cargando == true"
-						:active="cargando"
-						:indeterminate="cargando"
-						:size="20"
-						color="green"
-					></v-progress-circular>
 				</v-btn>
 			</v-card-actions>
 		</v-card>

@@ -1,15 +1,22 @@
 <template>
-	<cortestructure />
+	<div class="row">
+		<pagosoptionscard />
+	</div>
 </template>
 
 <script>
-import cortestructure from "../components/table-lists/cortes-structure.vue";
+import pagosoptionscard from "../components/global/pagos-options-card.vue";
 
 export default {
 	name: "main-pagos",
-	components: { cortestructure },
+	components: { pagosoptionscard },
 };
 </script>
 
 <style scoped>
+.row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 </style>

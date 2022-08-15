@@ -195,7 +195,7 @@ export default {
 
 			{
 				path: "/pagos",
-				title: "Pagos y cuentas",
+				title: "Cortes y ganancias",
 				icon: "mdi-cash-multiple",
 			},
 		],

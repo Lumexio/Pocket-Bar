@@ -53,29 +53,55 @@
 						</v-card-text>
 						<v-row class="ml-3 mr-3">
 							<v-col>
+								<v-subheader v-show="type_pay_cash == 'cash'"
+									>Pago en efectivo</v-subheader
+								>
 								<v-text-field
+									v-show="type_pay_cash == 'cash'"
 									label="Dinero en efectivo"
+									:dark="$store.getters.hasdarkflag"
+									outlined
+									v-model="obj_cash.amount"
+									prefix="$"
+								></v-text-field>
+
+								<v-subheader v-show="type_pay_card == 'card'"
+									>Pago con tarjeta</v-subheader
+								>
+								<v-text-field
+									v-show="type_pay_card == 'card'"
+									label="Pago con tarjeta"
+									:dark="$store.getters.hasdarkflag"
+									outlined
+									v-model="obj_card.amount"
+									prefix="$"
+								></v-text-field>
+								<v-text-field
+									v-show="type_pay_card == 'card'"
+									label="Voucher"
+									v-model="obj_card.voucher"
 									:dark="$store.getters.hasdarkflag"
 									outlined
 									prefix="$"
 								></v-text-field>
 								<v-text-field
-									v-show="type_pay_b == 'card'"
-									label="Pago con tarjeta"
+									v-show="type_pay_card == 'card' || type_pay_cash == 'cash'"
+									label="Propina"
 									:dark="$store.getters.hasdarkflag"
 									outlined
+									v-model="tip"
 									prefix="$"
 								></v-text-field>
 							</v-col>
 							<v-col>
 								<v-subheader>Tipo de pago</v-subheader>
 								<v-checkbox
-									v-model="type_pay_a"
+									v-model="type_pay_cash"
 									label="Efectivo"
 									value="cash"
 								></v-checkbox>
 								<v-checkbox
-									v-model="type_pay_b"
+									v-model="type_pay_card"
 									label="Tarjeta"
 									value="card"
 								></v-checkbox>
@@ -100,7 +126,7 @@
 				<v-dialog
 					:dark="$store.getters.hasdarkflag"
 					v-model="dialogCierreConfirm"
-					max-width="500px"
+					max-width="550px"
 				>
 					<v-card>
 						<v-card-title class="headline"
@@ -141,8 +167,13 @@ import { postCerrarticket } from "@/api/cortes.js";
 export default {
 	name: "tabla-activitylog",
 	data: () => ({
-		type_pay_a: "cash",
-		type_pay_b: "",
+		type_pay_cash: "cash",
+		type_pay_card: "",
+		tip: 0,
+		payments: [],
+		obj_card: {},
+		obj_cash: {},
+		packClose: {},
 		editedIndex: -1,
 		editedItem: {
 			id: "",
@@ -204,6 +235,24 @@ export default {
 		},
 	},
 	watch: {
+		obj_card(val) {
+			if (this.payments.includes(this.obj_card) === false && val) {
+				this.payments.push(this.obj_card);
+			} else if (this.payments.includes(this.obj_card) === true) {
+				this.payments.splice(this.payments.indexOf(this.obj_card), 1);
+			}
+		},
+		obj_cash(val) {
+			if (this.payments.includes(this.obj_cash) === false && val) {
+				this.payments.push(this.obj_cash);
+			} else if (this.payments.includes(this.obj_cash) === true) {
+				this.payments.splice(this.payments.indexOf(this.obj_cash), 1);
+			}
+		},
+
+		payments(val) {
+			console.log(val);
+		},
 		dialog(val) {
 			val || this.close();
 		},
@@ -246,8 +295,8 @@ export default {
 		cierreItemConfirm() {
 			this.ticketsArray.splice(this.editedIndex, 1);
 			// aqui armo el pago final
-			let send = {};
-			postCerrarticket(send);
+
+			postCerrarticket(this.packClose);
 		},
 		editItem(item) {
 			console.log("Datos ticket:", item);
@@ -256,6 +305,8 @@ export default {
 			this.dialog = true;
 		},
 		save() {
+			this.packClose = { id: this.editedItem.id, payments: this.payments };
+			console.log("before send:", this.packClose);
 			this.dialogCierreConfirm = true;
 		},
 		onFocus() {

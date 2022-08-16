@@ -34,7 +34,7 @@
 				<v-dialog
 					:dark="$store.getters.hasdarkflag"
 					v-model="dialog"
-					max-width="500px"
+					max-width="800px"
 				>
 					<v-card>
 						<v-card-title>
@@ -51,7 +51,36 @@
 							<b>Tootal a pagar:</b>
 							<p>{{ editedItem.monto_total }}</p>
 						</v-card-text>
-
+						<v-row class="ml-3 mr-3">
+							<v-col>
+								<v-text-field
+									label="Dinero en efectivo"
+									:dark="$store.getters.hasdarkflag"
+									outlined
+									prefix="$"
+								></v-text-field>
+								<v-text-field
+									v-show="type_pay_b == 'card'"
+									label="Pago con tarjeta"
+									:dark="$store.getters.hasdarkflag"
+									outlined
+									prefix="$"
+								></v-text-field>
+							</v-col>
+							<v-col>
+								<v-subheader>Tipo de pago</v-subheader>
+								<v-checkbox
+									v-model="type_pay_a"
+									label="Efectivo"
+									value="cash"
+								></v-checkbox>
+								<v-checkbox
+									v-model="type_pay_b"
+									label="Tarjeta"
+									value="card"
+								></v-checkbox>
+							</v-col>
+						</v-row>
 						<v-card-actions>
 							<v-btn color="blue darken-1" outlined @click="close">
 								Cancelar
@@ -112,6 +141,8 @@ import { postCerrarticket } from "@/api/cortes.js";
 export default {
 	name: "tabla-activitylog",
 	data: () => ({
+		type_pay_a: "cash",
+		type_pay_b: "",
 		editedIndex: -1,
 		editedItem: {
 			id: "",
@@ -187,6 +218,7 @@ export default {
 		// });
 		getTickets(this.ticketsArray)
 			.then((response) => {
+				console.log(response);
 				if (response.stats === 200) {
 					this.cargando = false;
 				}
@@ -213,7 +245,9 @@ export default {
 		},
 		cierreItemConfirm() {
 			this.ticketsArray.splice(this.editedIndex, 1);
-			postCerrarticket(this.editedItem);
+			// aqui armo el pago final
+			let send = {};
+			postCerrarticket(send);
 		},
 		editItem(item) {
 			console.log("Datos ticket:", item);
@@ -223,13 +257,6 @@ export default {
 		},
 		save() {
 			this.dialogCierreConfirm = true;
-			console.log("Guardando....");
-			// if (this.editedIndex > -1) {
-			// 	Object.assign(this.ticketsArray[this.editedIndex], this.editedItem);
-			// } else {
-			// 	this.desserts.push(this.editedItem);
-			// }
-			// this.close();
 		},
 		onFocus() {
 			let stext = document.getElementById("onsearch");

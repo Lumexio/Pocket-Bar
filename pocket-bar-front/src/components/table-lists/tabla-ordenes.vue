@@ -61,7 +61,7 @@
 									label="Dinero en efectivo"
 									:dark="$store.getters.hasdarkflag"
 									outlined
-									v-model="obj_cash.amount"
+									v-model="amount_cash"
 									prefix="$"
 								></v-text-field>
 
@@ -73,13 +73,13 @@
 									label="Pago con tarjeta"
 									:dark="$store.getters.hasdarkflag"
 									outlined
-									v-model="obj_card.amount"
+									v-model="amount_card"
 									prefix="$"
 								></v-text-field>
 								<v-text-field
 									v-show="type_pay_card == 'card'"
 									label="Voucher"
-									v-model="obj_card.voucher"
+									v-model="voucher"
 									:dark="$store.getters.hasdarkflag"
 									outlined
 									prefix="$"
@@ -169,6 +169,9 @@ export default {
 	data: () => ({
 		type_pay_cash: "cash",
 		type_pay_card: "",
+		amount_card: null,
+		amount_cash: null,
+		voucher: null,
 		tip: 0,
 		payments: [],
 		obj_card: {},
@@ -235,24 +238,6 @@ export default {
 		},
 	},
 	watch: {
-		obj_card(val) {
-			if (this.payments.includes(this.obj_card) === false && val) {
-				this.payments.push(this.obj_card);
-			} else if (this.payments.includes(this.obj_card) === true) {
-				this.payments.splice(this.payments.indexOf(this.obj_card), 1);
-			}
-		},
-		obj_cash(val) {
-			if (this.payments.includes(this.obj_cash) === false && val) {
-				this.payments.push(this.obj_cash);
-			} else if (this.payments.includes(this.obj_cash) === true) {
-				this.payments.splice(this.payments.indexOf(this.obj_cash), 1);
-			}
-		},
-
-		payments(val) {
-			console.log(val);
-		},
 		dialog(val) {
 			val || this.close();
 		},
@@ -297,15 +282,40 @@ export default {
 			// aqui armo el pago final
 
 			postCerrarticket(this.packClose);
+			this.payments = [];
+			this.obj_cash = {};
+			this.obj_card = {};
+			this.amount_card = null;
+			this.amount_cash = null;
+			this.tip = 0;
+			this.voucher = null;
 		},
 		editItem(item) {
-			console.log("Datos ticket:", item);
 			this.editedIndex = this.ticketsArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialog = true;
 		},
 		save() {
-			this.packClose = { id: this.editedItem.id, payments: this.payments };
+			if (this.amount_card != null) {
+				this.obj_card = {
+					payment_type: this.type_pay_card,
+					amount: this.amount_card,
+					voucher: this.voucher,
+				};
+				this.payments.push(this.obj_card);
+			}
+			if (this.amount_cash != null) {
+				this.obj_cash = {
+					payment_type: this.type_pay_cash,
+					amount: this.amount_cash,
+				};
+				this.payments.push(this.obj_cash);
+			}
+			this.packClose = {
+				id: this.editedItem.id,
+				payments: this.payments,
+				tip: this.tip,
+			};
 			console.log("before send:", this.packClose);
 			this.dialogCierreConfirm = true;
 		},

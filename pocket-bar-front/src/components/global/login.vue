@@ -14,9 +14,22 @@
 							? 'black-mode-text'
 							: 'white-mode-text',
 					]"
-					>bar</strong
-				></v-card-title
-			>
+				>
+					bar
+				</strong>
+				<v-progress-circular
+					:class="[
+						this.$store.getters.hasdarkflag === true
+							? 'black-mode-text'
+							: 'white-mode-text',
+					]"
+					v-show="cargando == true"
+					:active="cargando"
+					:indeterminate="cargando"
+					:size="30"
+				></v-progress-circular
+			></v-card-title>
+
 			<v-text-field v-model="name" label="Nombre" required></v-text-field>
 			<v-text-field
 				:append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -68,6 +81,7 @@ export default {
 		email: "", //a@a.com//b@b.com
 		password: "", //12345678
 		show3: false,
+		cargando: false,
 	}),
 
 	validations: {
@@ -100,6 +114,7 @@ export default {
 				password: this.password,
 			};
 
+			this.cargando = true;
 			axios
 				.get("sanctum/csrf-cookie")
 				.then((response) => {
@@ -113,7 +128,9 @@ export default {
 							store.commit("setrol", rol);
 							store.commit("setUserId", userId);
 							let validado = response.request.withCredentials;
+
 							if (validado == true) {
+								this.cargando = false;
 								store.commit("SET_TOKEN", response.data.token);
 								let token = store.state.token;
 								store.dispatch("login", { token });
@@ -142,7 +159,10 @@ export default {
 							}
 						})
 						.catch((e) => {
-							console.log(e);
+							if (e) {
+								this.cargando = false;
+								console.log("pppp", e);
+							}
 						});
 				})
 				.catch((e) => {

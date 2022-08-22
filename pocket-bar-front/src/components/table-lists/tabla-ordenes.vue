@@ -150,7 +150,12 @@
 				</v-dialog>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small class="mr-2" @click="editItem(item)">
+				<v-icon
+					v-show="item.status_ticket == 'Entregado'"
+					small
+					class="mr-2"
+					@click="editItem(item)"
+				>
 					mdi-cash-100
 				</v-icon>
 			</template>
@@ -287,8 +292,7 @@ export default {
 
 			postCerrarticket(this.packClose)
 				.then((response) => {
-					console.log(response);
-					if (response.stats === 200) {
+					if (response.response.status == 200) {
 						this.dialogCierreConfirm = false;
 						// para elimnar indice de la lista    this.ticketsArray.splice(this.editedIndex, 1);
 						this.RESET_CLOSE_DATA();

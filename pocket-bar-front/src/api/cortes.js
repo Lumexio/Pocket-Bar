@@ -1,5 +1,5 @@
 import axios from "axios";
-//import store from "@/store";
+import store from "@/store";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 
@@ -24,12 +24,24 @@ export function postCerrarticket(pack) {
     axios
       .post("api/caja/close", pack)
       .then(response => {
-        console.log("Close response:", response);
+        if (response.status === 200) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+            store.commit("setstatcode", null);
+          }, 2000);
+        }
         resolve({
           response
         });
       })
-      .catch((error) => { reject(error); });
+      .catch((error) => {
+        reject(error);
+        if (error) {
+          store.commit("setdanger", true);
+        }
+      });
   });
 }
 

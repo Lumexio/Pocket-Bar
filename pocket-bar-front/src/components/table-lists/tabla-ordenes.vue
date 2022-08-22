@@ -177,7 +177,7 @@ export default {
 		amount_card: null,
 		amount_cash: null,
 		voucher: null,
-		tip: 0,
+		tip: null,
 		payments: [],
 		obj_card: {},
 		obj_cash: {},
@@ -283,17 +283,32 @@ export default {
 			// });
 		},
 		cierreItemConfirm() {
-			this.ticketsArray.splice(this.editedIndex, 1);
 			// aqui armo el pago final
 
-			postCerrarticket(this.packClose);
-			this.payments = [];
-			this.obj_cash = {};
-			this.obj_card = {};
-			this.amount_card = null;
-			this.amount_cash = null;
-			this.tip = 0;
-			this.voucher = null;
+			postCerrarticket(this.packClose)
+				.then((response) => {
+					console.log(response);
+					if (response.stats === 200) {
+						this.dialogCierreConfirm = false;
+						// para elimnar indice de la lista    this.ticketsArray.splice(this.editedIndex, 1);
+						this.RESET_CLOSE_DATA();
+					}
+				})
+				.catch((e) => {
+					console.log(e);
+					this.cargando = true;
+				});
+		},
+		RESET_CLOSE_DATA() {
+			return (
+				(this.payments = []),
+				(this.obj_cash = {}),
+				(this.obj_card = {}),
+				(this.amount_card = null),
+				(this.amount_cash = null),
+				(this.tip = null),
+				(this.voucher = null)
+			);
 		},
 		editItem(item) {
 			this.editedIndex = this.ticketsArray.indexOf(item);
@@ -304,7 +319,7 @@ export default {
 			if (this.amount_card != null) {
 				this.obj_card = {
 					payment_type: this.type_pay_card,
-					amount: this.amount_card,
+					amount: Number(this.amount_card),
 					voucher: this.voucher,
 				};
 				this.payments.push(this.obj_card);
@@ -312,14 +327,14 @@ export default {
 			if (this.amount_cash != null) {
 				this.obj_cash = {
 					payment_type: this.type_pay_cash,
-					amount: this.amount_cash,
+					amount: Number(this.amount_cash),
 				};
 				this.payments.push(this.obj_cash);
 			}
 			this.packClose = {
-				id: this.editedItem.id,
+				ticket_id: this.editedItem.id,
 				payments: this.payments,
-				tip: this.tip,
+				tip: Number(this.tip),
 			};
 			console.log("before send:", this.packClose);
 			this.dialogCierreConfirm = true;

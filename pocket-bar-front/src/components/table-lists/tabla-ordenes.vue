@@ -34,7 +34,7 @@
 				<v-dialog
 					:dark="$store.getters.hasdarkflag"
 					v-model="dialog"
-					max-width="800px"
+					max-width="500px"
 				>
 					<v-card>
 						<v-card-title>
@@ -42,14 +42,31 @@
 						</v-card-title>
 
 						<v-card-text style="text-align: start">
-							<b>Nombre mesero:</b>
-							<p>{{ editedItem.nombre_mesero }}</p>
+							<v-row>
+								<v-col>
+									<b>Nombre mesero:</b>
+									<p>{{ editedItem.nombre_mesero }}</p>
 
-							<b>Estatus de ticket:</b>
-							<p>{{ editedItem.status_ticket }}</p>
+									<b>Estatus de ticket:</b>
+									<p>{{ editedItem.status_ticket }}</p>
 
-							<b>Tootal a pagar:</b>
-							<p>{{ editedItem.monto_total }}</p>
+									<b>Tootal a pagar:</b>
+									<p>{{ editedItem.monto_total }}</p>
+								</v-col>
+								<v-col>
+									<v-subheader>Tipo de pago</v-subheader>
+									<v-checkbox
+										v-model="type_pay_cash"
+										label="Efectivo"
+										value="cash"
+									></v-checkbox>
+									<v-checkbox
+										v-model="type_pay_card"
+										label="Tarjeta"
+										value="card"
+									></v-checkbox>
+								</v-col>
+							</v-row>
 						</v-card-text>
 						<v-row class="ml-3 mr-3">
 							<v-col>
@@ -64,7 +81,16 @@
 									v-model="amount_cash"
 									prefix="$"
 								></v-text-field>
-
+								<v-text-field
+									v-show="type_pay_card == 'card' || type_pay_cash == 'cash'"
+									label="Propina"
+									:dark="$store.getters.hasdarkflag"
+									outlined
+									v-model="tip"
+									prefix="$"
+								></v-text-field>
+							</v-col>
+							<v-col>
 								<v-subheader v-show="type_pay_card == 'card'"
 									>Pago con tarjeta</v-subheader
 								>
@@ -84,27 +110,6 @@
 									outlined
 									prefix="$"
 								></v-text-field>
-								<v-text-field
-									v-show="type_pay_card == 'card' || type_pay_cash == 'cash'"
-									label="Propina"
-									:dark="$store.getters.hasdarkflag"
-									outlined
-									v-model="tip"
-									prefix="$"
-								></v-text-field>
-							</v-col>
-							<v-col>
-								<v-subheader>Tipo de pago</v-subheader>
-								<v-checkbox
-									v-model="type_pay_cash"
-									label="Efectivo"
-									value="cash"
-								></v-checkbox>
-								<v-checkbox
-									v-model="type_pay_card"
-									label="Tarjeta"
-									value="card"
-								></v-checkbox>
 							</v-col>
 						</v-row>
 						<v-card-actions>

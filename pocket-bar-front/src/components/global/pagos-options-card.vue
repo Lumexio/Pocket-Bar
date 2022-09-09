@@ -77,6 +77,7 @@ export default {
 				.get("api/user")
 				.then((response) => {
 					let user = response.data;
+					console.log(user);
 					user.forEach((element) => {
 						let datos = {
 							id: element.id,
@@ -87,7 +88,7 @@ export default {
 						if (!datos) return;
 						this.usersArray.push(datos);
 					});
-					console.log(this.usersArray);
+
 					this.cargando = false;
 				})
 				.catch((error) => console.log(error));

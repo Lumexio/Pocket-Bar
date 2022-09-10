@@ -10,7 +10,7 @@
 					>Resumen de la noche
 				</v-stepper-step>
 				<v-divider></v-divider>
-				<v-stepper-step :complete="el > 2" step="3">
+				<v-stepper-step :complete="e1 > 2" step="3">
 					Confirmar totales</v-stepper-step
 				>
 			</v-stepper-header>
@@ -54,6 +54,7 @@
 
 <script>
 import { getCotizado } from "@/api/cortes.js";
+import { getUsuarios } from "@/api/usuarios.js";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
@@ -72,31 +73,11 @@ export default {
 		],
 	}),
 	methods: {
-		getusers() {
-			axios
-				.get("api/user")
-				.then((response) => {
-					let user = response.data;
-					console.log(user);
-					user.forEach((element) => {
-						let datos = {
-							id: element.id,
-							name: element.name,
-							name_rol: element.name_rol,
-							nominas: element.nominas,
-						};
-						if (!datos) return;
-						this.usersArray.push(datos);
-					});
-
-					this.cargando = false;
-				})
-				.catch((error) => console.log(error));
-		},
+		getusers() {},
 	},
 	mounted() {
+		getUsuarios(this.usersArray);
 		getCotizado();
-		this.getusers(this.usersArray);
 	},
 };
 </script>

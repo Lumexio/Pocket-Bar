@@ -76,11 +76,15 @@ export default {
 		getusers() {},
 	},
 	mounted() {
-		getUsuarios(this.usersArray);
+		getUsuarios(this.usersArray)
+			.then((response) => {
+				console.log(response);
+			})
+			.catch((e) => {
+				console.log(e);
+			});
 		getCotizado();
 	},
 };
 </script>
 
-<style scoped>
-</style>

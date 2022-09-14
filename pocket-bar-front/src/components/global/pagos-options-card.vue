@@ -55,9 +55,6 @@
 <script>
 import { getCotizado } from "@/api/cortes.js";
 import { getUsuarios } from "@/api/usuarios.js";
-import axios from "axios";
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 
 export default {
 	name: "cortes-structure",
@@ -78,7 +75,7 @@ export default {
 	mounted() {
 		getUsuarios(this.usersArray)
 			.then((response) => {
-				console.log(response);
+				this.usersArray = response.usersArray;
 			})
 			.catch((e) => {
 				console.log(e);

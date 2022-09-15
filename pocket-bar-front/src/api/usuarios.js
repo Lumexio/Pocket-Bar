@@ -1,5 +1,5 @@
 import axios from "axios";
-// import store from "@/store";
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export function getUsuarios(usersArray) {
@@ -9,7 +9,6 @@ export function getUsuarios(usersArray) {
       .then((response) => {
         let user = response.data;
         let stats = response.status;
-
         user.forEach((element) => {
           let datos = {
             id: element.id,

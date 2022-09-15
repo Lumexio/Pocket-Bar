@@ -125,6 +125,7 @@ import axios from "axios";
 import store from "@/store";
 import { upperConverter } from "@/special/uppercases-converter.js";
 import { getUsuarios } from "@/api/usuarios.js";
+import { getRol } from "@/api/rol.js";
 //axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export default {
@@ -190,26 +191,14 @@ export default {
 				}
 			})
 			.catch((error) => console.log(error));
-
-		axios
-			.get("api/rol")
+		getRol(this.itemsrol)
 			.then((response) => {
-				let categorias = response.data;
-
-				categorias.forEach((element) => {
-					let datos = {
-						rol_id: element.id,
-						name_rol: element.name_rol,
-					};
-
-					if (!datos) return;
-					this.itemsrol.push(datos);
-				});
-				this.cargando = false;
+				this.itemsrol = response.itemsrol;
+				if (response.stats === 200) {
+					this.cargando = false;
+				}
 			})
-			.catch((e) => {
-				console.log(e.message);
-			});
+			.catch((error) => console.log(error));
 	},
 
 	computed: {

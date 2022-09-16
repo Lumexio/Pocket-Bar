@@ -19,7 +19,7 @@ export function getCotizado() {
   });
 }
 export function postCerrarticket(pack) {
-  console.log("Pack de entrada cierre:", pack);
+
   return new Promise((resolve, reject) => {
     axios
       .post("api/caja/close", pack)

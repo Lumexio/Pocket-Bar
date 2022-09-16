@@ -410,6 +410,7 @@ class TicketController extends Controller
                 "error" => $th->getMessage()
             ], 500);
         }
+        broadcast((new MeseroEvents($ticket->waiter_id))->broadcastToEveryone());
 
         return response()->json([
             "status" => 200,

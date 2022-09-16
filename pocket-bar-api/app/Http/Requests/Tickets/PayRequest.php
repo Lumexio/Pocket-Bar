@@ -26,10 +26,10 @@ class PayRequest extends FormRequest
         return [
             "ticket_id" => "required|exists:tickets,id",
             "payments" => "required|array",
-            "tip" => "required|numeric|min:0",
             "payments.*.payment_type" => "required|in:cash,card,usd",
             "payments.*.amount" => "required|numeric",
             "payments.*.voucher" => "required_if:payments.*.payment_type,card|string|max:255",
+            "payments.*.tip" => "nullable|numeric|min:0",
         ];
     }
 }

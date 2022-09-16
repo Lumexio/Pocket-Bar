@@ -395,7 +395,7 @@ class TicketController extends Controller
                 $payment->ticket_id = $ticket->id;
                 $payment->type = $paymentData["type"];
                 $payment->voucher = $paymentData["voucher"] ?? null;
-                $payment->tip = $paymentData["type"] == "cash" ? $request->input("tip") : null;
+                $payment->tip = $paymentData["tip"] ?? null;
                 $payment->amount = $paymentData["amount"];
                 throw_if(!$payment->save(), \Exception::class, "Error al guardar el pago");
             }

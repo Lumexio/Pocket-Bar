@@ -508,7 +508,7 @@ export default {
 .arrowscounter {
 	display: flex;
 	flex-direction: row;
-	justify-content: end;
+	justify-content: flex-end;
 }
 .buttonsproced {
 	display: flex;

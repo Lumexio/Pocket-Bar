@@ -24,7 +24,7 @@ class CloseRequest extends FormRequest
     public function rules()
     {
         return [
-            "data" => "required|array",
+            // "data" => "required|array",
             "data.*.type" => "required|in:cash,card,usd",
             "data.*.amount" => "required|numeric",
             "data.*.tip" => "nullable|numeric",

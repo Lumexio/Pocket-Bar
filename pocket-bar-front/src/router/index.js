@@ -397,6 +397,32 @@ const routes = [
     }
   },
   {
+    path: '/pagos',
+    name: 'pagos',
+    component: () => import('../views/main-pagos.vue'),
+    meta: {
+      authenticated: true,
+      layout: 'default',
+      name: 'default'
+    },
+    beforeEnter: (to, from, next) => {
+      let validado = to.matched.some(record => record.meta.authenticated);
+      if (store.state.token) {
+        next();
+        if (validado == true && from.path !== '/') {
+          next();
+        }
+      }
+      else if (!validado) {
+        next({ name: 'login' });
+      }
+      else {
+        next({ name: 'login' });
+      }
+
+    }
+  },
+  {
     path: '/mesero',
     name: 'mesero',
     component: () => import('../views/pwa-mains/main-mesero.vue'),

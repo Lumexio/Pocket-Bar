@@ -83,10 +83,10 @@
 								></v-text-field>
 								<v-text-field
 									v-show="type_pay_card == 'card' || type_pay_cash == 'cash'"
-									label="Propina"
+									label="Propina efectivo"
 									:dark="$store.getters.hasdarkflag"
 									outlined
-									v-model="tip"
+									v-model="tip_cash"
 									prefix="$"
 								></v-text-field>
 							</v-col>
@@ -108,6 +108,14 @@
 									v-model="voucher"
 									:dark="$store.getters.hasdarkflag"
 									outlined
+									prefix="$"
+								></v-text-field>
+								<v-text-field
+									v-show="type_pay_card == 'card'"
+									label="Propina tarjeta"
+									:dark="$store.getters.hasdarkflag"
+									outlined
+									v-model="tip_card"
 									prefix="$"
 								></v-text-field>
 							</v-col>
@@ -182,7 +190,8 @@ export default {
 		amount_card: null,
 		amount_cash: null,
 		voucher: null,
-		tip: null,
+		tip_cash: null,
+		tip_card: null,
 		payments: [],
 		obj_card: {},
 		obj_cash: {},
@@ -310,7 +319,8 @@ export default {
 				(this.obj_card = {}),
 				(this.amount_card = null),
 				(this.amount_cash = null),
-				(this.tip = null),
+				(this.tip_cash = null),
+				(this.tip_card = null),
 				(this.voucher = null)
 			);
 		},
@@ -325,6 +335,7 @@ export default {
 					payment_type: this.type_pay_card,
 					amount: Number(this.amount_card),
 					voucher: this.voucher,
+					tip: Number(this.tip_card),
 				};
 				this.payments.push(this.obj_card);
 			}
@@ -332,15 +343,15 @@ export default {
 				this.obj_cash = {
 					payment_type: this.type_pay_cash,
 					amount: Number(this.amount_cash),
+					tip: Number(this.tip_cash),
 				};
 				this.payments.push(this.obj_cash);
 			}
 			this.packClose = {
 				ticket_id: this.editedItem.id,
 				payments: this.payments,
-				tip: Number(this.tip),
 			};
-			console.log("before send:", this.packClose);
+
 			this.dialogCierreConfirm = true;
 		},
 		onFocus() {

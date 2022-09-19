@@ -105,26 +105,6 @@
 										required
 									></v-select>
 								</v-col>
-								<v-col sm="4" md="6">
-									<v-select
-										v-model="selectr"
-										:items="itemsr"
-										item-text="nombre_rack"
-										item-value="id"
-										label="Ubicación rack"
-										required
-									></v-select>
-								</v-col>
-								<v-col sm="4" md="6">
-									<v-select
-										v-model="selectT"
-										:items="itemsT"
-										item-text="nombre_travesano"
-										item-value="id"
-										label="Ubicación travesaño"
-										required
-									></v-select>
-								</v-col>
 							</v-row>
 							<v-row
 								><v-col>
@@ -177,12 +157,12 @@
 			>
 				<template v-slot:default="dialogDetail">
 					<v-card :dark="$store.getters.hasdarkflag" :key="count">
+						<v-toolbar flat color="transparent">
+							<v-card-title>
+								Foto {{ editedItem.nombre_articulo }}</v-card-title
+							></v-toolbar
+						>
 						<v-card-text>
-							<v-toolbar flat>
-								<v-card-title>
-									Foto {{ editedItem.nombre_articulo }}</v-card-title
-								></v-toolbar
-							>
 							<v-img
 								:colspan="headers.length"
 								v-bind:lazy-src="editedItem.foto_articulo"
@@ -247,21 +227,17 @@ import { getCategorias } from "@/api/categorias.js";
 import { getMarcas } from "@/api/marcas.js";
 import { getProveedores } from "@/api/proveedores.js";
 import { getTipos } from "@/api/tipos.js";
-import { getRack } from "@/api/racks.js";
-import { getTravesano } from "@/api/travesanos.js";
+
 import { getStatus } from "@/api/status.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 import {
 	tiposync,
 	statusync,
-	travesañosync,
 	categsync,
-	racksync,
 	marcasync,
 	proveedorsync,
 } from "@/special/sync-indexitems.js";
 
-//axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export default {
 	name: "tabla-articulos",
 	data: () => ({
@@ -286,8 +262,6 @@ export default {
 			{ text: "Marca", value: "nombre_marca", align: "center" },
 			{ text: "Proveedor", value: "nombre_proveedor", align: "center" },
 			{ text: "estatus", value: "nombre_status", align: "center" },
-			{ text: "Rack", value: "nombre_rack", align: "center" },
-			{ text: "Travesaño", value: "nombre_travesano", align: "center" },
 			{ text: "Acciones", value: "actions", sortable: false, align: "center" },
 			{ text: "", align: "end", value: "data-table-expand" },
 		],
@@ -299,16 +273,14 @@ export default {
 		selectp: "", //proveedor
 		selectm: "", //marca
 		selectst: "", //status
-		selectr: "", //rack
-		selectT: "", //travesaño
+
 		//Array en el que se deposita de los selectores.
 		itemsc: [], //categoria
 		itemstt: [], //tipo
 		itemsp: [], //proveedor
 		itemstm: [], //marca
 		itemstst: [], //status
-		itemsr: [], //rack
-		itemsT: [], //travesaño
+
 		photo: null,
 
 		editedIndex: -1,
@@ -321,8 +293,7 @@ export default {
 			nombre_marca: "",
 			nombre_proveedor: "",
 			nombre_status: "",
-			nombre_rack: "",
-			nombre_travesano: "",
+
 			foto_articulo: null,
 			descripcion_articulo: "",
 		},
@@ -335,8 +306,7 @@ export default {
 			nombre_marca: "",
 			nombre_proveedor: "",
 			nombre_status: "",
-			nombre_rack: "",
-			nombre_travesano: "",
+
 			foto_articulo: null,
 			descripcion_articulo: "",
 		},
@@ -364,12 +334,7 @@ export default {
 		window.Echo.channel("tipos").listen("tipoCreated", (e) => {
 			this.itemstt = e.tipos;
 		});
-		window.Echo.channel("racks").listen("rackCreated", (e) => {
-			this.itemsr = e.racks;
-		});
-		window.Echo.channel("travesanos").listen("travesañoCreated", (e) => {
-			this.itemsT = e.travesanos;
-		});
+
 		getArticulos(this.articulosArray)
 			.then((response) => {
 				if (response.stats === 200) {
@@ -386,8 +351,7 @@ export default {
 		getMarcas(this.itemstm);
 		getProveedores(this.itemsp);
 		getTipos(this.itemstt);
-		getRack(this.itemsr);
-		getTravesano(this.itemsT);
+
 		getStatus(this.itemstst);
 	},
 
@@ -460,12 +424,7 @@ export default {
 			//status
 			let statync = this.editedItem.nombre_status;
 			this.selectst = statusync(this.itemstst, this.selectst, statync);
-			//rack
-			let racsycn = this.editedItem.nombre_rack;
-			this.selectr = racksync(this.itemsr, this.selectr, racsycn);
-			//travesaño
-			let travsync = this.editedItem.nombre_travesano;
-			this.selectT = travesañosync(this.itemsT, this.selectT, travsync);
+
 			this.dialog = true;
 		},
 
@@ -536,9 +495,7 @@ export default {
 					"categoria_id=" + this.selectc
 				}&${"tipo_id=" + this.selectt}&${"marca_id=" + this.selectm}&${
 					"proveedor_id=" + this.selectp
-				}&${"status_id=" + this.selectst}&${"rack_id=" + this.selectr}&${
-					"travesano_id=" + this.selectT
-				}`;
+				}&${"status_id=" + this.selectst}`;
 
 				editArticulos(url);
 				//Sub sistema de eliminación de photos del articulo
@@ -555,5 +512,3 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>

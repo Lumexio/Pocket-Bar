@@ -116,36 +116,6 @@
 					</v-list-item-icon>
 				</v-list-item>
 			</v-list-group>
-			<v-list-group
-				v-if="hasrol === 2 || hasrol === 1"
-				:value="true"
-				no-action
-				sub-group
-			>
-				<template v-slot:activator>
-					<v-list-item-content>
-						<v-list-item-title>Ubicaciones </v-list-item-title>
-					</v-list-item-content>
-				</template>
-				<v-list-item
-					v-for="item in itemlocation"
-					:key="item.title"
-					link
-					flat
-					:to="item.path"
-					v-shortkey="{
-						travesano: ['ctrl', 'e'],
-						racks: ['ctrl', 'r'],
-					}"
-					@shortkey="paths"
-				>
-					<v-list-item-title>{{ item.title }}</v-list-item-title>
-
-					<v-list-item-icon>
-						<v-icon>{{ item.icon }}</v-icon>
-					</v-list-item-icon>
-				</v-list-item>
-			</v-list-group>
 		</v-list>
 		<v-divider></v-divider>
 		<template v-slot:append>
@@ -221,18 +191,6 @@ export default {
 				icon: "mdi-folder-multiple",
 			},
 		],
-		itemlocation: [
-			{
-				path: "/racks",
-				title: "Racks",
-				icon: "mdi-folder-multiple",
-			},
-			{
-				path: "/travesano",
-				title: "Travesaños",
-				icon: "mdi-folder-multiple",
-			},
-		],
 	}),
 	computed: {
 		hasrol() {
@@ -275,12 +233,6 @@ export default {
 					break;
 				case "proveedores":
 					router.push("/proveedores").catch(() => {});
-					break;
-				case "racks":
-					router.push("/racks").catch(() => {});
-					break;
-				case "travesano":
-					router.push("/travesano").catch(() => {});
 					break;
 				default:
 					break;

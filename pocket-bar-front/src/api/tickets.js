@@ -35,6 +35,7 @@ export function getTickets(ticketsArray) {
 }
 export function postTickets(enviar) {
 
+
   axios
     .post("api/tickets/create", enviar)
     .then((response) => {
@@ -109,7 +110,7 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
           if (element.mesero) {
             datos.nombre_mesero = element.mesero.name;
           }
-          
+
           ticketsPWANotiArray.push(datos);
         });
         resolve({

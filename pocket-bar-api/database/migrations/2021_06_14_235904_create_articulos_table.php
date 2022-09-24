@@ -22,9 +22,7 @@ class CreateArticulosTable extends Migration
             $table->foreignId('categoria_id')->nullable('NULL')->references('id')->on('categorias_tbl');
             $table->foreignId('marca_id')->nullable('NULL')->references('id')->on('marcas_tbl');
             $table->foreignId('proveedor_id')->nullable('NULL')->references('id')->on('proveedores_tbl');
-            $table->foreignId('rack_id')->nullable('NULL')->references('id')->on('rack_tbl');
             $table->foreignId('tipo_id')->nullable('NULL')->references('id')->on('tipos_tbl');
-            $table->foreignId('travesano_id')->nullable('NULL')->references('id')->on('travesano_tbl');
             $table->foreignId('status_id')->nullable('NULL')->references('id')->on('status_tbl');
             $table->string('foto_articulo')->nullable('NULL');
             // $table->foreignId('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

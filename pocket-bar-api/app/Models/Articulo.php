@@ -67,8 +67,4 @@ class Articulo extends Model
     {
         return $this->belongsTo(Proveedor::class);
     }
-    public function rack()
-    {
-        return $this->belongsTo(Rack::class);
-    }
 }

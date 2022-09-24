@@ -30,8 +30,6 @@ class Articulo extends Model
         'tipo_id',
         'proveedor_id',
         'marca_id',
-        'travesano_id',
-        'rack_id',
         'status_id',
         'foto_articulo',
         'user_id'

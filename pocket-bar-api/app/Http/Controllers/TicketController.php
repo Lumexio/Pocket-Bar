@@ -190,9 +190,9 @@ class TicketController extends Controller
     {
         $articulo = Articulo::find($id);
         if ($sum) {
-            $articulo->units += $units;
+            $articulo->cantidad_articulo += $units;
         } else {
-            $articulo->units -= $units;
+            $articulo->cantidad_articulo -= $units;
         }
         throw_if(!$articulo->save(), \Exception::class, "Error al actualizar el articulo");
     }

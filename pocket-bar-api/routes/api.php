@@ -63,7 +63,7 @@ Mostrar un registro no */
         Route::get('/list', 'TicketController@index');
         Route::get('/pwa/list', 'TicketController@indexPwa');
         Route::post('/create', 'TicketController@store');
-        Route::put('/pay', 'TicketController@pay'); //pagar cuenta
+        Route::post('/pay', 'TicketController@pay'); //pagar cuenta
         Route::delete("/cancel", 'TicketController@cancelTicket');
         Route::put('/add/products', 'TicketController@addProducts');
     });

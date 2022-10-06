@@ -7,49 +7,46 @@
 		>
 			<v-card-title
 				class="fade-in-title font-weight-light"
+				style="font-size: 2rem"
 				:class="[
 					$store.getters.hasdarkflag === true
 						? 'title-user-letter-dark'
-						: 'title-user-letter-ligth',
+						: 'white-mode-text',
 				]"
-				style="font-size: 2rem"
 				><code>Pocket</code
-				><code class="font-weight-bold">bar</code></v-card-title
+				><strong
+					:class="[
+						this.$store.getters.hasdarkflag === true
+							? 'black-mode-text'
+							: 'white-mode-text',
+					]"
+				>
+					bar
+				</strong></v-card-title
 			>
-			<v-chip class="ml-6" color="pink" label outlined>{{ typeUser }}</v-chip>
 			<v-spacer></v-spacer>
-			<v-switch v-model="switchdark" color="success" flat></v-switch>
+			<span
+				class="mr-6"
+				:class="[
+					$store.getters.hasdarkflag === true
+						? 'title-user-letter-dark'
+						: 'white-mode-text',
+				]"
+				>{{ typeUser }}</span
+			>
 		</div>
 		<v-toolbar :dark="darkonchange" flat>
-			<v-text-field
-				flat
-				hide-details
-				prepend-inner-icon="mdi-magnify"
-				placeholder="Search"
-			></v-text-field>
-
-			<v-spacer></v-spacer>
-
-			<v-btn @click="dialoglistorden = true" icon>
+			<v-btn @click="dialogaccount = true" outlined>
+				<v-icon>mdi-account-cog</v-icon>
+			</v-btn>
+			<v-btn class="mr-1 ml-1" @click="dialoglistorden = true" outlined>
 				<v-icon>mdi-bell</v-icon>
 			</v-btn>
+			<v-spacer></v-spacer>
+			<v-btn outlined @click="dialogorden = true">
+				<v-icon>mdi-plus</v-icon>
+			</v-btn>
 
-			<v-menu :dark="darkonchange" offset-y>
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn text v-bind="attrs" v-on="on">
-						<v-icon>mdi-dots-vertical</v-icon>
-					</v-btn>
-				</template>
-				<v-list>
-					<v-list-item v-for="item in itemss" :key="item.id" :to="item.path">
-						<v-list-item-title
-							v-on="hasstatus == item.status"
-							@click="clear()"
-							>{{ item.title }}</v-list-item-title
-						>
-					</v-list-item>
-				</v-list>
-			</v-menu>
 			<template v-slot:extension>
 				<v-tabs
 					style="padding-right: 0px; width: 1%"
@@ -61,50 +58,37 @@
 					left
 				>
 					<v-tab style="padding: 2px" v-for="item in items" :key="item.id">
-						<v-btn @click="statuschange(item.status)" text>
-							{{ item.title }}</v-btn
-						>
+						<span @click="statuschange(item.status)"> {{ item.title }}</span>
 					</v-tab>
 				</v-tabs>
-				<v-fab-transition>
-					<v-btn
-						small
-						fab
-						dark
-						depressed
-						bottom
-						right
-						@click="dialogorden = true"
-					>
-						<v-icon icon>mdi-plus</v-icon>
-					</v-btn>
-				</v-fab-transition>
 			</template>
 		</v-toolbar>
 
 		<tomarorden :dialogorden.sync="dialogorden" />
 		<notiorden :dialoglistorden.sync="dialoglistorden" />
+		<account-settings :dialogaccount.sync="dialogaccount" />
 	</nav>
 </template>
 
 <script>
 import tomarorden from "@/pwa-components/forms/crear-orden.vue";
 import notiorden from "@/pwa-components/tables/lista-notificaciones-ordenes.vue";
+import AccountSettings from "@/pwa-components/tables/account-settings.vue";
 import store from "@/store";
 export default {
 	name: "navbarPwa",
 	components: {
 		tomarorden,
 		notiorden,
+		AccountSettings,
 	},
 	data() {
 		return {
-			itemss: [{ title: "Cerrar sessión", path: "/login" }],
 			type: null,
 			tabs: null,
 			dialogorden: false,
 			dialoglistorden: false,
-			switchdark: false,
+			dialogaccount: false,
 			items: [
 				{ id: 1, title: "Por entregar", status: "Por entregar" },
 				{ id: 2, title: "Entregadas", status: "Entregado" },
@@ -112,23 +96,8 @@ export default {
 			],
 		};
 	},
-	// created() {
-	//   this.hasdarkflag();
-	// },
-	watch: {
-		switchdark(val) {
-			store.commit("setdarkflag", val);
-		},
-	},
-	created() {
-		this.checkDark();
-	},
+
 	methods: {
-		checkDark() {
-			if (this.$store.getters.hasdarkflag === true) {
-				this.switchdark = true;
-			}
-		},
 		clear() {
 			store.commit("RESET");
 			store.commit("SET_TOKEN", null);
@@ -183,8 +152,12 @@ export default {
 .title-user-letter-dark {
 	color: aliceblue;
 }
-.title-user-letter-ligth {
-	color: #272727;
+
+.black-mode-text {
+	color: #9acd32;
+}
+.white-mode-text {
+	color: black;
 }
 .fade-in-title {
 	animation: fadeIn 5s;

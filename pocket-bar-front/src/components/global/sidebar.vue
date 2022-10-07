@@ -276,9 +276,9 @@ export default {
 .theme--dark.v-list-item--active {
 	color: yellowgreen !important;
 }
-.theme--light.v-list-item--active {
-	color: black !important;
-}
+// .theme--light.v-list-item--active {
+// 	color: black !important;
+// }
 .white-mode-text {
 	color: black;
 }

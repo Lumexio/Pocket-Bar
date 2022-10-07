@@ -1,84 +1,58 @@
 <template>
-	<nav>
-		<div
+	<v-toolbar :dark="darkonchange" fixed style="flex: none">
+		<h1
+			class="fade-in-title font-weight-light"
 			:class="[
-				$store.getters.hasdarkflag === true ? 'title-user-dark' : 'title-user',
+				$store.getters.hasdarkflag === true
+					? 'title-user-letter-dark'
+					: 'white-mode-text',
 			]"
 		>
-			<v-card-title
-				class="fade-in-title font-weight-light"
-				style="font-size: 2rem"
+			<code>Pocket</code
+			><strong
 				:class="[
 					$store.getters.hasdarkflag === true
-						? 'title-user-letter-dark'
+						? 'black-mode-text'
 						: 'white-mode-text',
 				]"
-				><code>Pocket</code
-				><strong
-					:class="[
-						this.$store.getters.hasdarkflag === true
-							? 'black-mode-text'
-							: 'white-mode-text',
-					]"
-				>
-					bar
-				</strong></v-card-title
 			>
-			<v-spacer></v-spacer>
-			<span
-				class="mr-6"
-				:class="[
-					$store.getters.hasdarkflag === true
-						? 'title-user-letter-dark'
-						: 'white-mode-text',
-				]"
-				>{{ typeUser }}</span
+				bar
+			</strong>
+		</h1>
+		<v-spacer></v-spacer>
+		<v-divider vertical></v-divider>
+		<v-btn class="mr-1 ml-1" @click="dialoglistorden = true" icon>
+			<v-icon>mdi-bell</v-icon>
+		</v-btn>
+		<v-btn @click="dialogaccount = true" icon>
+			<v-icon>mdi-account-cog</v-icon>
+		</v-btn>
+		<template v-slot:extension>
+			<v-tabs
+				next-icon="mdi-arrow-right-bold-box-outline"
+				prev-icon="mdi-arrow-left-bold-box-outline"
+				show-arrows
+				v-model="tabs"
+				grow
+				left
 			>
-		</div>
-		<v-toolbar :dark="darkonchange" flat>
-			<v-btn @click="dialogaccount = true" outlined>
-				<v-icon>mdi-account-cog</v-icon>
-			</v-btn>
-			<v-btn class="mr-1 ml-1" @click="dialoglistorden = true" outlined>
-				<v-icon>mdi-bell</v-icon>
-			</v-btn>
-			<v-spacer></v-spacer>
-			<v-btn outlined @click="dialogorden = true">
-				<v-icon>mdi-plus</v-icon>
-			</v-btn>
-
-			<template v-slot:extension>
-				<v-tabs
-					style="padding-right: 0px; width: 1%"
-					next-icon="mdi-arrow-right-bold-box-outline"
-					prev-icon="mdi-arrow-left-bold-box-outline"
-					show-arrows
-					v-model="tabs"
-					grow
-					left
-				>
-					<v-tab style="padding: 2px" v-for="item in items" :key="item.id">
-						<span @click="statuschange(item.status)"> {{ item.title }}</span>
-					</v-tab>
-				</v-tabs>
-			</template>
-		</v-toolbar>
-
-		<tomarorden :dialogorden.sync="dialogorden" />
+				<v-tab style="padding: 2px" v-for="item in items" :key="item.id">
+					<span @click="statuschange(item.status)"> {{ item.title }}</span>
+				</v-tab>
+			</v-tabs>
+		</template>
 		<notiorden :dialoglistorden.sync="dialoglistorden" />
 		<account-settings :dialogaccount.sync="dialogaccount" />
-	</nav>
+	</v-toolbar>
 </template>
 
 <script>
-import tomarorden from "@/pwa-components/forms/crear-orden.vue";
 import notiorden from "@/pwa-components/tables/lista-notificaciones-ordenes.vue";
 import AccountSettings from "@/pwa-components/tables/account-settings.vue";
 import store from "@/store";
 export default {
 	name: "navbarPwa",
 	components: {
-		tomarorden,
 		notiorden,
 		AccountSettings,
 	},
@@ -86,7 +60,6 @@ export default {
 		return {
 			type: null,
 			tabs: null,
-			dialogorden: false,
 			dialoglistorden: false,
 			dialogaccount: false,
 			items: [
@@ -112,24 +85,6 @@ export default {
 			return store.getters.hasdarkflag;
 		},
 
-		typeUser() {
-			var rol = "";
-			rol;
-			store.getters.hasrol;
-
-			switch (store.getters.hasrol) {
-				case 4:
-					rol = "Meser@";
-					break;
-				case 5:
-					rol = "Bartender";
-					break;
-
-				default:
-					break;
-			}
-			return rol;
-		},
 		hasstatus() {
 			return store.getters.hasstatus;
 		},

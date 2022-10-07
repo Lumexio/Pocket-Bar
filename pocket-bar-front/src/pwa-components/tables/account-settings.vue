@@ -16,6 +16,17 @@
 				</v-btn>
 				<v-toolbar-title>Configuración </v-toolbar-title>
 				<v-spacer></v-spacer>
+				<span
+					class="mr-6"
+					:class="[
+						$store.getters.hasdarkflag === true
+							? 'title-user-letter-dark'
+							: 'white-mode-text',
+					]"
+					>{{ typeUser }}</span
+				>
+				<v-divider vertical></v-divider>
+				<v-spacer></v-spacer>
 				<v-icon>mdi-account-cog</v-icon>
 			</v-toolbar>
 
@@ -70,6 +81,26 @@ export default {
 			store.commit("setdarkflag", val);
 		},
 	},
+	computed: {
+		typeUser() {
+			var rol = "";
+			rol;
+			store.getters.hasrol;
+
+			switch (store.getters.hasrol) {
+				case 4:
+					rol = "Meser@";
+					break;
+				case 5:
+					rol = "Bartender";
+					break;
+
+				default:
+					break;
+			}
+			return rol;
+		},
+	},
 	created() {
 		this.checkDark();
 	},
@@ -77,4 +108,10 @@ export default {
 </script>
 
 <style scoped>
+.white-mode-text {
+	color: black;
+}
+.title-user-letter-dark {
+	color: aliceblue;
+}
 </style>

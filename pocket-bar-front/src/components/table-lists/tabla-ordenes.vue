@@ -20,6 +20,8 @@
 			show-expand
 			:expanded.sync="expanded"
 			:items="ticketsArray"
+			:ticketsArray="ticketsArray"
+			@update:ticketsArray="getTickets()"
 			sort-by="cantidad_articulo"
 			:search="search"
 			:custom-filter="filterOnlyCapsText.toUpperCase"
@@ -129,6 +131,8 @@
 								color="success"
 								v-on:keyup.enter="save"
 								outlined
+								:ticketsArray="ticketsArray"
+								@update:ticketsArray="getTickets"
 								@click="save"
 							>
 								Efectuar pago caja
@@ -265,23 +269,24 @@ export default {
 		},
 	},
 	mounted() {
+		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+			"ticketCreated",
+			(e) => {
+				// this.$store.commit("settickets", e.tickets);
+				// this.ticketsArray = e.tickets;
+				this.ticketsArray.push(
+					this.ticketsArray.indexOf(this.ticketsArray.includes(e.tickets))
+				);
+				console.log("Data websockets:", e);
+			}
+		);
 		this.onFocus();
 		// window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
 		//   this.ticketsArray = e.activitylog;
 		// });
-
-		getTickets(this.ticketsArray)
-			.then((response) => {
-				console.log(response);
-				if (response.stats === 200) {
-					this.cargando = false;
-				}
-			})
-			.catch((e) => {
-				console.log(e);
-				this.cargando = true;
-			});
+		this.getTickets();
 	},
+
 	methods: {
 		close() {
 			this.dialog = false;
@@ -304,23 +309,16 @@ export default {
 				.then((response) => {
 					if (response.response.status == 200) {
 						this.dialogCierreConfirm = false;
-						// para elimnar indice de la lista    this.ticketsArray.splice(this.editedIndex, 1);
-						window.Echo.channel(
-							"tickets." + this.$store.getters.getUserId
-						).listen("ticketCreated", (e) => {
-							this.$store.commit("settickets", e.tickets);
-
-							this.ticketsArray = e.tickets;
-							console.log("Data websockets:", this.ticketsArray);
-						});
-						// window.Echo.channel(
-						// 	"mesero." + this.$store.getters.getUserId
-						// ).listen("MeseroEvent", (e) => {
-						// 	// this.$store.commit("settickets", e.tickets);
-						// 	console.log("Data websockets:", e.tickets);
-						// 	// this.ticketsArray = e.tickets;
-						// });
-						this.RESET_CLOSE_DATA();
+						this.dialog = false;
+						this.payments = [];
+						this.obj_cash = {};
+						this.obj_card = {};
+						this.amount_card = null;
+						this.amount_cash = null;
+						this.tip_cash = null;
+						this.tip_card = null;
+						this.voucher = null;
+						this.refresh = 0;
 					}
 				})
 				.catch((e) => {
@@ -337,8 +335,22 @@ export default {
 				(this.amount_cash = null),
 				(this.tip_cash = null),
 				(this.tip_card = null),
-				(this.voucher = null)
+				(this.voucher = null),
+				(this.refresh = 0)
 			);
+		},
+		getTickets() {
+			getTickets(this.ticketsArray)
+				.then((response) => {
+					console.log(response);
+					if (response.stats === 200) {
+						this.cargando = false;
+					}
+				})
+				.catch((e) => {
+					console.log(e);
+					this.cargando = true;
+				});
 		},
 		editItem(item) {
 			this.editedIndex = this.ticketsArray.indexOf(item);

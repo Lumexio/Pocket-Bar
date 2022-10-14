@@ -26,9 +26,9 @@ class ticketCreated implements ShouldBroadcast
     public $afterCommit = true;
     public function __construct(int $userId)
     {
+
         $this->userId = $userId;
         $actualWorkshift = Workshift::where("active", 1)->first();
-
         $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->where("status", "Por entregar")

@@ -404,8 +404,13 @@ class TicketController extends Controller
             $ticket->status = TicketStatus::Closed;
             $ticket->cashier_id = auth()->user()->id;
             $ticket->cashier_name = auth()->user()->name;
+
+
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
+
             DB::commit();
+            ticketCreated::dispatch($ticket->user_id);
+            broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
@@ -413,7 +418,8 @@ class TicketController extends Controller
             ], 500);
         }
 
-        broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
+
+
 
         return response()->json([
             "status" => 200,

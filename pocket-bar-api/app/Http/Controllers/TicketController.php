@@ -371,8 +371,9 @@ class TicketController extends Controller
         return response()->json($ticketDetail);
     }
 
-    public function pay(PayRequest $request): JsonResponse
+    public function pay(PayRequest $request)
     {
+
         DB::beginTransaction();
         try {
             $ticket = Ticket::find($request->input("ticket_id"));
@@ -393,12 +394,13 @@ class TicketController extends Controller
             foreach ($payments as $paymentData) {
                 $payment = new Payment();
                 $payment->ticket_id = $ticket->id;
-                $payment->type = $paymentData["type"];
-                $payment->voucher = $paymentData["voucher"] ?? null;
+                $payment->type = $paymentData["payment_type"];
+                $payment->vouchers = $paymentData["voucher"] ?? null;
                 $payment->tip = $paymentData["tip"] ?? null;
-                $payment->amount = $paymentData["amount"];
+                $payment->total = $paymentData["amount"];
                 throw_if(!$payment->save(), \Exception::class, "Error al guardar el pago");
             }
+
             $ticket->status = TicketStatus::Closed;
             $ticket->cashier_id = auth()->user()->id;
             $ticket->cashier_name = auth()->user()->name;
@@ -410,7 +412,8 @@ class TicketController extends Controller
                 "error" => $th->getMessage()
             ], 500);
         }
-        broadcast((new MeseroEvents($ticket->waiter_id))->broadcastToEveryone());
+
+        broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
 
         return response()->json([
             "status" => 200,

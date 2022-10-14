@@ -183,7 +183,7 @@
 import { getTickets } from "@/api/tickets.js";
 import { postCerrarticket } from "@/api/cortes.js";
 export default {
-	name: "tabla-activitylog",
+	name: "tabla-ordenes",
 	data: () => ({
 		type_pay_cash: "cash",
 		type_pay_card: "",
@@ -269,6 +269,7 @@ export default {
 		// window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
 		//   this.ticketsArray = e.activitylog;
 		// });
+
 		getTickets(this.ticketsArray)
 			.then((response) => {
 				console.log(response);
@@ -304,6 +305,21 @@ export default {
 					if (response.response.status == 200) {
 						this.dialogCierreConfirm = false;
 						// para elimnar indice de la lista    this.ticketsArray.splice(this.editedIndex, 1);
+						window.Echo.channel(
+							"tickets." + this.$store.getters.getUserId
+						).listen("ticketCreated", (e) => {
+							this.$store.commit("settickets", e.tickets);
+
+							this.ticketsArray = e.tickets;
+							console.log("Data websockets:", this.ticketsArray);
+						});
+						// window.Echo.channel(
+						// 	"mesero." + this.$store.getters.getUserId
+						// ).listen("MeseroEvent", (e) => {
+						// 	// this.$store.commit("settickets", e.tickets);
+						// 	console.log("Data websockets:", e.tickets);
+						// 	// this.ticketsArray = e.tickets;
+						// });
 						this.RESET_CLOSE_DATA();
 					}
 				})

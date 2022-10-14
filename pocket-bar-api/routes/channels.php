@@ -28,5 +28,5 @@ Broadcast::channel('mesero.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('tickets.{id}', function ($user, $id) {
-    return (Auth::check()) and (Auth::user()->rol_id == 5 or Auth::user()->rol_id == 4) and (Auth::user()->id == $id);
+    return (Auth::check()) and (Auth::user()->rol_id == 5 or Auth::user()->rol_id == 4 or Auth::user()->rol_id == 3) and (Auth::user()->id == $id);
 });

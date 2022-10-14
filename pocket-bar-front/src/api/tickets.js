@@ -10,10 +10,8 @@ export function getTickets(ticketsArray) {
     axios
       .get("api/tickets/list")
       .then(response => {
-
         const tickets = response.data.data;
         const stats = response.status;
-
         tickets.forEach((element) => {
           let datos = {
             id: element.id,

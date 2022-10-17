@@ -47,13 +47,13 @@
 							<v-row>
 								<v-col>
 									<b>Nombre mesero:</b>
-									<p>{{ editedItem.nombre_mesero }}</p>
+									<p>{{ editedItem.user_name }}</p>
 
 									<b>Estatus de ticket:</b>
-									<p>{{ editedItem.status_ticket }}</p>
+									<p>{{ editedItem.status }}</p>
 
 									<b>Tootal a pagar:</b>
-									<p>{{ editedItem.monto_total }}</p>
+									<p>{{ editedItem.total }}</p>
 								</v-col>
 								<v-col>
 									<v-subheader>Tipo de pago</v-subheader>
@@ -163,7 +163,7 @@
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon
-					v-show="item.status_ticket == 'Entregado'"
+					v-show="item.status == 'Entregado'"
 					small
 					class="mr-2"
 					@click="editItem(item)"
@@ -203,15 +203,15 @@ export default {
 		editedIndex: -1,
 		editedItem: {
 			id: "",
-			nombre_mesero: "",
-			status_ticket: "",
-			monto_total: "",
+			user_name: "",
+			status: "",
+			total: "",
 		},
 		defaultItem: {
 			id: "",
-			nombre_mesero: "",
-			status_ticket: "",
-			monto_total: "",
+			user_name: "",
+			status: "",
+			total: "",
 		},
 		dialog: false,
 		dialogCierreConfirm: false,
@@ -223,19 +223,19 @@ export default {
 				text: "Mesero",
 				align: "start",
 				sortable: false,
-				value: "nombre_mesero",
+				value: "user_name",
 			},
 			{
 				text: "Total de compra",
 				align: "start",
 				sortable: false,
-				value: "monto_total",
+				value: "total",
 			},
 			{
 				text: "Estado",
 				align: "start",
 				sortable: false,
-				value: "status_ticket",
+				value: "status",
 			},
 			{
 				text: "Creado en",
@@ -269,17 +269,11 @@ export default {
 		},
 	},
 	mounted() {
-		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
-			"ticketCreated",
-			(e) => {
-				// this.$store.commit("settickets", e.tickets);
-				// this.ticketsArray = e.tickets;
-				this.ticketsArray.push(
-					this.ticketsArray.indexOf(this.ticketsArray.includes(e.tickets))
-				);
-				console.log("Data websockets:", e);
-			}
-		);
+		window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
+			this.$store.commit("settickets", e.tickets);
+			this.ticketsArray = e.tickets;
+			console.log("Data websockets:", this.ticketsArray);
+		});
 		this.onFocus();
 		// window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
 		//   this.ticketsArray = e.activitylog;
@@ -307,6 +301,11 @@ export default {
 
 			postCerrarticket(this.packClose)
 				.then((response) => {
+					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
+						this.$store.commit("settickets", e.tickets);
+						this.ticketsArray = e.tickets;
+						console.log("Data websockets:", this.ticketsArray);
+					});
 					if (response.response.status == 200) {
 						this.dialogCierreConfirm = false;
 						this.dialog = false;
@@ -342,7 +341,6 @@ export default {
 		getTickets() {
 			getTickets(this.ticketsArray)
 				.then((response) => {
-					console.log(response);
 					if (response.stats === 200) {
 						this.cargando = false;
 					}

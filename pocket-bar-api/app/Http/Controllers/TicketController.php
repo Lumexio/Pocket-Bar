@@ -102,6 +102,7 @@ class TicketController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+
         $tickets = Ticket::with(['details', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->get();
@@ -406,8 +407,8 @@ class TicketController extends Controller
             $ticket->cashier_name = auth()->user()->name;
 
 
-            throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
 
+            throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
             ticketCreated::dispatch($ticket->user_id);
             broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());

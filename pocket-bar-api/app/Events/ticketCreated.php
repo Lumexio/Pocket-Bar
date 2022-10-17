@@ -26,42 +26,47 @@ class ticketCreated implements ShouldBroadcast
     public $afterCommit = true;
     public function __construct(int $userId)
     {
-
-        $this->userId = $userId;
-        $actualWorkshift = Workshift::where("active", 1)->first();
-        $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
+        $userId;
+        $this->tickets = Ticket::with(['details', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
-            ->where("status", "Por entregar")
-            ->where("user_id", $userId)
-            ->where("workshift_id", $actualWorkshift->id ?? null)
-            ->get()
-            ->map(function (Ticket $ticket) {
-                $data = [];
-                $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
-                $data["id"] = $ticket->id;
-                $data["mesa"] = $ticket->table_name;
-                $data["estatus"] = $ticket->status;
-                $data["titular"] = $ticket->client_name;
-                $data["total"] = $ticket->total;
-                $data["fecha"] = $date->toDateString();
-                $data["cantidad_articulos"] = $ticket->details->count();
-                $data["tiempo"] = $date->toTimeString("minute");
-                $data["productos"] = $ticket->details->map(function ($item) {
-                    return [
-                        "id" => $item->id,
-                        "nombre" => $item->articulo->nombre_articulo,
-                        "cantidad" => $item->units,
-                        "precio" => $item->unit_price,
-                        "subtotal" => $item->subtotal,
-                        "total" => $item->total,
-                        "descuento" => $item->discounts,
-                        "iva" => $item->tax,
-                    ];
-                });
-                $data["pagos"] = $ticket->payments ?? null;
+            ->get();
+        return $this->tickets;
+        // $this->userId = $userId;
+        // $actualWorkshift = Workshift::where("active", 1)->first();
+        // $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
+        //     ->orderBy("ticket_date", "desc")
+        //     ->where("status", "Por entregar")
+        //     ->where("user_id", $userId)
+        //     ->where("workshift_id", $actualWorkshift->id ?? null)
+        //     ->get()
+        //     ->map(function (Ticket $ticket) {
+        //         $data = [];
+        //         $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
+        //         $data["id"] = $ticket->id;
+        //         $data["mesa"] = $ticket->table_name;
+        //         $data["estatus"] = $ticket->status;
+        //         $data["titular"] = $ticket->client_name;
+        //         $data["total"] = $ticket->total;
+        //         $data["fecha"] = $date->toDateString();
+        //         $data["cantidad_articulos"] = $ticket->details->count();
+        //         $data["tiempo"] = $date->toTimeString("minute");
+        //         $data["productos"] = $ticket->details->map(function ($item) {
+        //             return [
+        //                 "id" => $item->id,
+        //                 "nombre" => $item->articulo->nombre_articulo,
+        //                 "cantidad" => $item->units,
+        //                 "precio" => $item->unit_price,
+        //                 "subtotal" => $item->subtotal,
+        //                 "total" => $item->total,
+        //                 "descuento" => $item->discounts,
+        //                 "iva" => $item->tax,
+        //             ];
+        //         });
+        //         $data["pagos"] = $ticket->payments ?? null;
 
-                return $data;
-            });
+        //         return $data;
+        //     });
+        // dd($this->tickets);
     }
 
     /**

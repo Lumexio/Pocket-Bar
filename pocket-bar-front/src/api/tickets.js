@@ -15,10 +15,10 @@ export function getTickets(ticketsArray) {
         tickets.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_mesero: element.user_name,
+            user_name: element.user_name,
             ticket_date: element.ticket_date,
-            monto_total: element.total,
-            status_ticket: element.status,
+            total: element.total,
+            status: element.status,
           };
           if (!datos) return;
           ticketsArray.push(datos);

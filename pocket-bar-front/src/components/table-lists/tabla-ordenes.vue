@@ -304,7 +304,6 @@ export default {
 					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 						this.$store.commit("settickets", e.tickets);
 						this.ticketsArray = e.tickets;
-						console.log("Data websockets:", this.ticketsArray);
 					});
 					if (response.response.status == 200) {
 						this.dialogCierreConfirm = false;

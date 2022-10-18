@@ -57,6 +57,7 @@ class TicketController extends Controller
 
     public function store(TicketCreateRequest $request): JsonResponse
     {
+
         $items = collect($request->input('productos'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
         $table = Table::find($request->input('mesa'));
@@ -121,9 +122,9 @@ class TicketController extends Controller
         /**
          * @var User
          */
+
         $user = auth()->user();
         $actualWorkshift = Workshift::where("active", 1)->first();
-
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->where("status", $request->input("status"))
@@ -135,7 +136,7 @@ class TicketController extends Controller
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
                 $data["mesa"] = $ticket->table_name;
-                $data["estatus"] = $ticket->status;
+                $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["fecha"] = $date->toDateString();

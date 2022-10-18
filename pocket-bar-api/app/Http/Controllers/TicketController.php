@@ -57,6 +57,7 @@ class TicketController extends Controller
 
     public function store(TicketCreateRequest $request): JsonResponse
     {
+
         $items = collect($request->input('productos'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
         $table = Table::find($request->input('mesa'));
@@ -102,6 +103,7 @@ class TicketController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+
         $tickets = Ticket::with(['details', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->get();
@@ -120,9 +122,9 @@ class TicketController extends Controller
         /**
          * @var User
          */
+
         $user = auth()->user();
         $actualWorkshift = Workshift::where("active", 1)->first();
-
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->where("status", $request->input("status"))
@@ -134,7 +136,7 @@ class TicketController extends Controller
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
                 $data["mesa"] = $ticket->table_name;
-                $data["estatus"] = $ticket->status;
+                $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["fecha"] = $date->toDateString();
@@ -190,9 +192,9 @@ class TicketController extends Controller
     {
         $articulo = Articulo::find($id);
         if ($sum) {
-            $articulo->units += $units;
+            $articulo->cantidad_articulo += $units;
         } else {
-            $articulo->units -= $units;
+            $articulo->cantidad_articulo -= $units;
         }
         throw_if(!$articulo->save(), \Exception::class, "Error al actualizar el articulo");
     }
@@ -371,8 +373,9 @@ class TicketController extends Controller
         return response()->json($ticketDetail);
     }
 
-    public function pay(PayRequest $request): JsonResponse
+    public function pay(PayRequest $request)
     {
+
         DB::beginTransaction();
         try {
             $ticket = Ticket::find($request->input("ticket_id"));
@@ -393,22 +396,32 @@ class TicketController extends Controller
             foreach ($payments as $paymentData) {
                 $payment = new Payment();
                 $payment->ticket_id = $ticket->id;
-                $payment->type = $paymentData["type"];
-                $payment->voucher = $paymentData["voucher"] ?? null;
+                $payment->type = $paymentData["payment_type"];
+                $payment->vouchers = $paymentData["voucher"] ?? null;
                 $payment->tip = $paymentData["tip"] ?? null;
-                $payment->amount = $paymentData["amount"];
+                $payment->total = $paymentData["amount"];
                 throw_if(!$payment->save(), \Exception::class, "Error al guardar el pago");
             }
+
             $ticket->status = TicketStatus::Closed;
             $ticket->cashier_id = auth()->user()->id;
             $ticket->cashier_name = auth()->user()->name;
+
+
+
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
+            DB::commit();
+            ticketCreated::dispatch($ticket->user_id);
+            broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 "error" => $th->getMessage()
             ], 500);
         }
+
+
+
 
         return response()->json([
             "status" => 200,

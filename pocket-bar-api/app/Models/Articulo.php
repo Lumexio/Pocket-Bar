@@ -30,8 +30,6 @@ class Articulo extends Model
         'tipo_id',
         'proveedor_id',
         'marca_id',
-        'travesano_id',
-        'rack_id',
         'status_id',
         'foto_articulo',
         'user_id'
@@ -66,9 +64,5 @@ class Articulo extends Model
     public function proveedor()
     {
         return $this->belongsTo(Proveedor::class);
-    }
-    public function rack()
-    {
-        return $this->belongsTo(Rack::class);
     }
 }

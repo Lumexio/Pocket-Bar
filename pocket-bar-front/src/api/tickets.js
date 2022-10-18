@@ -10,17 +10,15 @@ export function getTickets(ticketsArray) {
     axios
       .get("api/tickets/list")
       .then(response => {
-
         const tickets = response.data.data;
         const stats = response.status;
-
         tickets.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_mesero: element.user_name,
+            user_name: element.user_name,
             ticket_date: element.ticket_date,
-            monto_total: element.total,
-            status_ticket: element.status,
+            total: element.total,
+            status: element.status,
           };
           if (!datos) return;
           ticketsArray.push(datos);
@@ -34,6 +32,7 @@ export function getTickets(ticketsArray) {
   });
 }
 export function postTickets(enviar) {
+
 
   axios
     .post("api/tickets/create", enviar)
@@ -109,7 +108,7 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
           if (element.mesero) {
             datos.nombre_mesero = element.mesero.name;
           }
-          
+
           ticketsPWANotiArray.push(datos);
         });
         resolve({

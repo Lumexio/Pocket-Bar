@@ -33,6 +33,7 @@ class MeseroEvents implements ShouldBroadcast
         $this->userId = $userId;
         $this->TicketsARecibir = TicketDetail::getListForWebSockets(null, $userId, 4)->toArray();
         Log::info("Tickets a recibir para  " . json_encode($this->TicketsARecibir));
+        return $this->TicketsARecibir;
     }
 
     /**

@@ -83,7 +83,11 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogDelete" max-width="500px">
+			<v-dialog
+				:dark="$store.getters.hasdarkflag"
+				v-model="dialogDelete"
+				max-width="500px"
+			>
 				<v-card>
 					<v-card-title class="headline"
 						>¿Estas seguro de querer eliminarlo?</v-card-title
@@ -120,6 +124,8 @@
 import axios from "axios";
 import store from "@/store";
 import { upperConverter } from "@/special/uppercases-converter.js";
+import { getUsuarios } from "@/api/usuarios.js";
+import { getRol } from "@/api/rol.js";
 //axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
 export default {
@@ -177,45 +183,22 @@ export default {
 		window.Echo.channel("roles").listen("rolCreated", (e) => {
 			this.itemsrol = e.roles;
 		});
-
-		axios
-			.get("api/user")
+		getUsuarios(this.usersArray)
 			.then((response) => {
-				let user = response.data;
-
-				user.forEach((element) => {
-					let datos = {
-						id: element.id,
-						name: element.name,
-
-						name_rol: element.name_rol,
-					};
-					if (!datos) return;
-					this.usersArray.push(datos);
-				});
-				this.cargando = false;
+				this.usersArray = response.usersArray;
+				if (response.stats === 200) {
+					this.cargando = false;
+				}
 			})
 			.catch((error) => console.log(error));
-
-		axios
-			.get("api/rol")
+		getRol(this.itemsrol)
 			.then((response) => {
-				let categorias = response.data;
-
-				categorias.forEach((element) => {
-					let datos = {
-						rol_id: element.id,
-						name_rol: element.name_rol,
-					};
-
-					if (!datos) return;
-					this.itemsrol.push(datos);
-				});
-				this.cargando = false;
+				this.itemsrol = response.itemsrol;
+				if (response.stats === 200) {
+					this.cargando = false;
+				}
 			})
-			.catch((e) => {
-				console.log(e.message);
-			});
+			.catch((error) => console.log(error));
 	},
 
 	computed: {

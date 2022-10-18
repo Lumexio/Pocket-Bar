@@ -88,48 +88,8 @@ export function statusync(itemstst, selectst, recived) {
  }
  return selectst;
 }
-export function racksync(itemsr, selectr, recived) {
- var tempid = "";
- var tempname = "";
- tempname;
- if (itemsr) {
-  let rack = itemsr;
-  rack.forEach((element) => {
-   let datos = {
-    id: element.id,
-    nombre_rack: element.nombre_rack,
-   };
-   if (datos.nombre_rack === recived) {
-    tempid = datos.id;
-    tempname = datos.nombre_rack;
 
-    selectr = tempid;
-   }
-  });
- }
- return selectr;
-}
-export function travesañosync(itemsT, selectT, recived) {
- var tempid = "";
- var tempname = "";
- tempname;
- if (itemsT) {
-  let rack = itemsT;
-  rack.forEach((element) => {
-   let datos = {
-    id: element.id,
-    nombre_travesano: element.nombre_travesano,
-   };
-   if (datos.nombre_travesano === recived) {
-    tempid = datos.id;
-    tempname = datos.nombre_travesano;
 
-    selectT = tempid;
-   }
-  });
- }
- return selectT;
-}
 export function categsync(itemsc, selectc, recived) {
 
  var tempid = "";
@@ -153,4 +113,4 @@ export function categsync(itemsc, selectc, recived) {
  return selectc;
 }
 
-export default { tiposync, categsync, statusync, travesañosync, racksync, marcasync, proveedorsync }
+export default { tiposync, categsync, statusync, marcasync, proveedorsync }

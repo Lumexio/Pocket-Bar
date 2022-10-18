@@ -24,9 +24,8 @@ export function getArticulos(articulosArray) {
             nombre_marca: element.nombre_marca,
             nombre_proveedor: element.nombre_proveedor,
             nombre_status: element.nombre_status,
-            //campos de ubicación
-            nombre_rack: element.nombre_rack,
-            nombre_travesano: element.nombre_travesano,
+
+
             foto_articulo: element.foto_articulo,
           };
           if (!datos) return;
@@ -70,7 +69,7 @@ export function editArticulos(url, data) {
       }
     })
     .then((response) => {
-      console.log("Datos de edit:", response);
+
       if (response.statusText === "Created") {
         store.commit("setsuccess", true);
       }

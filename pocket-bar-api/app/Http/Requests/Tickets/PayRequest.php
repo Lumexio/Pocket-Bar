@@ -13,7 +13,8 @@ class PayRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() and auth()->user()->rol_id == 3;
+        // return auth()->check() and auth()->user()->rol_id == 3;
+        return true;
     }
 
     /**
@@ -24,12 +25,12 @@ class PayRequest extends FormRequest
     public function rules()
     {
         return [
-            "ticket_id" => "required|exists:tickets,id",
+            "ticket_id" => "required|exists:tickets_tbl,id",
             "payments" => "required|array",
             "payments.*.payment_type" => "required|in:cash,card,usd",
-            "payments.*.tip" => "required|numeric|min:0",
             "payments.*.amount" => "required|numeric",
             "payments.*.voucher" => "required_if:payments.*.payment_type,card|string|max:255",
+            "payments.*.tip" => "nullable|numeric|min:0",
         ];
     }
 }

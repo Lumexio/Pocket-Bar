@@ -19,6 +19,7 @@
 					<template v-slot:default>
 						<thead>
 							<tr>
+								
 								<th class="text-left">Nombre</th>
 								<th class="text-left">Cantidad</th>
 								<th class="text-left">Precio</th>
@@ -28,6 +29,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="producto in item.productos" :key="producto.id">
+								
 								<td class="text-left">{{ producto.nombre }}</td>
 								<td class="text-left">{{ producto.cantidad }}</td>
 								<td class="text-left">{{ producto.precio }}</td>
@@ -61,12 +63,12 @@ export default {
 		},
 	},
 	mounted() {
-		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+		window.Echo.channel("tickets." ).listen(
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				console.log("Tickets from  mesero socket:", this.ticketsPWAArray);
-			}
+			},
+		
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
 	},

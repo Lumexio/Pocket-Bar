@@ -26,17 +26,18 @@ class ticketCreated implements ShouldBroadcast
     public $afterCommit = true;
     public function __construct(int $userId)
     {
-        $userId;
+        $this->userId = $userId;
         $this->tickets = Ticket::with(['details', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->get();
         return $this->tickets;
+
         // $this->userId = $userId;
         // $actualWorkshift = Workshift::where("active", 1)->first();
         // $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
-        //     ->orderBy("ticket_date", "desc")
-        //     ->where("status", "Por entregar")
-        //     ->where("user_id", $userId)
+        // ->orderBy("ticket_date", "desc")
+        // ->where("status", "Por entregar")
+        // ->where("user_id", $userId)
         //     ->where("workshift_id", $actualWorkshift->id ?? null)
         //     ->get()
         //     ->map(function (Ticket $ticket) {
@@ -66,7 +67,7 @@ class ticketCreated implements ShouldBroadcast
 
         //         return $data;
         //     });
-        // dd($this->tickets);
+
     }
 
     /**

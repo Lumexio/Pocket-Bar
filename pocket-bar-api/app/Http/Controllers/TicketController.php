@@ -411,7 +411,8 @@ class TicketController extends Controller
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
-            ticketCreated::dispatch($ticket->user_id);
+            //ticketCreated::dispatch($ticket->user_id);
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
         } catch (\Throwable $th) {
             DB::rollBack();

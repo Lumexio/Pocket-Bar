@@ -146,4 +146,4 @@ export function postTicketsNotiPWA(enviar) {
 
 
 
-export default { getTickets, postTickets, getTicketsPWA, getTicketsNotiPWA }
+export default { getTickets, postTickets, postTicketsNotiPWA, getTicketsPWA, getTicketsNotiPWA }

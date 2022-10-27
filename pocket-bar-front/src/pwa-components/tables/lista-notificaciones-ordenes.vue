@@ -16,8 +16,8 @@
 				v-show="ticketsPWANotiArrayBarra"
 				class="ml-1 mr-1 mt-4 mb-4 pa-1"
 				style="min-width: 96%; max-width: 97%; text-align: start"
-				v-for="item in ticketsPWANotiArrayBarra"
-				:key="item.id"
+				v-for="(item,index) in ticketsPWANotiArrayBarra"
+				:key="index"
 			>
 				<v-row
 					><v-col cols="1"
@@ -179,9 +179,11 @@ export default {
 			);
 		},
 		getNotificationsFromAPI(variableName) {
+			console.log("getNotificationsFromAPI:",variableName);
 			getTicketsNotiPWA(this[variableName])
 				.then((response) => {
 					this[variableName] = response.ticketsPWANotiArray;
+					console.log("Noti 185:",this[variableName]);
 				})
 				.catch((e) => {
 					console.log(e);
@@ -215,21 +217,22 @@ export default {
 		},
 	},
 	mounted() {
-		this.getNotificationsFromAPI("ticketsPWANotiArrayMesero");
-		this.connectToSocket(
-			"mesero.",
-			"MeseroEvents",
-			"ticketsPWANotiArrayMesero",
-			"TicketsARecibir"
-		);
-
-		this.getNotificationsFromAPI("ticketsPWANotiArrayBarra");
+		if (this.$store.getters.hasrol === 4) {
+			this.getNotificationsFromAPI("ticketsPWANotiArrayMesero");
+			this.connectToSocket(
+				"mesero.",
+				"MeseroEvents",
+				"ticketsPWANotiArrayMesero",
+				"TicketsARecibir"
+			);
+		} else if(this.$store.getters.hasrol === 5){this.getNotificationsFromAPI("ticketsPWANotiArrayBarra");
 		this.connectToSocket(
 			"barra.",
 			"BarraEvents",
 			"ticketsPWANotiArrayBarra",
 			"notificacionesBarra"
 		);
+	}
 	},
 };
 </script>

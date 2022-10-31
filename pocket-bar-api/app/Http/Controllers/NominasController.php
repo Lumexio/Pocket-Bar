@@ -12,7 +12,7 @@ class NominasController extends Controller
 {
     public function nominasToPay(ToPay $request)
     {
-        $usersToPay = $request->input('nominas');
+        $usersToPay = $request->input('payrollS');
         $workshift = Workshift::where('active', 1)->first();
         $total = 0;
         $response = [
@@ -27,11 +27,11 @@ class NominasController extends Controller
             foreach ($usersToPay as $userToPay) {
                 $nomina = new Nomina();
                 $nomina->workshift_id = $workshift->id;
-                $nomina->user_id = $userToPay['id'];
-                $nomina->base = $userToPay['nomina'];
-                $nomina->tips = $userToPay['propina'];
-                $nomina->name = $userToPay['nombre'];
-                $nomina->paid = $usersToPay['base'] + ($usersToPay['tips'] * .75);
+                $nomina->user_id = $userToPay['user_id'];
+                $nomina->base = $userToPay['payment'];
+                $nomina->tips = $userToPay['tip'];
+                $nomina->name = $userToPay['name'];
+                $nomina->paid = $usersToPay['payment'] + ($usersToPay['tips'] * .75);
                 $total = $total + $nomina->paid;
                 $response["usersToPay"][] = [
                     "user_id" => $userToPay['user_id'],

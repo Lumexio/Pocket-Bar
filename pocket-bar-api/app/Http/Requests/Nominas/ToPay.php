@@ -25,11 +25,11 @@ class ToPay extends FormRequest
     public function rules()
     {
         return [
-            "nominas" => "required|array|min:1",
-            "nominas.*.id" => "required|integer|exists:users,id",
-            "nominas.*.nomina" => "required|numeric",
-            "nominas.*.propina" => "required|numeric",
-            "nominas.*.nombre" => "required|string|max:255",
+            "payroll" => "required|array|min:1",
+            "payroll.*.user_id" => "required|integer|exists:users,id",
+            "payroll.*.payment" => "required|numeric",
+            "payroll.*.tip" => "required|numeric",
+            "payroll.*.name" => "required|string|max:255",
         ];
     }
 }

@@ -79,7 +79,7 @@ Mostrar un registro no */
     });
 
     Route::prefix("nominas")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        Route::put('/pay', 'NominasController@pay');
+        Route::post('/pay', 'NominasController@pay');
     });
 
     Route::prefix("workshift")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {

@@ -22,12 +22,22 @@ Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 
 
 
+// window.Echo = new Echo({
+//   broadcaster: 'pusher',
+//   key: 'local',
+//   wsHost: window.location.hostname,
+//   wsPort: 6001,
+//   cluster: 'mt1',
+//   forceTLS: false,
+//   disableStats: true,
+//   //encrypted: true,
+// });
 window.Echo = new Echo({
   broadcaster: 'pusher',
   key: 'local',
-  wsHost: window.location.hostname,
+  wsHost: '127.0.0.1',
   wsPort: 6001,
-  cluster: 'mt1',
+  //cluster: process.env.MIX_PUSHER_APP_CLUSTER,
   forceTLS: false,
   disableStats: true,
   //encrypted: true,

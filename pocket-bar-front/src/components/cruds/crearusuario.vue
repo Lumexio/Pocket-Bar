@@ -73,7 +73,7 @@
 import axios from "axios";
 import store from "@/store";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://" + window.location.hostname + ":8000";
+axios.defaults.baseURL = "http://" + /*window.location.hostname*/"127.0.0.1" + ":8000";
 export default {
   name: "crearusuario",
   props: {

@@ -72,7 +72,8 @@ class ArticuloController extends Controller
                 $articulo["foto_articulo"] = $name_foto;
             }
             $articulo = Articulo::create($articulo);
-            articuloCreated::dispatch($articulo);
+            broadcast((new articuloCreated($articulo))->broadcastToEveryone());
+            //articuloCreated::dispatch($articulo)->broadcastToEveryone();
             return $articulo;
         }
     }

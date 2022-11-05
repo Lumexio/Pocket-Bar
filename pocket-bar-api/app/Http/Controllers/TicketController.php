@@ -84,12 +84,15 @@ class TicketController extends Controller
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             $this->createTicketDetails($items, $ticket);
             DB::commit();
+            ticketCreated::dispatch(auth()->user()->id);
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
         } catch (\Exception $th) {
             DB::rollBack();
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
         }
 
-        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+
 
         $this->sendNotificationsToBarthenders();
 
@@ -411,8 +414,8 @@ class TicketController extends Controller
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
-            //ticketCreated::dispatch($ticket->user_id);
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            ticketCreated::dispatch($ticket->user_id);
+           // broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
         } catch (\Throwable $th) {
             DB::rollBack();

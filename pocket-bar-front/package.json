@@ -8,7 +8,9 @@
     "lint": "vue-cli-service lint",
     "and": "&&",
     "delete-branch-local": "git branch -D",
-    "delete-branch-remote": "git push origin --delete"
+    "delete-branch-remote": "git push origin --delete",
+    "find-port-8080": "sudo lsof -i :8080",
+    "kill-ports-8080": "sudo kill $(lsof -t -i:8080)"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0-alpha.32",

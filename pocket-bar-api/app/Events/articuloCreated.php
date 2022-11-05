@@ -25,7 +25,7 @@ class articuloCreated implements ShouldBroadcast
     public $afterCommit = true;
     public function __construct()
     {
-        \App::call('App\Http\Controllers\ArticuloController@index');
+        return \App::call('App\Http\Controllers\ArticuloController@index');
     }
 
     /**

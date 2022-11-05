@@ -2,8 +2,8 @@
 	<v-expansion-panels :dark="darkonchange" popout>
 		<v-expansion-panel
 			class="sizes"
-			v-for="item in ticketsPWAArray"
-			:key="item.id"
+			v-for="(item,index) in ticketsPWAArray"
+			:key="index"
 		>
 			<v-expansion-panel-header>
 				<span>
@@ -62,11 +62,13 @@ export default {
 			}
 		},
 	},
+	
 	mounted() {
-		window.Echo.channel("tickets." ).listen(
+	window.Echo.channel("tickets."+ this.$store.getters.getUserId ).listen(
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
+				console.log("Check mesero websocket:", this.ticketsPWAArray);
 			},
 		
 		);
@@ -83,7 +85,6 @@ export default {
 <style scoped>
 .v-expansion-panels {
 	gap: 10px;
-
 	max-height: 10% !important;
 }
 .row {

@@ -25,7 +25,7 @@ class userCreated implements ShouldBroadcast
     public $users;
     public function __construct()
     {
-        \App::call('App\Http\Controllers\UserController@index');
+        $this->users = \App::call('App\Http\Controllers\UserController@index');
     }
 
     /**

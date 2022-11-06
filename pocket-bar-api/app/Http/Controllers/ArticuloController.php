@@ -72,8 +72,8 @@ class ArticuloController extends Controller
                 $articulo["foto_articulo"] = $name_foto;
             }
             $articulo = Articulo::create($articulo);
-            //broadcast((new articuloCreated($articulo))->broadcastToEveryone());
-            articuloCreated::dispatch($articulo);
+            broadcast((new articuloCreated($articulo))->broadcastToEveryone());
+            //articuloCreated::dispatch($articulo);
             return $articulo;
         }
     }
@@ -112,6 +112,7 @@ class ArticuloController extends Controller
         $articulo["foto_articulo"] = $filename;
         $articulo->update($request->all());
         $articulo['user_id'] = Auth::id();
+        broadcast((new articuloCreated($articulo))->broadcastToEveryone());
         return $articulo;
     }
 
@@ -129,7 +130,7 @@ class ArticuloController extends Controller
         $path = public_path("/images/$filename");
         File::delete($path);
         $articulo = Articulo::destroy($id);
-
+        broadcast((new articuloCreated($articulo))->broadcastToEveryone());
         return $articulo;
     }
 }

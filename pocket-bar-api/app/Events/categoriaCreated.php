@@ -22,9 +22,10 @@ class categoriaCreated implements ShouldBroadcast
      */
 
     public $categorias;
+
     public function __construct()
     {
-        \App::call('App\Http\Controllers\CategoriaController@index');
+        $this->categorias = \App::call('App\Http\Controllers\CategoriaController@index');
     }
 
     /**

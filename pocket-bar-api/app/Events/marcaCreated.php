@@ -24,7 +24,7 @@ class marcaCreated implements ShouldBroadcast
     public $marcas;
     public function __construct()
     {
-        \App::call('App\Http\Controllers\MarcaController@index');
+        $this->marcas = \App::call('App\Http\Controllers\MarcaController@index');
     }
 
     /**

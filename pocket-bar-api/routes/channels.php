@@ -20,13 +20,13 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 
 Broadcast::channel('barra.{id}', function ($user, $id) {
-    return (Auth::check()) and (Auth::user()->rol_id == 5) and (Auth::user()->id == $id);
+    return (Auth::check()) and (Auth::user()->rol_id == 5);
 });
 
 Broadcast::channel('mesero.{id}', function ($user, $id) {
-    return (Auth::check()) and (in_array(Auth::user()->rol_id, [4])) and (Auth::user()->id == $id);
+    return (Auth::check()) and (in_array(Auth::user()->rol_id, [4]));
 });
 
 Broadcast::channel('tickets.{id}', function ($user, $id) {
-    return (Auth::check()) and (Auth::user()->rol_id == 5 or Auth::user()->rol_id == 4 or Auth::user()->rol_id == 3) and (Auth::user()->id == $id);
+    return (Auth::check()) and (Auth::user()->rol_id == 5 or Auth::user()->rol_id == 4 or Auth::user()->rol_id == 3);
 });

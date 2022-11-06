@@ -39,7 +39,7 @@
 					</template>
 				</v-simple-table>
 				<p style="text-align: end" class="mr-4">
-					<span class="mr-6"> Subtotal:</span>{{ item.total_actual }}
+					<span class="mr-6"> Subtotal:</span>{{ item.total }}
 				</p>
 			</v-expansion-panel-content>
 		</v-expansion-panel>

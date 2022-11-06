@@ -24,7 +24,7 @@ class rolCreated implements ShouldBroadcast
     public $roles;
     public function __construct()
     {
-        \App::call('App\Http\Controllers\RolController@index');
+        $this->roles = \App::call('App\Http\Controllers\RolController@index');
     }
 
     /**

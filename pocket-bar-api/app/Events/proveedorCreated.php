@@ -24,7 +24,7 @@ class proveedorCreated implements ShouldBroadcast
     public $proveedores;
     public function __construct()
     {
-        \App::call('App\Http\Controllers\ProveedorController@index');
+        $this->proveedores = \App::call('App\Http\Controllers\ProveedorController@index');
     }
 
     /**

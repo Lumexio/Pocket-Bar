@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "@/store";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://" + /*window.location.hostname*/"127.0.0.1" + ":8000";
+axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
 
 
 export function getTickets(ticketsArray) {
@@ -76,7 +76,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
             id: element.id,
             fecha: element.fecha,
             titular: element.titular,
-            total_actual: element.total,
+            total: element.total,
             productos: element.productos,
             mesa: element.mesa,
           };
@@ -84,7 +84,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
           ticketsPWAArray.push(datos);
         });
 
-
+        console.log(ticketsPWAArray);
         resolve({
           stats, ticketsPWAArray
         });

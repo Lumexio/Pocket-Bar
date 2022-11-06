@@ -1,5 +1,6 @@
 <template >
 	<v-expansion-panels :dark="darkonchange" popout>
+		
 		<v-expansion-panel
 			class="sizes"
 			v-for="(item,index) in ticketsPWAArray"
@@ -64,7 +65,7 @@ export default {
 	},
 	
 	mounted() {
-	window.Echo.channel("tickets."+ this.$store.getters.getUserId ).listen(
+	window.Echo.channel("tickets.").listen(
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;

@@ -69,7 +69,7 @@ export default {
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				console.log("Check mesero websocket:", this.ticketsPWAArray);
+				
 			},
 		
 		);

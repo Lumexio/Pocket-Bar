@@ -38,7 +38,7 @@
 					</template>
 				</v-simple-table>
 				<p style="text-align: end" class="mr-4">
-					<span class="mr-6"> Subtotal:</span>{{ item.total_actual }}
+					<span class="mr-6"> Subtotal:</span>{{ item.total }}
 				</p>
 			</v-expansion-panel-content>
 		</v-expansion-panel>
@@ -56,17 +56,16 @@ export default {
 		ticketsPWAArray(val) {
 			val;
 			if (store.getters.hastickets) {
-				console.log("Tickets barra en wathcer:", store.getters.hastickets);
+				
 				this.ticketsPWAArray = store.getters.hastickets;
 			}
 		},
 	},
 	mounted() {
-		window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+		window.Echo.channel("tickets.").listen(
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);

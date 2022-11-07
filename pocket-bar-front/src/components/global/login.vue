@@ -126,6 +126,7 @@ export default {
 							let userId = response.data.user.id;
 
 							store.commit("setrol", rol);
+							console.log("Rol de usuario:",store.getters.hasrol);
 							store.commit("setUserId", userId);
 							let validado = response.request.withCredentials;
 

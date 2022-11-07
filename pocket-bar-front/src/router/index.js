@@ -38,7 +38,6 @@ const routes = [
 
         switch (store.getters.hasrol) {
           case 1:
-
             next({
               path: "/usuarios"
             });

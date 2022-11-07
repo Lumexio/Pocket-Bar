@@ -362,6 +362,8 @@ class TicketController extends Controller
             if ($previousStatus != $ticket->status) {
                 throw_if(!$ticket->save(), "Error al guardar en base de datos");
             }
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Throwable $th) {
 
             return response()->json([

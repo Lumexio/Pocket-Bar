@@ -444,9 +444,6 @@ export default {
 			this.articulosArray.splice(this.editedIndex, 1);
 			let id = this.editedItem.id;
 			deleteArticulos(id);
-			window.Echo.channel("articulos").listen("articuloCreated", (e) => {
-				this.articulosArray = e.articulos;
-			});
 			this.closeDelete();
 		},
 
@@ -471,7 +468,7 @@ export default {
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
 				let url = "api/updatephoto/" + send.id;
-
+console.log(this.photo);
 				if (this.photo != null) {
 					const formdata = new FormData();
 					formdata.append("foto_articulo", this.photo);
@@ -484,25 +481,30 @@ export default {
 		},
 		save() {
 			if (this.editedIndex > -1) {
+								
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
 				send.nombre_articulo = upperConverter(send.nombre_articulo);
 				let url = "api/articulo/update/" + send.id;
+				const formdata = new FormData();
 
-				url = `${url}?${"nombre_articulo=" + send.nombre_articulo}&${
-					"cantidad_articulo=" + send.cantidad_articulo
-				}&${"descripcion_articulo=" + send.descripcion_articulo}&${
-					"categoria_id=" + this.selectc
-				}&${"tipo_id=" + this.selectt}&${"marca_id=" + this.selectm}&${
-					"proveedor_id=" + this.selectp
-				}&${"status_id=" + this.selectst}`;
-
-				editArticulos(url);
-				//Sub sistema de eliminación de photos del articulo
-
-				window.Echo.channel("articulos").listen("articuloCreated", (e) => {
-					this.articulosArray = e.articulos;
-				});
+				// url = `${url}?${"nombre_articulo=" + send.nombre_articulo}&${
+				// 	"cantidad_articulo=" + send.cantidad_articulo
+				// }&${"descripcion_articulo=" + send.descripcion_articulo}&${
+				// 	"categoria_id=" + this.selectc
+				// }&${"tipo_id=" + this.selectt}&${"marca_id=" + this.selectm}&${
+				// 	"proveedor_id=" + this.selectp
+				// }&${"status_id=" + this.selectst}`;
+				formdata.append("nombre_articulo", send.nombre_articulo);
+				formdata.append("cantidad_articulo", send.cantidad_articulo);
+				formdata.append("categoria_id", this.selectc);
+				formdata.append("proveedor_id", this.selectp);
+				formdata.append("tipo_id", this.selectt);
+				formdata.append("status_id", this.selectst);
+				formdata.append("marca_id", this.selectm);
+				formdata.append("descripcion_articulo", send.descripcion_articulo);
+				formdata.append("foto_articulo", this.photo);
+				editArticulos(url,formdata);
 			} else {
 				this.articulosArray.push(this.editedItem);
 			}

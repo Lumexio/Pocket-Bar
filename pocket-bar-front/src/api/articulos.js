@@ -62,6 +62,7 @@ export function deleteArticulos(id) {
   axios.delete("api/articulo/delete/" + id).then((response) => { response; /*store.commit("increment", 1);*/ }).catch((error) => console.log(error));
 }
 export function editArticulos(url, data) {
+
   axios
     .put(url, data, {
       headers: {

@@ -11,8 +11,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use App\Models\Workshift;
 use App\Models\Ticket;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ticketCreated implements ShouldBroadcast
+class ticketCreated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

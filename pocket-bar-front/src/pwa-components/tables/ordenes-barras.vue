@@ -66,6 +66,7 @@ export default {
 			"ticketCreated",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
+				console.log("Barra:",e.tickets);
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);

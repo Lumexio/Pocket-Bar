@@ -317,6 +317,7 @@ export default {
 	mounted() {
 		window.Echo.channel("articulos").listen("articuloCreated", (e) => {
 			this.articulosArray = e.articulos;
+			console.log("Articulos:",e.articulos);
 		});
 
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {

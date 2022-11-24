@@ -13,7 +13,7 @@ use App\Models\Workshift;
 use App\Models\Ticket;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ticketCreated implements ShouldBroadcastNow
+class ticketCreatedBarra implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -33,7 +33,7 @@ class ticketCreated implements ShouldBroadcastNow
         $user = auth()->user();
         $actualWorkshift = Workshift::where("active", 1)->first();
         $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
-        ->orderBy("ticket_date", "desc")
+            ->orderBy("ticket_date", "desc")
             //->where("status", "Por entregar")
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
@@ -112,6 +112,6 @@ class ticketCreated implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('tickets.' . $this->userId);
+        return new Channel('ticketCreatedBarra.' . $this->userId);
     }
 }

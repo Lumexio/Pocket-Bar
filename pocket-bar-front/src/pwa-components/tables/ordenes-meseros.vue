@@ -5,6 +5,7 @@
 			class="sizes"
 			v-for="(item,index) in ticketsPWAArray"
 			:key="index"
+			v-show="item.status==hasstatus"
 		>
 			<v-expansion-panel-header>
 				<span>
@@ -29,7 +30,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="producto in item.productos" :key="producto.id">
+							<tr v-for="producto in item.productos" :key="producto.id"  >
 								
 								<td class="text-left">{{ producto.nombre }}</td>
 								<td class="text-left">{{ producto.cantidad }}</td>
@@ -65,8 +66,8 @@ export default {
 	},
 	
 	mounted() {
-	window.Echo.channel("tickets.").listen(
-			"ticketCreated",
+	window.Echo.channel("ticketCreatedMesero.").listen(
+			"ticketCreatedMesero",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
 				console.log("Mesero:",e.tickets);
@@ -78,6 +79,9 @@ export default {
 	computed: {
 		darkonchange() {
 			return store.getters.hasdarkflag;
+		},
+		hasstatus() {
+			return store.getters.hasstatus;
 		},
 	},
 };

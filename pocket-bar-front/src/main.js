@@ -35,7 +35,7 @@ Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 window.Echo = new Echo({
   broadcaster: 'pusher',
   key: 'local',
-  wsHost: '127.0.0.1',
+  wsHost: window.location.hostname,
   wsPort: 6001,
   //cluster: process.env.MIX_PUSHER_APP_CLUSTER,
   forceTLS: false,

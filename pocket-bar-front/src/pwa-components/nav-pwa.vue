@@ -36,8 +36,13 @@
 				grow
 				left
 			>
-				<v-tab style="padding: 2px" v-for="item in items" :key="item.id">
-					<span @click="statuschange(item.status)"> {{ item.title }}</span>
+				<v-tab
+					@click="statuschange(item.status)"
+					style="padding: 2px"
+					v-for="item in items"
+					:key="item.id"
+				>
+					{{ item.title }}
 				</v-tab>
 			</v-tabs>
 		</template>
@@ -59,18 +64,29 @@ export default {
 	data() {
 		return {
 			type: null,
-			tabs: null,
+			tabs: 1,
 			dialoglistorden: false,
 			dialogaccount: false,
 			items: [
-				{ id: 1, title: "Por entregar", status: "Por entregar" },
-				{ id: 2, title: "Entregadas", status: "Entregado" },
-				{ id: 3, title: "Cerradas", status: "Cerrado" },
+				{ id: 0, title: "Por entregar", status: "Por entregar" },
+				{ id: 1, title: "Entregadas", status: "Entregado" },
+				{ id: 2, title: "Cerradas", status: "Cerrado" },
 			],
 		};
 	},
-
+	mounted(){
+		this.test();
+	},
 	methods: {
+		test() {
+			
+			this.items.forEach(element => {
+				if (element.status == store.getters.hasstatus) {
+					return this.tabs=element.id;
+				}
+			});
+			
+		},
 		clear() {
 			store.commit("RESET");
 			store.commit("SET_TOKEN", null);
@@ -80,12 +96,14 @@ export default {
 			store.commit("increment", 1);
 		},
 	},
+
 	computed: {
 		darkonchange() {
 			return store.getters.hasdarkflag;
 		},
 
 		hasstatus() {
+			
 			return store.getters.hasstatus;
 		},
 	},

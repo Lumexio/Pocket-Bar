@@ -18,6 +18,8 @@ use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Events\ticketCreated;
+use App\Events\ticketCreatedMesero;
+use App\Events\ticketCreatedBarra;
 use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
 use App\Http\Requests\Tickets\CancelTicketRequest;
 use App\Http\Requests\Tickets\PayRequest;
@@ -85,7 +87,14 @@ class TicketController extends Controller
             $this->createTicketDetails($items, $ticket);
             DB::commit();
             //ticketCreated::dispatch(auth()->user()->id);
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            if (auth()->user()->rol_id == 4) {
+                ticketCreatedMesero::dispatch(auth()->user()->id);
+                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            } else if (auth()->user()->rol_id == 5) {
+                ticketCreatedBarra::dispatch(auth()->user()->id);
+                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            }
+            //broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Exception $th) {
             DB::rollBack();
@@ -317,7 +326,7 @@ class TicketController extends Controller
          */
         $user = $request->user();
 
-        if ($user->rol_id == Rol::Mesero and $request->input("status") != "Recibido") {
+        if ($user->rol_id == Rol::Mesero->value and $request->input("status") != "Recibido") {
 
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto a menos que sea Recibido"
@@ -377,8 +386,15 @@ class TicketController extends Controller
 
                 throw_if(!$ticket->save(), "Error al guardar en base de datos");
             }
-
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            if ($user->rol_id == Rol::Mesero->value) {
+                broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            } else if ($user->rol_id == Rol::Bartender->value) {
+                broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            }
+            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Throwable $th) {
 

@@ -4,6 +4,7 @@
 			class="sizes"
 			v-for="item in ticketsPWAArray"
 			:key="item.id"
+			v-show="item.status==hasstatus"
 		>
 			<v-expansion-panel-header>
 				<span>
@@ -62,8 +63,8 @@ export default {
 		},
 	},
 	mounted() {
-		window.Echo.channel("tickets.").listen(
-			"ticketCreated",
+		window.Echo.channel("ticketCreatedBarra.").listen(
+			"ticketCreatedBarra",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
 				console.log("Barra:",e.tickets);
@@ -74,6 +75,9 @@ export default {
 	computed: {
 		darkonchange() {
 			return store.getters.hasdarkflag;
+		},
+			hasstatus() {
+			return store.getters.hasstatus;
 		},
 	},
 };

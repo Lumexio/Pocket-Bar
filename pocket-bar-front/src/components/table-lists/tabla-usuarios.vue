@@ -127,7 +127,7 @@ import { upperConverter } from "@/special/uppercases-converter.js";
 import { getUsuarios } from "@/api/usuarios.js";
 import { getRol } from "@/api/rol.js";
 //axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://" + /*window.location.hostname*/"127.0.0.1" + ":8000";
+axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
 export default {
 	name: "tabla-usuarios",
 	data: () => ({

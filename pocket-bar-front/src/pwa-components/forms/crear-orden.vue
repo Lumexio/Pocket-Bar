@@ -86,6 +86,7 @@
 										:color="cambio(item)"
 										@click="cajaProductos(item)"
 										class="card-p ml-5"
+										:disabled="item.cantidad_articulo==0"
 									>
 										<v-img
 											v-bind:lazy-src="item.foto_articulo"
@@ -101,7 +102,7 @@
 													: 'blt',
 											]"
 										>
-											{{ item.nombre_articulo }}
+											{{ item.nombre_articulo }} <v-spacer></v-spacer>{{item.cantidad_articulo}}
 										</v-card-title>
 										<v-card-text
 											class="text font-weight-regular"

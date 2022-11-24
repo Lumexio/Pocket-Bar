@@ -5,7 +5,7 @@ namespace App\Enums;
 enum TicketItemStatus: string
 {
     case Standby = "En espera";
-    case InPreparation = "En preparación";
+    case InPreparation = "En preparacion";
     case Prepared = "Preparado";
     case Received = "Recibido";
 }

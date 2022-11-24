@@ -78,6 +78,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
             titular: element.titular,
             total: element.total,
             productos: element.productos,
+            status: element.status,
             mesa: element.mesa,
           };
           if (!datos) return;
@@ -119,6 +120,7 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
   });
 }
 export function postTicketsNotiPWA(enviar) {
+  console.log("Data para terminar prod:", enviar);
   return new Promise((resolve, reject) => {
     axios
       .put("api/ordenes/notificacion/productos", enviar)

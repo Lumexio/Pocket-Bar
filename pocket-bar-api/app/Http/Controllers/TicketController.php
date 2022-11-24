@@ -311,57 +311,73 @@ class TicketController extends Controller
 
     public function updateStatus(ProductoUpdateStatusRequest $request): JsonResponse
     {
+
         /**
          * @var \App\Models\User $user
          */
         $user = $request->user();
 
         if ($user->rol_id == Rol::Mesero and $request->input("status") != "Recibido") {
+
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto a menos que sea Recibido"
             ], 400);
         }
 
         $ticketDetail = TicketDetail::find($request->input("id"));
+
         $ticket = Ticket::find($ticketDetail->ticket_id);
 
         if ($ticket->status == TicketStatus::Closed) {
+
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto de un ticket cerrado"
             ], 400);
         }
 
         if ($request->input("status") == TicketItemStatus::Received and $ticketDetail->waiter_id != $user->id) {
+
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto a Recibido pues no eres el mesero que lo solicitó"
             ], 400);
         }
 
         if ($ticketDetail->status == TicketItemStatus::Received) {
+
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto que ya ha sido recibido anteriormente"
             ], 400);
         }
 
         try {
+
             if (in_array($ticketDetail->status, [TicketItemStatus::Standby, TicketItemStatus::Prepared])) {
+
                 $ticketDetail->barTender_id = $user->id;
             }
 
-            if ($ticketDetail->waiter_id == $user->id and $request->input("status") == TicketItemStatus::Prepared and $user->rol_id == Rol::Bartender) {
-                $ticketDetail->status = TicketItemStatus::Received;
+            if ($ticketDetail->waiter_id == $user->id and $request->input("status") == TicketItemStatus::Prepared->value and $user->rol_id == Rol::Bartender->value) {
+                $ticketDetail->status = TicketItemStatus::Received->value;
+
             } else {
+
                 $ticketDetail->status = $request->input("status");
+
             }
 
             throw_if(!$ticketDetail->save(), "Error al guardar en base de datos");
 
             $countOfStatusOfTicket = TicketDetail::countOfStatusOfTicket($ticket->id);
+
             $previousStatus = $ticketDetail->status;
+
             $ticket->status = TicketDetail::lastStatusOfTicket($ticket->id, $countOfStatusOfTicket);
+
             if ($previousStatus != $ticket->status) {
+
                 throw_if(!$ticket->save(), "Error al guardar en base de datos");
             }
+
             broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Throwable $th) {

@@ -22,8 +22,11 @@ export function getRol(itemsrol) {
      itemsrol, stats
     });
    })
-   .catch((e) => {
-    console.log(e.message);
+    .catch((e) => {
+      reject({
+        e
+      });
+
    });
  })
 }

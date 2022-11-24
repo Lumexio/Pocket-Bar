@@ -183,7 +183,7 @@ class TicketController extends Controller
             $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
             $ticketDetail->articulos_tbl_id = $item['id'];
             $ticketDetail->articulos_img = $item["foto_articulo"];
-            $ticketDetail->status = TicketItemStatus::Standby;
+            $ticketDetail->status = TicketItemStatus::Standby->value;
             $ticketDetail->ticket_id = $ticket->id;
             throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
 
@@ -335,14 +335,14 @@ class TicketController extends Controller
             ], 400);
         }
 
-        if ($request->input("status") == TicketItemStatus::Received and $ticketDetail->waiter_id != $user->id) {
+        if ($request->input("status") == TicketItemStatus::Received->value and $ticketDetail->waiter_id != $user->id) {
 
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto a Recibido pues no eres el mesero que lo solicitó"
             ], 400);
         }
 
-        if ($ticketDetail->status == TicketItemStatus::Received) {
+        if ($ticketDetail->status == TicketItemStatus::Received->value) {
 
             return response()->json([
                 "error" => "No puedes cambiar el estado de un producto que ya ha sido recibido anteriormente"
@@ -400,7 +400,7 @@ class TicketController extends Controller
         DB::beginTransaction();
         try {
             $ticket = Ticket::find($request->input("ticket_id"));
-            if ($ticket->status == TicketStatus::Closed) {
+            if ($ticket->status == TicketStatus::Closed->value) {
                 return response()->json([
                     "error" => "No puedes pagar un ticket cerrado"
                 ], 422);
@@ -424,7 +424,7 @@ class TicketController extends Controller
                 throw_if(!$payment->save(), \Exception::class, "Error al guardar el pago");
             }
 
-            $ticket->status = TicketStatus::Closed;
+            $ticket->status = TicketStatus::Closed->value;
             $ticket->cashier_id = auth()->user()->id;
             $ticket->cashier_name = auth()->user()->name;
 

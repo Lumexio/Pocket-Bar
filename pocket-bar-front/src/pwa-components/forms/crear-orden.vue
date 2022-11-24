@@ -156,20 +156,20 @@
 							v-for="(item, index) in pedidoArray"
 							:key="index"
 						>
-							<v-row
-								><v-col cols="6"
-									><span>{{ item.nombre_articulo }}</span></v-col
-								><v-spacer></v-spacer
-								><v-col
-									><span>${{ item.precio_articulo }}</span></v-col
-								>
+							<v-row>
 								<v-col>
 									<v-btn icon @click="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col
-								></v-row
-							>
-							<v-card-actions :key="refresher" class="arrowscounter">
+								>
+								<v-col cols="6"
+									><span>{{ item.nombre_articulo }}</span></v-col
+								><v-spacer></v-spacer
+								><v-col
+									><span class="pr-2">${{ item.precio_articulo }}</span></v-col
+								>
+							</v-row>
+							<v-card-actions  :key="refresher" class="arrowscounter">
 								<v-btn
 									v-if="item.piezas > 1"
 									text
@@ -187,8 +187,10 @@
 
 						<v-btn
 							dark
-							color="red"
-							class="boton-prcess mb-4"
+							block
+							x-large
+							color="success"
+							class="mb-4"
 							@click="crearTicket()"
 						>
 							Procesar pedido
@@ -501,10 +503,7 @@ export default {
 .boton {
 	left: 10%;
 }
-.boton-prcess {
-	left: 16%;
-	right: 0%;
-}
+
 .arrowscounter {
 	display: flex;
 	flex-direction: row;

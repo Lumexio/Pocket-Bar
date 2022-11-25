@@ -85,7 +85,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
           ticketsPWAArray.push(datos);
         });
 
-        console.log(ticketsPWAArray);
+
         resolve({
           stats, ticketsPWAArray
         });

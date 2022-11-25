@@ -132,7 +132,7 @@
 								v-on:keyup.enter="save"
 								outlined
 								:ticketsArray="ticketsArray"
-								@update:ticketsArray="getTickets"
+								@update:ticketsArray="getTickets()"
 								@click="save"
 							>
 								Efectuar pago caja
@@ -261,6 +261,7 @@ export default {
 		},
 	},
 	watch: {
+		
 		dialog(val) {
 			val || this.close();
 		},
@@ -272,7 +273,7 @@ export default {
 		window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 			this.$store.commit("settickets", e.tickets);
 			this.ticketsArray = e.tickets;
-			console.log("Data websockets:", this.ticketsArray);
+			
 		});
 		this.onFocus();
 		// window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {

@@ -70,7 +70,7 @@ export default {
 			"ticketCreatedMesero",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				console.log("Mesero:",e.tickets);
+				console.log("Mesero websockets:",e.tickets);
 			},
 		
 		);

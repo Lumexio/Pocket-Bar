@@ -27,9 +27,6 @@ class ticketCreatedMesero implements ShouldBroadcastNow
     public $afterCommit = true;
     public function __construct()
     {
-
-
-
         $user = auth()->user();
         $actualWorkshift = Workshift::where("active", 1)->first();
         $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])

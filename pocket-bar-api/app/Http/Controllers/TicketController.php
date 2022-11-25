@@ -448,14 +448,14 @@ class TicketController extends Controller
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
-            ticketCreated::dispatch($ticket->user_id);
+            ticketCreated::dispatch(auth()->user()->id);
 
             # code...
-            broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedMesero($ticket->user_id))->broadcastToEveryone());
             broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
 
             # code...
-            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedBarra($ticket->user_id))->broadcastToEveryone());
             //broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
 
             //broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());

@@ -9,10 +9,12 @@
         <v-list-item-group
           v-model="selectedItem"
           color="primary"
+          flat
         >
           <v-list-item
             v-for="(item, i) in items"
             :key="i"
+            :to="item.path"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
@@ -33,21 +35,25 @@ import { getCotizado } from "@/api/cortes.js";
 export default {
 	name: "menuPayment",
 	data: () => ({
-  data_resp: null,
+  data_resp: {},
   selectedItem: 1,
+  
     items: [
-      { text: 'Real-Time', icon: 'mdi-clock' },
-      { text: 'Audience', icon: 'mdi-account' },
-      { text: 'Conversions', icon: 'mdi-flag' },
+      { text: 'Pagar nominas', icon: 'mdi-account-cash',path: "/nominas" },
+      { text: 'Corte de la noche', icon: 'mdi-cash-100',path: "/" },
+      
     ],
-	}),
+  }),
+  whatch: {
+
+  },
 	methods: {
 		getusers() {},
 	},
 	mounted() {
 		getCotizado()
 			.then((response) => {
-				this.data_resp = response.data;
+        this.data_resp = response.data;
 			})
 			.catch((e) => {
 				console.log(e);

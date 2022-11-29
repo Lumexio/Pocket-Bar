@@ -1,15 +1,15 @@
 <template>
-	<div class="row">
-		<pagosoptionscard />
-	</div>
+	
+		<manuPayment></manuPayment>
+	
 </template>
 
 <script>
-import pagosoptionscard from "../components/global/pagos-options-card.vue";
-
+//import pagosoptionscard from "../components/global/pagos-options-card.vue";
+import manuPayment from '../components/global/manu-payment.vue';
 export default {
 	name: "main-pagos",
-	components: { pagosoptionscard },
+	components: { manuPayment },
 };
 </script>
 

@@ -31,7 +31,7 @@ class NominasController extends Controller
                 $nomina->base = $userToPay['payment'];
                 $nomina->tips = $userToPay['tip'];
                 $nomina->name = $userToPay['name'];
-                $nomina->paid = $usersToPay['payment'] + ($usersToPay['tips'] * .75);
+                $nomina->paid = $request->input('total_nominas') + ($usersToPay['tips'] * .75);
                 $total = $total + $nomina->paid;
                 $response["usersToPay"][] = [
                     "user_id" => $userToPay['user_id'],

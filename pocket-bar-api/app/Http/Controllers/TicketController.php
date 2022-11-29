@@ -21,6 +21,7 @@ use App\Events\ticketCreated;
 use App\Events\ticketCreatedMesero;
 use App\Events\ticketCreatedBarra;
 use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
+use App\Http\Requests\Tickets\AddProductsRequest;
 use App\Http\Requests\Tickets\CancelTicketRequest;
 use App\Http\Requests\Tickets\PayRequest;
 use App\Models\Articulo;
@@ -211,11 +212,20 @@ class TicketController extends Controller
         throw_if(!$articulo->save(), \Exception::class, "Error al actualizar el articulo");
     }
 
-    public function addProducts(Request $request): JsonResponse
+    public function addProducts(AddProductsRequest $request): JsonResponse
     {
         DB::beginTransaction();
+        $ticket = Ticket::find($request->input('ticket_id'));
+
+        if (in_array($ticket->status, [TicketStatus::Closed->value, TicketStatus::Canceled->value])) {
+            return response()->json([
+                "status" => 422,
+                "error" => 2,
+                "message" => "Ticket se encuentra en estado {$ticket->status} y no se le pueden añadir productos"
+            ], 422);
+        }
+
         try {
-            $ticket = Ticket::find($request->input('ticket_id'));
             $this->createTicketDetails(collect($request->input("productos")), $ticket);
             $items = $ticket->details->map(function ($item) {
                 return [

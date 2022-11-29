@@ -1,6 +1,6 @@
 <template>
 	<v-card width="100%" height="100%" :dark="this.$store.getters.hasdarkflag">
-		<v-toolbar color="trasnparent"><v-btn text to="/pagos" flat ><v-icon>mdi-arrow-left-bold-box-outline</v-icon> volver a menu</v-btn></v-toolbar>
+		<v-toolbar color="trasnparent"><v-btn text to="/pagos" ><v-icon>mdi-arrow-left-bold-box-outline</v-icon> volver a menu</v-btn></v-toolbar>
 		
 		<v-stepper v-model="e1">
 			<v-stepper-header>
@@ -36,7 +36,7 @@
 				<v-stepper-content step="2">
 					<v-card-actions>
 	<v-btn   x-large> Cancel </v-btn>	<v-spacer/>		
-	<v-btn color="success" @click="e1 = 3" x-large>Confirmar nominas </v-btn>
+	<v-btn color="success" @click="postNominas(selectedUser)" x-large>Confirmar nominas </v-btn>
 					
 					</v-card-actions>
 					<v-card class="mb-12" color="transparent" elevation="0" >
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getCotizado } from "@/api/cortes.js";
+import { getCotizado,postNominas } from "@/api/cortes.js";
 import { getUsuarios } from "@/api/usuarios.js";
 
 export default {
@@ -80,7 +80,18 @@ export default {
 		],
 	}),
 	methods: {
-		getusers() {},
+		postNominas(nominas) {
+			var total_nominas = 0;
+			nominas.forEach(item => {
+				total_nominas=total_nominas + item.nominas;
+			});
+			let payrol={payroll:nominas,total_nominas:total_nominas,tips:0 };
+			postNominas(payrol).then((response) => {
+				console.log(response);
+			}).catch((e) => {
+				console.log(e);
+			})
+		},
 	},
 	mounted() {
 		getUsuarios(this.usersArray)

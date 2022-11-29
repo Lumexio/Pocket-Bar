@@ -12,7 +12,7 @@ class NominasController extends Controller
 {
     public function nominasToPay(ToPay $request)
     {
-        $usersToPay = $request->input('payrollS');
+        $usersToPay = $request->input('payroll');
         $workshift = Workshift::where('active', 1)->first();
         $total = 0;
         $response = [

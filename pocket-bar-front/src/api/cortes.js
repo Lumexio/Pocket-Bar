@@ -27,6 +27,21 @@ export function getCotizado() {
       .catch((error) => { console.log(error); reject(error); });
   });
 }
+export function postNominas(nominas) {
+
+  return new Promise((resolve, reject) => {
+    axios
+      .post("api/nominas/pay", nominas)
+      .then(response => {
+        console.log(response);
+
+        resolve({
+          response
+        });
+      })
+      .catch((error) => { console.log(error); reject(error); });
+  });
+}
 export function postCerrarticket(pack) {
 
   return new Promise((resolve, reject) => {
@@ -57,4 +72,4 @@ export function postCerrarticket(pack) {
 
 
 
-export default { getCotizado, postCerrarticket }
+export default { getCotizado, postCerrarticket, postNominas }

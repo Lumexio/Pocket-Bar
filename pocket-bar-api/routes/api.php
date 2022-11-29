@@ -102,7 +102,7 @@ Mostrar un registro no */
          * !Por probar
          * *Francisco
          */
-        Route::post('/pay', 'NominasController@pay');
+        Route::post('/pay', 'NominasController@nominasToPay');
     });
 
     Route::prefix("workshift")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {

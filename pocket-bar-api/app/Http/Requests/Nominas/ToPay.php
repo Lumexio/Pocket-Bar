@@ -14,7 +14,7 @@ class ToPay extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->rol_id == Rol::Administrativo || auth()->user()->rol_id == Rol::Gerencia;
+        return auth()->user()->rol_id == Rol::Administrativo->value || auth()->user()->rol_id == Rol::Gerencia->value || auth()->user()->rol_id == Rol::Cajero->value;
     }
 
     /**

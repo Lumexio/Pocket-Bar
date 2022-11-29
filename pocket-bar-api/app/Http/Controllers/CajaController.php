@@ -21,6 +21,8 @@ class CajaController extends Controller
             ->selectRaw("SUM(payments_tbl.total) as total_night, payments_tbl.type")
             ->groupBy('payments_tbl.type')
             ->get();
+
+
         return $tickets;
     }
 

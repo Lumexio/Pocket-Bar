@@ -33,6 +33,7 @@ class CreateTicketsTable extends Migration
             $table->foreignId("table_id")->nullable(false)->references("id")->on("tables");
             $table->string("status")->default("Solicitado");
             $table->boolean("closed")->default(false);
+            $table->boolean("cancel_confirm")->default(null)->nullable(true);
             $table->dateTime("canceled_by_cashier_at")->nullable(true);
             $table->foreignId("canceled_by_cashier_id")->nullable(true)->references("id")->on("users");
             $table->dateTime("canceled_by_admin_at")->nullable(true);

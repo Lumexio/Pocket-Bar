@@ -26,6 +26,7 @@ class CancelTicketRequest extends FormRequest
     {
         return [
             "ticket_id" => "required|exists:tickets,id",
+            "confirm_ticket" => "nullable|boolean"
         ];
     }
 }

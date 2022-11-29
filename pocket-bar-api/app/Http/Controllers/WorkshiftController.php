@@ -22,7 +22,7 @@ class WorkshiftController extends Controller
             ], 400);
         }
 
-        $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed, TicketStatus::Canceled])->get();
+        $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->get();
 
         if ($pendingTickets->count() > 0) {
             return response()->json([
@@ -30,7 +30,7 @@ class WorkshiftController extends Controller
             ], 400);
         }
 
-        $closedTickets = Ticket::whereIn("status", [TicketStatus::Closed])->get();
+        $closedTickets = Ticket::whereIn("status", [TicketStatus::Closed->value])->get();
         $closeCashierData = CashRegisterCloseData::where('workshift_id', $activeWorkshift->id)->get();
         $totalPaid = $closedTickets->sum('total');
         $totalOfTickets = $closedTickets->sum('total');

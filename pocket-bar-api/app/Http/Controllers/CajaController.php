@@ -18,7 +18,7 @@ class CajaController extends Controller
             ->where("cashier_id", "=", $userId)
             ->with('details')
             ->join('payments_tbl', 'payments_tbl.ticket_id', '=', 'tickets_tbl.id')
-            ->selectRaw("SUM(payments_tbl.total), payments_tbl.type")
+            ->selectRaw("SUM(payments_tbl.total) as total_night, payments_tbl.type")
             ->groupBy('payments_tbl.type')
             ->get();
         return $tickets;

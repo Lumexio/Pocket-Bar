@@ -1,5 +1,7 @@
 <template>
 	<v-card width="100%" height="100%" :dark="this.$store.getters.hasdarkflag">
+		<v-toolbar color="trasnparent"><v-btn text to="/pagos" flat ><v-icon>mdi-arrow-left-bold-box-outline</v-icon> volver a menu</v-btn></v-toolbar>
+		
 		<v-stepper v-model="e1">
 			<v-stepper-header>
 				<v-stepper-step :complete="e1 > 1" step="1">
@@ -7,16 +9,18 @@
 				</v-stepper-step>
 				<v-divider></v-divider>
 				<v-stepper-step :complete="e1 > 2" step="2"
-					>Resumen de la noche
+					>Resumen de la noche y Confirmar totales
 				</v-stepper-step>
-				<v-divider></v-divider>
-				<v-stepper-step :complete="e1 > 2" step="3">
-					Confirmar totales</v-stepper-step
-				>
+		
 			</v-stepper-header>
 
 			<v-stepper-items>
 				<v-stepper-content class="pa-0" step="1">
+					<v-card-actions>
+	<v-btn   x-large> Cancel </v-btn>	<v-spacer/>		
+	<v-btn color="success" @click="e1 = 2" x-large> Ver resumen nominal </v-btn>
+					
+					</v-card-actions>
 					<v-data-table
 						v-model="selectedUser"
 						:headers="headers"
@@ -27,26 +31,32 @@
 					>
 					</v-data-table>
 
-					<v-btn color="primary" @click="e1 = 2"> Continue </v-btn>
-
-					<v-btn text> Cancel </v-btn>
 				</v-stepper-content>
 
 				<v-stepper-content step="2">
-					<v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
+					<v-card-actions>
+	<v-btn   x-large> Cancel </v-btn>	<v-spacer/>		
+	<v-btn color="success" @click="e1 = 3" x-large>Confirmar nominas </v-btn>
+					
+					</v-card-actions>
+					<v-card class="mb-12" color="transparent" elevation="0" >
+						<v-card-text>
+										<v-data-table
+						:headers="headers"
+						:items="selectedUser"
+						class="elevation-0"
+						
+					>
+					</v-data-table>
 
-					<v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
+						</v-card-text>
+						
+					</v-card>
 
-					<v-btn text> Cancel </v-btn>
+
 				</v-stepper-content>
 
-				<v-stepper-content step="3">
-					<v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
 
-					<v-btn color="primary" @click="e1 = 1"> Continue </v-btn>
-
-					<v-btn text> Cancel </v-btn>
-				</v-stepper-content>
 			</v-stepper-items>
 		</v-stepper>
 	</v-card>

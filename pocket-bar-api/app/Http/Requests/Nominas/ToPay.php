@@ -27,9 +27,8 @@ class ToPay extends FormRequest
         return [
             "payroll" => "required|array|min:1",
             "total_nominas" => "required|numeric",
-            "payroll.*.user_id" => "required|integer|exists:users,id",
-            "payroll.*.payment" => "required|numeric",
-            "payroll.*.tip" => "required|numeric",
+            "payroll.*.id" => "required|integer|exists:users,id",
+            "payroll.*.nominas" => "required|numeric",
             "payroll.*.name" => "required|string|max:255",
         ];
     }

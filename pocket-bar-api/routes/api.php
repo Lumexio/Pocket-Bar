@@ -60,29 +60,56 @@ Mostrar un registro no */
     Route::resource('activitylog', 'ActivitylogController');
 
     Route::prefix('tickets')->group(function () {
-        Route::get('/list', 'TicketController@index');
-        Route::get('/pwa/list', 'TicketController@indexPwa');
-        Route::post('/create', 'TicketController@store');
+        Route::get('/list', 'TicketController@index'); //Lista para deskstop
+        Route::get('/pwa/list', 'TicketController@indexPwa'); //Lista para pantallas moviles
+        Route::post('/create', 'TicketController@store'); //Crear ticket
         Route::post('/pay', 'TicketController@pay'); //pagar cuenta
+        /** Cancelar tiket
+         * !Pendiente crear boton para admin y cajero
+         * *Francisco
+         */
         Route::delete("/cancel", 'TicketController@cancelTicket');
+        /**Añadir productos a un ticket existe
+         * !Probar
+         * *Francisco
+         */
         Route::put('/add/products', 'TicketController@addProducts');
     });
 
     Route::prefix('ordenes')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        /**
+         * *listo
+         */
         Route::get('/notificacion/productos', 'OrdenesController@index');
+
         Route::put('/notificacion/productos', 'TicketController@updateStatus');
     });
 
     Route::prefix("caja")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        Route::get('/mustbe', 'CajaController@getMustBe'); //Lo que debo de tener en caja
+        /**Lo que debo de tener en caja
+         * *Listo
+         */
+        Route::get('/mustbe', 'CajaController@getMustBe');
+        /**Lo que debo de tener en caja
+         * !Por probar
+         * *Francisco
+         */
         Route::post('/close', 'CajaController@close'); //Lo que debo de tener en caja enviando desde el front para comparar
     });
 
     Route::prefix("nominas")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        /**Lo que debo de tener en caja
+         * !Por probar
+         * *Francisco
+         */
         Route::post('/pay', 'NominasController@pay');
     });
 
     Route::prefix("workshift")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        /**Lo que debo de tener en caja
+         * !Por probar
+         * *Francisco
+         */
         Route::post('/start', 'WorkshiftController@start');
         Route::put('/close', 'WorkshiftController@close');
     });

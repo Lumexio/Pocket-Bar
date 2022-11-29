@@ -10,9 +10,18 @@ export function getCotizado() {
     axios
       .get("api/caja/mustbe")
       .then(response => {
-        console.log("Must be:", response);
+        let data = {
+
+        };
+        response.data.forEach(item => {
+          data.total_night = item.total_night;
+          data.type = item.type;
+          data.details = item.details;
+
+        });
+
         resolve({
-          response
+          data
         });
       })
       .catch((error) => { console.log(error); reject(error); });

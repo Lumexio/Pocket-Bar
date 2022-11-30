@@ -19,6 +19,7 @@ export function getTickets(ticketsArray) {
             ticket_date: element.ticket_date,
             total: element.total,
             status: element.status,
+            cancel_confirm: element.cancel_confirm,
           };
           if (!datos) return;
           ticketsArray.push(datos);

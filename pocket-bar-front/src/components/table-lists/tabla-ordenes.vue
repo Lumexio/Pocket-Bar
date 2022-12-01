@@ -160,6 +160,26 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
+				<v-dialog
+					:dark="$store.getters.hasdarkflag"
+					v-model="dialogCancel"
+					max-width="550px"
+				>
+					<v-card>
+						<v-card-title class="headline"
+							>¿Estas seguro de querer cancelar este ticket?</v-card-title
+						>
+						<v-card-actions>
+							<v-btn color="danger" outlined @click="closeCancelTicket"
+								>Cancelar</v-btn
+							>
+							<v-spacer></v-spacer>
+							<v-btn color="success" outlined @click="cancelConfirm"
+								>Aceptar</v-btn
+							>
+						</v-card-actions>
+					</v-card>
+				</v-dialog>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon
@@ -169,6 +189,14 @@
 					@click="editItem(item)"
 				>
 					mdi-cash-100
+				</v-icon>
+				<v-icon
+					v-show="item.cancel_confirm != null"
+					small
+					class="mr-2"
+					@click="editItemCancel(item)"
+				>
+					mdi-close
 				</v-icon>
 			</template>
 			<template v-slot:no-data>
@@ -185,7 +213,7 @@
 
 <script>
 import { getTickets } from "@/api/tickets.js";
-import { postCerrarticket } from "@/api/cortes.js";
+import { postCerrarticket, postCancelticket } from "@/api/cortes.js";
 export default {
 	name: "tabla-ordenes",
 	data: () => ({
@@ -207,6 +235,12 @@ export default {
 			status: "",
 			total: "",
 		},
+		editedItemCancel: {
+			id: "",
+			user_name: "",
+			status: "",
+			total: "",
+		},
 		defaultItem: {
 			id: "",
 			user_name: "",
@@ -214,7 +248,9 @@ export default {
 			total: "",
 		},
 		dialog: false,
+		dialogCancel: false,
 		dialogCierreConfirm: false,
+		
 		search: "",
 		cargando: true,
 		expanded: [],
@@ -250,7 +286,7 @@ export default {
 				value: "ticket_date",
 			},
 			{ text: "Descripción", align: "start", value: "data-table-expand" },
-			{ text: "Cortes", value: "actions" },
+			{ text: "Acciones", value: "actions" },
 		],
 
 		ticketsArray: [],
@@ -261,19 +297,20 @@ export default {
 		},
 	},
 	watch: {
-		
 		dialog(val) {
 			val || this.close();
 		},
 		dialogCierreConfirm(val) {
 			val || this.closeCierreTicket();
 		},
+		dialogCancel(val) {
+			val || this.closeCancelTicket();
+		},
 	},
 	mounted() {
 		window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 			this.$store.commit("settickets", e.tickets);
 			this.ticketsArray = e.tickets;
-			
 		});
 		this.onFocus();
 		// window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
@@ -293,15 +330,22 @@ export default {
 		closeCierreTicket() {
 			this.dialogCierreConfirm = false;
 			// this.$nextTick(() => {
-			// 	this.editedItem = Object.assign({}, this.defaultItem);
+			// 	this.editedItemCancel = Object.assign({}, this.defaultItem);
 			// 	this.editedIndex = -1;
 			// });
 		},
-		cierreItemConfirm() {
+		closeCancelTicket() {
+			this.dialogCancel = false;
+			this.$nextTick(() => {
+				this.editedItemCancel = Object.assign({}, this.defaultItem);
+				this.editedIndex = -1;
+			});
+		},
+			cierreItemConfirm() {
 			// aqui armo el pago final
-
 			postCerrarticket(this.packClose)
 				.then((response) => {
+					
 					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 						this.$store.commit("settickets", e.tickets);
 						this.ticketsArray = e.tickets;
@@ -318,6 +362,26 @@ export default {
 						this.tip_card = null;
 						this.voucher = null;
 						this.refresh = 0;
+					}
+				})
+				.catch((e) => {
+					console.log(e);
+					this.cargando = true;
+				});
+		},
+		cancelConfirm() {
+			// aqui armo la cancelacion
+			postCancelticket({ id: this.editedItemCancel.id,confirm_ticket:false })
+				.then((response) => {
+					console.log("response cancel comp:",response);
+					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
+						this.$store.commit("settickets", e.tickets);
+						this.ticketsArray = e.tickets;
+					});
+					if (response.response.data.status == 200) {
+		
+						this.dialogCancel = false;
+						this.cargando = false;
 					}
 				})
 				.catch((e) => {
@@ -354,6 +418,11 @@ export default {
 			this.editedIndex = this.ticketsArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialog = true;
+		},
+		editItemCancel(item) {
+			this.editedIndex = this.ticketsArray.indexOf(item);
+			this.editedItemCancel = Object.assign({}, item);
+			this.dialogCancel = true;
 		},
 		save() {
 			if (this.amount_card != null) {

@@ -68,7 +68,7 @@ Mostrar un registro no */
          * !Pendiente crear boton para admin y cajero
          * *Francisco
          */
-        Route::delete("/cancel", 'TicketController@cancelTicket');
+        Route::post("/cancel", 'TicketController@cancelTicket');
         /**Añadir productos a un ticket existe
          * !Probar
          * *Francisco

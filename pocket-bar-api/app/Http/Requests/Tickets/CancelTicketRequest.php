@@ -14,7 +14,7 @@ class CancelTicketRequest extends FormRequest
      */
     public function authorize()
     {
-        return in_array(auth()->user()->rol_id, [Rol::Administrativo, Rol::Cajero, Rol::Gerencia]);
+        return auth()->user()->rol_id == Rol::Administrativo->value || auth()->user()->rol_id == Rol::Gerencia->value || auth()->user()->rol_id == Rol::Cajero->value;
     }
 
     /**
@@ -25,7 +25,8 @@ class CancelTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            "ticket_id" => "required|exists:tickets,id",
+            "id" => "required|exists:tickets_tbl,id",
+            //"ticket_id" => "required|numeric",
             "confirm_ticket" => "nullable|boolean"
         ];
     }

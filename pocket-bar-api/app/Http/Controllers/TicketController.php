@@ -260,9 +260,12 @@ class TicketController extends Controller
 
     public function cancelTicket(CancelTicketRequest $request): JsonResponse
     {
+
         DB::beginTransaction();
+
         try {
-            $ticket = Ticket::with("details")->find($request->input('ticket_id'));
+
+            $ticket = Ticket::with("details")->find($request->input('id'));
 
             if ($ticket->status == TicketStatus::Canceled->value) {
                 return response()->json([
@@ -270,9 +273,7 @@ class TicketController extends Controller
                     "error" => 1,
                     "message" => "El ticket ya ha sido cancelado",
                 ], 500);
-            }
-
-            if (auth()->user()->rol_id == Rol::Cajero and $ticket->canceled_by_cashier_at != null) {
+            } else if (auth()->user()->rol_id === Rol::Cajero->value and $ticket->cancel_confirm === false) {
                 return response()->json([
                     "status" => 500,
                     "error" => 1,
@@ -280,7 +281,9 @@ class TicketController extends Controller
                 ], 500);
             }
 
-            if (auth()->user()->rol_id == Rol::Administrativo and $ticket->canceled_by_admin_at != null) {
+
+
+            if (auth()->user()->rol_id === Rol::Administrativo and $ticket->cancel_confirm === true) {
                 return response()->json([
                     "status" => 500,
                     "error" => 1,
@@ -288,13 +291,13 @@ class TicketController extends Controller
                 ], 500);
             }
 
-            if (auth()->user()->rol_id == Rol::Cajero) {
+            if (auth()->user()->rol_id == Rol::Cajero->value) {
                 $ticket->cancel_confirm = false;
                 $ticket->canceled_by_cashier_at = Carbon::now();
                 $ticket->canceled_by_cashier_id = auth()->user()->id;
             }
 
-            if (in_array(auth()->user()->rol_id, [Rol::Administrativo, Rol::Gerencia])) {
+            if (in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Gerencia->value])) {
                 $ticket->cancel_confirm = true;
                 $ticket->canceled_by_admin_at = Carbon::now();
                 $ticket->canceled_by_admin_id = auth()->user()->id;
@@ -303,7 +306,7 @@ class TicketController extends Controller
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
 
-            if ($ticket->status == TicketStatus::Canceled->value) {
+            if ($ticket->status === TicketStatus::Canceled->value) {
                 /**
                  * @var TicketDetail $detail
                  */

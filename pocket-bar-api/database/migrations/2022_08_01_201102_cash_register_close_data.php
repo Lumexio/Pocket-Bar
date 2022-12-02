@@ -21,6 +21,7 @@ class CashRegisterCloseData extends Migration
             $table->decimal("total_with_tip", 10, 2)->nullable(false);
             $table->json("vouchers")->nullable(true);
             $table->foreignId("cashier_id")->nullable(false)->references("id")->on("users");
+            $table->foreignId("workshift_id")->nullable(false)->references("id")->on("workshifts");
             $table->timestamps();
         });
     }

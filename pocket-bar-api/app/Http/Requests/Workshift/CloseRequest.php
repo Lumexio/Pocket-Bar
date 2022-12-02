@@ -14,7 +14,7 @@ class CloseRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->rol_id == Rol::Gerencia or auth()->user()->rol_id == Rol::Administrativo;
+        return auth()->user()->rol_id == Rol::Gerencia->value or auth()->user()->rol_id == Rol::Administrativo->value;
     }
 
     /**

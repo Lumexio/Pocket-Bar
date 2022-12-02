@@ -19,7 +19,7 @@ class NominasController extends Controller
             "total" => $total,
             "nominas" => [],
             "workshift" => $workshift,
-            "bruto" => CashRegisterCloseData::where('workshift_id', $workshift->id)->sum('amount'),
+            "bruto" => CashRegisterCloseData::where('workshift_id', $workshift->id)->sum('total'),
             "neto" => 0
         ];
         DB::beginTransaction();
@@ -29,9 +29,9 @@ class NominasController extends Controller
                 $nomina->workshift_id = $workshift->id;
                 $nomina->user_id = $userToPay['user_id'];
                 $nomina->base = $userToPay['payment'];
-                $nomina->tips = $userToPay['tip'];
+                $nomina->tips = 0;
                 $nomina->name = $userToPay['name'];
-                $nomina->paid = $request->input('total_nominas') + ($usersToPay['tips'] * .75);
+                $nomina->paid = $request->input('nominas');
                 $total = $total + $nomina->paid;
                 $response["usersToPay"][] = [
                     "user_id" => $userToPay['user_id'],

@@ -33,7 +33,7 @@ class TicketController extends Controller
 {
     public static function sendNotificationsToBarthenders()
     {
-        $bartenders = User::where("rol_id", Rol::Bartender)->get();
+        $bartenders = User::where("rol_id", Rol::Bartender->value)->get();
         foreach ($bartenders as $bartender) {
             broadcast((new BarraEvents($bartender->id, 5))->broadcastToEveryone());
         }
@@ -283,7 +283,7 @@ class TicketController extends Controller
 
 
 
-            if (auth()->user()->rol_id === Rol::Administrativo and $ticket->cancel_confirm === true) {
+            if (auth()->user()->rol_id === Rol::Administrativo->value and $ticket->cancel_confirm === true) {
                 return response()->json([
                     "status" => 500,
                     "error" => 1,

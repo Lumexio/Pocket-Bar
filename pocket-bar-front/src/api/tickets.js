@@ -16,10 +16,12 @@ export function getTickets(ticketsArray) {
           let datos = {
             id: element.id,
             user_name: element.user_name,
+            client_name: element.client_name,
             ticket_date: element.ticket_date,
             total: element.total,
             status: element.status,
             cancel_confirm: element.cancel_confirm,
+
           };
           if (!datos) return;
           ticketsArray.push(datos);

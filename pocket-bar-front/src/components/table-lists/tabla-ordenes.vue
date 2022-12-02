@@ -208,6 +208,11 @@
 					{{ item.properties }}
 				</td>
 			</template>
+				<template v-slot:[`item.status`]="{ item }">
+			<v-chip :color="getColor(item.status)" dark>
+				{{ item.status }}
+			</v-chip>
+		</template>
 		</v-data-table>
 	</v-card>
 </template>
@@ -262,15 +267,21 @@ export default {
 				sortable: false,
 				value: "user_name",
 			},
+						{
+				text: "Cliente",
+				align: "start",
+				sortable: false,
+				value: "client_name",
+			},
 			{
 				text: "Total de compra",
-				align: "start",
+				align: "center",
 				sortable: false,
 				value: "total",
 			},
 			{
 				text: "Estado",
-				align: "start",
+				align: "center",
 				sortable: false,
 				value: "status",
 			},
@@ -286,8 +297,8 @@ export default {
 				sortable: false,
 				value: "ticket_date",
 			},
-			{ text: "Descripción", align: "start", value: "data-table-expand" },
-			{ text: "Acciones", value: "actions" },
+			{ text: "Acciones",align: "center", value: "actions" },
+			{ text: "Detalles",align: "center",  value: "data-table-expand" },
 		],
 
 		ticketsArray: [],
@@ -321,6 +332,14 @@ export default {
 	},
 
 	methods: {
+		getColor(status) {
+					
+			if (status === "Entregado") return "red lighten-2";
+			else if (status === "Por entregar") return "orange lighten-2";
+			else if (status === "Cerrado") return "orange lighten-1";
+			else if (status === "Cancelado") return "red lighten-1";
+			else return "white";
+		},
 		close() {
 			this.dialog = false;
 			this.$nextTick(() => {

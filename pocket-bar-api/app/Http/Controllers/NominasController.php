@@ -17,7 +17,7 @@ class NominasController extends Controller
         $total = 0;
         $response = [
             "total" => $total,
-            "nominas" => [],
+            "nominas" => $request->input('payroll'),
             "workshift" => $workshift,
             "bruto" => CashRegisterCloseData::where('workshift_id', $workshift->id)->sum('total'),
             "neto" => 0
@@ -26,20 +26,26 @@ class NominasController extends Controller
         try {
             foreach ($usersToPay as $userToPay) {
                 $nomina = new Nomina();
+
+                $nomina->user_name = $userToPay['name'];
+                $nomina->user_id = $userToPay['id'];
+                $nomina->base = $userToPay['nominas'];
+                $nomina->paid = $request->input('total_nominas');
                 $nomina->workshift_id = $workshift->id;
-                $nomina->user_id = $userToPay['user_id'];
-                $nomina->base = $userToPay['payment'];
-                $nomina->tips = 0;
-                $nomina->name = $userToPay['name'];
-                $nomina->paid = $request->input('nominas');
+                //$nomina->tips = 0;
                 $total = $total + $nomina->paid;
                 $response["usersToPay"][] = [
-                    "user_id" => $userToPay['user_id'],
+                    "user_id" => $userToPay['id'],
                     "name" => $userToPay['name'],
                     "paid" => $nomina->paid
                 ];
+
+
+
                 throw_if(!$nomina->save(), "Error al guardar el registro");
+
             }
+
             $response["neto"] = $response["bruto"] - $total;
             DB::commit();
         } catch (\Throwable $th) {

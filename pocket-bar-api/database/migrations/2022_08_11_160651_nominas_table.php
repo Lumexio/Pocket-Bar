@@ -17,10 +17,11 @@ class NominasTable extends Migration
             $table->id();
             $table->string("user_name")->nullable(false);
             $table->foreignId("user_id")->references("id")->on("users")->nullable(false);
-            $table->decimal("tips", 10, 2)->nullable(false);
+            //$table->decimal("tips", 10, 2)->nullable(false);
             $table->decimal("base", 10, 2)->nullable(false);
             $table->decimal("paid", 10, 2)->nullable(false);
             $table->foreignId("workshift_id")->nullable(false)->references("id")->on("workshifts");
+            $table->timestamps();
         });
     }
 

@@ -148,6 +148,11 @@ export default {
 				title: "Historial",
 				icon: "mdi-folder-multiple",
 			},
+			{
+				path: "/ordenes",
+				title: "Ordenes",
+				icon: "mdi-folder-multiple",
+			},
 		],
 		itemsemp: [
 			{

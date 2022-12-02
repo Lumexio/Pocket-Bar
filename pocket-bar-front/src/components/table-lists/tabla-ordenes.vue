@@ -183,7 +183,7 @@
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon
-					v-show="item.status == 'Entregado'"
+					v-show="(item.status == 'Entregado'&& $store.getters.hasrol===3)"
 					small
 					class="mr-2"
 					@click="editItem(item)"
@@ -191,13 +191,14 @@
 					mdi-cash-100
 				</v-icon>
 				<v-icon
-					v-show="item.cancel_confirm != null"
+					v-show="(item.cancel_confirm == null||item.cancel_confirm==false)&&item.status != 'Cerrado'"
 					small
 					class="mr-2"
 					@click="editItemCancel(item)"
 				>
 					mdi-close
 				</v-icon>
+				
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>

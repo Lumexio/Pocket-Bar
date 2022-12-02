@@ -95,7 +95,7 @@ class TicketController extends Controller
                 ticketCreatedBarra::dispatch(auth()->user()->id);
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             }
-            //broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Exception $th) {
             DB::rollBack();
@@ -326,6 +326,7 @@ class TicketController extends Controller
 
 
         $this->sendNotificationsToBarthenders();
+        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
         return response()->json([
             "status" => 200,
             "error" => 0,
@@ -406,6 +407,7 @@ class TicketController extends Controller
                 broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             }
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
             broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
@@ -461,8 +463,8 @@ class TicketController extends Controller
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
-            ticketCreated::dispatch(auth()->user()->id);
-
+            //ticketCreated::dispatch(auth()->user()->id);
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             # code...
             broadcast((new ticketCreatedMesero($ticket->user_id))->broadcastToEveryone());
             broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
@@ -479,10 +481,6 @@ class TicketController extends Controller
                 "error" => $th->getMessage()
             ], 500);
         }
-
-
-
-
         return response()->json([
             "status" => 200,
             "error" => 0,

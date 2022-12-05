@@ -195,6 +195,12 @@ export default {
 				title: "Proveedores",
 				icon: "mdi-folder-multiple",
 			},
+			
+			{
+				path: "/mesas",
+				title: "Mesas",
+				icon: "mdi-folder-multiple",
+			},
 		],
 	}),
 	computed: {

@@ -115,6 +115,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
+        DB::table('mesas_tbl')->insert([
+            'nombre_mesa' => '1',
+        ]);
+
+
+
         DB::table('marcas_tbl')->insert([
             'nombre_marca' => 'Honda',
         ]);

@@ -333,12 +333,11 @@ export default {
 
 	methods: {
 		getColor(status) {
-					
-			if (status === "Entregado") return "red lighten-2";
-			else if (status === "Por entregar") return "orange lighten-2";
-			else if (status === "Cerrado") return "orange lighten-1";
-			else if (status === "Cancelado") return "red lighten-1";
-			else return "white";
+			if (status === "Por entregar") return "orange lighten-2";
+			else if (status === "Entregado") return "blue darken-1";
+			else if (status === "Cerrado") return "red lighten-1";
+			else if (status === "Cancelado") return "grey darken-3";
+			else return "deep-orange darken-4";
 		},
 		close() {
 			this.dialog = false;

@@ -40,6 +40,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Eliminar no
     Mostrar un registro no */
     Route::resource('categoria', 'CategoriaController');
+    Route::resource('mesa', 'MesaController');
+
 
     /*Crear  si
 Eliminar no

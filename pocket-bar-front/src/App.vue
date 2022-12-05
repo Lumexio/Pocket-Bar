@@ -8,7 +8,6 @@
       :timeout="timeout"
       color="#C0CA33"
       rounded="pill"
-      top
       ><v-row
         ><b class="mt-2">¡Operación exitosa!</b> <v-spacer></v-spacer
         ><v-icon large>mdi-checkbox-marked-circle</v-icon></v-row
@@ -19,7 +18,6 @@
       :timeout="timeout"
       color="#F4511E"
       rounded="pill"
-      top
       ><v-row>
         <b class="mt-2">¡Oops hubo un problema!</b> <v-spacer></v-spacer
         ><v-icon large>mdi-alert</v-icon></v-row

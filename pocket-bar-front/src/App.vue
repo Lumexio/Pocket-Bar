@@ -7,7 +7,8 @@
       :value="hassuccess"
       :timeout="timeout"
       color="#C0CA33"
-      rounded="pill"
+      
+
       ><v-row
         ><b class="mt-2">¡Operación exitosa!</b> <v-spacer></v-spacer
         ><v-icon large>mdi-checkbox-marked-circle</v-icon></v-row

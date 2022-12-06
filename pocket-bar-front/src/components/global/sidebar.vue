@@ -120,10 +120,31 @@
 		<v-divider></v-divider>
 		<template v-slot:append>
 			<div class="pa-2">
-				<v-btn dark rounded class="mr-6" v-on:click="logout()" elevation="0">
+				<v-btn dark rounded class="mr-6" v-on:click="dialogLogout=true" elevation="0">
 					<v-icon left>mdi-logout</v-icon> Cerrar sesión
 				</v-btn>
 			</div>
+							<v-dialog
+					:dark="$store.getters.hasdarkflag"
+					v-model="dialogLogout"
+					max-width="500px"
+				>
+					<v-card>
+						<v-card-title class="headline justify-center "
+							>¿Quieres cerrar sesión?</v-card-title
+						>
+						<v-card-actions>
+							<v-spacer></v-spacer>
+							<v-btn color="blue darken-1" text @click="closeDelete"
+								>Cancelar</v-btn
+							>
+							<v-btn color="blue darken-1" text @click="logoutConfirm"
+								>Aceptar</v-btn
+							>
+							<v-spacer></v-spacer>
+						</v-card-actions>
+					</v-card>
+				</v-dialog>
 		</template>
 	</v-navigation-drawer>
 </template>
@@ -134,6 +155,7 @@ export default {
 	name: "sidebar",
 	components: {},
 	data: () => ({
+		dialogLogout: false,
 		switchdark: false,
 		itemsmain: [
 			//{ path: "/home", title: "Home", icon: "mdi-home" },
@@ -212,11 +234,22 @@ export default {
 		switchdark(val) {
 			this.$store.commit("setdarkflag", val);
 		},
+		dialogDelete(val) {
+			val || this.closeDelete();
+		},
 	},
 	created() {
 		this.checkDark();
 	},
 	methods: {
+		logoutConfirm() {
+			this.logout();
+			this.closeDelete();
+		
+		},
+			closeDelete() {
+			this.dialogDelete = false;
+		},
 		checkDark() {
 			if (this.$store.getters.hasdarkflag === true) {
 				this.switchdark = true;

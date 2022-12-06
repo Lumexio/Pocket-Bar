@@ -229,9 +229,7 @@ export default {
 			deleteCategoria(id);
 
 			this.closeDelete();
-			window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
-				this.itemsc = e.categorias;
-			});
+		
 		},
 
 		close() {

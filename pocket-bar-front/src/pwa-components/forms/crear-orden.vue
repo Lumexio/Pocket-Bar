@@ -146,12 +146,23 @@
 								<v-icon>mdi-chevron-left</v-icon>
 							</v-btn>
 						</div>
+														<v-select
+							v-model="selectmesa"
+							:items="itemsmesa"
+							item-text="nombre_mesa"
+							item-value="id"
+							label="Mesa"
+							outlined
+							class="ma-2"
+						>
+						</v-select>
 						<v-text-field
 							label="Titular"
 							class="ma-2"
 							v-model="titular"
 							outlined
 						></v-text-field>
+	
 						<v-card
 							class="mt-4 mb-4"
 							style="width: 100%"
@@ -160,7 +171,7 @@
 						>
 							<v-row>
 								<v-col>
-									<v-btn icon @click="deleteProduct(index)">
+									<v-btn icon x-large @click="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col
 								>
@@ -206,6 +217,7 @@
 
 <script>
 import { getArticulos } from "@/api/articulos.js";
+import { getMesas } from "@/api/mesas.js";
 import { postTickets } from "@/api/tickets.js";
 import store from "@/store";
 export default {
@@ -214,6 +226,8 @@ export default {
 	} /*data de llegado de componente padre creacion*/,
 	data() {
 		return {
+			selectmesa: "",
+			itemsmesa:[],
 			resp: null,
 			dialog: false,
 			pedidoArray: [],
@@ -352,7 +366,7 @@ export default {
 			var presend = {
 				productos: this.pedidoArray,
 				titular: (this.titular = this.titular.trim()),
-				mesa: mesa,
+				mesa: this.selectmesa,
 			};
 			postTickets(presend);
 			window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
@@ -461,9 +475,22 @@ export default {
 		},
 	},
 	mounted() {
+				window.Echo.channel("mesas").listen("mesaCreated", (e) => {
+			this.itemsc = e.mesas;
+		});
 		window.Echo.channel("articulos").listen("articuloCreated", (e) => {
 			this.articulosArray = e.articulos;
 		});
+		getMesas(this.itemsmesa)
+			.then((response) => {
+				if (response.stats === 200) {
+					this.cargando = false;
+				}
+			})
+			.catch((e) => {
+				console.log(e);
+				this.cargando = true;
+			});
 		getArticulos(this.articulosArray)
 			.then((response) => {
 				if (response.stats === 200) {

@@ -10,5 +10,5 @@ class Table extends Model
     use HasFactory;
 
 
-    protected $table = "tables";
+    protected $table = "mesas_tbl";
 }

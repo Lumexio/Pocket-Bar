@@ -39,10 +39,37 @@
 				:label="`Tema ${switchdark == true ? `oscuro` : `claro`}`"
 			></v-switch>
 			<v-divider></v-divider>
-			<v-btn class="mt-3" @click="toClose()" block large outlined color="gold"
+			<v-btn
+				class="mt-3"
+				@click="dialogLogout = true"
+				block
+				large
+				outlined
+				color="gold"
 				>Cerrar sesión</v-btn
 			>
 		</v-card>
+		<v-dialog
+			:dark="$store.getters.hasdarkflag"
+			v-model="dialogLogout"
+			max-width="500px"
+		>
+			<v-card>
+				<v-card-title class="headline justify-center"
+					>¿Quieres cerrar sesión?</v-card-title
+				>
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn color="blue darken-1" text @click="closeLogout"
+						>Cancelar</v-btn
+					>
+					<v-btn color="success"  @click="logoutConfirm"
+						>Aceptar</v-btn
+					>
+					<v-spacer></v-spacer>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</v-dialog>
 </template>
 
@@ -56,9 +83,17 @@ export default {
 	} /*data de llegado de componente padre creacion*/,
 	data: () => ({
 		switchdark: false,
+		dialogLogout: false,
 	}),
 
 	methods: {
+		logoutConfirm() {
+			this.toClose();
+			this.closeLogout();
+		},
+		closeLogout() {
+			this.dialogLogout = false;
+		},
 		toClose() {
 			this.clear();
 			router.push("/login");

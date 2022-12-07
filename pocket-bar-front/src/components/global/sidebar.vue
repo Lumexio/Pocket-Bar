@@ -234,9 +234,9 @@ export default {
 		switchdark(val) {
 			this.$store.commit("setdarkflag", val);
 		},
-		dialogDelete(val) {
-			val || this.closeDelete();
-		},
+		// dialogDelete(val) {
+		// 	val || this.closeDelete();
+		// },
 	},
 	created() {
 		this.checkDark();

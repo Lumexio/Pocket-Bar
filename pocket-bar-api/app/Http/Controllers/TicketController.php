@@ -61,6 +61,7 @@ class TicketController extends Controller
     public function store(TicketCreateRequest $request): JsonResponse
     {
 
+        //Cambiar migraciòn de tickets eliminando nombre_mesa
         $items = collect($request->input('productos'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
         $table = Mesa::find($request->input('mesa_id'));

@@ -341,7 +341,7 @@ namespace App\Models {
      * @property string $client_name
      * @property string|null $cashier_name
      * @property int|null $cashier_id
-     * @property int $table_id
+     * @property int $mesa_id
      * @property string $status
      * @property int $closed
      * @property string|null $canceled_by_cashier_at

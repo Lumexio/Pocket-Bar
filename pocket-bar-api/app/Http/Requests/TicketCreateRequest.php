@@ -25,7 +25,7 @@ class TicketCreateRequest extends FormRequest
     {
 
         return [
-            "mesa" => "required|exists:tables,id",
+            "mesa_id" => "required|exists:mesas_tbl,id",
             "titular" => "required|string|max:255",
             "productos" => "required|array|min:1",
             "productos.*.id" => "required|integer|exists:articulos_tbl,id",

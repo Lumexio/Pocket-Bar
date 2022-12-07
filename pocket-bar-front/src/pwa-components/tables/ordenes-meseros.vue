@@ -11,7 +11,7 @@
 				<span>
 					<span> <b>Titular: </b>{{ item.titular }}</span>
 					<br />
-					<span><b>Mesa: </b>{{ item.mesa }}</span>
+					<span><b>Mesa: </b>{{ item.nombre_mesa }}</span>
 					<br />
 					<span> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>

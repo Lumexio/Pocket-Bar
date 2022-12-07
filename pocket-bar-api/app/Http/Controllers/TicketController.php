@@ -11,7 +11,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketCreateRequest;
 use App\Http\Requests\TicketListPwaRequest;
-use App\Models\Table;
+use App\Models\Mesa;
 use App\Models\Workshift;
 use App\Models\User;
 use DB;
@@ -63,12 +63,12 @@ class TicketController extends Controller
 
         $items = collect($request->input('productos'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
-        $table = Table::find($request->input('mesa'));
+        $table = Mesa::find($request->input('mesa_id'));
         DB::beginTransaction();
         try {
             $ticket = new Ticket();
-            $ticket->table_id = $table->id;
-            $ticket->table_name = $table->name;
+            $ticket->mesa_id = $table->id;
+            $ticket->nombre_mesa = $table->nombre_mesa;
             $ticket->status = TicketStatus::Standby->value;
             $ticket->client_name = $request->input('titular');
             $ticket->user_id = auth()->user()->id;
@@ -148,7 +148,7 @@ class TicketController extends Controller
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
-                $data["mesa"] = $ticket->table_name;
+            $data["nombre_mesa"] = $ticket->nombre_mesa;
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;

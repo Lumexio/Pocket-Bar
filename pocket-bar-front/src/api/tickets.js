@@ -82,7 +82,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
             total: element.total,
             productos: element.productos,
             status: element.status,
-            mesa: element.mesa,
+            nombre_mesa: element.nombre_mesa,
           };
           if (!datos) return;
           ticketsPWAArray.push(datos);

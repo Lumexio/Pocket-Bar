@@ -362,11 +362,11 @@ export default {
 	},
 	methods: {
 		crearTicket() {
-			let mesa = 2;
+			
 			var presend = {
 				productos: this.pedidoArray,
 				titular: (this.titular = this.titular.trim()),
-				mesa: this.selectmesa,
+				mesa_id: this.selectmesa,
 			};
 			postTickets(presend);
 			window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(

@@ -67,7 +67,7 @@ class TicketFactory extends Factory
             "discounts" => 0,
             "min_tip" => $subtotal >= 500 ? $subtotal * 0.10 : $subtotal,
             "mesa_id" => $table,
-            "nombre_mesa" => $table,
+            //"nombre_mesa" => $table,
             "status" => $statusTicket,
             "workshift_id" => 1,
             "closed" => $statusTicket == "Cerrado" ? true : false,

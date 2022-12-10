@@ -64,12 +64,12 @@ class TicketController extends Controller
         //Cambiar migraciòn de tickets eliminando nombre_mesa
         $items = collect($request->input('productos'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
-        $table = Mesa::find($request->input('mesa_id'));
+        // $table = Mesa::find();
         DB::beginTransaction();
         try {
             $ticket = new Ticket();
-            $ticket->mesa_id = $table->id;
-            $ticket->nombre_mesa = $table->nombre_mesa;
+            $ticket->mesa_id = $request->input('mesa_id');
+            //$ticket->nombre_mesa = $table->nombre_mesa;
             $ticket->status = TicketStatus::Standby->value;
             $ticket->client_name = $request->input('titular');
             $ticket->user_id = auth()->user()->id;
@@ -119,6 +119,8 @@ class TicketController extends Controller
     {
 
         $tickets = Ticket::with(['details', "workshift", "payments"])
+            ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
+            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
             ->orderBy("ticket_date", "desc")
             ->get();
         // ->paginate(50, ['*'], 'page', $request->input('page', 1));
@@ -141,6 +143,8 @@ class TicketController extends Controller
         $actualWorkshift = Workshift::where("active", 1)->first();
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
+            ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
+            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
@@ -149,7 +153,7 @@ class TicketController extends Controller
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
-            $data["nombre_mesa"] = $ticket->nombre_mesa;
+                $data["nombre_mesa"] = $ticket->nombre_mesa;
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
@@ -315,7 +319,10 @@ class TicketController extends Controller
                     $this->updateArticulo($detail->articulos_tbl_id, $detail->units, true);
                 }
             }
-
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             DB::commit();
         } catch (\Throwable $th) {
             return response()->json([
@@ -324,10 +331,7 @@ class TicketController extends Controller
                 "message" => "Error al cancelar el ticket",
             ], 500);
         }
-
-
         $this->sendNotificationsToBarthenders();
-        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
         return response()->json([
             "status" => 200,
             "error" => 0,

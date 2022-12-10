@@ -183,7 +183,7 @@
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon
-					v-show="(item.status == 'Entregado'&& $store.getters.hasrol===3)"
+					v-show="item.status == 'Entregado' && $store.getters.hasrol === 3"
 					small
 					class="mr-2"
 					@click="editItem(item)"
@@ -191,14 +191,17 @@
 					mdi-cash-100
 				</v-icon>
 				<v-icon
-					v-show="(item.cancel_confirm == null||item.cancel_confirm==false)&&item.status != 'Cerrado'"
+					v-show="
+						(item.cancel_confirm == null || item.cancel_confirm == false) &&
+						item.status != 'Cerrado' &&
+						item.status != 'Cancelado'
+					"
 					small
 					class="mr-2"
 					@click="editItemCancel(item)"
 				>
 					mdi-close
 				</v-icon>
-				
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -208,11 +211,11 @@
 					{{ item.properties }}
 				</td>
 			</template>
-				<template v-slot:[`item.status`]="{ item }">
-			<v-chip :color="getColor(item.status)" dark>
-				{{ item.status }}
-			</v-chip>
-		</template>
+			<template v-slot:[`item.status`]="{ item }">
+				<v-chip :color="getColor(item.status)" dark>
+					{{ item.status }}
+				</v-chip>
+			</template>
 		</v-data-table>
 	</v-card>
 </template>
@@ -256,7 +259,7 @@ export default {
 		dialog: false,
 		dialogCancel: false,
 		dialogCierreConfirm: false,
-		
+
 		search: "",
 		cargando: true,
 		expanded: [],
@@ -267,7 +270,7 @@ export default {
 				sortable: false,
 				value: "user_name",
 			},
-						{
+			{
 				text: "Cliente",
 				align: "start",
 				sortable: false,
@@ -291,14 +294,9 @@ export default {
 				sortable: false,
 				value: "ticket_date",
 			},
-			{
-				text: "Cerrado en",
-				align: "start",
-				sortable: false,
-				value: "ticket_date",
-			},
-			{ text: "Acciones",align: "center", value: "actions" },
-			{ text: "Detalles",align: "center",  value: "data-table-expand" },
+
+			{ text: "Acciones", align: "center", value: "actions" },
+			{ text: "Detalles", align: "center", value: "data-table-expand" },
 		],
 
 		ticketsArray: [],
@@ -360,11 +358,10 @@ export default {
 				this.editedIndex = -1;
 			});
 		},
-			cierreItemConfirm() {
+		cierreItemConfirm() {
 			// aqui armo el pago final
 			postCerrarticket(this.packClose)
 				.then((response) => {
-					
 					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 						this.$store.commit("settickets", e.tickets);
 						this.ticketsArray = e.tickets;
@@ -390,15 +387,14 @@ export default {
 		},
 		cancelConfirm() {
 			// aqui armo la cancelacion
-			postCancelticket({ id: this.editedItemCancel.id,confirm_ticket:false })
+			postCancelticket({ id: this.editedItemCancel.id, confirm_ticket: false })
 				.then((response) => {
-					console.log("response cancel comp:",response);
+					console.log("response cancel comp:", response);
 					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 						this.$store.commit("settickets", e.tickets);
 						this.ticketsArray = e.tickets;
 					});
 					if (response.response.data.status == 200) {
-		
 						this.dialogCancel = false;
 						this.cargando = false;
 					}

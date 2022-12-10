@@ -26,7 +26,7 @@ class CreateTicketsTable extends Migration
             $table->decimal("discounts", 10, 2);
             $table->decimal("tip", 10, 2);
             $table->decimal("min_tip", 10, 2);
-            $table->string("nombre_mesa");
+            // $table->string("nombre_mesa");
             $table->string("client_name");
             $table->string("cashier_name")->nullable(true);
             $table->foreignId("cashier_id")->nullable(true)->references("id")->on("users");

@@ -55,9 +55,9 @@
 				</template>
 			</v-text-field>
 			<v-card-actions>
-				<v-btn @click="clear" outlined> limpiar </v-btn>
+				<v-btn @click="clear"> limpiar </v-btn>
 				<v-spacer></v-spacer>
-				<v-btn color="#9acd32" class="mr-4" v-on:click="login()" outlined>
+				<v-btn color="#4caf50" class="mr-4" v-on:click="login()">
 					Iniciar sesión
 				</v-btn>
 			</v-card-actions>
@@ -73,7 +73,8 @@ import store from "@/store";
 import router from "@/router";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
+axios.defaults.baseURL =
+	"http://" + window.location.hostname /*"127.0.0.1"*/ + ":8000";
 export default {
 	name: "crearusuario",
 	data: () => ({
@@ -126,7 +127,7 @@ export default {
 							let userId = response.data.user.id;
 
 							store.commit("setrol", rol);
-							console.log("Rol de usuario:",store.getters.hasrol);
+							console.log("Rol de usuario:", store.getters.hasrol);
 							store.commit("setUserId", userId);
 							let validado = response.request.withCredentials;
 

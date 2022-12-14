@@ -86,7 +86,7 @@
 										:color="cambio(item)"
 										@click="cajaProductos(item)"
 										class="card-p ml-5"
-										:disabled="item.cantidad_articulo==0"
+										:disabled="item.cantidad_articulo == 0"
 									>
 										<v-img
 											v-bind:lazy-src="item.foto_articulo"
@@ -102,7 +102,8 @@
 													: 'blt',
 											]"
 										>
-											{{ item.nombre_articulo }} <v-spacer></v-spacer>{{item.cantidad_articulo}}
+											{{ item.nombre_articulo }} <v-spacer></v-spacer
+											>{{ item.cantidad_articulo }}
 										</v-card-title>
 										<v-card-text
 											class="text font-weight-regular"
@@ -146,7 +147,7 @@
 								<v-icon>mdi-chevron-left</v-icon>
 							</v-btn>
 						</div>
-														<v-select
+						<v-select
 							v-model="selectmesa"
 							:items="itemsmesa"
 							item-text="nombre_mesa"
@@ -162,7 +163,7 @@
 							v-model="titular"
 							outlined
 						></v-text-field>
-	
+
 						<v-card
 							class="mt-4 mb-4"
 							style="width: 100%"
@@ -182,7 +183,7 @@
 									><span class="pr-2">${{ item.precio_articulo }}</span></v-col
 								>
 							</v-row>
-							<v-card-actions  :key="refresher" class="arrowscounter">
+							<v-card-actions :key="refresher" class="arrowscounter">
 								<v-btn
 									v-if="item.piezas > 1"
 									text
@@ -227,7 +228,7 @@ export default {
 	data() {
 		return {
 			selectmesa: "",
-			itemsmesa:[],
+			itemsmesa: [],
 			resp: null,
 			dialog: false,
 			pedidoArray: [],
@@ -362,7 +363,6 @@ export default {
 	},
 	methods: {
 		crearTicket() {
-			
 			var presend = {
 				productos: this.pedidoArray,
 				titular: (this.titular = this.titular.trim()),
@@ -475,7 +475,7 @@ export default {
 		},
 	},
 	mounted() {
-				window.Echo.channel("mesas").listen("mesaCreated", (e) => {
+		window.Echo.channel("mesas").listen("mesaCreated", (e) => {
 			this.itemsc = e.mesas;
 		});
 		window.Echo.channel("articulos").listen("articuloCreated", (e) => {
@@ -500,7 +500,7 @@ export default {
 				}
 			})
 			.catch((e) => {
-				console.log(e);
+				console.error(e);
 				this.cargando = true;
 			});
 	},

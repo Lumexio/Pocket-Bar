@@ -75,7 +75,7 @@ Mostrar un registro no */
          * !Probar
          * *Francisco
          */
-        Route::put('/add/products', 'TicketController@addProducts');
+        Route::post('/add/products', 'TicketController@addProducts');
     });
 
     Route::prefix('ordenes')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {

@@ -24,7 +24,7 @@ class AddProductsRequest extends FormRequest
     public function rules()
     {
         return [
-            "ticket_id" => "required|exists:tickets,id",
+            "ticket_id" => "required|exists:tickets_tbl,id",
             "productos" => "required|array|min:1",
             "productos.*.id" => "required|integer|exists:articulos_tbl,id",
             "productos.*.nombre_articulo" => "required|string",

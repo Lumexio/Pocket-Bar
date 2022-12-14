@@ -4,7 +4,7 @@
 			class="sizes"
 			v-for="item in ticketsPWAArray"
 			:key="item.id"
-			v-show="item.status==hasstatus"
+			v-show="item.status == hasstatus"
 		>
 			<v-expansion-panel-header>
 				<span>
@@ -14,13 +14,17 @@
 					<br />
 					<span> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
+
+				<v-btn style="max-width: 10px !important"
+					><v-icon>mdi-plus</v-icon>
+				</v-btn>
+				<v-spacer></v-spacer>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
 						<thead>
 							<tr>
-								
 								<th class="text-left">Nombre</th>
 								<th class="text-left">Cantidad</th>
 								<th class="text-left">Precio</th>
@@ -29,7 +33,6 @@
 						</thead>
 						<tbody>
 							<tr v-for="producto in item.productos" :key="producto.id">
-								
 								<td class="text-left">{{ producto.nombre }}</td>
 								<td class="text-left">{{ producto.cantidad }}</td>
 								<td class="text-left">{{ producto.precio }}</td>
@@ -57,7 +60,6 @@ export default {
 		ticketsPWAArray(val) {
 			val;
 			if (store.getters.hastickets) {
-				
 				this.ticketsPWAArray = store.getters.hastickets;
 			}
 		},
@@ -67,7 +69,7 @@ export default {
 			"ticketCreatedBarra",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				console.log("Barra:",e.tickets);
+				console.log("Barra:", e.tickets);
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
@@ -76,7 +78,7 @@ export default {
 		darkonchange() {
 			return store.getters.hasdarkflag;
 		},
-			hasstatus() {
+		hasstatus() {
 			return store.getters.hasstatus;
 		},
 	},

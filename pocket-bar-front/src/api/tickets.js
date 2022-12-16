@@ -31,12 +31,10 @@ export function getTickets(ticketsArray) {
           stats, ticketsArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { console.error(error); reject(error); });
   });
 }
 export function postTickets(enviar) {
-
-
   axios
     .post("api/tickets/create", enviar)
     .then((response) => {
@@ -57,6 +55,30 @@ export function postTickets(enviar) {
         store.commit("setdanger", true);
       }
     });
+
+}
+export function postAddProducts(enviar) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post("api/tickets/add/products", enviar)
+      .then((response) => {
+        if (response.status == 200) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+          }, 2000);
+        }
+        resolve(response);
+      })
+      .catch((e) => {
+        console.error(e.message);
+        if (e) {
+          store.commit("setdanger", true);
+        }
+        reject(e);
+      });
+  });
 
 }
 
@@ -93,7 +115,7 @@ export function getTicketsPWA(ticketsPWAArray, status) {
           stats, ticketsPWAArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { console.error(error); reject(error); });
   });
 }
 export function getTicketsNotiPWA(ticketsPWANotiArray) {
@@ -123,7 +145,6 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
   });
 }
 export function postTicketsNotiPWA(enviar) {
-  console.log("Data para terminar prod:", enviar);
   return new Promise((resolve, reject) => {
     axios
       .put("api/ordenes/notificacion/productos", enviar)
@@ -151,4 +172,4 @@ export function postTicketsNotiPWA(enviar) {
 
 
 
-export default { getTickets, postTickets, postTicketsNotiPWA, getTicketsPWA, getTicketsNotiPWA }
+export default { getTickets, postTickets, postAddProducts, postTicketsNotiPWA, getTicketsPWA, getTicketsNotiPWA }

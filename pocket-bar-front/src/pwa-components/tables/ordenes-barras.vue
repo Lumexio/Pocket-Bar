@@ -15,7 +15,9 @@
 					<span> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
 
-				<v-btn style="max-width: 10px !important"
+				<v-btn
+					@click="(dialogaddproduct = true), (ticket_id = item.id)"
+					style="max-width: 10px !important"
 					><v-icon>mdi-plus</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
@@ -46,14 +48,24 @@
 				</p>
 			</v-expansion-panel-content>
 		</v-expansion-panel>
+		<addProducts
+			:dialogaddproduct.sync="dialogaddproduct"
+			:ticket_id="ticket_id"
+		/>
 	</v-expansion-panels>
 </template>
 <script>
+import addProducts from "@/pwa-components/forms/add-product.vue";
 import store from "@/store";
 import { getTicketsPWA } from "@/api/tickets.js";
 export default {
 	name: "ordenesBarra",
+	components: {
+		addProducts,
+	},
 	data: () => ({
+		ticket_id: null,
+		dialogaddproduct: false,
 		ticketsPWAArray: [],
 	}),
 	whatch: {

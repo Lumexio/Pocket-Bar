@@ -148,6 +148,7 @@
 							</v-btn>
 						</div>
 						<v-select
+							v-show="$store.getters.hasrol == 4"
 							v-model="selectmesa"
 							:items="itemsmesa"
 							item-text="nombre_mesa"
@@ -368,6 +369,9 @@ export default {
 				titular: (this.titular = this.titular.trim()),
 				mesa_id: this.selectmesa,
 			};
+			if (store.getters.hasrol == 5) {
+				presend.mesa_id = 1;
+			}
 			postTickets(presend);
 			window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
 				"ticketCreated",

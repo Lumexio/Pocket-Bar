@@ -1,11 +1,10 @@
 <template >
 	<v-expansion-panels :dark="darkonchange" popout>
-		
 		<v-expansion-panel
 			class="sizes"
-			v-for="(item,index) in ticketsPWAArray"
+			v-for="(item, index) in ticketsPWAArray"
 			:key="index"
-			v-show="item.status==hasstatus"
+			v-show="item.status == hasstatus"
 		>
 			<v-expansion-panel-header>
 				<span>
@@ -15,13 +14,20 @@
 					<br />
 					<span> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
+
+				<v-btn
+					v-if="item.status != 'Cerrado'"
+					@click="(dialogaddproduct = true), (ticket_id = item.id)"
+					style="max-width: 10px !important"
+					><v-icon>mdi-plus</v-icon>
+				</v-btn>
+				<v-spacer></v-spacer>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
 						<thead>
 							<tr>
-								
 								<th class="text-left">Nombre</th>
 								<th class="text-left">Cantidad</th>
 								<th class="text-left">Precio</th>
@@ -30,8 +36,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="producto in item.productos" :key="producto.id"  >
-								
+							<tr v-for="producto in item.productos" :key="producto.id">
 								<td class="text-left">{{ producto.nombre }}</td>
 								<td class="text-left">{{ producto.cantidad }}</td>
 								<td class="text-left">{{ producto.precio }}</td>
@@ -45,15 +50,24 @@
 				</p>
 			</v-expansion-panel-content>
 		</v-expansion-panel>
+		<addProducts
+			:dialogaddproduct.sync="dialogaddproduct"
+			:ticket_id="ticket_id"
+		/>
 	</v-expansion-panels>
 </template>
 
 <script>
+import addProducts from "@/pwa-components/forms/add-product.vue";
 import store from "@/store";
 import { getTicketsPWA } from "@/api/tickets.js";
 export default {
 	name: "ordenesMesero",
+	components: {
+		addProducts,
+	},
 	data: () => ({
+		ticket_id: null,
 		ticketsPWAArray: [],
 	}),
 	whatch: {
@@ -64,15 +78,14 @@ export default {
 			}
 		},
 	},
-	
+
 	mounted() {
-	window.Echo.channel("ticketCreatedMesero.").listen(
+		window.Echo.channel("ticketCreatedMesero.").listen(
 			"ticketCreatedMesero",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				console.log("Mesero websockets:",e.tickets);
-			},
-		
+				console.log("Mesero websockets:", e.tickets);
+			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
 	},

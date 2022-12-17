@@ -16,6 +16,7 @@
 				</span>
 
 				<v-btn
+					v-if="item.status != 'Cerrado'"
 					@click="(dialogaddproduct = true), (ticket_id = item.id)"
 					style="max-width: 10px !important"
 					><v-icon>mdi-plus</v-icon>

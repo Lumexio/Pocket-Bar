@@ -152,7 +152,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //Mesas
-
+        DB::table("mesas_tbl")->insert([
+            "nombre_mesa" => "barra",
+        ]);
         for ($i = 1; $i < 11; $i++) {
             DB::table("mesas_tbl")->insert([
                 "nombre_mesa" => $i,

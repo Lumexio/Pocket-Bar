@@ -30,6 +30,7 @@ class WorkshiftController extends Controller
 
         $workshift_report = [];
         $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->get();
+<<<<<<< HEAD
         $totalGroupByEmployee = Ticket::selectRaw("SUM(total) as total_workshift_sales, SUM(tip) as totalTips")
             ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
             ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
@@ -50,6 +51,8 @@ class WorkshiftController extends Controller
             $workshift_report[] = $detailEmployee;
         }
 
+=======
+>>>>>>> ad7b2d9 (fix: Ui redesing)
         if ($pendingTickets->count() > 0) {
             return response()->json([
                 'message' => "Hay cuentas pendientes de cerrar, Tienes pendientes de cerrar {$pendingTickets->count()} cuentas, falta por cobrar {$pendingTickets->sum('total')}",

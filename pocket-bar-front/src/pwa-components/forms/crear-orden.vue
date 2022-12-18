@@ -32,6 +32,7 @@
 					<v-stepper-content class="pa-0" step="1">
 						<div class="ma-2 buttonsproced">
 							<v-btn
+								x-large
 								dark
 								color="red"
 								v-if="pedidoArray.length > 0"
@@ -46,7 +47,13 @@
 								v-if="countproductos != 0"
 								:content="countproductos"
 							>
-								<v-btn dark v-if="pedidoArray.length > 0" @click="e6 = 2">
+								<v-btn
+									x-large
+									color="primary"
+									dark
+									v-if="pedidoArray.length > 0"
+									@click="e6 = 2"
+								>
 									<v-icon>mdi-chevron-right</v-icon>
 								</v-btn>
 							</v-badge>
@@ -142,7 +149,13 @@
 
 					<v-stepper-content class="pa-0" step="2">
 						<div class="back">
-							<v-btn dark @click="e6 = 1" class="mb-4 ml-2">
+							<v-btn
+								x-large
+								color="primary"
+								dark
+								@click="e6 = 1"
+								class="mb-4 ml-2"
+							>
 								<v-icon>mdi-chevron-left</v-icon>
 							</v-btn>
 						</div>

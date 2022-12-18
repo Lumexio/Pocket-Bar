@@ -20,11 +20,20 @@
 			</strong>
 		</h1>
 		<v-spacer></v-spacer>
-		<v-divider vertical></v-divider>
-		<v-btn class="mr-1 ml-1" @click="dialoglistorden = true" icon>
-			<v-icon>mdi-bell</v-icon>
-		</v-btn>
-		<v-btn @click="dialogaccount = true" icon>
+
+		<v-badge
+			overlap
+			color="green"
+			bottom
+			left
+			:value="$store.getters.hasorders"
+			:content="$store.getters.hasorders"
+		>
+			<v-btn large class="mr-1 ml-1" @click="dialoglistorden = true" icon>
+				<v-icon>mdi-bell</v-icon>
+			</v-btn>
+		</v-badge>
+		<v-btn x-large @click="dialogaccount = true" icon>
 			<v-icon>mdi-account-cog</v-icon>
 		</v-btn>
 		<template v-slot:extension>
@@ -74,18 +83,16 @@ export default {
 			],
 		};
 	},
-	mounted(){
+	mounted() {
 		this.test();
 	},
 	methods: {
 		test() {
-			
-			this.items.forEach(element => {
+			this.items.forEach((element) => {
 				if (element.status == store.getters.hasstatus) {
-					return this.tabs=element.id;
+					return (this.tabs = element.id);
 				}
 			});
-			
 		},
 		clear() {
 			store.commit("RESET");
@@ -103,7 +110,6 @@ export default {
 		},
 
 		hasstatus() {
-			
 			return store.getters.hasstatus;
 		},
 	},

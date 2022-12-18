@@ -7,15 +7,16 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
+					x-large
+					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'a']"
 					@shortkey="dialogarticulo = !dialogarticulo"
-					elevation="0"
+					elevation="2"
 					dark
-					@click="dialogarticulo = true"
+					@click.prevent="dialogarticulo = true"
 					v-bind="attrs"
 					v-on="on"
-					rounded
 				>
 					<v-icon left large>mdi-plus</v-icon>
 					Artículos
@@ -27,15 +28,16 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
+					x-large
+					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'c']"
 					@shortkey="dialogcategoria = !dialogcategoria"
-					elevation="0"
+					elevation="2"
 					dark
-					@click="dialogcategoria = true"
+					@click.prevent="dialogcategoria = true"
 					v-bind="attrs"
 					v-on="on"
-					rounded
 				>
 					<v-icon left large>mdi-plus</v-icon>
 					Categoría
@@ -47,15 +49,16 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
+					x-large
+					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'm']"
 					@shortkey="dialogmarca = !dialogmarca"
-					elevation="0"
+					elevation="2"
 					dark
-					@click="dialogmarca = true"
+					@click.prevent="dialogmarca = true"
 					v-bind="attrs"
 					v-on="on"
-					rounded
 				>
 					<v-icon left large>mdi-plus</v-icon>
 					Marca
@@ -67,15 +70,16 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
+					x-large
+					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 't']"
 					@shortkey="dialogtipo = !dialogtipo"
-					elevation="0"
+					elevation="2"
 					dark
-					@click="dialogtipo = true"
+					@click.prevent="dialogtipo = true"
 					v-bind="attrs"
 					v-on="on"
-					rounded
 				>
 					<v-icon left large>mdi-plus</v-icon>
 					Tipo
@@ -87,15 +91,16 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
+					x-large
+					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'p']"
 					@shortkey="dialogproveedor = !dialogproveedor"
-					elevation="0"
+					elevation="2"
 					dark
-					@click="dialogproveedor = true"
+					@click.prevent="dialogproveedor = true"
 					v-bind="attrs"
 					v-on="on"
-					rounded
 				>
 					<v-icon left large>mdi-plus</v-icon>
 					Proveedor
@@ -105,8 +110,8 @@
 		</v-tooltip>
 
 		<!--<v-row class="ma-2">
-          <v-btn elevation="0"
-                dark  @click="dialogstatus = !dialogstatus">
+          <v-btn elevation="2"
+                dark  @click.prevent="dialogstatus = !dialogstatus">
             Status
           </v-btn>
         </v-row>-->

@@ -6,7 +6,7 @@
 		transition="dialog-bottom-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
 			<v-toolbar dark>
-				<v-btn icon dark @click="close()">
+				<v-btn x-large icon dark @click="close()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
@@ -16,7 +16,7 @@
 				v-show="ticketsPWANotiArrayBarra"
 				class="ml-1 mr-1 mt-4 mb-4 pa-1"
 				style="min-width: 96%; max-width: 97%; text-align: start"
-				v-for="(item,index) in ticketsPWANotiArrayBarra"
+				v-for="(item, index) in ticketsPWANotiArrayBarra"
 				:key="index"
 			>
 				<v-row
@@ -36,12 +36,16 @@
 					}}</v-chip>
 
 					<v-btn
+						x-large
+						color="primary"
 						dark
 						v-if="item.status === 'En espera' && hasrol === 'bartender'"
 						@click="sendStatusPrep(item.id, 'En preparacion')"
 						>Preparar</v-btn
 					>
 					<v-btn
+						x-large
+						color="success"
 						dark
 						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"
 						@click="sendStatusPrep(item.id, 'Preparado')"
@@ -79,12 +83,15 @@
 					}}</v-chip>
 
 					<v-btn
+						large
 						dark
+						color="grey darken-1"
 						v-if="item.status === 'En espera' && hasrol === 'bartender'"
 						@click="sendStatusPrep(item.id, 'En preparacion')"
 						>Preparar</v-btn
 					>
 					<v-btn
+						large
 						dark
 						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"
 						@click="sendStatusPrep(item.id, 'Preparado')"
@@ -105,6 +112,7 @@
 <script>
 import { getTicketsNotiPWA } from "@/api/tickets.js";
 import { postTicketsNotiPWA } from "@/api/tickets.js";
+import store from "@/store";
 export default {
 	name: "listaNotiOrdenes",
 	props: {
@@ -113,7 +121,7 @@ export default {
 	data: () => ({
 		ticketsPWANotiArrayMesero: [],
 		ticketsPWANotiArrayBarra: [],
-
+		tempTicketsArray: [],
 		sendStatusPrepBox: { id: null, status: "Preparado" },
 		sendStatusRecivedBox: { id: null, status: "Recibido" },
 	}),
@@ -175,22 +183,24 @@ export default {
 				event,
 				(e) => {
 					this[variableName] = this.parseNotifications(e[callbackVariableName]);
+					store.commit("setorder", this[variableName].length);
 				}
 			);
 		},
 		getNotificationsFromAPI(variableName) {
-			console.log("getNotificationsFromAPI:",variableName);
 			getTicketsNotiPWA(this[variableName])
 				.then((response) => {
 					this[variableName] = response.ticketsPWANotiArray;
-					console.log("Noti 185:",this[variableName]);
+					this.tempTicketsArray = response.ticketsPWANotiArray;
+					store.commit("setorder", this.tempTicketsArray.length);
+					console.log("Noti 185:", this.tempTicketsArray);
 				})
 				.catch((e) => {
 					console.log(e);
 				});
 		},
 	},
-
+	whatch: {},
 	computed: {
 		hasrol() {
 			var rol = null;
@@ -225,14 +235,15 @@ export default {
 				"ticketsPWANotiArrayMesero",
 				"TicketsARecibir"
 			);
-		} else if(this.$store.getters.hasrol === 5){this.getNotificationsFromAPI("ticketsPWANotiArrayBarra");
-		this.connectToSocket(
-			"barra.",
-			"BarraEvents",
-			"ticketsPWANotiArrayBarra",
-			"notificacionesBarra"
-		);
-	}
+		} else if (this.$store.getters.hasrol === 5) {
+			this.getNotificationsFromAPI("ticketsPWANotiArrayBarra");
+			this.connectToSocket(
+				"barra.",
+				"BarraEvents",
+				"ticketsPWANotiArrayBarra",
+				"notificacionesBarra"
+			);
+		}
 	},
 };
 </script>

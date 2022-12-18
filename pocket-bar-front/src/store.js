@@ -12,6 +12,7 @@ const getDefaultState = () => {
         darkflag: false,
         token: null,
         recharge: 0,
+        order: 0,
         rol: null,
         userId: null,
         status: "Por entregar",
@@ -41,6 +42,7 @@ export default new Vuex.Store({
         hasdarkflag(state) { return state.darkflag },
         getUserId(state) { return state.userId },
         gettickets(state) { return state.ticketArray },
+        hasorders(state) { return state.order },
     },
 
     mutations: {
@@ -55,6 +57,7 @@ export default new Vuex.Store({
             state.recharge += payload;
         },
         setrol(state, payload) { state.rol = payload },
+        setorder(state, payload) { state.order = payload },
         setsuccess(state, payload) { state.notiLike = payload },
         setdanger(state, payload) { state.notiDanger = payload },
         setstatus(state, payload) { state.status = payload },
@@ -65,18 +68,23 @@ export default new Vuex.Store({
         RESET: state => {
             state.token = null,
                 state.recharge = 0,
+                state.order = 0,
                 state.rol = null,
                 state.status = "Por entregar",
                 state.notiLike = null,
                 state.notiDanger = null,
                 state.statcode = null,
                 state.ticketArray = null
+            state.order = 0
         }
     },
 
     actions: {
         increment({ commit }) {
             commit('increment')
+        },
+        setorder({ commit }) {
+            commit('setorder')
         },
         setdanger({ commit }) {
             commit('setdanger')

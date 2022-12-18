@@ -8,17 +8,22 @@
 		>
 			<v-expansion-panel-header>
 				<span>
-					<span> <b>Titular: </b>{{ item.titular }}</span>
+					<span style="font-size: 18px">
+						<b>Titular: </b>{{ item.titular }}</span
+					>
 					<br />
-					<span><b>Mesa: </b>{{ item.nombre_mesa }}</span>
+					<span style="font-size: 18px"
+						><b>Mesa: </b>{{ item.nombre_mesa }}</span
+					>
 					<br />
-					<span> <b>Fecha: </b>{{ item.fecha }}</span>
+					<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
 
 				<v-btn
+					x-large
+					color="primary"
 					v-if="item.status != 'Cerrado'"
 					@click="(dialogaddproduct = true), (ticket_id = item.id)"
-					style="max-width: 10px !important"
 					><v-icon>mdi-plus</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
@@ -82,7 +87,6 @@ export default {
 			"ticketCreatedBarra",
 			(e) => {
 				this.ticketsPWAArray = e.tickets;
-				console.log("Barra:", e.tickets);
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);

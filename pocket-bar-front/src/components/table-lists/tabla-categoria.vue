@@ -97,8 +97,24 @@
 				</v-dialog>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-				<v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+				<v-btn
+					color="blue darken-4"
+					large
+					dark
+					class="ma-2"
+					@click.prevent="editItem(item)"
+				>
+					<v-icon> mdi-pencil </v-icon>
+				</v-btn>
+				<v-btn
+					color="red darken-4"
+					large
+					dark
+					class="ma-2"
+					@click.prevent="deleteItem(item)"
+				>
+					<v-icon> mdi-delete </v-icon>
+				</v-btn>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -229,7 +245,6 @@ export default {
 			deleteCategoria(id);
 
 			this.closeDelete();
-		
 		},
 
 		close() {

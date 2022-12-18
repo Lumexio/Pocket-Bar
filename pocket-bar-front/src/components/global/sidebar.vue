@@ -121,11 +121,11 @@
 		<template v-slot:append>
 			<div class="pa-2">
 				<v-btn
+					x-large
 					dark
-					rounded
 					class="mr-6"
 					v-on:click="dialogLogout = true"
-					elevation="0"
+					elevation="2"
 				>
 					<v-icon left>mdi-logout</v-icon> Cerrar sesión
 				</v-btn>
@@ -141,8 +141,10 @@
 					>
 					<v-card-actions>
 						<v-spacer></v-spacer>
-						<v-btn @click="closeDelete">Cancelar</v-btn>
-						<v-btn color="success" @click="logoutConfirm">Aceptar</v-btn>
+						<v-btn x-large @click="dialogLogout = false">Cancelar</v-btn>
+						<v-btn x-large color="success" @click="logoutConfirm"
+							>Aceptar</v-btn
+						>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
@@ -246,7 +248,7 @@ export default {
 	methods: {
 		logoutConfirm() {
 			this.logout();
-			this.closeDelete();
+			this.dialogLogout = false;
 		},
 		closeDelete() {
 			this.dialogDelete = false;

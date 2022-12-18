@@ -1,54 +1,56 @@
 <template>
-  <!--
+	<!--
   En esta tarjeta se encuentra el listado de componentes para crear todos los elementos
   dentro del sistema.
 -->
-  <div style="width: 64%" class="pa-3">
-    <v-row>
-      <v-col align-self="end" cols="2">
-        <v-row>
-          <v-btn
-            v-shortkey="['ctrl', 'shift', 'c']"
-            @shortkey="dialogmesa = !dialogmesa"
-            elevation="0"
-            dark
-            rounded
-            @click="dialogmesa = !dialogmesa"
-          >
-            <v-icon left large>mdi-plus</v-icon>
-            Mesa
-          </v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
+	<div style="width: 64%" class="pa-3">
+		<v-row>
+			<v-col align-self="end" cols="2">
+				<v-row>
+					<v-btn
+						x-large
+						elevation="2"
+						color="primary"
+						v-shortkey="['ctrl', 'shift', 'c']"
+						@shortkey="dialogmesa = !dialogmesa"
+						dark
+						rounded
+						@click.prevent="dialogmesa = !dialogmesa"
+					>
+						<v-icon left large>mdi-plus</v-icon>
+						Mesa
+					</v-btn>
+				</v-row>
+			</v-col>
+		</v-row>
 
-    <crearmesa :dialogmesa.sync="dialogmesa" />
-  </div>
+		<crearmesa :dialogmesa.sync="dialogmesa" />
+	</div>
 </template>
 
 <script>
 import crearmesa from "../cruds/crearmesa.vue";
 
 export default {
-  name: "crearlistmesa",
+	name: "crearlistmesa",
 
-  components: {
-    crearmesa,
-  },
+	components: {
+		crearmesa,
+	},
 
-  data: () => ({
-    dialogmesa: false,
-  }),
+	data: () => ({
+		dialogmesa: false,
+	}),
 };
 </script>
 <style scoped>
 .list-card {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  padding: 1em;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	padding: 1em;
 
-  width: 7rem;
-  height: 3em;
+	width: 7rem;
+	height: 3em;
 }
 </style>

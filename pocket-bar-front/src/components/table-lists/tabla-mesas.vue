@@ -17,7 +17,6 @@
 			show-expand
 			:expanded.sync="expanded"
 			:items="mesaArray"
-			
 			class="elevation-1"
 			:search="search"
 			:custom-filter="filterOnlyCapsText.toUpperCase"
@@ -97,8 +96,24 @@
 				</v-dialog>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-				<v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+				<v-btn
+					color="blue darken-4"
+					large
+					dark
+					class="ma-2"
+					@click.prevent="editItem(item)"
+				>
+					<v-icon> mdi-pencil </v-icon>
+				</v-btn>
+				<v-btn
+					color="red darken-4"
+					large
+					dark
+					class="ma-2"
+					@click.prevent="deleteItem(item)"
+				>
+					<v-icon> mdi-delete </v-icon>
+				</v-btn>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -113,11 +128,7 @@
 </template>
 
 <script>
-import {
-	getMesas,
-	deleteMesa,
- editMesa,
-} from "@/api/mesas.js";
+import { getMesas, deleteMesa, editMesa } from "@/api/mesas.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
 	nombre_mesa: "tabla-mesa",
@@ -229,7 +240,6 @@ export default {
 			deleteMesa(id);
 
 			this.closeDelete();
-		
 		},
 
 		close() {
@@ -259,7 +269,6 @@ export default {
 					"descripcion_mesa=" + send.descripcion_mesa
 				}`;
 				editMesa(url);
-			
 			} else {
 				this.mesaArray.push(this.editedItem);
 			}

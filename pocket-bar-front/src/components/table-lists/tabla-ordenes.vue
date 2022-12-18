@@ -182,26 +182,29 @@
 				</v-dialog>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon
+				<v-btn
 					v-show="item.status == 'Entregado' && $store.getters.hasrol === 3"
-					small
+					large
 					class="mr-2"
+					color="success"
 					@click="editItem(item)"
 				>
-					mdi-cash-100
-				</v-icon>
-				<v-icon
+					<v-icon> mdi-cash-100 </v-icon>
+				</v-btn>
+				<v-btn
 					v-show="
 						(item.cancel_confirm == null || item.cancel_confirm == false) &&
 						item.status != 'Cerrado' &&
 						item.status != 'Cancelado'
 					"
-					small
+					large
+					dark
+					color="red darken-4"
 					class="mr-2"
 					@click="editItemCancel(item)"
 				>
-					mdi-close
-				</v-icon>
+					<v-icon> mdi-close </v-icon>
+				</v-btn>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>

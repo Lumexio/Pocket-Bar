@@ -198,9 +198,30 @@
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-			<v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-			<v-icon small @click="detailItem(item)"> mdi-file-eye-outline </v-icon>
+			<v-btn
+				color="blue darken-4"
+				large
+				class="ma-2"
+				@click.prevent="editItem(item)"
+			>
+				<v-icon> mdi-pencil </v-icon>
+			</v-btn>
+			<v-btn
+				color="red darken-4"
+				large
+				class="ma-2"
+				@click.prevent="deleteItem(item)"
+			>
+				<v-icon> mdi-delete </v-icon>
+			</v-btn>
+			<v-btn
+				color="grey darken-1"
+				large
+				class="ma-2"
+				@click.prevent="detailItem(item)"
+			>
+				<v-icon> mdi-file-eye-outline </v-icon>
+			</v-btn>
 		</template>
 		<template v-slot:no-data>
 			<span>Datos no disponibles.</span>
@@ -317,7 +338,7 @@ export default {
 	mounted() {
 		window.Echo.channel("articulos").listen("articuloCreated", (e) => {
 			this.articulosArray = e.articulos;
-			console.log("Articulos:",e.articulos);
+			console.log("Articulos:", e.articulos);
 		});
 
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
@@ -469,7 +490,7 @@ export default {
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
 				let url = "api/updatephoto/" + send.id;
-console.log(this.photo);
+				console.log(this.photo);
 				if (this.photo != null) {
 					const formdata = new FormData();
 					formdata.append("foto_articulo", this.photo);
@@ -482,7 +503,6 @@ console.log(this.photo);
 		},
 		save() {
 			if (this.editedIndex > -1) {
-								
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
 				send.nombre_articulo = upperConverter(send.nombre_articulo);
@@ -505,7 +525,7 @@ console.log(this.photo);
 				formdata.append("marca_id", this.selectm);
 				formdata.append("descripcion_articulo", send.descripcion_articulo);
 				formdata.append("foto_articulo", this.photo);
-				editArticulos(url,formdata);
+				editArticulos(url, formdata);
 			} else {
 				this.articulosArray.push(this.editedItem);
 			}

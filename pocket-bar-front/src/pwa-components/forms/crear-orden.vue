@@ -15,7 +15,6 @@
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
-
 				<v-toolbar-title>Nueva orden</v-toolbar-title>
 			</v-toolbar>
 			<v-stepper fill-height v-model="e6" editable>

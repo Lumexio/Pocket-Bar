@@ -111,8 +111,24 @@
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-			<v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+			<v-btn
+				color="blue darken-4"
+				large
+				dark
+				class="ma-2"
+				@click.prevent="editItem(item)"
+			>
+				<v-icon> mdi-pencil </v-icon>
+			</v-btn>
+			<v-btn
+				color="red darken-4"
+				large
+				dark
+				class="ma-2"
+				@click.prevent="deleteItem(item)"
+			>
+				<v-icon> mdi-delete </v-icon>
+			</v-btn>
 		</template>
 		<template v-slot:no-data>
 			<span>Datos no disponibles.</span>
@@ -127,7 +143,8 @@ import { upperConverter } from "@/special/uppercases-converter.js";
 import { getUsuarios } from "@/api/usuarios.js";
 import { getRol } from "@/api/rol.js";
 //axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
+axios.defaults.baseURL =
+	"http://" + window.location.hostname /*"127.0.0.1"*/ + ":8000";
 export default {
 	name: "tabla-usuarios",
 	data: () => ({

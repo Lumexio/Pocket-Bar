@@ -23,7 +23,6 @@ class WorkshiftController extends Controller
         }
 
         $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->get();
-
         if ($pendingTickets->count() > 0) {
             return response()->json([
                 'message' => "Hay cuentas pendientes de cerrar, Tienes pendientes de cerrar {$pendingTickets->count()} cuentas, falta por cobrar {$pendingTickets->sum('total')}",

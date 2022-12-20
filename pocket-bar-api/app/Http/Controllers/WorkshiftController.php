@@ -30,16 +30,6 @@ class WorkshiftController extends Controller
 
         $workshift_report = [];
         $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->get();
-        // $tempQuery =
-        //     Ticket::selectRaw("SUM(total) as total_workshift_sales, SUM(tip) as totalTips")
-        //     ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
-        //     ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
-        //     ->addSelect("u.id", "rol.name_rol as rol", "u.name")
-        //     ->where("tickets_tbl.status", TicketStatus::Closed->value)
-        //     ->whereIn("rol.id", [4, 5])
-        //     ->where('workshift_id', $this->activeWorkshift->id)
-        //     ->groupBy(["rol.name_rol", "u.id", "u.name"])
-        //     ->get();
         $total_debts = Ticket::selectRaw("SUM(total) as total_workshift_debt, user_id")
             ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
             ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
@@ -49,8 +39,6 @@ class WorkshiftController extends Controller
             ->where('workshift_id', $this->activeWorkshift->id)
             ->groupBy(["rol.name_rol", "u.id", "u.name"])
             ->get();
-
-        // dd($total_debts->user_id);
         $totalGroupByEmployee = Ticket::selectRaw("SUM(total) as total_workshift_sales, SUM(tip) as totalTips")
             ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
             ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
@@ -62,14 +50,14 @@ class WorkshiftController extends Controller
             ->get();
 
         foreach ($totalGroupByEmployee as $totalEmployee) {
-            $detailEmployee[$totalEmployee->id] = $totalEmployee->toArray();
+            $detailEmployee = $totalEmployee->toArray();
 
             $this->getTickets([TicketStatus::Closed->value], $totalEmployee->id, $detailEmployee, "closed_tickets");
             $this->getTickets([TicketStatus::Delivered->value], $totalEmployee->id, $detailEmployee, "non_closed_tickets");
             $this->getTickets([TicketStatus::Canceled->value], $totalEmployee->id, $detailEmployee, "canceled_tickets");
-            $workshift_report[] = $detailEmployee;
+            $workshift_report[$totalEmployee->id] = $detailEmployee;
         }
-
+        // dd($workshift_report);
         foreach ($total_debts as  $total_debt) {
             if (!isset($workshift_report[$total_debt->user_id])) {
                 $detailEmployee = [
@@ -82,16 +70,16 @@ class WorkshiftController extends Controller
                     "closed_tickets" => [],
                 ];
                 $this->getTickets([TicketStatus::Delivered->value], $total_debt->user_id, $detailEmployee, "non_closed_tickets");
+                $this->getTickets([TicketStatus::Canceled->value], $total_debt->user_id, $detailEmployee, "canceled_tickets");
                 $workshift_report[$total_debt->user_id] = $detailEmployee;
             } else {
                 $workshift_report[$total_debt->user_id]["total_workshift_debt"] = $total_debt->total_workshift_debt;
             }
         }
-
         if ($pendingTickets->count() > 0) {
             return response()->json([
                 'message' => "Hay cuentas pendientes de cerrar, Tienes pendientes de cerrar {$pendingTickets->count()} cuentas, falta por cobrar {$pendingTickets->sum('total')}",
-                "workshift_report" => $workshift_report,
+                "workshift_report" => [...$workshift_report],
             ], 400);
         }
 
@@ -104,7 +92,7 @@ class WorkshiftController extends Controller
         if ($difference < -1) {
             return response()->json([
                 'message' => "La diferencia debe ser menor igual a la suma de las cuentas cerradas menos 1 peso, posiblemente falta hacer un corte de caja",
-                "workshift_report" => $workshift_report,
+                "workshift_report" => [...$workshift_report],
 
             ], 400);
         }
@@ -115,7 +103,7 @@ class WorkshiftController extends Controller
             return response()->json([
                 'message' => 'Jornada de trabajo cerrada',
                 "saldoFavor" => $difference,
-                "workshift_report" => $workshift_report,
+                "workshift_report" => [...$workshift_report],
             ], 200);
         }
     }
@@ -123,14 +111,15 @@ class WorkshiftController extends Controller
     public function getTickets(array $filter, int $employee_id, array &$detailEmployee, string $type)
     {
         $Tickets = Ticket::whereIn("status", $filter)
-            ->addSelect("id", "status", "client_name", "ticket_date", "total", "table_name")
+            ->addSelect("id", "status", "client_name", "ticket_date", "total")
             ->where("user_id", $employee_id)
             ->where('workshift_id', $this->activeWorkshift->id)
             ->get();
+        $detailEmployee[$type] = [];
         foreach ($Tickets as $Ticket) {
             $payments = Payment::where("ticket_id", $Ticket->id)->get();
             $detail = $this->getDetails($Ticket->id);
-            $detailEmployee[$employee_id][$type][] = [
+            $detailEmployee[$type][] = [
                 ...$Ticket->toArray(),
                 "details" => $detail->toArray(),
                 "payments" => $payments->toArray()

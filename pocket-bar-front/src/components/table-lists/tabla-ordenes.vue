@@ -184,7 +184,7 @@
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-btn
 					v-show="item.status == 'Entregado' && $store.getters.hasrol === 3"
-					large
+					small
 					class="mr-2"
 					color="success"
 					@click="editItem(item)"
@@ -193,11 +193,12 @@
 				</v-btn>
 				<v-btn
 					v-show="
-						(item.cancel_confirm == null || item.cancel_confirm == false) &&
+						(item.cancel_confirm == null || item.cancel_confirm == 0) &&
 						item.status != 'Cerrado' &&
 						item.status != 'Cancelado'
 					"
-					large
+					:disabled="disablecheck($store.getters.hasrol, item.cancel_confirm)"
+					small
 					dark
 					color="red darken-4"
 					class="mr-2"
@@ -333,6 +334,15 @@ export default {
 	},
 
 	methods: {
+		disablecheck(rol, cancelflag) {
+			let disabled;
+			if ((cancelflag == 0 && rol == 3) || (cancelflag == 1 && rol == 3)) {
+				disabled = true;
+			} else {
+				disabled = false;
+			}
+			return disabled;
+		},
 		getColor(status) {
 			if (status === "Por entregar") return "orange lighten-2";
 			else if (status === "Entregado") return "blue darken-1";

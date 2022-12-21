@@ -180,12 +180,11 @@
 							></v-file-input>
 							<v-btn
 								v-show="photo != null"
-								text
 								color="orange"
 								@click="photochange()"
 								>Subir Imagen</v-btn
 							>
-							<v-btn text @click="dialogDetail.value = false">Close</v-btn>
+							<v-btn @click="dialogDetail.value = false">Close</v-btn>
 						</v-card-actions>
 					</v-card>
 				</template>
@@ -198,30 +197,13 @@
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-btn
-				color="blue darken-4"
-				large
-				class="ma-2"
-				@click.prevent="editItem(item)"
-			>
-				<v-icon> mdi-pencil </v-icon>
-			</v-btn>
-			<v-btn
-				color="red darken-4"
-				large
-				class="ma-2"
-				@click.prevent="deleteItem(item)"
-			>
-				<v-icon> mdi-delete </v-icon>
-			</v-btn>
-			<v-btn
-				color="grey darken-1"
-				large
-				class="ma-2"
-				@click.prevent="detailItem(item)"
-			>
-				<v-icon> mdi-file-eye-outline </v-icon>
-			</v-btn>
+			<v-icon small @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+
+			<v-icon small @click.prevent="deleteItem(item)"> mdi-delete </v-icon>
+
+			<v-icon small @click.prevent="detailItem(item)">
+				mdi-file-eye-outline
+			</v-icon>
 		</template>
 		<template v-slot:no-data>
 			<span>Datos no disponibles.</span>
@@ -277,14 +259,24 @@ export default {
 				sortable: false,
 				value: "nombre_articulo",
 			},
-			{ text: "Cantidad", value: "cantidad_articulo", align: "center" },
+			{
+				text: "Cantidad",
+				value: "cantidad_articulo",
+				align: "center",
+			},
 			{ text: "Categoría", value: "nombre_categoria", align: "center" },
 			{ text: "Tipo", value: "nombre_tipo", align: "center" },
 			{ text: "Marca", value: "nombre_marca", align: "center" },
 			{ text: "Proveedor", value: "nombre_proveedor", align: "center" },
 			{ text: "estatus", value: "nombre_status", align: "center" },
-			{ text: "Acciones", value: "actions", sortable: false, align: "center" },
-			{ text: "", align: "end", value: "data-table-expand" },
+			{
+				text: "Acciones",
+
+				value: "actions",
+				sortable: false,
+				align: "center",
+			},
+			{ align: "end", value: "data-table-expand" },
 		],
 
 		articulosArray: [],

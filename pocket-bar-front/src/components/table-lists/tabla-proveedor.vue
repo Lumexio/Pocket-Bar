@@ -87,24 +87,11 @@
 				</v-dialog>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-btn
-					color="blue darken-4"
-					large
-					dark
-					class="ma-2"
-					@click.prevent="editItem(item)"
-				>
-					<v-icon> mdi-pencil </v-icon>
-				</v-btn>
-				<v-btn
-					color="red darken-4"
-					large
-					dark
-					class="ma-2"
-					@click.prevent="deleteItem(item)"
-				>
-					<v-icon> mdi-delete </v-icon>
-				</v-btn>
+				<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+
+				<v-icon small dark @click.prevent="deleteItem(item)">
+					mdi-delete
+				</v-icon>
 			</template>
 
 			<template v-slot:no-data>

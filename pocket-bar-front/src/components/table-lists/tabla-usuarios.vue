@@ -78,8 +78,8 @@
 
 					<v-card-actions v-on:keyup.enter="save">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="close"> Cancelar </v-btn>
-						<v-btn color="blue darken-1" text @click="save"> Guardar </v-btn>
+						<v-btn @click="close"> Cancelar </v-btn>
+						<v-btn color="blue darken-1" @click="save"> Guardar </v-btn>
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
@@ -94,10 +94,8 @@
 					>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="closeDelete"
-							>Cancelar</v-btn
-						>
-						<v-btn color="blue darken-1" text @click="deleteItemConfirm"
+						<v-btn @click="closeDelete">Cancelar</v-btn>
+						<v-btn color="blue darken-1" @click="deleteItemConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>
@@ -111,24 +109,9 @@
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-btn
-				color="blue darken-4"
-				large
-				dark
-				class="ma-2"
-				@click.prevent="editItem(item)"
-			>
-				<v-icon> mdi-pencil </v-icon>
-			</v-btn>
-			<v-btn
-				color="red darken-4"
-				large
-				dark
-				class="ma-2"
-				@click.prevent="deleteItem(item)"
-			>
-				<v-icon> mdi-delete </v-icon>
-			</v-btn>
+			<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+
+			<v-icon small dark @click.prevent="deleteItem(item)"> mdi-delete </v-icon>
 		</template>
 		<template v-slot:no-data>
 			<span>Datos no disponibles.</span>

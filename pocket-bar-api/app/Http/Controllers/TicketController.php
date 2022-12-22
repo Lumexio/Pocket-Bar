@@ -76,7 +76,7 @@ class TicketController extends Controller
             $ticket->user_name = auth()->user()->name;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
-            $ticket->tip = $request->input('tip', 0);
+            $ticket->tip = $request->input('tip');
             $ticket->min_tip = $subtotal >= 500 ? $subtotal * 0.10 : $subtotal;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;

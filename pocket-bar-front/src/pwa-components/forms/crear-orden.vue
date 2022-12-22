@@ -38,7 +38,7 @@
 								v-if="pedidoArray.length > 0"
 								@click="cancelarPedido()"
 							>
-								limpiar
+								<v-icon>mdi-trash-can-outline </v-icon>
 							</v-btn>
 							<v-spacer></v-spacer>
 							<v-badge
@@ -54,7 +54,7 @@
 									v-if="pedidoArray.length > 0"
 									@click="e6 = 2"
 								>
-									<v-icon>mdi-chevron-right</v-icon>
+									<v-icon>mdi-cart-variant</v-icon>
 								</v-btn>
 							</v-badge>
 						</div>
@@ -162,6 +162,7 @@
 						<v-select
 							v-show="$store.getters.hasrol == 4"
 							v-model="selectmesa"
+							append-icon="mdi-table-furniture"
 							:items="itemsmesa"
 							item-text="nombre_mesa"
 							item-value="id"
@@ -170,8 +171,18 @@
 							class="ma-2"
 						>
 						</v-select>
+						<v-select
+							v-model="selectip"
+							:items="itemstip"
+							append-icon="mdi-percent-circle-outline"
+							label="Propina"
+							outlined
+							class="ma-2"
+						>
+						</v-select>
 						<v-text-field
 							label="Titular"
+							append-icon="mdi-account-circle-outline"
 							class="ma-2"
 							v-model="titular"
 							outlined
@@ -221,6 +232,7 @@
 							@click="crearTicket()"
 						>
 							Procesar pedido
+							<v-icon>mdi-trash-can-outline </v-icon>
 						</v-btn>
 					</v-stepper-content>
 				</v-stepper-items>
@@ -242,6 +254,8 @@ export default {
 		return {
 			selectmesa: "",
 			itemsmesa: [],
+			itemstip: [5, 10, 15, 20],
+			selectip: 0,
 			resp: null,
 			dialog: false,
 			pedidoArray: [],
@@ -380,23 +394,25 @@ export default {
 				productos: this.pedidoArray,
 				titular: (this.titular = this.titular.trim()),
 				mesa_id: this.selectmesa,
+				tip: this.selectip,
 			};
 			if (store.getters.hasrol == 5) {
 				presend.mesa_id = 1;
 			}
 			postTickets(presend);
-			window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
-				"ticketCreated",
-				(e) => {
-					this.$store.commit("settickets", e.tickets);
-				}
-			);
+			// window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
+			// 	"ticketCreated",
+			// 	(e) => {
+			// 		this.$store.commit("settickets", e.tickets);
+			// 	}
+			// );
 			if (store.getters.hasstatcode == 200) {
 				this.pedidoArray = [];
 				this.countproductos = 0;
 				this.totalPedido = 0;
 				this.titular = "";
 				this.e1 = 1;
+				this.selectip = 1;
 				store.commit("setstatcode", null);
 				// store.commit("increment", 1);
 			} else {
@@ -425,6 +441,7 @@ export default {
 				(this.totalPedido = 0),
 				(this.titular = ""),
 				(this.e1 = 1),
+				(this.selectip = 0),
 				store.commit("setstatcode", null)
 			);
 		},

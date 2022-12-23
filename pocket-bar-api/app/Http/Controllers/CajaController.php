@@ -34,10 +34,10 @@ class CajaController extends Controller
 
     public function getMustBe(): JsonResponse
     {
-        //$mustBeData = $this->getMustBeData(auth()->user()->id);
+        $mustBeData = $this->getMustBeData(auth()->user()->id);
         $workshift_report = WorkshiftController::getWorkShiftReport();
         return response()->json([
-            $this->getMustBeData(auth()->user()->id),
+            "must_be" => $mustBeData,
             "workshift_report" => [...$workshift_report],
         ], 200);
     }

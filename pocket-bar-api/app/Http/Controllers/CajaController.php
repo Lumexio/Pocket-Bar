@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Models\Workshift;
 use App\Http\Requests\Caja\CloseRequest;
 use App\Models\CashRegisterCloseData;
+use Illuminate\Http\JsonResponse;
 
 class CajaController extends Controller
 {
@@ -31,12 +32,12 @@ class CajaController extends Controller
         return $tickets;
     }
 
-    public function getMustBe()
+    public function getMustBe(): JsonResponse
     {
-        $mustBeData = $this->getMustBeData(auth()->user()->id);
+        //$mustBeData = $this->getMustBeData(auth()->user()->id);
         $workshift_report = WorkshiftController::getWorkShiftReport();
         return response()->json([
-            "mustBeData" => $mustBeData,
+            $this->getMustBeData(auth()->user()->id),
             "workshift_report" => [...$workshift_report],
         ], 200);
     }

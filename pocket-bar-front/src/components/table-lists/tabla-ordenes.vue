@@ -210,15 +210,22 @@
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
 			</template>
-			<template v-slot:expanded-item="{ headers, item }">
-				<td :colspan="headers.length">
-					{{ item.properties }}
-				</td>
-			</template>
+
 			<template v-slot:[`item.status`]="{ item }">
 				<v-chip :color="getColor(item.status)" dark>
 					{{ item.status }}
 				</v-chip>
+			</template>
+			<template v-slot:expanded-item="{ item }">
+				<v-data-table
+					style="min-width: 100%"
+					hide-default-footer
+					dense
+					:items="item.details"
+					class="elevation-0"
+					:headers="headersDetails"
+				>
+				</v-data-table>
 			</template>
 		</v-data-table>
 	</v-card>
@@ -267,6 +274,20 @@ export default {
 		search: "",
 		cargando: true,
 		expanded: [],
+		headersDetails: [
+			{
+				text: "Producto",
+				align: "start",
+				sortable: false,
+				value: "articulo.nombre_articulo",
+			},
+			{
+				text: "Precio",
+				align: "start",
+				sortable: false,
+				value: "articulo.precio_articulo",
+			},
+		],
 		headers: [
 			{
 				text: "Mesero",

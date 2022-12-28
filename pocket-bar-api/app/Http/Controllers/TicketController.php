@@ -272,6 +272,7 @@ class TicketController extends Controller
 
             $ticket = Ticket::with("details")->find($request->input('id'));
 
+
             if ($ticket->status == TicketStatus::Canceled->value) {
                 return response()->json([
                     "status" => 500,
@@ -302,7 +303,10 @@ class TicketController extends Controller
                 $ticket->canceled_by_cashier_id = auth()->user()->id;
             }
 
+
+
             if (in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Gerencia->value])) {
+                TicketDetail::where("ticket_id", $ticket->id)->update(["status" => TicketItemStatus::Canceled->value]);
                 $ticket->cancel_confirm = true;
                 $ticket->canceled_by_admin_at = Carbon::now();
                 $ticket->canceled_by_admin_id = auth()->user()->id;

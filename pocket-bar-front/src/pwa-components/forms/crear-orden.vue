@@ -175,7 +175,7 @@
 							v-model="selectip"
 							:items="itemstip"
 							append-icon="mdi-percent-circle-outline"
-							label="Propina"
+							label="Propina %"
 							outlined
 							class="ma-2"
 						>

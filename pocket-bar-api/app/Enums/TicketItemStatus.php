@@ -8,4 +8,5 @@ enum TicketItemStatus: string
     case InPreparation = "En preparacion";
     case Prepared = "Preparado";
     case Received = "Recibido";
+    case Canceled = "Cancelado";
 }

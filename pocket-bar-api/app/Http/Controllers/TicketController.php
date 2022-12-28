@@ -76,7 +76,7 @@ class TicketController extends Controller
             $ticket->user_name = auth()->user()->name;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
-            $ticket->tip = $request->input('tip', 0);
+            $ticket->tip = $request->input('tip');
             $ticket->min_tip = $subtotal >= 500 ? $subtotal * 0.10 : $subtotal;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
@@ -118,7 +118,7 @@ class TicketController extends Controller
     public function index(Request $request): JsonResponse
     {
 
-        $tickets = Ticket::with(['details.articulo:id,nombre_articulo', "workshift", "payments"])
+        $tickets = Ticket::with(['details.articulo:id,nombre_articulo,precio_articulo', "workshift", "payments"])
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
             ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'tickets_tbl.cancel_confirm', 'mesas_tbl.nombre_mesa')
             ->orderBy("ticket_date", "desc")
@@ -272,6 +272,7 @@ class TicketController extends Controller
 
             $ticket = Ticket::with("details")->find($request->input('id'));
 
+
             if ($ticket->status == TicketStatus::Canceled->value) {
                 return response()->json([
                     "status" => 500,
@@ -302,7 +303,10 @@ class TicketController extends Controller
                 $ticket->canceled_by_cashier_id = auth()->user()->id;
             }
 
+
+
             if (in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Gerencia->value])) {
+                TicketDetail::where("ticket_id", $ticket->id)->update(["status" => TicketItemStatus::Canceled->value]);
                 $ticket->cancel_confirm = true;
                 $ticket->canceled_by_admin_at = Carbon::now();
                 $ticket->canceled_by_admin_id = auth()->user()->id;

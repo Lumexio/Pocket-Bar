@@ -16,7 +16,7 @@
 			bottom
 			right
 			@click="dialogorden = true"
-			><v-icon>mdi-plus</v-icon></v-btn
+			><v-icon>mdi-point-of-sale</v-icon></v-btn
 		>
 
 		<tomarorden :dialogorden.sync="dialogorden" />

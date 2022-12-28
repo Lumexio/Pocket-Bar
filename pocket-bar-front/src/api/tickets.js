@@ -21,11 +21,13 @@ export function getTickets(ticketsArray) {
             total: element.total,
             status: element.status,
             cancel_confirm: element.cancel_confirm,
+            details: element.details,
 
           };
           if (!datos) return;
           ticketsArray.push(datos);
         });
+
 
         resolve({
           stats, ticketsArray

@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TicketStatus;
 use DB;
 use App\Models\Ticket;
 use App\Models\Workshift;
 use App\Http\Requests\Caja\CloseRequest;
 use App\Models\CashRegisterCloseData;
+use Illuminate\Http\JsonResponse;
 
 class CajaController extends Controller
 {
+    public Workshift $activeWorkshift;
     private function getMustBeData($userId)
     {
-        $actualWorkshift = Workshift::where('active', 1)->first();
-        $tickets = Ticket::where('workshift_id', $actualWorkshift->id)
+        $this->actualWorkshift = Workshift::where('active', 1)->first();
+        if (!$this->actualWorkshift) {
+            return response()->json([
+                'message' => 'No hay una jornada de trabajo activa'
+            ], 400);
+        }
+        $tickets = Ticket::where('workshift_id', $this->actualWorkshift->id)
             ->where('status', '!=', 'cancelado')
             ->where("cashier_id", "=", $userId)
             ->with('details')
@@ -21,14 +29,17 @@ class CajaController extends Controller
             ->selectRaw("SUM(payments_tbl.total) as total_night, payments_tbl.type")
             ->groupBy('payments_tbl.type')
             ->get();
-
-
         return $tickets;
     }
 
-    public function getMustBe()
+    public function getMustBe(): JsonResponse
     {
-        return response()->json($this->getMustBeData(auth()->user()->id));
+        $mustBeData = $this->getMustBeData(auth()->user()->id);
+        $workshift_report = WorkshiftController::getWorkShiftReport();
+        return response()->json([
+            "must_be" => $mustBeData,
+            "workshift_report" => [...$workshift_report],
+        ], 200);
     }
 
     public function close(CloseRequest $request)

@@ -24,7 +24,7 @@ class TicketListPwaRequest extends FormRequest
     public function rules()
     {
         return [
-            "status" => "required|in:Por entregar,Entregado,Cerrado",
+            "status" => "required|in:Por entregar,Entregado,Cerrado,Cancelado",
         ];
     }
 }

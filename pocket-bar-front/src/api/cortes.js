@@ -10,10 +10,8 @@ export function getCotizado() {
     axios
       .get("api/caja/mustbe")
       .then(response => {
-        let data = {
-
-        };
-        response.data.forEach(item => {
+        let data = {};
+        response.data.must_be.forEach(item => {
           data.total_night = item.total_night;
           data.type = item.type;
           data.details = item.details;

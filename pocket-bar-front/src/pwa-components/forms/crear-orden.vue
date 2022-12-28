@@ -223,16 +223,9 @@
 							<b>Total:</b><span> ${{ totalPedido }}</span>
 						</div>
 
-						<v-btn
-							dark
-							block
-							x-large
-							color="success"
-							class="mb-4"
-							@click="crearTicket()"
-						>
+						<v-btn dark block x-large color="success" @click="crearTicket()">
 							Procesar pedido
-							<v-icon>mdi-trash-can-outline </v-icon>
+							<v-icon class="ml-2">mdi-check </v-icon>
 						</v-btn>
 					</v-stepper-content>
 				</v-stepper-items>

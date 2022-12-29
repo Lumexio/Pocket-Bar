@@ -150,7 +150,12 @@
 							>¿Estas seguro de querer cerrar este ticket?</v-card-title
 						>
 						<v-card-text
-							><h2>Cambio: ${{ changeMoney }}</h2></v-card-text
+							><h2 v-if="amount_cash">Efectivo: {{ amount_cash }}</h2>
+							<h2 v-if="amount_card">Tarjeta: {{ amount_card }}</h2>
+							<h2>
+								Total ingresado: ${{ toNumber(amount_cash, amount_card) }}
+							</h2>
+							<h2>Cambio: ${{ changeMoney }}</h2></v-card-text
 						>
 						<v-card-actions>
 							<v-btn color="danger" outlined @click="closeCierreTicket"
@@ -359,16 +364,21 @@ export default {
 	},
 
 	methods: {
+		toNumber(amount_cash, amount_card) {
+			let a = 0,
+				b = 0;
+			a = amount_cash;
+			b = amount_card;
+			a = Number(a);
+			b = Number(b);
+			b = a + b;
+			return b;
+		},
+
 		changePayment(payment, totalToPay) {
 			this.changeMoney = payment - totalToPay;
 			this.amount_cash = totalToPay;
 			//this.amount_cash = totalToPay;
-			console.log(
-				"Cambio:",
-				this.changeMoney,
-				"Real to send:",
-				this.amount_cash
-			);
 		},
 		disablecheck(rol, cancelflag) {
 			let disabled;

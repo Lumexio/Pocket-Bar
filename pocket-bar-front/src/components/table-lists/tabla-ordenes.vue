@@ -149,8 +149,8 @@
 						<v-card-title class="headline"
 							>¿Estas seguro de querer cerrar este ticket?</v-card-title
 						>
-						<v-card-text
-							><h2 v-if="amount_cash">Efectivo: {{ amount_cash }}</h2>
+						<v-card-text class="text-left"
+							><h2 v-if="amount_cash">Efectivo: {{ bringedMoney }}</h2>
 							<h2 v-if="amount_card">Tarjeta: {{ amount_card }}</h2>
 							<h2>
 								Total ingresado: ${{ toNumber(amount_cash, amount_card) }}
@@ -246,6 +246,7 @@ export default {
 	name: "tabla-ordenes",
 	data: () => ({
 		changeMoney: 0,
+		bringedMoney: 0,
 		type_pay_cash: "cash",
 		type_pay_card: "",
 		amount_card: null,
@@ -376,6 +377,7 @@ export default {
 		},
 
 		changePayment(payment, totalToPay) {
+			this.bringedMoney = payment;
 			this.changeMoney = payment - totalToPay;
 			this.amount_cash = totalToPay;
 			//this.amount_cash = totalToPay;

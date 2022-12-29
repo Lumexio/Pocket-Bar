@@ -33,30 +33,38 @@ export function getTickets(ticketsArray) {
           stats, ticketsArray
         });
       })
-      .catch((error) => { console.error(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postTickets(enviar) {
-  axios
-    .post("api/tickets/create", enviar)
-    .then((response) => {
 
-      if (response.status == 200) {
-        store.commit("setsuccess", true);
-        store.commit("setstatcode", 200);
-        setTimeout(function () {
-          store.commit("setsuccess", null);
-        }, 2000);
+  return new Promise((resolve, reject) => {
+    axios
+      .post("api/tickets/create", enviar)
+      .then((response) => {
+        const resp = response.data;
+        const stats = response.status;
+        if (response.status == 200) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+          }, 2000);
 
-      }
+        }
 
-    })
-    .catch((e) => {
-      console.log(e.message);
-      if (e) {
-        store.commit("setdanger", true);
-      }
-    });
+
+        resolve({
+          resp, stats
+        });
+      })
+      .catch((e) => {
+        reject(e);
+        if (e) {
+          store.commit("setdanger", true);
+        }
+      });
+  });
 
 }
 export function postAddProducts(enviar) {

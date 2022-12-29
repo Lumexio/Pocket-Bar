@@ -392,25 +392,26 @@ export default {
 			if (store.getters.hasrol == 5) {
 				presend.mesa_id = 1;
 			}
-			postTickets(presend);
+			postTickets(presend).then((response) => {
+				if (response.status == 200) {
+					this.pedidoArray = [];
+					this.countproductos = 0;
+					this.totalPedido = 0;
+					this.titular = "";
+					this.e1 = 1;
+					this.selectip = 1;
+					store.commit("setstatcode", null);
+					// store.commit("increment", 1);
+				} else {
+					this.e6 = 1;
+				}
+			});
 			// window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
 			// 	"ticketCreated",
 			// 	(e) => {
 			// 		this.$store.commit("settickets", e.tickets);
 			// 	}
 			// );
-			if (store.getters.hasstatcode == 200) {
-				this.pedidoArray = [];
-				this.countproductos = 0;
-				this.totalPedido = 0;
-				this.titular = "";
-				this.e1 = 1;
-				this.selectip = 1;
-				store.commit("setstatcode", null);
-				// store.commit("increment", 1);
-			} else {
-				this.e6 = 1;
-			}
 		},
 		sumaresta(operacion, producto, index) {
 			if (operacion == "suma") {

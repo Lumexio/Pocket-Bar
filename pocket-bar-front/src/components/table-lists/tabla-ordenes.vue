@@ -133,7 +133,7 @@
 								outlined
 								:ticketsArray="ticketsArray"
 								@update:ticketsArray="getTickets()"
-								@click="save"
+								@click="save(), changePayment(amount_cash, editedItem.total)"
 							>
 								Efectuar pago caja
 							</v-btn>
@@ -148,6 +148,9 @@
 					<v-card>
 						<v-card-title class="headline"
 							>¿Estas seguro de querer cerrar este ticket?</v-card-title
+						>
+						<v-card-text
+							><h2>Cambio: ${{ changeMoney }}</h2></v-card-text
 						>
 						<v-card-actions>
 							<v-btn color="danger" outlined @click="closeCierreTicket"
@@ -237,6 +240,7 @@ import { postCerrarticket, postCancelticket } from "@/api/cortes.js";
 export default {
 	name: "tabla-ordenes",
 	data: () => ({
+		changeMoney: 0,
 		type_pay_cash: "cash",
 		type_pay_card: "",
 		amount_card: null,
@@ -355,6 +359,17 @@ export default {
 	},
 
 	methods: {
+		changePayment(payment, totalToPay) {
+			this.changeMoney = payment - totalToPay;
+			this.amount_cash = totalToPay;
+			//this.amount_cash = totalToPay;
+			console.log(
+				"Cambio:",
+				this.changeMoney,
+				"Real to send:",
+				this.amount_cash
+			);
+		},
 		disablecheck(rol, cancelflag) {
 			let disabled;
 			if ((cancelflag == 0 && rol == 3) || (cancelflag == 1 && rol == 3)) {
@@ -396,10 +411,6 @@ export default {
 			// aqui armo el pago final
 			postCerrarticket(this.packClose)
 				.then((response) => {
-					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
-						this.$store.commit("settickets", e.tickets);
-						this.ticketsArray = e.tickets;
-					});
 					if (response.response.status == 200) {
 						this.dialogCierreConfirm = false;
 						this.dialog = false;
@@ -423,7 +434,6 @@ export default {
 			// aqui armo la cancelacion
 			postCancelticket({ id: this.editedItemCancel.id, confirm_ticket: false })
 				.then((response) => {
-					console.log("response cancel comp:", response);
 					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 						this.$store.commit("settickets", e.tickets);
 						this.ticketsArray = e.tickets;

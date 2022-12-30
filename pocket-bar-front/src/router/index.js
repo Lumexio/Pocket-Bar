@@ -51,7 +51,7 @@ const routes = [
           case 3:
 
             next({
-              path: "/historial"
+              path: "/ordenes"
             });
             break;
           case 4:

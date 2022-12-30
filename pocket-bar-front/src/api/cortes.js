@@ -17,9 +17,10 @@ export function getCotizado() {
           data.details = item.details;
 
         });
+        const workshift_report = response.data.workshift_report;
 
         resolve({
-          data
+          data, workshift_report
         });
       })
       .catch((error) => { console.log(error); reject(error); });

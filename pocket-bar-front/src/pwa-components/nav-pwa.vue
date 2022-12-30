@@ -29,11 +29,16 @@
 			:value="$store.getters.hasorders"
 			:content="$store.getters.hasorders"
 		>
-			<v-btn large class="mr-1 ml-1" @click="dialoglistorden = true" icon>
+			<v-btn
+				large
+				class="mr-1 ml-1"
+				@click.prevent="dialoglistorden = true"
+				icon
+			>
 				<v-icon>mdi-bell</v-icon>
 			</v-btn>
 		</v-badge>
-		<v-btn x-large @click="dialogaccount = true" icon>
+		<v-btn x-large @click.prevent="dialogaccount = true" icon>
 			<v-icon>mdi-account-cog</v-icon>
 		</v-btn>
 		<template v-slot:extension>
@@ -46,7 +51,7 @@
 				left
 			>
 				<v-tab
-					@click="statuschange(item.status)"
+					@click.prevent="statuschange(item.status)"
 					style="padding: 2px"
 					v-for="item in items"
 					:key="item.id"

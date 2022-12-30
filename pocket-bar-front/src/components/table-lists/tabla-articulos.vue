@@ -119,10 +119,10 @@
 
 					<v-card-actions v-on:keyup.enter="save">
 						<v-spacer></v-spacer>
-						<v-btn color="grey darken-2" outlined @click="close">
+						<v-btn color="grey darken-2" outlined @click.prevent="close">
 							Cancelar
 						</v-btn>
-						<v-btn color="yellow darken-2" outlined @click="save">
+						<v-btn color="yellow darken-2" outlined @click.prevent="save">
 							Guardar cambios
 						</v-btn>
 					</v-card-actions>
@@ -140,10 +140,10 @@
 					>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="closeDelete"
+						<v-btn color="blue darken-1" text @click.prevent="closeDelete"
 							>Cancel</v-btn
 						>
-						<v-btn color="blue darken-1" text @click="deleteItemConfirm"
+						<v-btn color="blue darken-1" text @click.prevent="deleteItemConfirm"
 							>OK</v-btn
 						>
 						<v-spacer></v-spacer>
@@ -181,10 +181,10 @@
 							<v-btn
 								v-show="photo != null"
 								color="orange"
-								@click="photochange()"
+								@click.prevent="photochange()"
 								>Subir Imagen</v-btn
 							>
-							<v-btn @click="dialogDetail.value = false">Close</v-btn>
+							<v-btn @click.prevent="dialogDetail.value = false">Close</v-btn>
 						</v-card-actions>
 					</v-card>
 				</template>

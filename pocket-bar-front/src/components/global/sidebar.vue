@@ -141,8 +141,10 @@
 					>
 					<v-card-actions>
 						<v-spacer></v-spacer>
-						<v-btn x-large @click="dialogLogout = false">Cancelar</v-btn>
-						<v-btn x-large color="success" @click="logoutConfirm"
+						<v-btn x-large @click.prevent="dialogLogout = false"
+							>Cancelar</v-btn
+						>
+						<v-btn x-large color="success" @click.prevent="logoutConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>

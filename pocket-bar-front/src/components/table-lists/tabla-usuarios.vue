@@ -78,8 +78,8 @@
 
 					<v-card-actions v-on:keyup.enter="save">
 						<v-spacer></v-spacer>
-						<v-btn @click="close"> Cancelar </v-btn>
-						<v-btn color="blue darken-1" @click="save"> Guardar </v-btn>
+						<v-btn @click.prevent="close"> Cancelar </v-btn>
+						<v-btn color="blue darken-1" @click.prevent="save"> Guardar </v-btn>
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
@@ -94,8 +94,8 @@
 					>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
-						<v-btn @click="closeDelete">Cancelar</v-btn>
-						<v-btn color="blue darken-1" @click="deleteItemConfirm"
+						<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
+						<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>

@@ -15,7 +15,7 @@
 			fixed
 			bottom
 			right
-			@click="dialogorden = true"
+			@click.prevent="dialogorden = true"
 			><v-icon>mdi-point-of-sale</v-icon></v-btn
 		>
 

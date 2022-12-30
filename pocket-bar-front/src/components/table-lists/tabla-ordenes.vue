@@ -123,7 +123,7 @@
 							</v-col>
 						</v-row>
 						<v-card-actions>
-							<v-btn color="blue darken-1" outlined @click="close">
+							<v-btn color="blue darken-1" outlined @click.prevent="close">
 								Cancelar
 							</v-btn>
 							<v-spacer></v-spacer>
@@ -133,7 +133,9 @@
 								outlined
 								:ticketsArray="ticketsArray"
 								@update:ticketsArray="getTickets()"
-								@click="save(), changePayment(amount_cash, editedItem.total)"
+								@click.prevent="
+									save(), changePayment(amount_cash, editedItem.total)
+								"
 							>
 								Efectuar pago caja
 							</v-btn>
@@ -158,11 +160,11 @@
 							<h2>Cambio: ${{ changeMoney }}</h2></v-card-text
 						>
 						<v-card-actions>
-							<v-btn color="danger" outlined @click="closeCierreTicket"
+							<v-btn color="danger" outlined @click.prevent="closeCierreTicket"
 								>Cancelar</v-btn
 							>
 							<v-spacer></v-spacer>
-							<v-btn color="success" outlined @click="cierreItemConfirm"
+							<v-btn color="success" outlined @click.prevent="cierreItemConfirm"
 								>Aceptar</v-btn
 							>
 						</v-card-actions>
@@ -178,11 +180,11 @@
 							>¿Estas seguro de querer cancelar este ticket?</v-card-title
 						>
 						<v-card-actions>
-							<v-btn color="danger" outlined @click="closeCancelTicket"
+							<v-btn color="danger" outlined @click.prevent="closeCancelTicket"
 								>Cancelar</v-btn
 							>
 							<v-spacer></v-spacer>
-							<v-btn color="success" outlined @click="cancelConfirm"
+							<v-btn color="success" outlined @click.prevent="cancelConfirm"
 								>Aceptar</v-btn
 							>
 						</v-card-actions>
@@ -195,7 +197,7 @@
 					small
 					class="mr-2"
 					color="success"
-					@click="editItem(item)"
+					@click.prevent="editItem(item)"
 				>
 					<v-icon> mdi-cash-100 </v-icon>
 				</v-btn>
@@ -210,7 +212,7 @@
 					dark
 					color="red darken-4"
 					class="mr-2"
-					@click="editItemCancel(item)"
+					@click.prevent="editItemCancel(item)"
 				>
 					<v-icon> mdi-close </v-icon>
 				</v-btn>

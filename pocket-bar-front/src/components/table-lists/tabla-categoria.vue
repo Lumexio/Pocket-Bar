@@ -66,11 +66,13 @@
 								color="blue darken-1"
 								v-on:keyup.enter="save"
 								text
-								@click="close"
+								@click.prevent="close"
 							>
 								Cancelar
 							</v-btn>
-							<v-btn color="blue darken-1" text @click="save"> Guardar </v-btn>
+							<v-btn color="blue darken-1" text @click.prevent="save">
+								Guardar
+							</v-btn>
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
@@ -85,10 +87,13 @@
 						>
 						<v-card-actions>
 							<v-spacer></v-spacer>
-							<v-btn color="blue darken-1" text @click="closeDelete"
+							<v-btn color="blue darken-1" text @click.prevent="closeDelete"
 								>Cancelar</v-btn
 							>
-							<v-btn color="blue darken-1" text @click="deleteItemConfirm"
+							<v-btn
+								color="blue darken-1"
+								text
+								@click.prevent="deleteItemConfirm"
 								>Aceptar</v-btn
 							>
 							<v-spacer></v-spacer>

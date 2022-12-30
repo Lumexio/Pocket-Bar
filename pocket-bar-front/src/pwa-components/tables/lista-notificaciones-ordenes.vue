@@ -6,7 +6,7 @@
 		transition="dialog-bottom-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
 			<v-toolbar dark>
-				<v-btn x-large icon dark @click="close()">
+				<v-btn x-large icon dark @click.prevent="close()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
@@ -40,7 +40,7 @@
 						color="primary"
 						dark
 						v-if="item.status === 'En espera' && hasrol === 'bartender'"
-						@click="sendStatusPrep(item.id, 'En preparacion')"
+						@click.prevent="sendStatusPrep(item.id, 'En preparacion')"
 						>Preparar</v-btn
 					>
 					<v-btn
@@ -48,13 +48,13 @@
 						color="success"
 						dark
 						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"
-						@click="sendStatusPrep(item.id, 'Preparado')"
+						@click.prevent="sendStatusPrep(item.id, 'Preparado')"
 						>Terminar</v-btn
 					>
 					<v-btn
 						dark
 						v-if="item.status === 'Preparado' && hasrol === 'mesero'"
-						@click="sendStatusRecived(item.id, item.status)"
+						@click.prevent="sendStatusRecived(item.id, item.status)"
 						>Recibir</v-btn
 					>
 				</v-card-actions>
@@ -87,20 +87,20 @@
 						dark
 						color="grey darken-1"
 						v-if="item.status === 'En espera' && hasrol === 'bartender'"
-						@click="sendStatusPrep(item.id, 'En preparacion')"
+						@click.prevent="sendStatusPrep(item.id, 'En preparacion')"
 						>Preparar</v-btn
 					>
 					<v-btn
 						large
 						dark
 						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"
-						@click="sendStatusPrep(item.id, 'Preparado')"
+						@click.prevent="sendStatusPrep(item.id, 'Preparado')"
 						>Terminar</v-btn
 					>
 					<v-btn
 						dark
 						v-if="item.status === 'Preparado' && hasrol === 'mesero'"
-						@click="sendStatusRecived(item.id, item.status)"
+						@click.prevent="sendStatusRecived(item.id, item.status)"
 						>Recibir</v-btn
 					>
 				</v-card-actions>

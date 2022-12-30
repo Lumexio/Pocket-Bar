@@ -17,7 +17,7 @@
 					icon
 					color="dark"
 					@shortkey="onClose"
-					@click="onClose"
+					@click.prevent="onClose"
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
@@ -125,13 +125,15 @@
 			</form>
 			<v-card-actions
 				><v-spacer></v-spacer>
-				<v-btn color="grey darken-1" @click="clear" outlined> Limpiar </v-btn>
+				<v-btn color="grey darken-1" @click.prevent="clear" outlined>
+					Limpiar
+				</v-btn>
 				<v-btn
 					color="yellow darken-2"
 					class="mr-4"
 					v-shortkey="['enter']"
 					@shortkey="submit"
-					@click="submit"
+					@click.prevent="submit"
 					outlined
 				>
 					Guardar {{ nameat }}

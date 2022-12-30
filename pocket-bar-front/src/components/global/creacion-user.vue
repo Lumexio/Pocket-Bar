@@ -22,7 +22,7 @@
 					</v-btn>
 				</v-row>
 				<!-- <v-row>
-          <v-btn color="primary" text @click="dialogrol = !dialogrol">
+          <v-btn color="primary" text @click.prevent="dialogrol = !dialogrol">
             Rol
           </v-btn>
         </v-row>-->

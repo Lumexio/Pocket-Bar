@@ -25,7 +25,7 @@
 					x-large
 					color="primary"
 					v-if="item.status != 'Cerrado'"
-					@click="(dialogaddproduct = true), (ticket_id = item.id)"
+					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
 					><v-icon>mdi-plus</v-icon>
 				</v-btn>
 			</v-expansion-panel-header>

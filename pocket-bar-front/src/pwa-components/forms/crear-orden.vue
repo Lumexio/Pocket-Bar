@@ -10,7 +10,7 @@
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
-					@click="close()"
+					@click.prevent="close()"
 					x-large
 				>
 					<v-icon>mdi-close</v-icon>
@@ -36,7 +36,7 @@
 								dark
 								color="red"
 								v-if="pedidoArray.length > 0"
-								@click="cancelarPedido()"
+								@click.prevent="cancelarPedido()"
 							>
 								<v-icon>mdi-trash-can-outline </v-icon>
 							</v-btn>
@@ -52,7 +52,7 @@
 									color="primary"
 									dark
 									v-if="pedidoArray.length > 0"
-									@click="e6 = 2"
+									@click.prevent="e6 = 2"
 								>
 									<v-icon>mdi-cart-variant</v-icon>
 								</v-btn>
@@ -90,7 +90,7 @@
 								<v-row v-for="item in props.items" :key="item.id" class="mb-3">
 									<v-card
 										:color="cambio(item)"
-										@click="cajaProductos(item)"
+										@click.prevent="cajaProductos(item)"
 										class="card-p ml-5"
 										:disabled="item.cantidad_articulo == 0"
 									>
@@ -135,10 +135,10 @@
 									<span class="mr-4 grey--text">
 										Page {{ page }} of {{ numberOfPages }}
 									</span>
-									<v-btn dark class="mr-1" @click="formerPage">
+									<v-btn dark class="mr-1" @click.prevent="formerPage">
 										<v-icon>mdi-chevron-left</v-icon>
 									</v-btn>
-									<v-btn dark class="ml-1" @click="nextPage">
+									<v-btn dark class="ml-1" @click.prevent="nextPage">
 										<v-icon>mdi-chevron-right</v-icon>
 									</v-btn>
 								</v-row>
@@ -153,7 +153,7 @@
 								x-large
 								color="primary"
 								dark
-								@click="e6 = 1"
+								@click.prevent="e6 = 1"
 								class="mb-4 ml-2"
 							>
 								<v-icon>mdi-chevron-left</v-icon>
@@ -196,7 +196,7 @@
 						>
 							<v-row>
 								<v-col>
-									<v-btn icon x-large @click="deleteProduct(index)">
+									<v-btn icon x-large @click.prevent="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col
 								>
@@ -211,10 +211,10 @@
 								<v-btn
 									v-if="item.piezas > 1"
 									text
-									@click="sumaresta('resta', item, index)"
+									@click.prevent="sumaresta('resta', item, index)"
 									><v-icon>mdi-chevron-left</v-icon></v-btn
 								><span class="ma-2">{{ item.piezas }} </span
-								><v-btn text @click="sumaresta('suma', item, index)"
+								><v-btn text @click.prevent="sumaresta('suma', item, index)"
 									><v-icon>mdi-chevron-right</v-icon></v-btn
 								>
 							</v-card-actions>
@@ -223,7 +223,13 @@
 							<b>Total:</b><span> ${{ totalPedido }}</span>
 						</div>
 
-						<v-btn dark block x-large color="success" @click="crearTicket()">
+						<v-btn
+							dark
+							block
+							x-large
+							color="success"
+							@click.prevent="crearTicket()"
+						>
 							Procesar pedido
 							<v-icon class="ml-2">mdi-check </v-icon>
 						</v-btn>

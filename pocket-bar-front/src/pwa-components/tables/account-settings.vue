@@ -9,7 +9,7 @@
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag"
-					@click="close()"
+					@click.prevent="close()"
 					x-large
 				>
 					<v-icon>mdi-close</v-icon>
@@ -41,7 +41,7 @@
 			<v-divider></v-divider>
 			<v-btn
 				class="mt-3"
-				@click="dialogLogout = true"
+				@click.prevent="dialogLogout = true"
 				block
 				large
 				outlined
@@ -60,12 +60,10 @@
 				>
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn color="blue darken-1" text @click="closeLogout"
+					<v-btn color="blue darken-1" text @click.prevent="closeLogout"
 						>Cancelar</v-btn
 					>
-					<v-btn color="success"  @click="logoutConfirm"
-						>Aceptar</v-btn
-					>
+					<v-btn color="success" @click.prevent="logoutConfirm">Aceptar</v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
 			</v-card>

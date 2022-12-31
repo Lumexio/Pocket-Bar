@@ -52,8 +52,8 @@
 						:key="item.name"
 						cols="12"
 						sm="6"
-						md="4"
-						lg="3"
+						md="7"
+						lg="6"
 					>
 						<v-card>
 							<v-card-title class="subheading font-weight-bold">
@@ -70,6 +70,72 @@
 										Total de propinas: ${{ item.totalTips }}
 									</v-list-item-content>
 								</v-list-item>
+								<v-list-group
+									v-show="item.closed_tickets.length > 0"
+									prepend-icon="mdi-checkbox-marked"
+									no-action
+								>
+									<template v-slot:activator>
+										<v-list-item-content>
+											<v-list-item-title>Cuentas cerradas</v-list-item-title>
+										</v-list-item-content>
+									</template>
+									<v-list-item class="pa-0">
+										<v-list-item-content>
+											<v-data-table
+												dense
+												hide-default-footer
+												:headers="headers"
+												:items="item.closed_tickets"
+												item-key="name"
+											></v-data-table>
+										</v-list-item-content>
+									</v-list-item>
+								</v-list-group>
+								<v-list-group
+									v-show="item.canceled_tickets.length > 0"
+									prepend-icon="mdi-close-box"
+									no-action
+								>
+									<template v-slot:activator>
+										<v-list-item-content>
+											<v-list-item-title>Cuentas canceladas</v-list-item-title>
+										</v-list-item-content>
+									</template>
+									<v-list-item class="pa-0">
+										<v-list-item-content>
+											<v-data-table
+												dense
+												hide-default-footer
+												:headers="headers"
+												:items="item.canceled_tickets"
+												item-key="name"
+											></v-data-table>
+										</v-list-item-content>
+									</v-list-item>
+								</v-list-group>
+								<v-list-group
+									v-show="item.non_closed_tickets.length > 0"
+									prepend-icon="mdi-alpha-a-box"
+									no-action
+								>
+									<template v-slot:activator>
+										<v-list-item-content>
+											<v-list-item-title>Cuentas abiertas</v-list-item-title>
+										</v-list-item-content>
+									</template>
+									<v-list-item class="pa-0">
+										<v-list-item-content>
+											<v-data-table
+												dense
+												hide-default-footer
+												:headers="headers"
+												:items="item.non_closed_tickets"
+												item-key="name"
+											></v-data-table>
+										</v-list-item-content>
+									</v-list-item>
+								</v-list-group>
 								<!-- <v-list-item v-for="(key, index) in filteredKeys" :key="index">
 									<v-list-item-content
 										:class="{ 'blue--text': sortBy === key }"
@@ -150,6 +216,16 @@ export default {
 		},
 	},
 	data: () => ({
+		headers: [
+			{
+				text: "Cliente",
+				align: "start",
+				sortable: false,
+				value: "client_name",
+			},
+			{ text: "Fecha", value: "ticket_date" },
+			{ text: "Total", value: "total" },
+		],
 		itemsPerPageArray: [4, 10, 12],
 		search: "",
 		filter: {},

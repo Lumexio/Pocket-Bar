@@ -84,7 +84,7 @@ export default {
 		submit() {
 			store.commit("setsuccess", null);
 			store.commit("setdanger", null);
-			console.log(this.nombre_mesa);
+
 			this.nombre_mesa = upperConverter(this.nombre_mesa);
 			const formdata = new FormData();
 			formdata.append("nombre_mesa", this.nombre_mesa);

@@ -24,7 +24,7 @@ export function getProveedores(proveedorArray) {
           stats, proveedorArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postProveedores(enviar) {

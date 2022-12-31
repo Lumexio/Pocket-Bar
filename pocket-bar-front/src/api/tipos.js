@@ -23,7 +23,7 @@ export function getTipos(tipoArray) {
           stats, tipoArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postTipos(enviar) {

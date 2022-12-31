@@ -10,7 +10,7 @@ export function getActivitylog(activitylogArray) {
     axios
       .get("api/activitylog")
       .then((response) => {
-        console.log(response.data.payload);
+
         const activitylog = response.data.payload;
         const stats = response.status;
         activitylog.forEach((element) => {
@@ -28,7 +28,7 @@ export function getActivitylog(activitylogArray) {
           stats, activitylogArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 

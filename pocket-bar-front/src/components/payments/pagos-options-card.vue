@@ -109,7 +109,6 @@ export default {
 				.then((response) => {
 					if (response.response.status === 200) {
 						this.e1 = 1;
-						console.log("Data", response.response.status);
 
 						this.selectedUser = [];
 						this.$store.commit("setsuccess", true);

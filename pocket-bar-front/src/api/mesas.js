@@ -9,7 +9,7 @@ export function getMesas(mesaArray) {
     axios
       .get("api/mesa")
       .then(response => {
-        console.log(response);
+
         const mesa = response.data;
         const stats = response.status;
         mesa.forEach((element) => {
@@ -25,7 +25,7 @@ export function getMesas(mesaArray) {
           stats, mesaArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postMesas(enviar) {
@@ -43,7 +43,7 @@ export function postMesas(enviar) {
       }
     })
     .catch((e) => {
-      console.log(e.message);
+
       if (e) {
         store.commit("setdanger", true);
       }

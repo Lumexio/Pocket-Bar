@@ -330,7 +330,6 @@ export default {
 	mounted() {
 		window.Echo.channel("articulos").listen("articuloCreated", (e) => {
 			this.articulosArray = e.articulos;
-			console.log("Articulos:", e.articulos);
 		});
 
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
@@ -482,7 +481,7 @@ export default {
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
 				let url = "api/updatephoto/" + send.id;
-				console.log(this.photo);
+
 				if (this.photo != null) {
 					const formdata = new FormData();
 					formdata.append("foto_articulo", this.photo);

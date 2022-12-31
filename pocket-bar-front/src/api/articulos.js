@@ -53,7 +53,7 @@ export function postArticulos(enviar) {
       }
     })
     .catch((e) => {
-      console.log(e.message);
+
       if (e) {
         store.commit("setdanger", true);
       }

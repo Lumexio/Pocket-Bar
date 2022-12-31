@@ -127,7 +127,7 @@ export default {
 							let userId = response.data.user.id;
 
 							store.commit("setrol", rol);
-							console.log("Rol de usuario:", store.getters.hasrol);
+
 							store.commit("setUserId", userId);
 							let validado = response.request.withCredentials;
 
@@ -163,7 +163,6 @@ export default {
 						.catch((e) => {
 							if (e) {
 								this.cargando = false;
-								console.log("pppp", e);
 							}
 						});
 				})

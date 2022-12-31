@@ -399,15 +399,14 @@ export default {
 				presend.mesa_id = 1;
 			}
 			postTickets(presend).then((response) => {
-				if (response.status == 200) {
+				if (response) {
 					this.pedidoArray = [];
 					this.countproductos = 0;
 					this.totalPedido = 0;
 					this.titular = "";
 					this.e1 = 1;
-					this.selectip = 1;
-					store.commit("setstatcode", null);
-					// store.commit("increment", 1);
+					this.selectip = 0;
+					this.cancelarPedido();
 				} else {
 					this.e6 = 1;
 				}
@@ -435,15 +434,13 @@ export default {
 			}
 		},
 		cancelarPedido() {
-			return (
-				(this.pedidoArray = []),
+			(this.pedidoArray = []),
 				(this.countproductos = 0),
 				(this.totalPedido = 0),
 				(this.titular = ""),
 				(this.e1 = 1),
 				(this.selectip = 0),
-				store.commit("setstatcode", null)
-			);
+				store.commit("setstatcode", null);
 		},
 		deleteProduct(index) {
 			this.countproductos -= 1;

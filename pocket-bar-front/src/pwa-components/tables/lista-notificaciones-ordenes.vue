@@ -193,7 +193,6 @@ export default {
 					this[variableName] = response.ticketsPWANotiArray;
 					this.tempTicketsArray = response.ticketsPWANotiArray;
 					store.commit("setorder", this.tempTicketsArray.length);
-					console.log("Noti 185:", this.tempTicketsArray);
 				})
 				.catch((e) => {
 					console.log(e);

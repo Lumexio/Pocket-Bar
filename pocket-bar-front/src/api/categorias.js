@@ -24,7 +24,7 @@ export function getCategorias(categoriaArray) {
           stats, categoriaArray
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postCategorias(enviar) {

@@ -23,7 +23,7 @@ export function getCotizado() {
           data, workshift_report
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postNominas(nominas) {
@@ -32,13 +32,13 @@ export function postNominas(nominas) {
     axios
       .post("api/nominas/pay", nominas)
       .then(response => {
-        console.log(response);
+
 
         resolve({
           response
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => { reject(error); });
   });
 }
 export function postCerrarticket(pack) {
@@ -72,7 +72,7 @@ export function postCancelticket(pack) {
     axios
       .post("api/tickets/cancel", pack)
       .then(response => {
-        console.log("APi resp", response);
+
         if (response.status === 200) {
           store.commit("setsuccess", true);
           store.commit("setstatcode", 200);

@@ -42,7 +42,7 @@
 			>
 				Guardar
 			</v-btn>
-			<v-btn @click.prevent="clear" text> Limpiar </v-btn>
+			<v-btn @click.prevent="clear" text> <v-icon>mdi-eraser</v-icon> </v-btn>
 		</v-card>
 	</v-dialog>
 </template>

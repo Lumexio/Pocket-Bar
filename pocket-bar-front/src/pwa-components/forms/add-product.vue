@@ -38,7 +38,7 @@
 								v-if="pedidoArray.length > 0"
 								@click.prevent="cancelarPedido()"
 							>
-								limpiar
+								<v-icon>mdi-eraser</v-icon>
 							</v-btn>
 							<v-spacer></v-spacer>
 							<v-badge

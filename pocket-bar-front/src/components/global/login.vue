@@ -55,7 +55,9 @@
 				</template>
 			</v-text-field>
 			<v-card-actions>
-				<v-btn x-large @click.prevent="clear"> limpiar </v-btn>
+				<v-btn x-large @click.prevent="clear">
+					<v-icon>mdi-eraser</v-icon>
+				</v-btn>
 				<v-spacer></v-spacer>
 				<v-btn x-large color="#4caf50" dark class="mr-4" v-on:click="login()">
 					Iniciar sesión

@@ -34,7 +34,9 @@
 				</v-col>
 			</v-row>
 			<v-sapacer></v-sapacer>
-			<v-btn @click.prevent="clear" outlined> Limpiar </v-btn>
+			<v-btn @click.prevent="clear" outlined>
+				<v-icon>mdi-eraser</v-icon>
+			</v-btn>
 			<v-btn
 				class="mr-4"
 				v-shortkey="['enter']"

@@ -63,7 +63,7 @@
 			</v-row>
 			<v-card-actions>
 				<v-btn class="mr-4" @click.prevent="submit" text> Guardar </v-btn>
-				<v-btn @click.prevent="clear" text> Limpiar </v-btn>
+				<v-btn @click.prevent="clear" text> <v-icon>mdi-eraser</v-icon> </v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>

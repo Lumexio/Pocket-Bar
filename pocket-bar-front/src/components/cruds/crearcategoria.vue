@@ -49,7 +49,7 @@
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn color="grey darken-2" @click.prevent="clear" outlined>
-					Limpiar
+					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
 				<v-btn
 					color="yellow darken-2"

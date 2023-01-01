@@ -26,6 +26,18 @@
 			:search="search"
 			:custom-filter="filterOnlyCapsText.toUpperCase"
 		>
+			<template v-slot:expanded-item="{ item }"
+				><td :colspan="headers.length">
+					<v-data-table
+						hide-default-footer
+						dense
+						:items="item.details"
+						class="elevation-0"
+						:headers="headersDetails"
+					>
+					</v-data-table>
+				</td>
+			</template>
 			<template v-slot:top>
 				<v-progress-linear
 					height="6"
@@ -134,7 +146,7 @@
 								:ticketsArray="ticketsArray"
 								@update:ticketsArray="getTickets()"
 								@click.prevent="
-									save(), changePayment(amount_cash, editedItem.total)
+									changePayment(amount_cash, editedItem.total), save()
 								"
 							>
 								Efectuar pago caja
@@ -226,17 +238,6 @@
 					{{ item.status }}
 				</v-chip>
 			</template>
-			<template v-slot:expanded-item="{ item }">
-				<v-data-table
-					style="min-width: 100%"
-					hide-default-footer
-					dense
-					:items="item.details"
-					class="elevation-0"
-					:headers="headersDetails"
-				>
-				</v-data-table>
-			</template>
 		</v-data-table>
 	</v-card>
 </template>
@@ -253,6 +254,7 @@ export default {
 		type_pay_card: "",
 		amount_card: null,
 		amount_cash: null,
+		amount_cash_ingresed: null,
 		voucher: null,
 		tip_cash: null,
 		tip_card: null,
@@ -375,14 +377,14 @@ export default {
 			a = Number(a);
 			b = Number(b);
 			b = a + b;
+
 			return b;
 		},
 
 		changePayment(payment, totalToPay) {
-			this.bringedMoney = payment;
-			this.changeMoney = payment - totalToPay;
-			this.amount_cash = totalToPay;
-			//this.amount_cash = totalToPay;
+			this.bringedMoney = Number(payment);
+			this.changeMoney = Number(payment) - Number(totalToPay);
+			this.amount_cash = Number(payment) - this.changeMoney;
 		},
 		disablecheck(rol, cancelflag) {
 			let disabled;
@@ -423,6 +425,7 @@ export default {
 		},
 		cierreItemConfirm() {
 			// aqui armo el pago final
+
 			postCerrarticket(this.packClose)
 				.then((response) => {
 					if (response.response.status == 200) {
@@ -448,10 +451,10 @@ export default {
 			// aqui armo la cancelacion
 			postCancelticket({ id: this.editedItemCancel.id, confirm_ticket: false })
 				.then((response) => {
-					window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
-						this.$store.commit("settickets", e.tickets);
-						this.ticketsArray = e.tickets;
-					});
+					// window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
+					// 	this.$store.commit("settickets", e.tickets);
+					// 	this.ticketsArray = e.tickets;
+					// });
 					if (response.response.data.status == 200) {
 						this.dialogCancel = false;
 						this.cargando = false;
@@ -513,6 +516,7 @@ export default {
 					amount: Number(this.amount_cash),
 					tip: Number(this.tip_cash),
 				};
+
 				this.payments.push(this.obj_cash);
 			}
 			this.packClose = {

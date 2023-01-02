@@ -5,8 +5,17 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<v-card :dark="this.$store.getters.hasdarkflag === true">
-			<v-toolbar color="transparent">
+		<v-card
+			:dark="this.$store.getters.hasdarkflag === true"
+			v-touch="{
+				left: () => swipe('Left'),
+				right: () => swipe('Right'),
+				up: () => swipe('Up'),
+				down: () => swipe('Down'),
+				move: () => swipe('Move'),
+			}"
+		>
+			<v-toolbar prominent color="transparent">
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
@@ -16,6 +25,7 @@
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Nueva orden</v-toolbar-title>
+				{{ swipeDirection }}
 			</v-toolbar>
 			<v-stepper fill-height v-model="e6" editable>
 				<v-stepper-items>
@@ -251,6 +261,7 @@ export default {
 	} /*data de llegado de componente padre creacion*/,
 	data() {
 		return {
+			swipeDirection: "None",
 			selectmesa: "",
 			itemsmesa: [],
 			itemstip: [5, 10, 15, 20],
@@ -388,6 +399,9 @@ export default {
 		};
 	},
 	methods: {
+		swipe(direction) {
+			this.swipeDirection = direction;
+		},
 		crearTicket() {
 			var presend = {
 				productos: this.pedidoArray,

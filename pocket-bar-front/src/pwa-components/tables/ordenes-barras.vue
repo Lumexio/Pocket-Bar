@@ -28,6 +28,9 @@
 					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
 					><v-icon>mdi-plus</v-icon>
 				</v-btn>
+				<v-btn class="mr-16" max-width="25px" x-large color="cyan darken-3"
+					><v-icon>mdi-eye-circle</v-icon>
+				</v-btn>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
 				<v-simple-table dense calculate-widths>

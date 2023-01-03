@@ -18,7 +18,13 @@
 					<br />
 					<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
-				<v-btn class="mr-1" max-width="25px" x-large color="cyan darken-3"
+				<v-btn
+					class="mr-1"
+					max-width="25px"
+					x-large
+					dark
+					color="cyan darken-3"
+					@click.prevent="dialogticketviewer = true"
 					><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
 				<v-btn
@@ -56,6 +62,10 @@
 					<span class="mr-6"> Subtotal:</span>{{ item.total }}
 				</p>
 			</v-expansion-panel-content>
+			<ticketViewer
+				:dialogticketviewer.sync="dialogticketviewer"
+				:ticket="item"
+			/>
 		</v-expansion-panel>
 		<addProducts
 			:dialogaddproduct.sync="dialogaddproduct"
@@ -65,16 +75,19 @@
 </template>
 <script>
 import addProducts from "@/pwa-components/forms/add-product.vue";
+import ticketViewer from "@/pwa-components/forms/ticket-viewer.vue";
 import store from "@/store";
 import { getTicketsPWA } from "@/api/tickets.js";
 export default {
 	name: "ordenesBarra",
 	components: {
 		addProducts,
+		ticketViewer,
 	},
 	data: () => ({
 		ticket_id: null,
 		dialogaddproduct: false,
+		dialogticketviewer: false,
 		ticketsPWAArray: [],
 	}),
 	whatch: {

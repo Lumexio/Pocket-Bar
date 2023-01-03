@@ -5,17 +5,17 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<v-card
-			:dark="this.$store.getters.hasdarkflag === true"
-			v-touch="{
-				left: () => swipe('Left'),
-				right: () => swipe('Right'),
-				up: () => swipe('Up'),
-				down: () => swipe('Down'),
-				move: () => swipe('Move'),
-			}"
-		>
-			<v-toolbar prominent color="transparent">
+		<v-card :dark="this.$store.getters.hasdarkflag === true">
+			<v-toolbar
+				prominent
+				color="transparent"
+				v-touch="{
+					left: () => swipe('Left'),
+					right: () => swipe('Right'),
+					up: () => swipe('Up'),
+					down: () => swipe('Down'),
+				}"
+			>
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
@@ -25,7 +25,6 @@
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Nueva orden</v-toolbar-title>
-				{{ swipeDirection }}
 			</v-toolbar>
 			<v-stepper fill-height v-model="e6" editable>
 				<v-stepper-items>
@@ -400,6 +399,9 @@ export default {
 	},
 	methods: {
 		swipe(direction) {
+			if (direction === "Down") {
+				this.$emit("update:dialogorden", false);
+			}
 			this.swipeDirection = direction;
 		},
 		crearTicket() {

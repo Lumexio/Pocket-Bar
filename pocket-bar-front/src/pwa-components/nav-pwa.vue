@@ -1,5 +1,5 @@
 <template>
-	<v-toolbar :dark="darkonchange" fixed style="flex: none">
+	<v-toolbar prominent :dark="darkonchange" fixed style="flex: none">
 		<h1
 			class="fade-in-title font-weight-light"
 			:class="[
@@ -48,11 +48,9 @@
 				show-arrows
 				v-model="tabs"
 				grow
-				left
 			>
 				<v-tab
 					@click.prevent="statuschange(item.status)"
-					style="padding: 2px"
 					v-for="item in items"
 					:key="item.id"
 				>

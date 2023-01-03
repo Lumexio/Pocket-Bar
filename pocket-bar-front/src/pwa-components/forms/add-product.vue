@@ -6,7 +6,16 @@
 		transition="dialog-bottom-transition"
 	>
 		<v-card :dark="this.$store.getters.hasdarkflag === true">
-			<v-toolbar color="transparent">
+			<v-toolbar
+				color="transparent"
+				prominent
+				v-touch="{
+					left: () => swipe('Left'),
+					right: () => swipe('Right'),
+					up: () => swipe('Up'),
+					down: () => swipe('Down'),
+				}"
+			>
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
@@ -218,6 +227,7 @@ export default {
 	} /*data de llegado de componente padre creacion*/,
 	data() {
 		return {
+			swipeDirection: "None",
 			resp: null,
 			pedidoArray: [],
 			countproductos: 0,
@@ -238,6 +248,12 @@ export default {
 		};
 	},
 	methods: {
+		swipe(direction) {
+			if (direction === "Down") {
+				this.$emit("update:dialogaddproduct", false);
+			}
+			this.swipeDirection = direction;
+		},
 		crearTicket() {
 			var presend = {
 				productos: this.pedidoArray,

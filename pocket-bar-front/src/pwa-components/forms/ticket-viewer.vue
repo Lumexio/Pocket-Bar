@@ -5,7 +5,8 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<v-card :dark="this.$store.getters.hasdarkflag === true">
+		<!-- <v-card :dark="this.$store.getters.hasdarkflag === true"> -->
+		<v-card>
 			<v-toolbar
 				color="transparent"
 				flat
@@ -17,18 +18,56 @@
 					down: () => swipe('Down'),
 				}"
 			>
-				<v-btn
-					icon
-					:dark="this.$store.getters.hasdarkflag === true"
-					@click.prevent="close()"
-					x-large
-				>
+				<v-btn icon @click.prevent="close()" x-large>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
 				<v-toolbar-title>Ver ticket</v-toolbar-title>
 			</v-toolbar>
-			{{ ticket }}
+			<v-card-text class="text-left pl-0 pr-0">
+				<v-row class="ma-4">
+					<v-col>
+						Titular
+						<h2>{{ ticket.titular }}</h2>
+					</v-col>
+					<v-spacer></v-spacer>
+					<v-col>
+						Estatus
+						<h3>{{ ticket.status }}</h3>
+					</v-col>
+					<v-col>
+						Mesa
+						<h3>{{ ticket.nombre_mesa }}</h3>
+					</v-col>
+					<v-col>
+						Fecha
+						<h3>{{ ticket.fecha }}</h3>
+					</v-col>
+				</v-row>
+				<v-simple-table dense calculate-widths>
+					<template v-slot:default>
+						<thead>
+							<tr>
+								<th class="text-left">Nombre</th>
+								<th class="text-left">Cantidad</th>
+								<th class="text-left">Precio</th>
+
+								<th class="text-left">Descuento</th>
+								<th class="text-left">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="producto in ticket.productos" :key="producto.id">
+								<td class="text-left">{{ producto.nombre }}</td>
+								<td class="text-left">{{ producto.cantidad }}</td>
+								<td class="text-left">{{ producto.precio }}</td>
+								<td class="text-left">${{ producto.descuento }}</td>
+								<td class="text-left">${{ producto.total }}</td>
+							</tr>
+						</tbody>
+					</template>
+				</v-simple-table>
+			</v-card-text>
 		</v-card>
 	</v-dialog>
 </template>

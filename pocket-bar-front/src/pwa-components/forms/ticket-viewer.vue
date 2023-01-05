@@ -31,18 +31,28 @@
 						<h2>{{ ticket.titular }}</h2>
 					</v-col>
 					<v-spacer></v-spacer>
-					<v-col>
+					<v-col cols="2">
 						Estatus
 						<h3>{{ ticket.status }}</h3>
 					</v-col>
-					<v-col>
+					<v-col cols="1">
 						Mesa
 						<h3>{{ ticket.nombre_mesa }}</h3>
 					</v-col>
-					<v-col>
+					<v-col cols="2">
 						Fecha
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
+					<v-col cols="3"
+						><v-select
+							v-model="selectip"
+							:items="itemstip"
+							append-icon="mdi-percent-circle-outline"
+							label="Propina %"
+							outlined
+							class="ma-2"
+						></v-select
+					></v-col>
 				</v-row>
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
@@ -79,7 +89,7 @@ export default {
 		ticket: { default: null },
 	} /*data de llegado de componente padre creacion*/,
 	data() {
-		return {};
+		return { itemstip: [5, 10, 15, 20], selectip: 0 };
 	},
 	methods: {
 		swipe(direction) {

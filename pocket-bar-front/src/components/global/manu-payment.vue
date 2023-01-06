@@ -26,7 +26,6 @@ export default {
 			.then((response) => {
 				this.data_resp = response.data;
 				this.workshift_report = response.workshift_report;
-				console.log(this.workshift_report);
 			})
 			.catch((e) => {
 				console.log(e);

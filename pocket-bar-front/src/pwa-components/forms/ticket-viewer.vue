@@ -28,7 +28,7 @@
 				<v-row class="ma-4">
 					<v-col>
 						Titular
-						<h2>{{ ticket.titular }}</h2>
+						<h1>{{ ticket.titular }}</h1>
 					</v-col>
 					<v-spacer></v-spacer>
 					<v-col cols="2">

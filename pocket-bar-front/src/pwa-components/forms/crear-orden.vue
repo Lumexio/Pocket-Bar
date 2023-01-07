@@ -427,12 +427,6 @@ export default {
 					this.e6 = 1;
 				}
 			});
-			// window.Echo.channel("tickets." + this.$store.getters.getUserId).listen(
-			// 	"ticketCreated",
-			// 	(e) => {
-			// 		this.$store.commit("settickets", e.tickets);
-			// 	}
-			// );
 		},
 		sumaresta(operacion, producto, index) {
 			if (operacion == "suma") {

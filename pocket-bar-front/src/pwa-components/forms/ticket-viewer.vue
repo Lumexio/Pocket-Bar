@@ -22,7 +22,7 @@
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
-				<v-toolbar-title>Ver ticket</v-toolbar-title>
+				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
 			<v-card-text class="text-left pl-0 pr-0">
 				<v-row class="ma-4">

@@ -24,6 +24,7 @@
 
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
+			<!-- Importante revisar y corregir -->
 			<v-card-text class="text-left pl-0 pr-0">
 				<v-row class="ma-4">
 					<v-col>

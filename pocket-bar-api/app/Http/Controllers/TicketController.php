@@ -136,6 +136,7 @@ class TicketController extends Controller
     public function indexPwa(TicketListPwaRequest $request): JsonResponse
     {
         /**
+         * Indexsado de tickets para la pwa
          * @var User
          */
 

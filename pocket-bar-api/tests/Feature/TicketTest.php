@@ -14,10 +14,13 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testLogIn()
+    public function testArticuloList()
     {
-        $response = $this->post('/api/login', ["name"=>"admin", "password"=>"12345678"]);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . '8|N6NzHNU3GEpHxmqYp5Cozfk71qj292mEyIvu2uH4',
+        ])->get('/api/articulo/list');
         $response->assertStatus(200);
-
     }
 }

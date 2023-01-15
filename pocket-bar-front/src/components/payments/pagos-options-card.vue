@@ -20,13 +20,13 @@
 			<v-stepper-items>
 				<v-stepper-content class="pa-0" step="1">
 					<v-card-actions>
-						<v-btn x-large @click="selectedUser = []"> Cancel </v-btn>
+						<v-btn large @click="selectedUser = []"> Cancel </v-btn>
 						<v-spacer />
 						<v-btn
 							:disabled="emptyCheck"
 							color="success"
 							@click.prevent="e1 = 2"
-							x-large
+							large
 						>
 							Ver resumen nominal
 						</v-btn>
@@ -45,14 +45,14 @@
 
 				<v-stepper-content step="2">
 					<v-card-actions>
-						<v-btn x-large @click.prevent="(e1 = 1), (selectedUser = [])">
+						<v-btn large @click.prevent="(e1 = 1), (selectedUser = [])">
 							Cancel
 						</v-btn>
 						<v-spacer />
 						<v-btn
 							color="success"
 							@click.prevent="postNominas(selectedUser)"
-							x-large
+							large
 							>Confirmar nominas
 						</v-btn>
 					</v-card-actions>

@@ -21,7 +21,7 @@
 				<v-btn
 					class="mr-1"
 					max-width="25px"
-					x-large
+					large
 					dark
 					color="cyan darken-3"
 					@click.prevent="dialogticketviewer = true"
@@ -30,7 +30,7 @@
 				<v-btn
 					class="mr-16"
 					max-width="25px"
-					x-large
+					large
 					color="primary"
 					v-if="item.status != 'Cerrado'"
 					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"

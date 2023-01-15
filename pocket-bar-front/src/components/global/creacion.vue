@@ -7,7 +7,7 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
-					x-large
+					large
 					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'a']"
@@ -28,7 +28,7 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
-					x-large
+					large
 					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'c']"
@@ -49,7 +49,7 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
-					x-large
+					large
 					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'm']"
@@ -70,7 +70,7 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
-					x-large
+					large
 					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 't']"
@@ -91,7 +91,7 @@
 		<v-tooltip open-delay="500" left>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
-					x-large
+					large
 					color="primary"
 					class="mt-3"
 					v-shortkey="['ctrl', 'shift', 'p']"

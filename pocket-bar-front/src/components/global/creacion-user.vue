@@ -8,7 +8,7 @@
 			<v-col align-self="end" cols="2">
 				<v-row>
 					<v-btn
-						x-large
+						large
 						v-shortkey="['ctrl', 'shift', 'u']"
 						@shortkey="dialogusuarios = !dialogusuarios"
 						elevation="2"

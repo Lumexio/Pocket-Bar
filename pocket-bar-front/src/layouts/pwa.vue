@@ -11,7 +11,7 @@
 			:dark="$store.getters.hasdarkflag === true"
 			class="mb-10 xem"
 			fab
-			x-large
+			large
 			fixed
 			bottom
 			right

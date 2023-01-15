@@ -20,7 +20,7 @@
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
 					@click.prevent="close()"
-					x-large
+					large
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
@@ -172,7 +172,7 @@
 						>
 							<v-row>
 								<v-col>
-									<v-btn icon x-large @click.prevent="deleteProduct(index)">
+									<v-btn icon large @click.prevent="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col
 								>
@@ -202,7 +202,7 @@
 						<v-btn
 							dark
 							block
-							x-large
+							large
 							color="success"
 							class="mb-4"
 							@click.prevent="crearTicket()"

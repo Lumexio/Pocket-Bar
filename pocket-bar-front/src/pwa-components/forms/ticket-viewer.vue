@@ -17,7 +17,7 @@
 					down: () => swipe('Down'),
 				}"
 			>
-				<v-btn icon @click.prevent="close()" x-large>
+				<v-btn icon @click.prevent="close()" large>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
@@ -43,7 +43,9 @@
 						Fecha
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
-					<v-col cols="3"
+				</v-row>
+				<v-row>
+					<v-col cols="5"
 						><v-select
 							v-model="selectip"
 							:items="itemstip"
@@ -53,7 +55,10 @@
 							class="ma-2"
 						></v-select
 					></v-col>
-				</v-row>
+					<v-col>
+						<v-btn class="ma-3" large><v-icon>mdi-cash</v-icon></v-btn>
+					</v-col></v-row
+				>
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
 						<thead>

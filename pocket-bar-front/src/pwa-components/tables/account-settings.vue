@@ -10,7 +10,7 @@
 					icon
 					:dark="this.$store.getters.hasdarkflag"
 					@click.prevent="close()"
-					x-large
+					large
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>

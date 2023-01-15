@@ -6,7 +6,7 @@
 		transition="dialog-bottom-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
 			<v-toolbar dark>
-				<v-btn x-large icon dark @click.prevent="close()">
+				<v-btn large icon dark @click.prevent="close()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
@@ -36,7 +36,7 @@
 					}}</v-chip>
 
 					<v-btn
-						x-large
+						large
 						color="primary"
 						dark
 						v-if="item.status === 'En espera' && hasrol === 'bartender'"
@@ -44,7 +44,7 @@
 						>Preparar</v-btn
 					>
 					<v-btn
-						x-large
+						large
 						color="success"
 						dark
 						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"

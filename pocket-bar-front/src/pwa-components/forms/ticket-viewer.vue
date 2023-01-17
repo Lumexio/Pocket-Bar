@@ -23,7 +23,7 @@
 
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
-			<!-- Importante revisar y corregir para el envio del request -->
+
 			<v-card-text class="text-left pl-0 pr-0">
 				<v-row class="ma-4">
 					<v-col>
@@ -45,17 +45,6 @@
 					</v-col>
 				</v-row>
 				<v-row>
-					<!-- <v-col cols="5"
-						><v-select
-							v-model="selectip"
-							:items="itemstip"
-							append-icon="mdi-percent-circle-outline"
-							label="Propina %"
-							outlined
-							class="ma-2"
-						></v-select
-					></v-col> -->
-
 					<template v-for="(item, index) in itemstip" :item="item">
 						<v-col class="d-flex justify-center" :key="index">
 							<v-btn

@@ -44,9 +44,14 @@
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
 				</v-row>
-				<v-row>
-					<template v-for="(item, index) in itemstip" :item="item">
-						<v-col class="d-flex justify-center" :key="index">
+				<v-row class="mb-3">
+					<template>
+						<v-col
+							v-for="(item, index) in itemstip"
+							:item="item"
+							class="d-flex justify-center"
+							:key="index"
+						>
 							<v-btn
 								dark
 								color="primary"
@@ -74,14 +79,17 @@
 							<tr v-for="producto in ticket.productos" :key="producto.id">
 								<td class="text-center">{{ producto.nombre }}</td>
 								<td class="text-center">{{ producto.cantidad }}</td>
-								<td class="text-center">{{ producto.precio }}</td>
+								<td class="text-center">${{ producto.precio }}</td>
 								<td class="text-center">${{ producto.descuento }}</td>
 								<td class="text-center">${{ producto.total }}</td>
 							</tr>
 						</tbody>
-						<v-row class="ma-3"> Propina: {{ selectip }}%</v-row>
 					</template>
 				</v-simple-table>
+				<v-row class="ma-4">
+					Propina: {{ selectip }}% [${{ calctip(ticket.total) }}] Total neto:
+					${{ calctotalneto(ticket.total) }}
+				</v-row>
 			</v-card-text>
 		</v-card>
 	</v-dialog>
@@ -104,7 +112,16 @@ export default {
 			selectip: 0,
 		};
 	},
+	computed: {},
 	methods: {
+		calctip(total) {
+			this.selectip = Number(this.selectip);
+
+			return Math.round(Number(total) * (this.selectip / 100));
+		},
+		calctotalneto(total) {
+			return Number(total) + this.calctip(total);
+		},
 		toTip(tip) {
 			this.selectip = tip;
 		},
@@ -120,7 +137,6 @@ export default {
 		},
 	},
 	mounted() {},
-	computed: {},
 	watch: {},
 };
 </script>

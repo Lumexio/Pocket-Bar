@@ -28,7 +28,7 @@
 					><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
 				<v-btn
-					class="mr-16"
+					class="mr-2"
 					max-width="25px"
 					large
 					color="primary"
@@ -52,14 +52,14 @@
 							<tr v-for="producto in item.productos" :key="producto.id">
 								<td class="text-left">{{ producto.nombre }}</td>
 								<td class="text-left">{{ producto.cantidad }}</td>
-								<td class="text-left">{{ producto.precio }}</td>
-								<td class="text-left">{{ producto.total }}</td>
+								<td class="text-left">${{ producto.precio }}</td>
+								<td class="text-left">${{ producto.total }}</td>
 							</tr>
 						</tbody>
 					</template>
 				</v-simple-table>
-				<p style="text-align: end" class="mr-4">
-					<span class="mr-6"> Subtotal:</span>{{ item.total }}
+				<p style="text-align: end" class="mr-6 font-weight-bold">
+					<span class="mr-6"> Subtotal:</span> ${{ item.total }}
 				</p>
 			</v-expansion-panel-content>
 			<ticketViewer

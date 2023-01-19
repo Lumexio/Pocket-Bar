@@ -5,8 +5,18 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
-			<v-toolbar dark>
-				<v-btn large icon dark @click.prevent="close()">
+			<v-toolbar
+				color="transparent"
+				flat
+				prominent
+				v-touch="{
+					left: () => swipe('Left'),
+					right: () => swipe('Right'),
+					up: () => swipe('Up'),
+					down: () => swipe('Down'),
+				}"
+			>
+				<v-btn large icon @click.prevent="close()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 
@@ -119,6 +129,7 @@ export default {
 		dialoglistorden: { default: false },
 	} /*data de llegado de componente padre creacion*/,
 	data: () => ({
+		swipeDirection: "None",
 		ticketsPWANotiArrayMesero: [],
 		ticketsPWANotiArrayBarra: [],
 		tempTicketsArray: [],
@@ -127,6 +138,12 @@ export default {
 	}),
 
 	methods: {
+		swipe(direction) {
+			if (direction === "Down") {
+				this.$emit("update:dialoglistorden", false);
+			}
+			this.swipeDirection = direction;
+		},
 		colorchange(status) {
 			var st = null;
 			switch (status) {

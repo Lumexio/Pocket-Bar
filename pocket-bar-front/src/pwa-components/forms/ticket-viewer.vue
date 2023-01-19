@@ -103,6 +103,7 @@ export default {
 	} /*data de llegado de componente padre creacion*/,
 	data() {
 		return {
+			swipeDirection: "None",
 			itemstip: [
 				{ name: "5%", value: 5 },
 				{ name: "10%", value: 10 },

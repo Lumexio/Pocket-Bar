@@ -22,7 +22,7 @@
 					class="mr-1"
 					max-width="25px"
 					large
-					dark
+					:dark="darkonchange"
 					color="cyan darken-3"
 					@click.prevent="dialogticketviewer = true"
 					><v-icon>mdi-eye-circle</v-icon>
@@ -31,7 +31,8 @@
 					class="mr-2"
 					max-width="25px"
 					large
-					color="primary"
+					:dark="darkonchange"
+					color="#1E88E5"
 					v-if="item.status != 'Cerrado'"
 					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
 					><v-icon>mdi-plus</v-icon>

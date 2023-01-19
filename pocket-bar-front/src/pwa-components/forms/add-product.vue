@@ -8,6 +8,7 @@
 		<v-card :dark="this.$store.getters.hasdarkflag === true">
 			<v-toolbar
 				color="transparent"
+				flat
 				prominent
 				v-touch="{
 					left: () => swipe('Left'),

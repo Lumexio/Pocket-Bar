@@ -5,6 +5,7 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
+		<!-- Comment cotorro -->
 		<v-card :dark="this.$store.getters.hasdarkflag === true">
 			<v-toolbar
 				color="transparent"

@@ -180,7 +180,7 @@
 							class="ma-2"
 						>
 						</v-select>
-						<v-select
+						<!-- <v-select
 							v-model="selectip"
 							:items="itemstip"
 							append-icon="mdi-percent-circle-outline"
@@ -188,7 +188,7 @@
 							outlined
 							class="ma-2"
 						>
-						</v-select>
+						</v-select> -->
 						<v-text-field
 							label="Titular"
 							append-icon="mdi-account-circle-outline"

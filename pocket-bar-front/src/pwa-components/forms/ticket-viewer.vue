@@ -44,7 +44,7 @@
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
 				</v-row>
-				<v-row class="mb-3">
+				<v-row class="mb-3" v-show="statCheck(ticket.status)">
 					<template>
 						<v-col
 							v-for="(item, index) in itemstip"
@@ -87,8 +87,16 @@
 					</template>
 				</v-simple-table>
 				<v-row class="ma-4">
-					Propina: {{ selectip }}% [${{ calctip(ticket.total) }}] Total neto:
-					${{ calctotalneto(ticket.total) }}
+					<v-col>
+						Propina:
+						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b></v-col
+					>
+					<v-col>
+						<h3>
+							Total neto:
+							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
+						</h3></v-col
+					>
 				</v-row>
 			</v-card-text>
 		</v-card>
@@ -100,6 +108,7 @@ export default {
 	props: {
 		dialogticketviewer: { default: false },
 		ticket: { default: null },
+		status: { default: null },
 	} /*data de llegado de componente padre creacion*/,
 	data() {
 		return {
@@ -113,8 +122,15 @@ export default {
 			selectip: 0,
 		};
 	},
-	computed: {},
+
 	methods: {
+		statCheck(status) {
+			if (status != "Por entregar") {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		calctip(total) {
 			this.selectip = Number(this.selectip);
 

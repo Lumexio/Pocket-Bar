@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Rol;
 use App\Events\rolCreated;
@@ -11,7 +13,7 @@ class RolController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection|Rol[]
      */
     public function index()
     {
@@ -21,8 +23,8 @@ class RolController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Model|Rol
      */
     public function store(Request $request)
     {
@@ -35,7 +37,7 @@ class RolController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Collection|Model|Rol|Rol[]
      */
     public function show($id)
     {
@@ -45,9 +47,9 @@ class RolController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Collection|Model|Rol|Rol[]
      */
     public function update(Request $request, $id)
     {
@@ -60,7 +62,7 @@ class RolController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return int
      */
     public function destroy($id)
     {

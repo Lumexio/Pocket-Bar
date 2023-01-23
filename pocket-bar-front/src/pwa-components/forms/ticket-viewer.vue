@@ -20,7 +20,7 @@
 				<v-btn icon @click.prevent="close()" large>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
-
+				<!-- Some text -->
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
 

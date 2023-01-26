@@ -6,6 +6,7 @@
 		transition="dialog-bottom-transition"
 	>
 		<v-card>
+			<!-- Do this -->
 			<v-toolbar
 				color="transparent"
 				flat

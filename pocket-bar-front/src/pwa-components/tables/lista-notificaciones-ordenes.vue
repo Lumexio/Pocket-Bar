@@ -119,7 +119,7 @@
 	</v-dialog>
 </template>
 
-<script>
+<script lang="js">
 import { getTicketsNotiPWA } from "@/api/tickets.js";
 import { postTicketsNotiPWA } from "@/api/tickets.js";
 import store from "@/store";

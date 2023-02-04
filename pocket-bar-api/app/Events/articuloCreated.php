@@ -4,14 +4,9 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-// use Illuminate\Support\Facades\DB;
-// use App\Models\Articulo;
-// use Illuminate\Broadcasting\PresenceChannel;
-// use Illuminate\Broadcasting\PrivateChannel;
 
 class articuloCreated implements ShouldBroadcastNow
 {
@@ -22,8 +17,8 @@ class articuloCreated implements ShouldBroadcastNow
      *
      * @return void
      */
-    public $articulos;
-    public $afterCommit = true;
+    public mixed $articulos;
+    public bool $afterCommit = true;
     public function __construct()
     {
 
@@ -34,9 +29,9 @@ class articuloCreated implements ShouldBroadcastNow
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel|array
     {
         return new Channel('articulos');
     }

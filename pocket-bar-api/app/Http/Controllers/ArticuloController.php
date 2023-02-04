@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use App\Models\Articulo;
 use App\Events\articuloCreated;
 use App\Http\Requests\ArticuleValidationRequest;
 use File;
-//use Illuminate\Http\File;
 use Illuminate\Support\Facades\Auth;
-
-//use Illuminate\Support\Facades\Storage;
 
 class ArticuloController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection
      */
-    public function index()
+    public function index(): Collection
     {
-        $dat = DB::table('articulos_tbl')
+        return DB::table('articulos_tbl')
             ->leftJoin('users', 'articulos_tbl.user_id', '=', 'users.id')
             ->leftJoin('categorias_tbl', 'articulos_tbl.categoria_id', '=', 'categorias_tbl.id')
             ->leftJoin('marcas_tbl', 'articulos_tbl.marca_id', '=', 'marcas_tbl.id')
@@ -34,12 +34,10 @@ class ArticuloController extends Controller
             ->get()
             ->map(
                 function ($item) {
-                    $item->foto_articulo = url("images/{$item->foto_articulo}");
+                    $item->foto_articulo = url("images/$item->foto_articulo");
                     return $item;
                 }
             );
-
-        return $dat;
 
 
         //return Articulo::all();
@@ -49,12 +47,12 @@ class ArticuloController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ArticuleValidationRequest $request
+     * @return Model|Response
      *
      * dentro hay una validacion para saber si el nombre del articulo ya exite en los registros.
      */
-    public function store(ArticuleValidationRequest $request)
+    public function store(ArticuleValidationRequest $request): Model|Response
     {
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
             return response([
@@ -71,8 +69,7 @@ class ArticuloController extends Controller
                 $articulo["foto_articulo"] = $name_foto;
             }
             $articulo = Articulo::create($articulo);
-            broadcast((new articuloCreated($articulo))->broadcastToEveryone());
-            //articuloCreated::dispatch($articulo);
+            broadcast((new articuloCreated())->broadcastToEveryone());
             return $articulo;
         }
     }
@@ -80,10 +77,10 @@ class ArticuloController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Collection|Model
      */
-    public function show($id)
+    public function show(int $id): Collection|Model
     {
         return Articulo::find($id);
     }
@@ -91,11 +88,11 @@ class ArticuloController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Model
      */
-    public function update($id, Request $request)
+    public function update(Request $request, int $id): Model
     {
         $articulo = Articulo::find($id);
         //Obtener nombre venidero
@@ -132,7 +129,7 @@ class ArticuloController extends Controller
 
 
         $articulo['user_id'] = Auth::id();
-        broadcast((new articuloCreated($articulo))->broadcastToEveryone());
+        broadcast((new articuloCreated())->broadcastToEveryone());
         return $articulo;
     }
 
@@ -140,17 +137,17 @@ class ArticuloController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return int
      */
-    public function destroy($id)
+    public function destroy(int $id): int
     {
         $articulo = Articulo::find($id);
         $filename = $articulo->foto_articulo;
         $path = public_path("/images/$filename");
         File::delete($path);
         $articulo = Articulo::destroy($id);
-        broadcast((new articuloCreated($articulo))->broadcastToEveryone());
+        broadcast((new articuloCreated())->broadcastToEveryone());
         return $articulo;
     }
 }

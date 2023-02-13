@@ -424,8 +424,8 @@ export default {
 	justify-content: flex-start;
 }
 .card-p {
-	min-width: 90%;
-	max-width: 90%;
+	min-width: 96%;
+	max-width: 96%;
 }
 .card-prod {
 	text-align: start;

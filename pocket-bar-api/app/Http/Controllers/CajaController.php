@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 class CajaController extends Controller
 {
-    public Workshift $activeWorkshift;
+    public Workshift $actualWorkshift;
     private function getMustBeData($userId)
     {
         $this->actualWorkshift = Workshift::where('active', 1)->first();

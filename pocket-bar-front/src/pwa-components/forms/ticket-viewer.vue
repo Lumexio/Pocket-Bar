@@ -98,6 +98,11 @@
 							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
 						</h3></v-col
 					>
+					<v-col
+						><v-btn color="success" large rounded depressed @click="sendTip()"
+							>Guardar propina</v-btn
+						></v-col
+					>
 				</v-row>
 			</v-card-text>
 		</v-card>
@@ -105,6 +110,7 @@
 </template>
 
 <script>
+import { putTipUpdate } from "@/api/tickets.js";
 export default {
 	props: {
 		dialogticketviewer: { default: false },
@@ -125,6 +131,13 @@ export default {
 	},
 
 	methods: {
+		sendTip() {
+			putTipUpdate({ id: this.ticket.id, tip: this.selectip }).then((res) => {
+				if (res) {
+					this.$emit("update:dialogticketviewer", false);
+				}
+			});
+		},
 		statCheck(status) {
 			if (status != "Por entregar") {
 				return true;

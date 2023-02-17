@@ -65,6 +65,17 @@
 						</v-col>
 					</template>
 				</v-row>
+				<div class="d-flex justify-center align-center">
+					<v-text-field
+						label="Monto	de propina"
+						append-icon="mdi-currency-usd"
+						append-outer-icon="mdi-cash"
+						style="max-width: 20rem"
+						v-show="statCheck(ticket.status)"
+						class="ma-5"
+						outlined
+					></v-text-field>
+				</div>
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
 						<thead>
@@ -99,7 +110,7 @@
 						</h3></v-col
 					>
 					<v-col
-						><v-btn color="success" large rounded depressed @click="sendTip()"
+						><v-btn color="success" large depressed @click="sendTip()"
 							>Guardar propina</v-btn
 						></v-col
 					>

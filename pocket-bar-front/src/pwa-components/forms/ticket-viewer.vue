@@ -65,6 +65,17 @@
 						</v-col>
 					</template>
 				</v-row>
+				<div class="d-flex justify-center align-center">
+					<v-text-field
+						label="Monto	de propina"
+						append-icon="mdi-currency-usd"
+						append-outer-icon="mdi-cash"
+						style="max-width: 20rem"
+						v-show="statCheck(ticket.status)"
+						class="ma-5"
+						outlined
+					></v-text-field>
+				</div>
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
 						<thead>
@@ -98,6 +109,11 @@
 							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
 						</h3></v-col
 					>
+					<v-col
+						><v-btn color="success" large depressed @click="sendTip()"
+							>Guardar propina</v-btn
+						></v-col
+					>
 				</v-row>
 			</v-card-text>
 		</v-card>
@@ -105,6 +121,7 @@
 </template>
 
 <script>
+import { putTipUpdate } from "@/api/tickets.js";
 export default {
 	props: {
 		dialogticketviewer: { default: false },
@@ -125,6 +142,13 @@ export default {
 	},
 
 	methods: {
+		sendTip() {
+			putTipUpdate({ id: this.ticket.id, tip: this.selectip }).then((res) => {
+				if (res) {
+					this.$emit("update:dialogticketviewer", false);
+				}
+			});
+		},
 		statCheck(status) {
 			if (status != "Por entregar") {
 				return true;

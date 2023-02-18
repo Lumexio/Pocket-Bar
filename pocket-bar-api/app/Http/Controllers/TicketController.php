@@ -57,7 +57,13 @@ class TicketController extends Controller
 
         return [$subtotal, $tax, $discounts, $total];
     }
-
+    public function tipUpdate(Request $request)
+    {
+        $ticket = Ticket::findOrFail($request->input('id'));
+        $ticket->tip = $request->input('tip');
+        $ticket->save();
+        return response()->json($ticket);
+    }
     public function store(TicketCreateRequest $request): JsonResponse
     {
 

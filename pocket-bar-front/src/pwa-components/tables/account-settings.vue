@@ -5,7 +5,7 @@
 		hide-overlay
 		transition="dialog-top-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
-			<v-toolbar color="transparent">
+			<v-toolbar color="transparent" prominent>
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag"
@@ -14,20 +14,11 @@
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
-				<v-toolbar-title>Configuración </v-toolbar-title>
-				<v-spacer></v-spacer>
-				<span
-					class="mr-6"
-					:class="[
-						$store.getters.hasdarkflag === true
-							? 'title-user-letter-dark'
-							: 'white-mode-text',
-					]"
-					>{{ typeUser }}</span
+				<v-toolbar-title
+					><v-icon>mdi-account-cog</v-icon> Configuración <v-spacer></v-spacer>
+					<span class="caption">{{ typeUser }}</span></v-toolbar-title
 				>
-				<v-divider vertical></v-divider>
 				<v-spacer></v-spacer>
-				<v-icon>mdi-account-cog</v-icon>
 			</v-toolbar>
 
 			<h2>Temas</h2>

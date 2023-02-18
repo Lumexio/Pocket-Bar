@@ -61,6 +61,7 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($request->input('id'));
         $ticket->tip = $request->input('tip');
+        $ticket->specifictip = $request->input('specifictip');
         $ticket->save();
         return response()->json($ticket);
     }

@@ -72,6 +72,7 @@
 						append-outer-icon="mdi-cash"
 						style="max-width: 20rem"
 						v-show="statCheck(ticket.status)"
+						v-model="specifictip"
 						class="ma-5"
 						outlined
 					></v-text-field>
@@ -138,12 +139,17 @@ export default {
 				{ name: "20%", value: 20 },
 			],
 			selectip: 0,
+			specifictip: null,
 		};
 	},
 
 	methods: {
 		sendTip() {
-			putTipUpdate({ id: this.ticket.id, tip: this.selectip }).then((res) => {
+			putTipUpdate({
+				id: this.ticket.id,
+				tip: this.selectip,
+				specifictip: this.specifictip,
+			}).then((res) => {
 				if (res) {
 					this.$emit("update:dialogticketviewer", false);
 				}

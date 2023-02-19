@@ -18,6 +18,7 @@ class CreateProveedorsTable extends Migration
             $table->string('nombre_proveedor');
             $table->longText('descripcion')->nullable();
             $table->timestamps();
+            $table->boolean('active')->default(true);
             $table->engine = 'InnoDB';
         });
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Events\categoriaCreated;
 use App\Http\Requests\CategoriaValidationRequest;
+use App\Http\Requests\ListRequest;
 
 class CategoriaController extends Controller
 {
@@ -14,10 +15,20 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ListRequest $request)
     {
-
-        return Categoria::all();
+        $categorias = Categoria::query();
+        $active = $request->get('active');
+        if (isset($active)) {
+            $categorias->where('active', $request->get('active'));
+        } else {
+            $categorias->where('active', true)
+                ->orWhere('active', false);
+        }
+        return response()->json([
+            'message' => 'success',
+            'categorias' => $categorias->get()
+        ], 200);
     }
 
     /**
@@ -58,7 +69,7 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $categoria = Categoria::find($id);
         $categoria->update($request->all());
@@ -71,9 +82,18 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    // public function destroy($id)
+    // {
+    //     // No se puede eliminar una categoria
 
-        return Categoria::destroy($id);
+    //     return Categoria::destroy($id);
+    // }
+
+    public function activate(int $id)
+    {
+        $categoria = Categoria::find($id);
+        $categoria->active = !$categoria->active;
+        $categoria->save();
+        return $categoria;
     }
 }

@@ -16,6 +16,7 @@ class CreateRolsTable extends Migration
         Schema::create('rols_tbl', function (Blueprint $table) {
             $table->id();
             $table->string('name_rol');
+            $table->boolean('active')->default(true);
             $table->timestamps();
             $table->engine = 'InnoDB';
         });

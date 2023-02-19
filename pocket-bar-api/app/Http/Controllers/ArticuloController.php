@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use \Illuminate\Http\Response;
 use App\Models\Articulo;
 use App\Events\articuloCreated;
 use App\Http\Requests\ArticuleValidationRequest;
+use App\Http\Requests\ListRequest;
 use File;
-//use Illuminate\Http\File;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-//use Illuminate\Support\Facades\Storage;
 
 class ArticuloController extends Controller
 {
@@ -20,16 +19,20 @@ class ArticuloController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ListRequest $request): JsonResponse
     {
-        $dat = DB::table('articulos_tbl')
-            ->leftJoin('users', 'articulos_tbl.user_id', '=', 'users.id')
-            ->leftJoin('categorias_tbl', 'articulos_tbl.categoria_id', '=', 'categorias_tbl.id')
-            ->leftJoin('marcas_tbl', 'articulos_tbl.marca_id', '=', 'marcas_tbl.id')
-            ->leftJoin('proveedores_tbl', 'articulos_tbl.proveedor_id', '=', 'proveedores_tbl.id')
-            ->leftJoin('status_tbl', 'articulos_tbl.status_id', '=', 'status_tbl.id')
-            ->leftJoin('tipos_tbl', 'articulos_tbl.tipo_id', '=', 'tipos_tbl.id')
-            ->select('articulos_tbl.id', 'articulos_tbl.nombre_articulo', 'articulos_tbl.cantidad_articulo', 'articulos_tbl.precio_articulo',  'articulos_tbl.descripcion_articulo', 'articulos_tbl.foto_articulo', 'users.name', 'categorias_tbl.nombre_categoria', 'marcas_tbl.nombre_marca', 'proveedores_tbl.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo')
+        $showActive = $request->get('showActive');
+        $dat = DB::table('articulos_tbl as art')
+            ->leftJoin('users', 'art.user_id', '=', 'users.id')
+            ->leftJoin('categorias_tbl as cat', 'art.categoria_id', '=', 'cat.id')
+            ->leftJoin('marcas_tbl', 'art.marca_id', '=', 'marcas_tbl.id')
+            ->leftJoin('proveedores_tbl as prov', 'art.proveedor_id', '=', 'prov.id')
+            ->leftJoin('status_tbl', 'art.status_id', '=', 'status_tbl.id')
+            ->leftJoin('tipos_tbl', 'art.tipo_id', '=', 'tipos_tbl.id');
+        if (isset($showActive)) {
+            $dat = $showActive ? $dat->whereNull('art.deactivated_at') : $dat->whereNotNull('art.deactivated_at');
+        }
+        $dat = $dat->select('art.id', 'art.nombre_articulo', 'art.cantidad_articulo', 'art.precio_articulo',  'art.descripcion_articulo', 'art.foto_articulo', 'users.name', 'cat.nombre_categoria', 'marcas_tbl.nombre_marca', 'prov.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo', "art.deactivated_at")
             ->get()
             ->map(
                 function ($item) {
@@ -37,11 +40,7 @@ class ArticuloController extends Controller
                     return $item;
                 }
             );
-
-        return $dat;
-
-
-        //return Articulo::all();
+        return response()->json(["message" => "success", "articulos" => $dat]);
     }
 
 
@@ -73,7 +72,6 @@ class ArticuloController extends Controller
             }
             $articulo = Articulo::create($articulo);
             broadcast((new articuloCreated($articulo))->broadcastToEveryone());
-            //articuloCreated::dispatch($articulo);
             return $articulo;
         }
     }
@@ -82,9 +80,9 @@ class ArticuloController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Model
      */
-    public function show($id)
+    public function show(int $id)
     {
         return Articulo::find($id);
     }
@@ -121,16 +119,26 @@ class ArticuloController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function activate(int $id): JsonResponse
     {
+        $message = "";
         $articulo = Articulo::find($id);
-        $filename = $articulo->foto_articulo;
-        $path = public_path("/images/$filename");
-        File::delete($path);
-        $articulo = Articulo::destroy($id);
+        if (isset($articulo->deactivated_at)) {
+            $articulo->deactivated_at = null;
+            $message = "Articulo Activado";
+        } else {
+            $filename = $articulo->foto_articulo;
+            if (isset($filename)) {
+                $path = public_path("/images/$filename");
+                File::delete($path);
+            }
+            $articulo->deactivated_at = now();
+            $message = "Articulo Desactivado";
+        }
+        $articulo->save();
         broadcast((new articuloCreated($articulo))->broadcastToEveryone());
-        return $articulo;
+        return response()->json(['message' => $message, 'articulo' => $articulo]);
     }
 }

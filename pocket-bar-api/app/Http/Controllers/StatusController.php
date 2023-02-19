@@ -63,8 +63,16 @@ class StatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    // public function destroy($id)
+    // {
+    //     return Status::destroy($id);
+    // }
+
+    public function activate($id)
     {
-        return Status::destroy($id);
+        $status = Status::find($id);
+        $status->status = !$status->status;
+        $status->save();
+        return $status;
     }
 }

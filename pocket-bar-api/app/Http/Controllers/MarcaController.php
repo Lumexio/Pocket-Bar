@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Marca;
 
 use App\Events\marcaCreated;
+use App\Http\Requests\ListRequest;
 use App\Http\Requests\MarcaValidationRequest;
 
 class MarcaController extends Controller
@@ -15,9 +16,20 @@ class MarcaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ListRequest $request)
     {
-        return Marca::all();
+        $active = $request->get('active');
+        $marcas = Marca::query();
+        if (isset($active)) {
+            $marcas->where('active', $request->get('active'));
+        } else {
+            $marcas->where('active', true)
+                ->orWhere('active', false);
+        }
+        return response()->json([
+            'message' => 'success',
+            'marcas' => $marcas->get()
+        ], 200);
     }
 
     /**
@@ -70,8 +82,16 @@ class MarcaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    // public function destroy($id)
+    // {
+    //     return Marca::destroy($id);
+    // }
+
+    public function activate($id)
     {
-        return Marca::destroy($id);
+        $marca = Marca::find($id);
+        $marca->active = !$marca->active;
+        $marca->save();
+        return $marca;
     }
 }

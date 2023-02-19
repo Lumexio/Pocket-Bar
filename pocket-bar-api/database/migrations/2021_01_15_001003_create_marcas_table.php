@@ -18,6 +18,7 @@ class CreateMarcasTable extends Migration
             $table->string('nombre_marca', 100);
             $table->longText('descripcion_marca')->nullable();
             $table->timestamps();
+            $table->boolean("active")->default(true);
             $table->engine = 'InnoDB';
         });
     }

@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->engine = 'InnoDB';
             $table->foreignId('rol_id')->nullable('NULL')->references('id')->on('rols_tbl');
+            $table->boolean('active')->default(true);
         });
     }
 

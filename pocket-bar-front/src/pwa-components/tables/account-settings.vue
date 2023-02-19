@@ -65,6 +65,7 @@
 <script>
 import store from "@/store";
 import router from "@/router";
+import { Logout } from "@/api/usuarios.js";
 export default {
 	name: "configurionCuenta",
 	props: {
@@ -77,8 +78,12 @@ export default {
 
 	methods: {
 		logoutConfirm() {
-			this.toClose();
-			this.closeLogout();
+			Logout().then((res) => {
+				if (res.status === 200) {
+					this.toClose();
+					this.closeLogout();
+				}
+			});
 		},
 		closeLogout() {
 			this.dialogLogout = false;

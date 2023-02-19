@@ -27,4 +27,18 @@ export function getUsuarios(usersArray) {
       .catch((error) => { console.log(error); reject(error); });
   })
 }
-export default { getUsuarios };
+export function Logout() {
+  return new Promise((resolve, reject) => {
+    axios
+      .get("api/logout")
+      .then((response) => {
+        const data = response.data;
+        const status = response.status;
+        resolve({
+          data, status
+        });
+      })
+      .catch((error) => { reject(error); });
+  })
+}
+export default { getUsuarios, Logout };

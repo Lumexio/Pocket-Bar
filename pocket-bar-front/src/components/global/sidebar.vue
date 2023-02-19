@@ -155,6 +155,7 @@
 <script>
 import store from "@/store.js";
 import router from "@/router";
+import { Logout } from "@/api/usuarios.js";
 export default {
 	name: "sidebar",
 	components: {},
@@ -247,8 +248,12 @@ export default {
 	},
 	methods: {
 		logoutConfirm() {
-			this.logout();
-			this.dialogLogout = false;
+			Logout().then((res) => {
+				if (res.status === 200) {
+					this.logout();
+					this.dialogLogout = false;
+				}
+			});
 		},
 		closeDelete() {
 			this.dialogDelete = false;

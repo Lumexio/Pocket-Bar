@@ -25,6 +25,7 @@ class CreateTicketsTable extends Migration
             $table->decimal("tax", 10, 2);
             $table->decimal("discounts", 10, 2);
             $table->decimal("tip", 10, 2);
+            $table->decimal("specifictip", 10, 2)->nullable(true);
             $table->decimal("min_tip", 10, 2);
             // $table->string("nombre_mesa");
             $table->string("client_name");

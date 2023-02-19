@@ -72,6 +72,7 @@ Mostrar un registro no */
         Route::get('/list', 'TicketController@index'); //Lista para deskstop
         Route::get('/pwa/list', 'TicketController@indexPwa'); //Lista para pantallas moviles
         Route::post('/create', 'TicketController@store'); //Crear ticket
+        Route::put('/tip', 'TicketController@tipUpdate'); //Crear ticket
         Route::post('/pay', 'TicketController@pay'); //pagar cuenta
         /** Cancelar tiket
          * !Pendiente crear boton para admin y cajero
@@ -125,3 +126,4 @@ Mostrar un registro no */
 });
 
 Route::post('login', [UserController::class, 'login']);
+Route::get('logout', [UserController::class, 'logout']);

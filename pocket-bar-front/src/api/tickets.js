@@ -67,6 +67,37 @@ export function postTickets(enviar) {
   });
 
 }
+
+export function putTipUpdate(enviar) {
+
+  return new Promise((resolve, reject) => {
+    axios
+      .put("api/tickets/tip", enviar)
+      .then((response) => {
+        const resp = response;
+
+        if (response) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+          }, 2000);
+        }
+        resolve({
+          resp
+        });
+      })
+      .catch((e) => {
+        reject(e);
+        if (e) {
+          store.commit("setdanger", true);
+        }
+      });
+  });
+
+}
+
+
 export function postAddProducts(enviar) {
   return new Promise((resolve, reject) => {
     axios
@@ -182,4 +213,4 @@ export function postTicketsNotiPWA(enviar) {
 
 
 
-export default { getTickets, postTickets, postAddProducts, postTicketsNotiPWA, getTicketsPWA, getTicketsNotiPWA }
+export default { getTickets, postTickets, putTipUpdate, postAddProducts, postTicketsNotiPWA, getTicketsPWA, getTicketsNotiPWA }

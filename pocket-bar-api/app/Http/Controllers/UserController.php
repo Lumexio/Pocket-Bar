@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use \Illuminate\Http\Response;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\userCreated;
 use App\Http\Requests\UsuarioValidationRequest;
@@ -79,7 +79,7 @@ class UserController extends Controller
     }
 
 
-    function login(Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
             'name' => ['required'],
@@ -93,7 +93,8 @@ class UserController extends Controller
             return response()->json(
                 [
                     'message' => ['Las credentials no concuerdan con ningun registro.']
-                ], 404
+                ],
+                404
             );
         }
 
@@ -113,7 +114,7 @@ class UserController extends Controller
             return response()->json($response);
         }
     }
-    function logout(): JsonResponse
+    public function logout(): JsonResponse
     {
         Auth::logout();
         return response()->json(['message' => 'Logged out'], 200);

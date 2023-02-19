@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Events\proveedorCreated;
+use App\Http\Requests\ListRequest;
 use App\Http\Requests\ProveedorValidationRequest;
 
 class ProveedorController extends Controller
@@ -14,9 +15,20 @@ class ProveedorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ListRequest $request)
     {
-        return Proveedor::all();
+        $proveedores = Proveedor::query();
+        $active = $request->get('active');
+        if (isset($active)) {
+            $proveedores->where('active', $request->get('active'));
+        } else {
+            $proveedores->where('active', true)
+                ->orWhere('active', false);
+        }
+        return response()->json([
+            'message' => 'success',
+            'proveedores' => $proveedores->get()
+        ], 200);
     }
 
     /**
@@ -64,14 +76,16 @@ class ProveedorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Activate and deactivate the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Model
      */
-    public function destroy($id)
+    public function activate($id)
     {
-        $proveedor = Proveedor::destroy($id);
+        $proveedor = Proveedor::find($id);
+        $proveedor->active = !$proveedor->active;
+        $proveedor->save();
         return $proveedor;
     }
 }

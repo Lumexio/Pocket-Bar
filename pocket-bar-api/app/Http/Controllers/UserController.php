@@ -72,9 +72,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function activate($id)
     {
-        return User::destroy($id);
+        $user = User::find($id);
+        $user->active = !$user->active;
+        $user->save();
+        return $user;
     }
 
 
@@ -85,7 +88,7 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = User::where('name', $request->name)->first();
+        $user = User::where('name', $request->name)->where("active", true)->first();
 
         // print_r($data);
         if (!$user || !Hash::check($request->password, $user->password)) {

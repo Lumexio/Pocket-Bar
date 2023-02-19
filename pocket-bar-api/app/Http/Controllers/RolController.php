@@ -64,8 +64,15 @@ class RolController extends Controller
      * @param  int  $id
      * @return int
      */
-    public function destroy($id)
+    // public function destroy($id)
+    // {
+    //     return Rol::destroy($id);
+    // }
+
+    public function activate($id)
     {
-        return Rol::destroy($id);
+        $rol = Rol::find($id);
+        $rol->update(['activo' => !$rol->activo]);
+        return $rol;
     }
 }

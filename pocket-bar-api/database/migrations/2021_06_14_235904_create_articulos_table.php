@@ -25,12 +25,12 @@ class CreateArticulosTable extends Migration
             $table->foreignId('tipo_id')->nullable('NULL')->references('id')->on('tipos_tbl');
             $table->foreignId('status_id')->nullable('NULL')->references('id')->on('status_tbl');
             $table->string('foto_articulo')->nullable('NULL');
-            // $table->foreignId('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->timestamps();
+            $table->date('deactivated_at')->nullable('NULL');
             $table->engine = 'InnoDB';
         });
     }

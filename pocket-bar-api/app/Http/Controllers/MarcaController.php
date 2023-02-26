@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Marca;
 
 use App\Events\marcaCreated;
 use App\Http\Requests\ListRequest;
 use App\Http\Requests\MarcaValidationRequest;
+use Illuminate\Support\Collection;
 
 class MarcaController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param ListRequest $request
+     * @return JsonResponse
      */
-    public function index(ListRequest $request)
+    public function index(ListRequest $request): JsonResponse
     {
         $active = $request->get('active');
         $marcas = Marca::query();
@@ -29,19 +32,18 @@ class MarcaController extends Controller
         return response()->json([
             'message' => 'success',
             'marcas' => $marcas->get()
-        ], 200);
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  MarcaValidationRequest $request
+     * @return JsonResponse|Model
      */
-    public function store(MarcaValidationRequest $request)
+    public function store(MarcaValidationRequest $request): JsonResponse|Model
     {
         if (Marca::where('nombre_marca', '=', $request->get('nombre_marca'))->exists()) {
-            return response([
+            return response()->json([
                 'message' => ['Uno de los parametros ya exite.']
             ], 409);
         } else {
@@ -55,9 +57,9 @@ class MarcaController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Model|Collection
      */
-    public function show($id)
+    public function show(int $id): Model|Collection
     {
         return Marca::find($id);
     }
@@ -65,11 +67,11 @@ class MarcaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Model|Collection
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): Model|Collection
     {
         $marca = Marca::find($id);
         $marca->update($request->all());
@@ -80,14 +82,17 @@ class MarcaController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return int
      */
-    // public function destroy($id)
+    // public function destroy($id): int
     // {
     //     return Marca::destroy($id);
     // }
-
-    public function activate($id)
+    /**
+     * @param int $id
+     * @return Model|Collection
+     */
+    public function activate(int $id): Model|Collection
     {
         $marca = Marca::find($id);
         $marca->active = !$marca->active;

@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\TicketStatus;
 use DB;
 use App\Models\Ticket;
 use App\Models\Workshift;
 use App\Http\Requests\Caja\CloseRequest;
 use App\Models\CashRegisterCloseData;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
+use Throwable;
 
 class CajaController extends Controller
 {
     public Workshift $actualWorkshift;
-    private function getMustBeData($userId)
+    private function getMustBeData($userId): JsonResponse|Model|Collection
     {
         $this->actualWorkshift = Workshift::where('active', 1)->first();
-        if (!$this->actualWorkshift) {
+        if (empty($this->actualWorkshift)) {
             return response()->json([
                 'message' => 'No hay una jornada de trabajo activa'
             ], 400);
         }
-        $tickets = Ticket::where('workshift_id', $this->actualWorkshift->id)
+        return Ticket::where('workshift_id', $this->actualWorkshift->id)
             ->where('status', '!=', 'cancelado')
             ->where("cashier_id", "=", $userId)
             ->with('details')
@@ -29,7 +31,6 @@ class CajaController extends Controller
             ->selectRaw("SUM(payments_tbl.total) as total_night, payments_tbl.type")
             ->groupBy('payments_tbl.type')
             ->get();
-        return $tickets;
     }
 
     public function getMustBe(): JsonResponse
@@ -42,7 +43,10 @@ class CajaController extends Controller
         ], 200);
     }
 
-    public function close(CloseRequest $request)
+    /**
+     * @throws Throwable
+     */
+    public function close(CloseRequest $request): JsonResponse
     {
         $dataInDatabase = $this->getMustBeData(auth()->user()->id)->groupBy('type');
         $dataSended = collect($request->input('data'))->groupBy('type');
@@ -75,7 +79,7 @@ class CajaController extends Controller
 
 
             DB::commit();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             return response()->json(['error' => $th->getMessage()], 422);
         }

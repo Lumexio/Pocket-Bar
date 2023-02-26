@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Events\categoriaCreated;
@@ -14,10 +15,10 @@ class CategoriaController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Categoria[]|Collection
+     * @param ListRequest $request
+     * @return JsonResponse
      */
-    public function index(ListRequest $request)
+    public function index(ListRequest $request): JsonResponse
     {
         $categorias = Categoria::query();
         $active = $request->get('active');
@@ -37,12 +38,12 @@ class CategoriaController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CategoriaValidationRequest $request
-     * @return Response|Model
+     * @return JsonResponse|Model
      */
-    public function store(CategoriaValidationRequest $request): Response|Model
+    public function store(CategoriaValidationRequest $request): JsonResponse|Model
     {
         if (Categoria::where('nombre_categoria', '=', $request->get('nombre_categoria'))->exists()) {
-            return response([
+            return response()->json([
                 'message' => ['Nombre el nombre de la categoria  ya exite.']
             ], 409);
         } else {
@@ -56,9 +57,9 @@ class CategoriaController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Model
+     * @return Model|Collection
      */
-    public function show(int $id): Model
+    public function show(int $id): Model|Collection
     {
         return Categoria::find($id);
     }
@@ -70,7 +71,7 @@ class CategoriaController extends Controller
      * @param int $id
      * @return Model
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): Model
     {
         $categoria = Categoria::find($id);
         $categoria->update($request->all());
@@ -90,7 +91,7 @@ class CategoriaController extends Controller
     //     return Categoria::destroy($id);
     // }
 
-    public function activate(int $id)
+    public function activate(int $id): Model
     {
         $categoria = Categoria::find($id);
         $categoria->active = !$categoria->active;

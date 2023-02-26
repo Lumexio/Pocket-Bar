@@ -5,9 +5,11 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
+		<!-- Comment cotorro -->
 		<v-card :dark="this.$store.getters.hasdarkflag === true">
 			<v-toolbar
 				color="transparent"
+				flat
 				prominent
 				v-touch="{
 					left: () => swipe('Left'),
@@ -20,7 +22,7 @@
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
 					@click.prevent="close()"
-					x-large
+					large
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
@@ -172,7 +174,7 @@
 						>
 							<v-row>
 								<v-col>
-									<v-btn icon x-large @click.prevent="deleteProduct(index)">
+									<v-btn icon large @click.prevent="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col
 								>
@@ -202,7 +204,7 @@
 						<v-btn
 							dark
 							block
-							x-large
+							large
 							color="success"
 							class="mb-4"
 							@click.prevent="crearTicket()"
@@ -422,8 +424,8 @@ export default {
 	justify-content: flex-start;
 }
 .card-p {
-	min-width: 90%;
-	max-width: 90%;
+	min-width: 96%;
+	max-width: 96%;
 }
 .card-prod {
 	text-align: start;

@@ -18,6 +18,7 @@ class CreateCategoriasTable extends Migration
             $table->string('nombre_categoria', 100);
             $table->longText('descripcion_categoria')->nullable();
             $table->timestamps();
+            $table->boolean('active')->default(true);
             $table->engine = 'InnoDB';
         });
     }

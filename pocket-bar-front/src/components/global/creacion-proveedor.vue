@@ -9,7 +9,7 @@
 			<v-col align-self="end" cols="2">
 				<v-row>
 					<v-btn
-						x-large
+						large
 						elevation="2"
 						color="primary"
 						v-shortkey="['ctrl', 'shift', 'p']"

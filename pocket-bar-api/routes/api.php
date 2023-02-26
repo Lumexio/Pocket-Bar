@@ -27,19 +27,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/create', 'ArticuloController@store');
         Route::put('/update/{id}', 'ArticuloController@update');
         Route::get('/list', 'ArticuloController@index');
-        Route::delete('/delete/{id}', 'ArticuloController@destroy');
+        Route::put('/activate/{id}', 'ArticuloController@activate');
     });
+    // Route::put("articulo/activate/{id}", "ArticuloController@activate");
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
 
     Route::resource('rol', 'RolController');
+    Route::put('/rol/activate/{id}', 'RolController@activate');
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
     Route::resource('marca', 'MarcaController');
+    Route::put('/marca/activate/{id}', 'MarcaController@activate');
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
     Route::resource('categoria', 'CategoriaController');
+    Route::put('/categoria/activate/{id}', 'CategoriaController@activate');
     Route::resource('mesa', 'MesaController');
 
 
@@ -51,20 +55,24 @@ Mostrar un registro no */
 Eliminar no
 Mostrar un registro no */
     Route::resource('proveedor', 'ProveedorController');
+    Route::put('/proveedor/activate/{id}', 'ProveedorController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
     Route::resource('status', 'StatusController');
+    Route::put('/status/activate/{id}', 'StatusController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
     Route::resource('user', 'UserController');
+    Route::put('/user/activate/{id}', 'UserController@activate');
     Route::resource('activitylog', 'ActivitylogController');
 
     Route::prefix('tickets')->group(function () {
         Route::get('/list', 'TicketController@index'); //Lista para deskstop
         Route::get('/pwa/list', 'TicketController@indexPwa'); //Lista para pantallas moviles
         Route::post('/create', 'TicketController@store'); //Crear ticket
+        Route::put('/tip', 'TicketController@tipUpdate'); //Crear ticket
         Route::post('/pay', 'TicketController@pay'); //pagar cuenta
         /** Cancelar tiket
          * !Pendiente crear boton para admin y cajero
@@ -118,3 +126,4 @@ Mostrar un registro no */
 });
 
 Route::post('login', [UserController::class, 'login']);
+Route::get('logout', [UserController::class, 'logout']);

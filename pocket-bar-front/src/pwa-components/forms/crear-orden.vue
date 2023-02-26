@@ -20,7 +20,7 @@
 					icon
 					:dark="this.$store.getters.hasdarkflag === true"
 					@click.prevent="close()"
-					x-large
+					large
 				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
@@ -41,7 +41,7 @@
 					<v-stepper-content class="pa-0" step="1">
 						<div class="ma-2 buttonsproced">
 							<v-btn
-								x-large
+								large
 								dark
 								color="red"
 								v-if="pedidoArray.length > 0"
@@ -57,7 +57,7 @@
 								:content="countproductos"
 							>
 								<v-btn
-									x-large
+									large
 									color="primary"
 									dark
 									v-if="pedidoArray.length > 0"
@@ -159,7 +159,7 @@
 					<v-stepper-content class="pa-0" step="2">
 						<div class="back">
 							<v-btn
-								x-large
+								large
 								color="primary"
 								dark
 								@click.prevent="e6 = 1"
@@ -180,7 +180,7 @@
 							class="ma-2"
 						>
 						</v-select>
-						<v-select
+						<!-- <v-select
 							v-model="selectip"
 							:items="itemstip"
 							append-icon="mdi-percent-circle-outline"
@@ -188,7 +188,7 @@
 							outlined
 							class="ma-2"
 						>
-						</v-select>
+						</v-select> -->
 						<v-text-field
 							label="Titular"
 							append-icon="mdi-account-circle-outline"
@@ -205,7 +205,7 @@
 						>
 							<v-row>
 								<v-col>
-									<v-btn icon x-large @click.prevent="deleteProduct(index)">
+									<v-btn icon large @click.prevent="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col
 								>
@@ -235,7 +235,7 @@
 						<v-btn
 							dark
 							block
-							x-large
+							large
 							color="success"
 							@click.prevent="crearTicket()"
 						>
@@ -588,8 +588,8 @@ export default {
 	justify-content: flex-start;
 }
 .card-p {
-	min-width: 90%;
-	max-width: 90%;
+	min-width: 96%;
+	max-width: 96%;
 }
 .card-prod {
 	text-align: start;

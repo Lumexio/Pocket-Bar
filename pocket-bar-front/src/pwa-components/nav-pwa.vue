@@ -38,23 +38,17 @@
 				<v-icon>mdi-bell</v-icon>
 			</v-btn>
 		</v-badge>
-		<v-btn x-large @click.prevent="dialogaccount = true" icon>
+		<v-btn large @click.prevent="dialogaccount = true" icon>
 			<v-icon>mdi-account-cog</v-icon>
 		</v-btn>
 		<template v-slot:extension>
-			<v-tabs
-				next-icon="mdi-arrow-right-bold-box-outline"
-				prev-icon="mdi-arrow-left-bold-box-outline"
-				show-arrows
-				v-model="tabs"
-				grow
-			>
+			<v-tabs v-model="tabs" icons-and-text>
 				<v-tab
 					@click.prevent="statuschange(item.status)"
 					v-for="item in items"
 					:key="item.id"
 				>
-					{{ item.title }}
+					<v-icon> {{ item.icon }}</v-icon>
 				</v-tab>
 			</v-tabs>
 		</template>
@@ -80,9 +74,24 @@ export default {
 			dialoglistorden: false,
 			dialogaccount: false,
 			items: [
-				{ id: 0, title: "Por entregar", status: "Por entregar" },
-				{ id: 1, title: "Entregadas", status: "Entregado" },
-				{ id: 2, title: "Cerradas", status: "Cerrado" },
+				{
+					id: 0,
+					title: "Por entregar",
+					status: "Por entregar",
+					icon: "mdi-package",
+				},
+				{
+					id: 1,
+					title: "Entregadas",
+					status: "Entregado",
+					icon: "mdi-package-check",
+				},
+				{
+					id: 2,
+					title: "Cerradas",
+					status: "Cerrado",
+					icon: "mdi-package-variant-closed",
+				},
 			],
 		};
 	},

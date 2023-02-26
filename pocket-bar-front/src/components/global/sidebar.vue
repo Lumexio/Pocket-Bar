@@ -121,7 +121,7 @@
 		<template v-slot:append>
 			<div class="pa-2">
 				<v-btn
-					x-large
+					large
 					dark
 					class="mr-6"
 					v-on:click="dialogLogout = true"
@@ -141,10 +141,8 @@
 					>
 					<v-card-actions>
 						<v-spacer></v-spacer>
-						<v-btn x-large @click.prevent="dialogLogout = false"
-							>Cancelar</v-btn
-						>
-						<v-btn x-large color="success" @click.prevent="logoutConfirm"
+						<v-btn large @click.prevent="dialogLogout = false">Cancelar</v-btn>
+						<v-btn large color="success" @click.prevent="logoutConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>
@@ -157,6 +155,7 @@
 <script>
 import store from "@/store.js";
 import router from "@/router";
+import { Logout } from "@/api/usuarios.js";
 export default {
 	name: "sidebar",
 	components: {},
@@ -249,8 +248,12 @@ export default {
 	},
 	methods: {
 		logoutConfirm() {
-			this.logout();
-			this.dialogLogout = false;
+			Logout().then((res) => {
+				if (res.status === 200) {
+					this.logout();
+					this.dialogLogout = false;
+				}
+			});
 		},
 		closeDelete() {
 			this.dialogDelete = false;

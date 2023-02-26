@@ -5,8 +5,8 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<!-- <v-card :dark="this.$store.getters.hasdarkflag === true"> -->
 		<v-card>
+			<!-- Do this -->
 			<v-toolbar
 				color="transparent"
 				flat
@@ -18,80 +18,161 @@
 					down: () => swipe('Down'),
 				}"
 			>
-				<v-btn icon @click.prevent="close()" x-large>
+				<v-btn icon @click.prevent="close()" large>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
-
+				<!-- Some text -->
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
+
 			<v-card-text class="text-left pl-0 pr-0">
 				<v-row class="ma-4">
 					<v-col>
 						Titular
 						<h1>{{ ticket.titular }}</h1>
 					</v-col>
-					<v-spacer></v-spacer>
-					<v-col cols="2">
+
+					<v-col>
 						Estatus
 						<h3>{{ ticket.status }}</h3>
 					</v-col>
-					<v-col cols="1">
+					<v-col>
 						Mesa
 						<h3>{{ ticket.nombre_mesa }}</h3>
 					</v-col>
-					<v-col cols="2">
+					<v-col>
 						Fecha
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
-					<v-col cols="3"
-						><v-select
-							v-model="selectip"
-							:items="itemstip"
-							append-icon="mdi-percent-circle-outline"
-							label="Propina %"
-							outlined
-							class="ma-2"
-						></v-select
-					></v-col>
 				</v-row>
+				<v-row class="mb-3" v-show="statCheck(ticket.status)">
+					<template>
+						<v-col
+							v-for="(item, index) in itemstip"
+							:item="item"
+							class="d-flex justify-center"
+							:key="index"
+						>
+							<v-btn
+								dark
+								color="primary"
+								@click="toTip(item.value)"
+								large
+								rounded
+								depressed
+								>{{ item.name }}</v-btn
+							>
+						</v-col>
+					</template>
+				</v-row>
+				<div class="d-flex justify-center align-center">
+					<v-text-field
+						label="Monto	de propina"
+						append-icon="mdi-currency-usd"
+						append-outer-icon="mdi-cash"
+						style="max-width: 20rem"
+						v-show="statCheck(ticket.status)"
+						v-model="specifictip"
+						class="ma-5"
+						outlined
+					></v-text-field>
+				</div>
 				<v-simple-table dense calculate-widths>
 					<template v-slot:default>
 						<thead>
 							<tr>
-								<th class="text-left">Nombre</th>
-								<th class="text-left">Cantidad</th>
-								<th class="text-left">Precio</th>
-
-								<th class="text-left">Descuento</th>
-								<th class="text-left">Total</th>
+								<th class="text-center pa-0">Nombre</th>
+								<th class="text-center pa-0">Cantidad</th>
+								<th class="text-center pa-0">Precio</th>
+								<th class="text-center pa-0">Descuento</th>
+								<th class="text-center pa-0">Total</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="producto in ticket.productos" :key="producto.id">
-								<td class="text-left">{{ producto.nombre }}</td>
-								<td class="text-left">{{ producto.cantidad }}</td>
-								<td class="text-left">{{ producto.precio }}</td>
-								<td class="text-left">${{ producto.descuento }}</td>
-								<td class="text-left">${{ producto.total }}</td>
+								<td class="text-center">{{ producto.nombre }}</td>
+								<td class="text-center">{{ producto.cantidad }}</td>
+								<td class="text-center">${{ producto.precio }}</td>
+								<td class="text-center">${{ producto.descuento }}</td>
+								<td class="text-center">${{ producto.total }}</td>
 							</tr>
 						</tbody>
 					</template>
 				</v-simple-table>
+				<v-row class="ma-4">
+					<v-col>
+						Propina:
+						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b></v-col
+					>
+					<v-col>
+						<h3>
+							Total neto:
+							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
+						</h3></v-col
+					>
+					<v-col
+						><v-btn color="success" large depressed @click="sendTip()"
+							>Guardar propina</v-btn
+						></v-col
+					>
+				</v-row>
 			</v-card-text>
 		</v-card>
 	</v-dialog>
 </template>
 
 <script>
+import { putTipUpdate } from "@/api/tickets.js";
 export default {
 	props: {
 		dialogticketviewer: { default: false },
 		ticket: { default: null },
+		status: { default: null },
 	} /*data de llegado de componente padre creacion*/,
 	data() {
-		return { itemstip: [5, 10, 15, 20], selectip: 0 };
+		return {
+			swipeDirection: "None",
+			itemstip: [
+				{ name: "5%", value: 5 },
+				{ name: "10%", value: 10 },
+				{ name: "15%", value: 15 },
+				{ name: "20%", value: 20 },
+			],
+			selectip: 0,
+			specifictip: null,
+		};
 	},
+
 	methods: {
+		sendTip() {
+			putTipUpdate({
+				id: this.ticket.id,
+				tip: this.selectip,
+				specifictip: this.specifictip,
+			}).then((res) => {
+				if (res) {
+					this.$emit("update:dialogticketviewer", false);
+				}
+			});
+		},
+		statCheck(status) {
+			if (status != "Por entregar") {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		calctip(total) {
+			this.selectip = Number(this.selectip);
+
+			return Math.round(Number(total) * (this.selectip / 100));
+		},
+		calctotalneto(total) {
+			return Number(total) + this.calctip(total);
+		},
+		toTip(tip) {
+			this.selectip = tip;
+		},
 		swipe(direction) {
 			if (direction === "Down") {
 				this.$emit("update:dialogticketviewer", false);
@@ -104,7 +185,6 @@ export default {
 		},
 	},
 	mounted() {},
-	computed: {},
 	watch: {},
 };
 </script>

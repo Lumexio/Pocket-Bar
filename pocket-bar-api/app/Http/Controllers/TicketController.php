@@ -46,11 +46,11 @@ class TicketController extends Controller
         });
 
         $tax = $items->sum(function ($item) {
-            return $item['tax'];
+            return $item['tax'] ?? 0;
         });
 
         $discounts = $items->sum(function ($item) {
-            return $item['descuento'];
+            return $item['descuento'] ?? 0;
         });
 
         $total = $subtotal + $tax - $discounts;
@@ -80,7 +80,12 @@ class TicketController extends Controller
     }
     public function store(TicketCreateRequest $request): JsonResponse
     {
-
+        $workshift = Workshift::where("active", true)->first();
+        if (!$workshift) {
+            return response()->json([
+                "message" => "No se ha iniciado turno de trabajo"
+            ], 400);
+        }
         //Cambiar migraciòn de tickets eliminando nombre_mesa
         $items = collect($request->input('productos'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
@@ -103,7 +108,7 @@ class TicketController extends Controller
             $ticket->item_count = $items->count();
             $ticket->timezone = "America/Denver";
             $ticket->total = $total;
-            $ticket->workshift_id = Workshift::where("active", 1)->firstOrFail()->id;
+            $ticket->workshift_id = $workshift->id;
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             $this->createTicketDetails($items, $ticket);

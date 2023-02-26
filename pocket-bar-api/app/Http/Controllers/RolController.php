@@ -13,9 +13,9 @@ class RolController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|Rol[]
+     * @return Collection|array|Rol
      */
-    public function index()
+    public function index(): Collection|array|Rol
     {
         return Rol::all();
     }
@@ -24,9 +24,9 @@ class RolController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Model|Rol
+     * @return Model|Rol|Collection
      */
-    public function store(Request $request)
+    public function store(Request $request): Model|Rol|Collection
     {
         $rol = Rol::create($request->all());
         rolCreated::dispatch($rol);
@@ -36,10 +36,10 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return Collection|Model|Rol|Rol[]
      */
-    public function show($id)
+    public function show(int $id): array|Model|Collection|Rol
     {
         return Rol::find($id);
     }
@@ -48,10 +48,10 @@ class RolController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int  $id
+     * @param int $id
      * @return Collection|Model|Rol|Rol[]
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): array|Model|Collection|Rol
     {
         $rol = Rol::find($id);
         $rol->update($request->all());
@@ -69,7 +69,11 @@ class RolController extends Controller
     //     return Rol::destroy($id);
     // }
 
-    public function activate($id)
+    /**
+     * @param $id
+     * @return Collection|Model|Rol
+     */
+    public function activate($id): Model|Collection|Rol
     {
         $rol = Rol::find($id);
         $rol->update(['activo' => !$rol->activo]);

@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Events\proveedorCreated;
 use App\Http\Requests\ListRequest;
 use App\Http\Requests\ProveedorValidationRequest;
+use Illuminate\Http\Response;
+use Ramsey\Collection\Collection;
 
 class ProveedorController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param ListRequest $request
+     * @return JsonResponse
      */
-    public function index(ListRequest $request)
+    public function index(ListRequest $request): JsonResponse
     {
         $proveedores = Proveedor::query();
         $active = $request->get('active');
@@ -34,15 +38,17 @@ class ProveedorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ProveedorValidationRequest $request
+     * @return JsonResponse|Proveedor|Model|Collection
      */
-    public function store(ProveedorValidationRequest $request)
+    public function store(ProveedorValidationRequest $request): JsonResponse|Proveedor|Model|Collection
     {
         if (Proveedor::where('nombre_proveedor', '=', $request->get('nombre_proveedor'))->exists()) {
-            return response([
-                'message' => ['Uno de los parametros ya exite.']
-            ], 409);
+            return response()->json(
+                [
+                    'message' => ['Uno de los parametros ya exite.']
+                ], 409
+            );
         } else {
             $proveedor = Proveedor::create($request->all());
             proveedorCreated::dispatch($proveedor);
@@ -53,10 +59,10 @@ class ProveedorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Proveedor|Model|Collection
      */
-    public function show($id)
+    public function show(int $id): Proveedor|Model|Collection
     {
         return Proveedor::find($id);
     }
@@ -64,11 +70,11 @@ class ProveedorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Proveedor|Model|Collection
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): Proveedor|Model|Collection
     {
         $proveedor = Proveedor::find($id);
         $proveedor->update($request->all());
@@ -78,10 +84,10 @@ class ProveedorController extends Controller
     /**
      * Activate and deactivate the specified resource from storage.
      *
-     * @param  int  $id
-     * @return Model
+     * @param int $id
+     * @return Model|Collection|Proveedor
      */
-    public function activate($id)
+    public function activate(int $id): Model|Collection|Proveedor
     {
         $proveedor = Proveedor::find($id);
         $proveedor->active = !$proveedor->active;

@@ -9,9 +9,7 @@ use App\Models\Ticket;
 use App\Models\Workshift;
 use App\Models\CashRegisterCloseData;
 use App\Models\Payment;
-use App\Models\TicketDetail;
 use DB;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class WorkshiftController extends Controller
@@ -22,7 +20,7 @@ class WorkshiftController extends Controller
     {
         $this->activeWorkshift = Workshift::where('active', 1)->first();
 
-        if (!$this->activeWorkshift) {
+        if (empty($this->activeWorkshift)) {
             return response()->json([
                 'message' => 'No hay una jornada de trabajo activa'
             ], 400);

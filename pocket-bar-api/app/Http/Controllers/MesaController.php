@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\Reflection\DocBlock\Type\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use App\Events\mesaCreated;
@@ -13,26 +16,27 @@ class MesaController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection|Mesa[]
      */
-    public function index()
+    public function index(): array|Collection
     {
-
         return Mesa::all();
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  MesaValidationRequest  $request
+     * @return JsonResponse|Model|Collection
      */
-    public function store(MesaValidationRequest $request)
+    public function store(MesaValidationRequest $request): JsonResponse|Model|Collection
     {
         if (Mesa::where('nombre_mesa', '=', $request->get('nombre_mesa'))->exists()) {
-            return response([
-                'message' => ['Nombre el nombre de la mesa  ya exite.']
-            ], 409);
+            return response()->json(
+                [
+                    'message' => ['Nombre el nombre de la mesa  ya exite.']
+                ], 409
+            );
         } else {
             $mesa = Mesa::create($request->all());
             mesaCreated::dispatch($mesa);
@@ -43,23 +47,22 @@ class MesaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Model|Collection
      */
-    public function show($id)
+    public function show(int $id): Model|Collection
     {
-
         return Mesa::find($id);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Model|Collection
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): Model|Collection
     {
         $mesa = Mesa::find($id);
         $mesa->update($request->all());
@@ -69,12 +72,11 @@ class MesaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return int
      */
-    public function destroy($id)
+    public function destroy(int $id): int
     {
-
         return Mesa::destroy($id);
     }
 }

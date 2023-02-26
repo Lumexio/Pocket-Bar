@@ -7,10 +7,17 @@ use App\Models\CashRegisterCloseData;
 use App\Models\Nomina;
 use App\Models\Workshift;
 use DB;
+use Illuminate\Http\JsonResponse;
+use Throwable;
 
 class NominasController extends Controller
 {
-    public function nominasToPay(ToPay $request)
+    /**
+     * @param ToPay $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function nominasToPay(ToPay $request): JsonResponse
     {
         $usersToPay = $request->input('payroll');
         $workshift = Workshift::where('active', 1)->first();
@@ -39,16 +46,13 @@ class NominasController extends Controller
                     "name" => $userToPay['name'],
                     "paid" => $nomina->paid
                 ];
-
-
-
                 throw_if(!$nomina->save(), "Error al guardar el registro");
 
             }
 
             $response["neto"] = $response["bruto"] - $total;
             DB::commit();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollback();
             return response()->json(["error" => $th->getMessage()], 500);
         }

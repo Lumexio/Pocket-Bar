@@ -11,7 +11,6 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketCreateRequest;
 use App\Http\Requests\TicketListPwaRequest;
-use App\Models\Mesa;
 use App\Models\Workshift;
 use App\Models\User;
 use DB;
@@ -28,6 +27,7 @@ use App\Models\Articulo;
 use App\Models\Payment;
 use App\Models\TicketDetail;
 use Illuminate\Support\Collection;
+use Throwable;
 
 class TicketController extends Controller
 {
@@ -78,6 +78,12 @@ class TicketController extends Controller
         broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         return response()->json($ticket);
     }
+
+    /**
+     * @throws Throwable
+     * @param TicketCreateRequest $request
+     * @return JsonResponse
+     */
     public function store(TicketCreateRequest $request): JsonResponse
     {
         $workshift = Workshift::where("active", true)->first();
@@ -137,7 +143,7 @@ class TicketController extends Controller
             "error" => 0,
             "message" => "Ticket creado correctamente",
             "data" => $ticket
-        ], 200);
+        ]);
     }
 
     public function index(Request $request): JsonResponse
@@ -148,7 +154,6 @@ class TicketController extends Controller
             ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'tickets_tbl.cancel_confirm', 'mesas_tbl.nombre_mesa')
             ->orderBy("ticket_date", "desc")
             ->get();
-        // ->paginate(50, ['*'], 'page', $request->input('page', 1));
 
         return response()->json([
             "status" => 200,
@@ -356,7 +361,7 @@ class TicketController extends Controller
             broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             DB::commit();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 "status" => 500,
                 "error" => 1,
@@ -448,7 +453,7 @@ class TicketController extends Controller
             broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
             broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
 
             return response()->json([
                 "error" => $th->getMessage()
@@ -512,7 +517,7 @@ class TicketController extends Controller
 
             //broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             //broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             return response()->json([
                 "error" => $th->getMessage()

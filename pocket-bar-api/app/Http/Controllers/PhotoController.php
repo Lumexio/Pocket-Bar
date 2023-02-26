@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Articulo;
 use File;
 use App\Events\articuloCreated;
-use Illuminate\Support\Facades\DB;
-
-//use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 class PhotoController extends Controller
 {
-    public function updatephoto(Request $request, $id)
+    public function updatephoto(Request $request, $id): Articulo|Model|Collection
     {
         $articulo = Articulo::find($id);
         $filename = $articulo->foto_articulo;

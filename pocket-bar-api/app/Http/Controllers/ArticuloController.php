@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Models\Articulo;
@@ -20,8 +18,8 @@ class ArticuloController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection
+     * @param ListRequest $request
+     * @return JsonResponse
      */
     public function index(ListRequest $request): JsonResponse
     {
@@ -52,16 +50,19 @@ class ArticuloController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ArticuleValidationRequest $request
-     * @return Model|Response
+     * @return Model|JsonResponse
      *
      * dentro hay una validacion para saber si el nombre del articulo ya exite en los registros.
      */
-    public function store(ArticuleValidationRequest $request): Model|Response
+    public function store(ArticuleValidationRequest $request): Model|JsonResponse
     {
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
-            return response([
-                'message' => ['Uno de los parametros ya exite.']
-            ], 409);
+            return response()->json(
+                [
+                    'message' => ['Uno de los parametros ya exite.']
+                ],
+                409
+            );
         } else {
             $photo = $request->file('foto_articulo');
             $articulo = $request->all();
@@ -81,10 +82,10 @@ class ArticuloController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return Model
+     * @param int $id
+     * @return Collection|Model|null
      */
-    public function show(int $id)
+    public function show(int $id): Collection|Model|null
     {
         return Articulo::find($id);
     }
@@ -98,43 +99,20 @@ class ArticuloController extends Controller
      */
     public function update(Request $request, int $id): Model
     {
-        $articulo = Articulo::find($id);
-        //Obtener nombre venidero
+        $article = Articulo::find($id);
+        $newName = $request->nombre_articulo;
+        $filename = $article->foto_articulo;
 
-        $newname = $request->nombre_articulo;
-
-
-        //si el archivo existe
-        if (file_exists(public_path("/images/$articulo->foto_articulo"))) {
-            //lugar donde esta guardado el archivo existente
-            $oldpath = public_path("/images/$articulo->foto_articulo");
-            //nuevo nombre del archivo
-            if (str_contains($articulo->foto_articulo, '.png')) {
-                $newname =  $newname . '.' . "png";
-            } elseif (str_contains($articulo->foto_articulo, '.jpg')) {
-                $newname =  $newname . '.' . "jpg";
-            }
-            $newpath = public_path("/images/$newname");
-            rename($oldpath, $newpath);
-        }
-        $articulo->update([
-        'nombre_articulo' => $request->nombre_articulo,
-        'cantidad_articulo' => $request->cantidad_articulo,
-        'precio_articulo' => $request->precio_articulo,
-        'descripcion_articulo' => $request->descripcion_articulo,
-        'categoria_id' => $request->categoria_id,
-        'marca_id' => $request->marca_id,
-        'proveedor_id' => $request->proveedor_id,
-        'status_id' => $request->status_id,
-        'tipo_id' => $request->tipo_id,
-        'foto_articulo' => $newname ? $newname : $articulo->foto_articulo,
-        'user_id' => Auth::id()]);
-
-
-
-        $articulo['user_id'] = Auth::id();
+        //lugar donde esta guardado el archivo existente
+        $oldPath = public_path("/images/$filename");
+        $filename =  $newName . '.' . "jpg";
+        $newPath = public_path("/images/$filename");
+        rename($oldPath, $newPath);
+        $article["foto_articulo"] = $filename;
+        $article->update($request->all());
+        $article['user_id'] = Auth::id();
         broadcast((new articuloCreated())->broadcastToEveryone());
-        return $articulo;
+        return $article;
     }
 
 

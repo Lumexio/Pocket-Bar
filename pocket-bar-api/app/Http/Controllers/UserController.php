@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use \Illuminate\Http\Response;
@@ -15,25 +17,21 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Collection
      */
-    public function index()
+    public function index(): Collection
     {
         $loggeduser = Auth::id();
-        $dat = DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol')->get();
-
-
-        return $dat;
+        return DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol')->get();
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param UsuarioValidationRequest $request
+     * @return User
      */
-    public function store(UsuarioValidationRequest $request)
+    public function store(UsuarioValidationRequest $request): User
     {
         $user = User::create($request->all());
         userCreated::dispatch($user);
@@ -43,10 +41,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return User
      */
-    public function show($id)
+    public function show(int $id): User
     {
         return User::find($id);
     }
@@ -54,11 +52,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return User
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): User
     {
         $user = User::find($id);
         $user->update($request->all());
@@ -69,10 +67,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return User
      */
-    public function activate($id)
+    public function activate(int $id): User
     {
         $user = User::find($id);
         $user->active = !$user->active;
@@ -81,7 +79,7 @@ class UserController extends Controller
     }
 
 
-    function login(Request $request)
+    function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
             'name' => ['required'],
@@ -92,9 +90,11 @@ class UserController extends Controller
 
         // print_r($data);
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['Las credentials no concuerdan con ningun registro.']
-            ], 404);
+            return response()->json(
+                [
+                    'message' => ['Las credentials no concuerdan con ningun registro.']
+                ], 404
+            );
         }
 
 
@@ -110,10 +110,10 @@ class UserController extends Controller
 
             Auth::login($user, true);
             $request->session()->save();
-            return response($response, 200);
+            return response()->json($response);
         }
     }
-    function logout()
+    function logout(): JsonResponse
     {
         Auth::logout();
         return response()->json(['message' => 'Logged out'], 200);

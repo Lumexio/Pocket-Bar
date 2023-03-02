@@ -136,13 +136,15 @@ export function getTicketsPWA(ticketsPWAArray, status) {
 
         const tickets = response.data.data;
         const stats = response.status;
-
+console.log(tickets);
         tickets.forEach((element) => {
           let datos = {
             id: element.id,
             fecha: element.fecha,
             titular: element.titular,
             total: element.total,
+            tip: element.tip,
+            specifictip: element.specifictip,
             productos: element.productos,
             status: element.status,
             nombre_mesa: element.nombre_mesa,

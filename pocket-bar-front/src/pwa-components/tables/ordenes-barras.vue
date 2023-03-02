@@ -59,8 +59,10 @@
 						</tbody>
 					</template>
 				</v-simple-table>
+				
 				<p style="text-align: end" class="mr-6 font-weight-bold">
-					<span class="mr-6"> Subtotal:</span> ${{ item.total }}
+					<span class="mr-2"> Propina:</span> {{ item.tip }}% 
+					<span class="mr-2"> Subtotal:</span> ${{ item.total }}
 				</p>
 			</v-expansion-panel-content>
 			<ticketViewer

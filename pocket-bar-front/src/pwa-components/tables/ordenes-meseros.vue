@@ -2,29 +2,41 @@
 	<v-expansion-panels :dark="darkonchange" popout>
 		<v-expansion-panel
 			class="sizes"
-			v-for="(item, index) in ticketsPWAArray"
-			:key="index"
+			v-for="item in ticketsPWAArray"
+			:key="item.titular"
 			v-show="item.status == hasstatus"
 		>
 			<v-expansion-panel-header>
 				<span>
-					<span> <b>Titular: </b>{{ item.titular }}</span>
+					<span style="font-size: 18px">
+						<b>Titular: </b>{{ item.titular }}</span
+					>
 					<br />
-					<span><b>Mesa: </b>{{ item.nombre_mesa }}</span>
+					<span style="font-size: 18px"
+						><b>Mesa: </b>{{ item.nombre_mesa }}</span
+					>
 					<br />
-					<span> <b>Fecha: </b>{{ item.fecha }}</span>
+					<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
-
 				<v-btn
-					class="mr-16"
+					class="mr-1"
 					max-width="25px"
 					large
-					color="primary"
+					:dark="darkonchange"
+					color="cyan darken-3"
+					@click.prevent="dialogticketviewer = true"
+					><v-icon>mdi-eye-circle</v-icon>
+				</v-btn>
+				<v-btn
+					class="mr-2"
+					max-width="25px"
+					large
+					:dark="darkonchange"
+					color="#1E88E5"
 					v-if="item.status != 'Cerrado'"
 					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
 					><v-icon>mdi-plus</v-icon>
 				</v-btn>
-				<v-spacer></v-spacer>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
 				<v-simple-table dense calculate-widths>
@@ -34,7 +46,6 @@
 								<th class="text-left">Nombre</th>
 								<th class="text-left">Cantidad</th>
 								<th class="text-left">Precio</th>
-
 								<th class="text-left">Total</th>
 							</tr>
 						</thead>
@@ -42,16 +53,23 @@
 							<tr v-for="producto in item.productos" :key="producto.id">
 								<td class="text-left">{{ producto.nombre }}</td>
 								<td class="text-left">{{ producto.cantidad }}</td>
-								<td class="text-left">{{ producto.precio }}</td>
-								<td class="text-left">{{ producto.total }}</td>
+								<td class="text-left">${{ producto.precio }}</td>
+								<td class="text-left">${{ producto.total }}</td>
 							</tr>
 						</tbody>
 					</template>
 				</v-simple-table>
-				<p style="text-align: end" class="mr-4">
-					<span class="mr-6"> Subtotal:</span>{{ item.total }}
+				
+				<p style="text-align: end" class="mr-6 font-weight-bold">
+					<span class="mr-2"> Propina:</span> {{ item.tip }}% 
+					<span class="mr-2"> Subtotal:</span> ${{ item.total }}
 				</p>
+				
 			</v-expansion-panel-content>
+			<ticketViewer
+				:dialogticketviewer.sync="dialogticketviewer"
+				:ticket="item"
+			/>
 		</v-expansion-panel>
 		<addProducts
 			:dialogaddproduct.sync="dialogaddproduct"
@@ -59,18 +77,21 @@
 		/>
 	</v-expansion-panels>
 </template>
-
 <script>
 import addProducts from "@/pwa-components/forms/add-product.vue";
+import ticketViewer from "@/pwa-components/forms/ticket-viewer.vue";
 import store from "@/store";
 import { getTicketsPWA } from "@/api/tickets.js";
 export default {
 	name: "ordenesMesero",
 	components: {
 		addProducts,
+		ticketViewer,
 	},
 	data: () => ({
 		ticket_id: null,
+		dialogaddproduct: false,
+		dialogticketviewer: false,
 		ticketsPWAArray: [],
 	}),
 	whatch: {
@@ -112,6 +133,6 @@ export default {
 	flex-direction: row;
 }
 .sizes {
-	min-width: 100%;
+	max-width: calc(100% - 0px) !important;
 }
 </style>

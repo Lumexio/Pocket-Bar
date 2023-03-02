@@ -117,6 +117,7 @@
 						<div class="d-flex flex-row justify-space-between">
 						<h4>
 							Total neto:
+<<<<<<< HEAD
 						</h4>
 					<h4>
 							${{ calctotalneto(ticket.total) }}
@@ -128,6 +129,18 @@
 				<v-btn color="success"    x-large   depressed @click="sendTip()"
 							>Guardar propina</v-btn
 						></v-row>
+=======
+							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
+						</h3></v-col
+					>
+					
+				</v-row>
+				<v-row class="justify-center">
+				<v-btn color="success"    x-large   depressed @click="sendTip()"
+							>Guardar propina</v-btn
+						></v-row>
+			</v-card-text>
+>>>>>>> 9f64a16 (fix: tip data)
 		</v-card>
 	</v-dialog>
 </template>

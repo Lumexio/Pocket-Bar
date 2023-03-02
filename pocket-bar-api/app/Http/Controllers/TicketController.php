@@ -70,7 +70,7 @@ class TicketController extends Controller
         if (auth()->user()->rol_id == 4) {
             ticketCreatedMesero::dispatch(auth()->user()->id);
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-        } else if (auth()->user()->rol_id == 5) {
+        } elseif (auth()->user()->rol_id == 5) {
             ticketCreatedBarra::dispatch(auth()->user()->id);
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         }
@@ -108,7 +108,7 @@ class TicketController extends Controller
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
             $ticket->tip = $request->input('tip');
-            $ticket->min_tip = isset($ticket->tip) ? ((float)$subtotal * (float)$ticket->tip)/100 : 0;
+            $ticket->min_tip = $ticket->tip!=null ? ((float)$subtotal * (float)$ticket->tip)/100 : 0;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
             $ticket->item_count = $items->count();
@@ -123,7 +123,7 @@ class TicketController extends Controller
             if (auth()->user()->rol_id == 4) {
                 ticketCreatedMesero::dispatch(auth()->user()->id);
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-            } else if (auth()->user()->rol_id == 5) {
+            } elseif (auth()->user()->rol_id == 5) {
                 ticketCreatedBarra::dispatch(auth()->user()->id);
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             }
@@ -175,7 +175,7 @@ class TicketController extends Controller
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->select('tickets_tbl.id', 'tickets_tbl.status','tickets_tbl.tip','tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
+            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa')
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
@@ -312,7 +312,7 @@ class TicketController extends Controller
                     "error" => 1,
                     "message" => "El ticket ya ha sido cancelado",
                 ], 500);
-            } else if (auth()->user()->rol_id === Rol::Cajero->value and $ticket->cancel_confirm === false) {
+            } elseif (auth()->user()->rol_id === Rol::Cajero->value and $ticket->cancel_confirm === false) {
                 return response()->json([
                     "status" => 500,
                     "error" => 1,
@@ -445,7 +445,7 @@ class TicketController extends Controller
             if ($user->rol_id == Rol::Mesero->value) {
                 broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-            } else if ($user->rol_id == Rol::Bartender->value) {
+            } elseif ($user->rol_id == Rol::Bartender->value) {
                 broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             }

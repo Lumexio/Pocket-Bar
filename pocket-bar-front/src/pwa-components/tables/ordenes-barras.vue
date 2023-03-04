@@ -24,7 +24,7 @@
 					large
 					:dark="darkonchange"
 					color="cyan darken-3"
-					@click.prevent="dialogticketviewer = true"
+					@click.prevent="(dialogticketviewer = true),(onticket=item)"
 					><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
 				<v-btn
@@ -65,11 +65,12 @@
 					<span class="mr-2"> Subtotal:</span> ${{ item.total }}
 				</p>
 			</v-expansion-panel-content>
-			<ticketViewer
-				:dialogticketviewer.sync="dialogticketviewer"
-				:ticket="item"
-			/>
+		
 		</v-expansion-panel>
+		<ticketViewer
+				:dialogticketviewer.sync="dialogticketviewer"
+				:ticket="onticket"
+			/>
 		<addProducts
 			:dialogaddproduct.sync="dialogaddproduct"
 			:ticket_id="ticket_id"
@@ -89,6 +90,7 @@ export default {
 	},
 	data: () => ({
 		ticket_id: null,
+		onticket: {},
 		dialogaddproduct: false,
 		dialogticketviewer: false,
 		ticketsPWAArray: [],

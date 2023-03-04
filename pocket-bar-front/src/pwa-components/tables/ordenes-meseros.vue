@@ -3,7 +3,7 @@
 		<v-expansion-panel
 			class="sizes"
 			v-for="item in ticketsPWAArray"
-			:key="item.titular"
+			:key="item.id"
 			v-show="item.status == hasstatus"
 		>
 			<v-expansion-panel-header>
@@ -24,7 +24,7 @@
 					large
 					:dark="darkonchange"
 					color="cyan darken-3"
-					@click.prevent="dialogticketviewer = true"
+					@click.prevent="(dialogticketviewer = true),(onticket=item)"
 					><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
 				<v-btn
@@ -68,7 +68,7 @@
 			</v-expansion-panel-content>
 			<ticketViewer
 				:dialogticketviewer.sync="dialogticketviewer"
-				:ticket="item"
+				:ticket="onticket"
 			/>
 		</v-expansion-panel>
 		<addProducts
@@ -90,6 +90,7 @@ export default {
 	},
 	data: () => ({
 		ticket_id: null,
+		onticket: {},
 		dialogaddproduct: false,
 		dialogticketviewer: false,
 		ticketsPWAArray: [],

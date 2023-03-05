@@ -96,7 +96,7 @@ class TicketController extends Controller
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
             $ticket->tip = $request->input('tip');
-            $ticket->min_tip = $ticket->tip!=null ? ((float)$subtotal * (float)$ticket->tip)/100 : 0;
+            $ticket->min_tip = isset($ticket->tip) ? ((float)$subtotal * (float)$ticket->tip)/100 : 0;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
             $ticket->item_count = $items->count();

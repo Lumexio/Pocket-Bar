@@ -59,10 +59,22 @@ class TicketController extends Controller
     }
     public function tipUpdate(Request $request)
     {
+
         $ticket = Ticket::findOrFail($request->input('id'));
+
         $ticket->tip = $request->input('tip');
         $ticket->specifictip = $request->input('specifictip');
+        (float)$ticket->min_tip = ((float)$ticket->subtotal*(float)$request->input('tip'))/100;
         $ticket->save();
+        if (auth()->user()->rol_id == 4) {
+            ticketCreatedMesero::dispatch(auth()->user()->id);
+            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+        } else if (auth()->user()->rol_id == 5) {
+            ticketCreatedBarra::dispatch(auth()->user()->id);
+            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+        }
+        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+        broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         return response()->json($ticket);
     }
     public function store(TicketCreateRequest $request): JsonResponse
@@ -84,7 +96,7 @@ class TicketController extends Controller
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
             $ticket->tip = $request->input('tip');
-            $ticket->min_tip = $subtotal >= 500 ? $subtotal * 0.10 : $subtotal;
+            $ticket->min_tip = isset($ticket->tip) ? ((float)$subtotal * (float)$ticket->tip)/100 : 0;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
             $ticket->item_count = $items->count();
@@ -152,7 +164,7 @@ class TicketController extends Controller
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
+            ->select('tickets_tbl.id', 'tickets_tbl.status','tickets_tbl.tip','tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
@@ -165,6 +177,8 @@ class TicketController extends Controller
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
+                $data["tip"] = $ticket->tip;
+                $data["specifictip"] = $ticket->specifictip;
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");

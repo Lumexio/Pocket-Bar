@@ -110,12 +110,12 @@
 							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
 						</h3></v-col
 					>
-					<v-col
-						><v-btn color="success" large depressed @click="sendTip()"
-							>Guardar propina</v-btn
-						></v-col
-					>
+					
 				</v-row>
+				<v-row class="justify-center">
+				<v-btn color="success"    x-large   depressed @click="sendTip()"
+							>Guardar propina</v-btn
+						></v-row>
 			</v-card-text>
 		</v-card>
 	</v-dialog>

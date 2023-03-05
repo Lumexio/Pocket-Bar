@@ -42,10 +42,12 @@ class ticketCreatedBarra implements ShouldBroadcastNow
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
-            $data["nombre_mesa"] = $ticket->nombre_mesa;
+                $data["nombre_mesa"] = $ticket->nombre_mesa;
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
+                $data["tip"] = $ticket->tip;
+                $data["specifictip"] = $ticket->specifictip;
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");

@@ -201,7 +201,8 @@ export default {
 				(e) => {
 					this[variableName] = this.parseNotifications(e[callbackVariableName]);
 				//	store.commit("setorder", this[variableName].length);
-				this[variableName].forEach(element => {
+					this[variableName].forEach(element => {
+						store.commit("setorder", 0);
 					this.$store.getters.hasrol === 4 &&	(element.status === "Preparado"||element.status === "Recibido")
 						? 	store.commit("setorder", this[variableName].length)
 							: store.commit("setorder", 0);

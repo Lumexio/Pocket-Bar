@@ -132,7 +132,6 @@ export default {
 		swipeDirection: "None",
 		ticketsPWANotiArrayMesero: [],
 		ticketsPWANotiArrayBarra: [],
-		tempTicketsArray: [],
 		sendStatusPrepBox: { id: null, status: "Preparado" },
 		sendStatusRecivedBox: { id: null, status: "Recibido" },
 	}),
@@ -193,6 +192,7 @@ export default {
 
 				ticketsPWANotiArray.push(datos);
 			});
+			
 			return ticketsPWANotiArray;
 		},
 		connectToSocket(channel, event, variableName, callbackVariableName) {
@@ -200,7 +200,16 @@ export default {
 				event,
 				(e) => {
 					this[variableName] = this.parseNotifications(e[callbackVariableName]);
-					store.commit("setorder", this[variableName].length);
+				//	store.commit("setorder", this[variableName].length);
+				this[variableName].forEach(element => {
+					this.$store.getters.hasrol === 4 &&	(element.status === "Preparado"||element.status === "Recibido")
+						? 	store.commit("setorder", this[variableName].length)
+							: store.commit("setorder", 0);
+							this.$store.getters.hasrol === 5 &&	(element.status === "En espera"||element.status === "En preparacion")
+						? 	store.commit("setorder", this[variableName].length)
+								: store.commit("setorder", 0);
+							});
+					
 				}
 			);
 		},
@@ -208,8 +217,17 @@ export default {
 			getTicketsNotiPWA(this[variableName])
 				.then((response) => {
 					this[variableName] = response.ticketsPWANotiArray;
-					this.tempTicketsArray = response.ticketsPWANotiArray;
-					store.commit("setorder", this.tempTicketsArray.length);
+					response.ticketsPWANotiArray.forEach(element => {
+						store.commit("setorder", 0);
+						this.$store.getters.hasrol === 4 &&	(element.status === "Preparado"||element.status === "Recibido")
+						? store.commit("setorder", response.ticketsPWANotiArray.length)
+							: store.commit("setorder", 0);
+							this.$store.getters.hasrol === 5 &&	(element.status === "En espera"||element.status === "En preparacion")
+						? store.commit("setorder", response.ticketsPWANotiArray.length)
+						: store.commit("setorder", 0);
+					});
+					
+				//store.commit("setorder", response.ticketsPWANotiArray.length);	
 				})
 				.catch((e) => {
 					console.log(e);

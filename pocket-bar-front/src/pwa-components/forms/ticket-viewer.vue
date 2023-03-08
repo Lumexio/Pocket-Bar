@@ -5,23 +5,18 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<v-card>
-			<!-- Do this -->
+	<v-card :dark="true">
 			<v-toolbar
+			prominent
 				color="transparent"
-				flat
-				prominent
+				elevation="0"
 				v-touch="{
-					left: () => swipe('Left'),
-					right: () => swipe('Right'),
-					up: () => swipe('Up'),
 					down: () => swipe('Down'),
 				}"
 			>
-				<v-btn icon @click.prevent="close()" large>
+				<v-btn icon @click.prevent="close" large>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
-				<!-- Some text -->
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
 

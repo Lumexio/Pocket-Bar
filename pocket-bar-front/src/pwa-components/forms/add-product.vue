@@ -6,15 +6,12 @@
 		transition="dialog-bottom-transition"
 	>
 		<!-- Comment cotorro -->
-		<v-card :dark="this.$store.getters.hasdarkflag === true">
+		<v-card  :dark="this.$store.getters.hasdarkflag === true">
 			<v-toolbar
 				color="transparent"
-				flat
+				elevation="0"
 				prominent
 				v-touch="{
-					left: () => swipe('Left'),
-					right: () => swipe('Right'),
-					up: () => swipe('Up'),
 					down: () => swipe('Down'),
 				}"
 			>
@@ -99,12 +96,12 @@
 								<v-row
 									v-for="item in articulosArray"
 									:key="item.id"
-									class="mb-3"
+									
 								>
 									<v-card
 										:color="cambio(item)"
 										@click.prevent="cajaProductos(item)"
-										class="card-p ml-5"
+										class="card-p ml-4 mr-4 mb-1"
 										:disabled="item.cantidad_articulo == 0"
 									>
 										<v-img
@@ -424,8 +421,7 @@ export default {
 	justify-content: flex-start;
 }
 .card-p {
-	min-width: 96%;
-	max-width: 96%;
+	width: 100%;
 }
 .card-prod {
 	text-align: start;

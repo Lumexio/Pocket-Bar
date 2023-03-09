@@ -5,23 +5,28 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-	<v-card :dark="true">
+		<!-- Comment cotorro -->
+		<v-card  >
 			<v-toolbar
-			prominent
 				color="transparent"
 				elevation="0"
+				prominent
 				v-touch="{
 					down: () => swipe('Down'),
 				}"
 			>
-				<v-btn icon @click.prevent="close" large>
+				<v-btn
+					icon
+					@click.prevent="close()"
+					large
+				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
+
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
-
-			<v-card-text class="text-left pl-0 pr-0">
-				<v-row class="ma-4">
+			
+				<v-row class="ma-4 pa-0 text-left ">
 					<v-col>
 						Titular
 						<h1>{{ ticket.titular }}</h1>
@@ -40,7 +45,8 @@
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
 				</v-row>
-				<v-row class="mb-3" v-show="statCheck(ticket.status)">
+			
+			<v-row class="ma-0 pa-0" v-show="statCheck(ticket.status)">
 					<template>
 						<v-col
 							v-for="(item, index) in itemstip"
@@ -72,7 +78,7 @@
 						outlined
 					></v-text-field>
 				</div>
-				<v-simple-table dense calculate-widths>
+				<v-simple-table dense calculate-widths class="pa-0">
 					<template v-slot:default>
 						<thead>
 							<tr>
@@ -94,24 +100,23 @@
 						</tbody>
 					</template>
 				</v-simple-table>
-				<v-row class="ma-4">
-					<v-col>
+				<div class="d-flex justify-end">
+					
+					<v-col style="max-width: 9rem;" class="pa-0 text-left">
 						Propina:
-						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b></v-col
-					>
-					<v-col>
+						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b>
+						Subtotal:
+						<b>${{ ticket.total }}</b>
 						<h3>
 							Total neto:
 							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
 						</h3></v-col
 					>
-					
-				</v-row>
-				<v-row class="justify-center">
+					</div>
+					<v-row class="justify-end pa-0 ma-5">
 				<v-btn color="success"    x-large   depressed @click="sendTip()"
 							>Guardar propina</v-btn
 						></v-row>
-			</v-card-text>
 		</v-card>
 	</v-dialog>
 </template>
@@ -184,5 +189,3 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>

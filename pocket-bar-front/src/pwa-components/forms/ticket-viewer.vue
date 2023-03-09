@@ -7,9 +7,9 @@
 	>
 		<v-card  >
 			<v-toolbar
-			prominent
 				color="transparent"
 				elevation="0"
+				prominent
 				v-touch="{
 					down: () => swipe('Down'),
 				}"

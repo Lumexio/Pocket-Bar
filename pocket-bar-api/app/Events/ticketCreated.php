@@ -34,7 +34,7 @@ class ticketCreated implements ShouldBroadcastNow
 
         $this->tickets = Ticket::with(['details.articulo:id,nombre_articulo,precio_articulo', "workshift", "payments"])
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'tickets_tbl.cancel_confirm', 'mesas_tbl.nombre_mesa')
+            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.cancel_confirm', 'mesas_tbl.nombre_mesa')
             ->orderBy("ticket_date", "desc")
             ->get();
         // ->paginate(50, ['*'], 'page', $request->input('page', 1));

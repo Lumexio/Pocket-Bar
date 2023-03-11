@@ -52,7 +52,7 @@
 				</v-tab>
 			</v-tabs>
 		</template>
-		<notiorden :dialoglistorden.sync="dialoglistorden" />
+		<notiorden :dialoglistorden.sync="dialoglistorden"  />
 		<account-settings :dialogaccount.sync="dialogaccount" />
 	</v-toolbar>
 </template>
@@ -99,6 +99,7 @@ export default {
 		this.test();
 	},
 	methods: {
+		
 		test() {
 			this.items.forEach((element) => {
 				if (element.status == store.getters.hasstatus) {

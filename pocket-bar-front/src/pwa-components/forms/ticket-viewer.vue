@@ -5,28 +5,28 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<v-card>
-			<!-- Do this -->
+	
+		<v-card  >
 			<v-toolbar
 				color="transparent"
-				flat
+				elevation="0"
 				prominent
 				v-touch="{
-					left: () => swipe('Left'),
-					right: () => swipe('Right'),
-					up: () => swipe('Up'),
 					down: () => swipe('Down'),
 				}"
 			>
-				<v-btn icon @click.prevent="close()" large>
+				<v-btn
+					icon
+					@click.prevent="close()"
+					large
+				>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
-				<!-- Some text -->
+
 				<v-toolbar-title>Ticket</v-toolbar-title>
 			</v-toolbar>
-
-			<v-card-text class="text-left pl-0 pr-0">
-				<v-row class="ma-4">
+			
+				<v-row class="ma-4 pa-0 text-left ">
 					<v-col>
 						Titular
 						<h1>{{ ticket.titular }}</h1>
@@ -45,7 +45,8 @@
 						<h3>{{ ticket.fecha }}</h3>
 					</v-col>
 				</v-row>
-				<v-row class="mb-3" v-show="statCheck(ticket.status)">
+			
+			<v-row class="ma-0 pa-0" v-show="statCheck(ticket.status)">
 					<template>
 						<v-col
 							v-for="(item, index) in itemstip"
@@ -77,7 +78,7 @@
 						outlined
 					></v-text-field>
 				</div>
-				<v-simple-table dense calculate-widths>
+				<v-simple-table dense calculate-widths class="pa-0">
 					<template v-slot:default>
 						<thead>
 							<tr>
@@ -99,24 +100,35 @@
 						</tbody>
 					</template>
 				</v-simple-table>
-				<v-row class="ma-4">
-					<v-col>
-						Propina:
-						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b></v-col
-					>
-					<v-col>
-						<h3>
-							Total neto:
-							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
-						</h3></v-col
-					>
+				<div class="d-flex justify-end">
 					
-				</v-row>
-				<v-row class="justify-center">
+					<v-col  class="pa-3 ">
+						<div v-if="selectip>0"  class="d-flex flex-row justify-space-between">
+						<p>Propina:</p>
+						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b>
+					</div>
+					<div v-if="specifictip>0" class="d-flex flex-row justify-space-between">
+						<p>Propina directa:</p>
+						<b>${{ specifictip }}</b>
+					</div>
+						<div class="d-flex flex-row justify-space-between">
+					<p>	Subtotal:</p>
+						<b>${{ ticket.total }}</b>
+					</div>
+						<div class="d-flex flex-row justify-space-between">
+						<h4>
+							Total neto:
+						</h4>
+					<h4>
+							${{ calctotalneto(ticket.total) }}
+						</h4>
+						</div>
+						</v-col>
+					</div>
+					<v-row class="justify-end pa-0 ma-5">
 				<v-btn color="success"    x-large   depressed @click="sendTip()"
 							>Guardar propina</v-btn
 						></v-row>
-			</v-card-text>
 		</v-card>
 	</v-dialog>
 </template>
@@ -165,10 +177,11 @@ export default {
 		calctip(total) {
 			this.selectip = Number(this.selectip);
 
-			return Math.round(Number(total) * (this.selectip / 100));
+			return (Number(total) * (this.selectip / 100)).toFixed(2);
 		},
 		calctotalneto(total) {
-			return Number(total) + this.calctip(total);
+			total=Number(total) + Number(this.calctip(total))+Number(this.specifictip);
+			return total;
 		},
 		toTip(tip) {
 			this.selectip = tip;
@@ -184,10 +197,7 @@ export default {
 			this.$emit("update:dialogticketviewer", false);
 		},
 	},
-	mounted() {},
-	watch: {},
 };
 </script>
 
-<style scoped>
-</style>
+

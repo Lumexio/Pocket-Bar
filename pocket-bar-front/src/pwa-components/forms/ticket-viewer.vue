@@ -5,7 +5,7 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 	>
-		<!-- Comment cotorro -->
+	
 		<v-card  >
 			<v-toolbar
 				color="transparent"
@@ -102,16 +102,28 @@
 				</v-simple-table>
 				<div class="d-flex justify-end">
 					
-					<v-col style="max-width: 9rem;" class="pa-0 text-left">
-						Propina:
+					<v-col  class="pa-3 ">
+						<div v-if="selectip>0"  class="d-flex flex-row justify-space-between">
+						<p>Propina:</p>
 						<b>{{ selectip }}% ${{ calctip(ticket.total) }}</b>
-						Subtotal:
+					</div>
+					<div v-if="specifictip>0" class="d-flex flex-row justify-space-between">
+						<p>Propina directa:</p>
+						<b>${{ specifictip }}</b>
+					</div>
+						<div class="d-flex flex-row justify-space-between">
+					<p>	Subtotal:</p>
 						<b>${{ ticket.total }}</b>
-						<h3>
+					</div>
+						<div class="d-flex flex-row justify-space-between">
+						<h4>
 							Total neto:
-							<b class="text--primary">${{ calctotalneto(ticket.total) }}</b>
-						</h3></v-col
-					>
+						</h4>
+					<h4>
+							${{ calctotalneto(ticket.total) }}
+						</h4>
+						</div>
+						</v-col>
 					</div>
 					<v-row class="justify-end pa-0 ma-5">
 				<v-btn color="success"    x-large   depressed @click="sendTip()"
@@ -165,10 +177,11 @@ export default {
 		calctip(total) {
 			this.selectip = Number(this.selectip);
 
-			return Math.round(Number(total) * (this.selectip / 100));
+			return (Number(total) * (this.selectip / 100)).toFixed(2);
 		},
 		calctotalneto(total) {
-			return Number(total) + this.calctip(total);
+			total=Number(total) + Number(this.calctip(total))+Number(this.specifictip);
+			return total;
 		},
 		toTip(tip) {
 			this.selectip = tip;
@@ -184,8 +197,7 @@ export default {
 			this.$emit("update:dialogticketviewer", false);
 		},
 	},
-	mounted() {},
-	watch: {},
 };
 </script>
+
 

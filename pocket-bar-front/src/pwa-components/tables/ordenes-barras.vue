@@ -59,11 +59,21 @@
 						</tbody>
 					</template>
 				</v-simple-table>
-				
-				<p style="text-align: end" class="mr-6 font-weight-bold">
-					<span class="mr-2"> Propina:</span> {{ item.tip }}% 
-					<span class="mr-2"> Subtotal:</span> ${{ item.total }}
-				</p>
+				<v-col class="pa-4">
+				<div class="d-flex flex-row justify-space-between align-center">
+					<span > Propina:</span>
+					<v-divider></v-divider> 
+					<b>{{ item.tip }}% </b>
+				</div>
+				<div class="d-flex flex-row justify-space-between align-center">
+					<span > Propina directa:</span> 
+					<v-divider></v-divider> 
+					<b>${{ item.specifictip }} </b>
+				</div>
+				<div class="d-flex flex-row justify-space-between align-center">
+					<span > Subtotal:</span><v-divider></v-divider> <b> ${{ item.total }}</b>
+				</div>
+			</v-col>
 			</v-expansion-panel-content>
 		
 		</v-expansion-panel>

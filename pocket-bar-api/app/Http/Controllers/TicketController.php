@@ -57,6 +57,7 @@ class TicketController extends Controller
 
         return [$subtotal, $tax, $discounts, $total];
     }
+
     public function tipUpdate(Request $request)
     {
 

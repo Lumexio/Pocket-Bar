@@ -124,7 +124,6 @@ class ArticuloController extends Controller
      */
     public function activate(int $id): JsonResponse
     {
-        $message = "";
         $articulo = Articulo::find($id);
         if (isset($articulo->deactivated_at)) {
             $articulo->deactivated_at = null;

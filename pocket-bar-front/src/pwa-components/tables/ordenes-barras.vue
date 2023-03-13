@@ -24,7 +24,7 @@
 					large
 					:dark="darkonchange"
 					color="cyan darken-3"
-					@click.prevent="dialogticketviewer = true"
+					@click.prevent="(dialogticketviewer = true),(onticket=item)"
 					><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
 				<v-btn
@@ -59,15 +59,28 @@
 						</tbody>
 					</template>
 				</v-simple-table>
-				<p style="text-align: end" class="mr-6 font-weight-bold">
-					<span class="mr-6"> Subtotal:</span> ${{ item.total }}
-				</p>
+				<v-col class="pa-4">
+				<div class="d-flex flex-row justify-space-between align-center">
+					<span > Propina:</span>
+					<v-divider></v-divider> 
+					<b>{{ item.tip }}% </b>
+				</div>
+				<div class="d-flex flex-row justify-space-between align-center">
+					<span > Propina directa:</span> 
+					<v-divider></v-divider> 
+					<b>${{ item.specifictip }} </b>
+				</div>
+				<div class="d-flex flex-row justify-space-between align-center">
+					<span > Subtotal:</span><v-divider></v-divider> <b> ${{ item.total }}</b>
+				</div>
+			</v-col>
 			</v-expansion-panel-content>
-			<ticketViewer
-				:dialogticketviewer.sync="dialogticketviewer"
-				:ticket="item"
-			/>
+		
 		</v-expansion-panel>
+		<ticketViewer
+				:dialogticketviewer.sync="dialogticketviewer"
+				:ticket="onticket"
+			/>
 		<addProducts
 			:dialogaddproduct.sync="dialogaddproduct"
 			:ticket_id="ticket_id"
@@ -87,6 +100,7 @@ export default {
 	},
 	data: () => ({
 		ticket_id: null,
+		onticket: {},
 		dialogaddproduct: false,
 		dialogticketviewer: false,
 		ticketsPWAArray: [],

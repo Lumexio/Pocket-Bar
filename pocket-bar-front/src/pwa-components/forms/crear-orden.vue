@@ -10,9 +10,6 @@
 				prominent
 				color="transparent"
 				v-touch="{
-					left: () => swipe('Left'),
-					right: () => swipe('Right'),
-					up: () => swipe('Up'),
 					down: () => swipe('Down'),
 				}"
 			>
@@ -96,11 +93,11 @@
 							</template>
 
 							<template v-slot:default="props">
-								<v-row v-for="item in props.items" :key="item.id" class="mb-3">
+								<v-row v-for="item in props.items" :key="item.id" >
 									<v-card
 										:color="cambio(item)"
 										@click.prevent="cajaProductos(item)"
-										class="card-p ml-5"
+										class="card-p ml-4 mr-4 mb-1"
 										:disabled="item.cantidad_articulo == 0"
 									>
 										<v-img
@@ -588,8 +585,7 @@ export default {
 	justify-content: flex-start;
 }
 .card-p {
-	min-width: 96%;
-	max-width: 96%;
+	width: 100%;
 }
 .card-prod {
 	text-align: start;

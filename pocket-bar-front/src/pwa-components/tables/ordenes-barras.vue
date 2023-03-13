@@ -60,12 +60,12 @@
 					</template>
 				</v-simple-table>
 				<v-col class="pa-4">
-				<div class="d-flex flex-row justify-space-between align-center">
+				<div v-if="item.tip>0" class="d-flex flex-row justify-space-between align-center">
 					<span > Propina:</span>
 					<v-divider></v-divider> 
 					<b>{{ item.tip }}% </b>
 				</div>
-				<div class="d-flex flex-row justify-space-between align-center">
+				<div v-if="item.specifictip>0" class="d-flex flex-row justify-space-between align-center">
 					<span > Propina directa:</span> 
 					<v-divider></v-divider> 
 					<b>${{ item.specifictip }} </b>

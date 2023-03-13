@@ -125,7 +125,7 @@
 						</div>
 						</v-col>
 					</div>
-					<v-row class="justify-end pa-0 ma-5">
+					<v-row v-show="statCheck(ticket.status)" class="justify-end pa-0 ma-5">
 				<v-btn color="success"    x-large   depressed @click="sendTip()"
 							>Guardar propina</v-btn
 						></v-row>

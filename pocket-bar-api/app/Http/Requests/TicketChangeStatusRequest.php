@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Rol;
 use App\Enums\TicketItemStatus;
 use App\Enums\TicketStatus;
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,7 +16,7 @@ class TicketChangeStatusRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check();
+        return auth()->user()->rol_id == Rol::Bartender->value || auth()->user()->rol_id == Rol::Mesero->value;
     }
 
     /**
@@ -28,7 +29,7 @@ class TicketChangeStatusRequest extends FormRequest
         //",En preparación,Entregado,Recibido"
         return [
             "id" => "required|integer|exists:tickets_tbl,id",
-            "subStatus" => "required|string|in:" . TicketItemStatus::Standby . "," . TicketItemStatus::InPreparation . "," . TicketItemStatus::Prepared . "," . TicketItemStatus::Received
+            "subStatus" => "required|string|in:" . TicketItemStatus::Standby->value . "," . TicketItemStatus::InPreparation->value . "," . TicketItemStatus::Prepared->value . "," . TicketItemStatus::Received->value,
         ];
     }
 }

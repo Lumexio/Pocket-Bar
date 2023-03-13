@@ -6,6 +6,10 @@ use Illuminate\Contracts\Console\Kernel;
 
 trait CreatesApplication
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+    }
     /**
      * Creates the application.
      *

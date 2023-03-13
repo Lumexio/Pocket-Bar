@@ -167,17 +167,17 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Articulo::factory(10)->create();
 
-        // $tickets = TicketFactory::new()->times(10)->raw();
+         $tickets = TicketFactory::new()->times(10)->raw();
 
-        // foreach ($tickets as $ticket) {
-        //     $ticketToInsert = $ticket;
-        //     unset($ticketToInsert["items"]);
+         foreach ($tickets as $ticket) {
+             $ticketToInsert = $ticket;
+             unset($ticketToInsert["items"]);
 
-        //     $id = Ticket::insertGetId($ticketToInsert);
-        //     foreach ($ticket["items"] as $item) {
-        //         $item["ticket_id"] = $id;
-        //         TicketDetail::insert($item);
-        //     }
-        // }
+             $id = Ticket::insertGetId($ticketToInsert);
+             foreach ($ticket["items"] as $item) {
+                 $item["ticket_id"] = $id;
+                 TicketDetail::insert($item);
+             }
+         }
     }
 }

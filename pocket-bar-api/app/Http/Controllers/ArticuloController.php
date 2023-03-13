@@ -50,11 +50,11 @@ class ArticuloController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ArticuleValidationRequest $request
-     * @return Model|JsonResponse
+     * @return JsonResponse
      *
      * dentro hay una validacion para saber si el nombre del articulo ya exite en los registros.
      */
-    public function store(ArticuleValidationRequest $request): Model|JsonResponse
+    public function store(ArticuleValidationRequest $request): JsonResponse
     {
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
             return response()->json(
@@ -74,7 +74,7 @@ class ArticuloController extends Controller
             }
             $articulo = Articulo::create($articulo);
             broadcast((new articuloCreated($articulo))->broadcastToEveryone());
-            return $articulo;
+            return response()->json(["message" => "success", "articulo" => $articulo], 201);
         }
     }
 
@@ -94,24 +94,26 @@ class ArticuloController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return Model
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Model
+    public function update(Request $request, int $id): JsonResponse
     {
         $article = Articulo::find($id);
-        $newName = $request->nombre_articulo;
-        $filename = $article->foto_articulo;
 
-        //lugar donde esta guardado el archivo existente
-        $oldPath = public_path("/images/$filename");
-        $filename =  $newName . '.' . "jpg";
-        $newPath = public_path("/images/$filename");
-        rename($oldPath, $newPath);
-        $article["foto_articulo"] = $filename;
+        if(isset($request->foto_articulo)){
+            $newName = $request->nombre_articulo;
+            $filename = $article->foto_articulo;
+            //lugar donde esta guardado el archivo existente
+            $oldPath = public_path("/images/$filename");
+            $filename =  $newName . '.' . "jpg";
+            $newPath = public_path("/images/$filename");
+            rename($oldPath, $newPath);
+            $article["foto_articulo"] = $filename;
+        }
         $article->update($request->all());
         $article['user_id'] = Auth::id();
         broadcast((new articuloCreated())->broadcastToEveryone());
-        return $article;
+        return response()->json(["message" => "success", "articulo" => $article], 200);
     }
 
 

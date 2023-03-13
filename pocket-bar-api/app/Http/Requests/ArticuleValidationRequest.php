@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ArticuleValidationRequest extends FormRequest
@@ -11,9 +12,9 @@ class ArticuleValidationRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true;
+        return auth()->user()->rol_id == Rol::Administrativo->value || auth()->user()->rol_id == Rol::Gerencia->value;
     }
 
     /**

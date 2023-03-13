@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UsuarioValidationRequest extends FormRequest
@@ -13,7 +14,7 @@ class UsuarioValidationRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->rol_id == Rol::Administrativo->value || auth()->user()->rol_id == Rol::Gerencia->value;;
     }
 
     /**

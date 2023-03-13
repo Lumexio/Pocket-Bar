@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TicketCreateRequest extends FormRequest
@@ -13,7 +14,7 @@ class TicketCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check();
+        return auth()->user()->rol_id == Rol::Bartender->value || auth()->user()->rol_id == Rol::Mesero->value;
     }
 
     /**

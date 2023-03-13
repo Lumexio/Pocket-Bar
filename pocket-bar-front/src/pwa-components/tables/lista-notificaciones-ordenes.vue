@@ -202,14 +202,15 @@ export default {
 					this[variableName] = this.parseNotifications(e[callbackVariableName]);
 				//	store.commit("setorder", this[variableName].length);
 					this[variableName].forEach(element => {
+						console.log(element.status);
 						store.commit("setorder", 0);
 					this.$store.getters.hasrol === 4 &&	(element.status === "Preparado"||element.status === "Recibido")
 						? 	store.commit("setorder", this[variableName].length)
 							: store.commit("setorder", 0);
-							this.$store.getters.hasrol === 5 &&	(element.status === "En espera"||element.status === "En preparacion")
-						? 	store.commit("setorder", this[variableName].length)
-								: store.commit("setorder", 0);
-							});
+							this.$store.getters.hasrol === 5 &&	(element.status === "En espera")&&	(element.status != "Preparado"||element.status != "Recibido")
+						? store.commit("setorder",  this[variableName].length)
+						: store.commit("setorder", 0);
+					});
 					
 				}
 			);
@@ -223,7 +224,7 @@ export default {
 						this.$store.getters.hasrol === 4 &&	(element.status === "Preparado"||element.status === "Recibido")
 						? store.commit("setorder", response.ticketsPWANotiArray.length)
 							: store.commit("setorder", 0);
-							this.$store.getters.hasrol === 5 &&	(element.status === "En espera"||element.status === "En preparacion")
+							this.$store.getters.hasrol === 5 &&	(element.status === "En espera")&&	(element.status != "Preparado"||element.status != "Recibido")
 						? store.commit("setorder", response.ticketsPWANotiArray.length)
 						: store.commit("setorder", 0);
 					});

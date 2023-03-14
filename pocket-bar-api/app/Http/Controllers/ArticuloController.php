@@ -101,12 +101,19 @@ class ArticuloController extends Controller
         //Obtener nombre venidero
 
         $newname = $request->nombre_articulo;
-        $filename =  $articulo->nombre_articulo . '.' . "jpg";
-        if (file_exists(public_path("/images/$filename"))) {
+
+
+        //si el archivo existe
+        if (file_exists(public_path("/images/$articulo->foto_articulo"))) {
             //lugar donde esta guardado el archivo existente
-            $oldpath = public_path("/images/$filename");
-            $filename =  $newname . '.' . "jpg";
-            $newpath = public_path("/images/$filename");
+            $oldpath = public_path("/images/$articulo->foto_articulo");
+            //nuevo nombre del archivo
+            if (str_contains($articulo->foto_articulo, '.png')) {
+                $newname =  $newname . '.' . "png";
+            } elseif (str_contains($articulo->foto_articulo, '.jpg')) {
+                $newname =  $newname . '.' . "jpg";
+            }
+            $newpath = public_path("/images/$newname");
             rename($oldpath, $newpath);
         }
         $articulo->update([
@@ -119,7 +126,7 @@ class ArticuloController extends Controller
         'proveedor_id' => $request->proveedor_id,
         'status_id' => $request->status_id,
         'tipo_id' => $request->tipo_id,
-        'foto_articulo' => file_exists(public_path("/images/$filename")) ? $filename : "",
+        'foto_articulo' => $newname ? $newname : $articulo->foto_articulo,
         'user_id' => Auth::id()]);
 
 

@@ -515,8 +515,7 @@ export default {
 					"tipo_id": this.selectt,
 					"status_id": this.selectst,
 					"marca_id": this.selectm,
-					"descripcion_articulo": send.descripcion_articulo,
-					"foto_articulo": this.photo != null ?this.photo.name:""
+					"descripcion_articulo": send.descripcion_articulo
 				};
 				// formdata.append("nombre_articulo", send.nombre_articulo);
 				// formdata.append("cantidad_articulo", send.cantidad_articulo);

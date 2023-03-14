@@ -65,11 +65,7 @@ export function deleteArticulos(id) {
 export function editArticulos(url, data) {
 
   axios
-    .put(url, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    .put(url, data)
     .then((response) => {
 
       if (response.statusText === "Created") {

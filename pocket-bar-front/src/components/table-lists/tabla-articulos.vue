@@ -498,7 +498,7 @@ export default {
 				let send = this.editedItem;
 				send.nombre_articulo = upperConverter(send.nombre_articulo);
 				let url = "api/articulo/update/" + send.id;
-				const formdata = new FormData();
+				//const formdata = new FormData();
 
 				// url = `${url}?${"nombre_articulo=" + send.nombre_articulo}&${
 				// 	"cantidad_articulo=" + send.cantidad_articulo
@@ -507,16 +507,27 @@ export default {
 				// }&${"tipo_id=" + this.selectt}&${"marca_id=" + this.selectm}&${
 				// 	"proveedor_id=" + this.selectp
 				// }&${"status_id=" + this.selectst}`;
-				formdata.append("nombre_articulo", send.nombre_articulo);
-				formdata.append("cantidad_articulo", send.cantidad_articulo);
-				formdata.append("categoria_id", this.selectc);
-				formdata.append("proveedor_id", this.selectp);
-				formdata.append("tipo_id", this.selectt);
-				formdata.append("status_id", this.selectst);
-				formdata.append("marca_id", this.selectm);
-				formdata.append("descripcion_articulo", send.descripcion_articulo);
-				formdata.append("foto_articulo", this.photo);
-				editArticulos(url, formdata);
+				const pack = {
+					"nombre_articulo": send.nombre_articulo,
+					"cantidad_articulo": send.cantidad_articulo,
+					"categoria_id": this.selectc,
+					"proveedor_id": this.selectp,
+					"tipo_id": this.selectt,
+					"status_id": this.selectst,
+					"marca_id": this.selectm,
+					"descripcion_articulo": send.descripcion_articulo,
+					"foto_articulo": this.photo != null ?this.photo.name:""
+				};
+				// formdata.append("nombre_articulo", send.nombre_articulo);
+				// formdata.append("cantidad_articulo", send.cantidad_articulo);
+				// formdata.append("categoria_id", this.selectc);
+				// formdata.append("proveedor_id", this.selectp);
+				// formdata.append("tipo_id", this.selectt);
+				// formdata.append("status_id", this.selectst);
+				// formdata.append("marca_id", this.selectm);
+				// formdata.append("descripcion_articulo", send.descripcion_articulo);
+				// formdata.append("foto_articulo", this.photo);
+				editArticulos(url, pack);
 			} else {
 				this.articulosArray.push(this.editedItem);
 			}
@@ -525,4 +536,5 @@ export default {
 	},
 };
 </script>
+
 

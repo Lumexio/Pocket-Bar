@@ -30,7 +30,7 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 //  });
 // }
 export function postPhoto(url, enviar) {
-
+  console.log(enviar);
   axios
     .post(url, enviar, {
       headers: {

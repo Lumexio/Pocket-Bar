@@ -67,6 +67,7 @@ p {
 .v-data-table > .v-data-table__wrapper > table > thead > tr > td,
 .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
 	vertical-align: inherit;
+	margin: 0px !important;
 }
 
 span {

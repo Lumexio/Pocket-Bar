@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use \Illuminate\Http\Response;
+use Illuminate\Http\Response;
 use App\Models\Articulo;
 use App\Events\articuloCreated;
 use App\Http\Requests\ArticuleValidationRequest;
 use File;
 //use Illuminate\Http\File;
 use Illuminate\Support\Facades\Auth;
+
 //use Illuminate\Support\Facades\Storage;
 
 class ArticuloController extends Controller
@@ -29,7 +30,7 @@ class ArticuloController extends Controller
             ->leftJoin('proveedores_tbl', 'articulos_tbl.proveedor_id', '=', 'proveedores_tbl.id')
             ->leftJoin('status_tbl', 'articulos_tbl.status_id', '=', 'status_tbl.id')
             ->leftJoin('tipos_tbl', 'articulos_tbl.tipo_id', '=', 'tipos_tbl.id')
-            ->select('articulos_tbl.id', 'articulos_tbl.nombre_articulo', 'articulos_tbl.cantidad_articulo', 'articulos_tbl.precio_articulo',  'articulos_tbl.descripcion_articulo', 'articulos_tbl.foto_articulo', 'users.name', 'categorias_tbl.nombre_categoria', 'marcas_tbl.nombre_marca', 'proveedores_tbl.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo')
+            ->select('articulos_tbl.id', 'articulos_tbl.nombre_articulo', 'articulos_tbl.cantidad_articulo', 'articulos_tbl.precio_articulo', 'articulos_tbl.descripcion_articulo', 'articulos_tbl.foto_articulo', 'users.name', 'categorias_tbl.nombre_categoria', 'marcas_tbl.nombre_marca', 'proveedores_tbl.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo')
             ->get()
             ->map(
                 function ($item) {
@@ -55,8 +56,6 @@ class ArticuloController extends Controller
      */
     public function store(ArticuleValidationRequest $request)
     {
-
-
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
             return response([
                 'message' => ['Uno de los parametros ya exite.']
@@ -96,21 +95,35 @@ class ArticuloController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
         $articulo = Articulo::find($id);
         //Obtener nombre venidero
-        $newname = $request->nombre_articulo;
-        //newname de archivo ya guardado
-        $filename = $articulo->foto_articulo;
 
-        //lugar donde esta guardado el archivo existente
-        $oldpath = public_path("/images/$filename");
-        $filename =  $newname . '.' . "jpg";
-        $newpath = public_path("/images/$filename");
-        rename($oldpath, $newpath);
-        $articulo["foto_articulo"] = $filename;
-        $articulo->update($request->all());
+        $newname = $request->nombre_articulo;
+        $filename =  $articulo->nombre_articulo . '.' . "jpg";
+        if (file_exists(public_path("/images/$filename"))) {
+            //lugar donde esta guardado el archivo existente
+            $oldpath = public_path("/images/$filename");
+            $filename =  $newname . '.' . "jpg";
+            $newpath = public_path("/images/$filename");
+            rename($oldpath, $newpath);
+        }
+        $articulo->update([
+        'nombre_articulo' => $request->nombre_articulo,
+        'cantidad_articulo' => $request->cantidad_articulo,
+        'precio_articulo' => $request->precio_articulo,
+        'descripcion_articulo' => $request->descripcion_articulo,
+        'categoria_id' => $request->categoria_id,
+        'marca_id' => $request->marca_id,
+        'proveedor_id' => $request->proveedor_id,
+        'status_id' => $request->status_id,
+        'tipo_id' => $request->tipo_id,
+        'foto_articulo' => file_exists(public_path("/images/$filename")) ? $filename : "",
+        'user_id' => Auth::id()]);
+
+
+
         $articulo['user_id'] = Auth::id();
         broadcast((new articuloCreated($articulo))->broadcastToEveryone());
         return $articulo;

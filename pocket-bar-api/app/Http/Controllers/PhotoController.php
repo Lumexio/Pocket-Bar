@@ -17,20 +17,25 @@ class PhotoController extends Controller
          * * Esta pieza de codigo esta sujeta a cambios para detectar de que modelo proviene
          * !Obtendra el parametro extra llamado 'from' para esta tarea y crear una imagen para el modelo al que apunta.
          */
+
+
         $articulo = Articulo::find($id);
         $filename = $articulo->foto_articulo;
         if ($filename != null) {
             $path = public_path("/images/$filename");
             File::delete($path);
         }
-        $extension = $request->file('foto_articulo')->guessExtension();
-        if ($extension === 'jpg' || $extension === 'png') {
-            $name_foto =  $articulo->nombre_articulo . '.' . $extension;
-        } else if ($extension != 'jpg' || $extension != 'png') {
+
+        if (str_contains($request->file('foto_articulo')->getClientOriginalName(), '.png')) {
+
+            $name_foto =  $articulo->nombre_articulo . '.' . 'png';
+
+        }else if (str_contains($request->file('foto_articulo')->getClientOriginalName(), '.jpg')) {
             $name_foto =  $articulo->nombre_articulo . '.' . 'jpg';
         }
+
         $request->foto_articulo->move(public_path('images'), $name_foto);
-        $articulo["foto_articulo"] = $name_foto;
+        $articulo->foto_articulo = $name_foto;
         $articulo->save();
         articuloCreated::dispatch($articulo);
         return $articulo;

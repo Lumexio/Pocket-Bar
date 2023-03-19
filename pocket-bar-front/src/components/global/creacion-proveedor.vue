@@ -15,7 +15,7 @@
 						v-shortkey="['ctrl', 'shift', 'p']"
 						@shortkey="dialogproveedor = !dialogproveedor"
 						dark
-						rounded
+						
 						@click.prevent="dialogproveedor = !dialogproveedor"
 					>
 						<v-icon left large dark>mdi-plus</v-icon>

@@ -14,7 +14,7 @@
 						elevation="2"
 						color="primary"
 						dark
-						rounded
+						
 						@click.prevent="dialogusuarios = true"
 					>
 						<v-icon left large>mdi-plus</v-icon>

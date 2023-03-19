@@ -9,7 +9,7 @@
 				<v-btn
 					large
 					color="primary"
-					class="mt-3"
+					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'a']"
 					@shortkey="dialogarticulo = !dialogarticulo"
 					elevation="2"
@@ -30,7 +30,7 @@
 				<v-btn
 					large
 					color="primary"
-					class="mt-3"
+					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'c']"
 					@shortkey="dialogcategoria = !dialogcategoria"
 					elevation="2"
@@ -51,7 +51,7 @@
 				<v-btn
 					large
 					color="primary"
-					class="mt-3"
+					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'm']"
 					@shortkey="dialogmarca = !dialogmarca"
 					elevation="2"
@@ -72,7 +72,7 @@
 				<v-btn
 					large
 					color="primary"
-					class="mt-3"
+					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 't']"
 					@shortkey="dialogtipo = !dialogtipo"
 					elevation="2"
@@ -93,7 +93,7 @@
 				<v-btn
 					large
 					color="primary"
-					class="mt-3"
+					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'p']"
 					@shortkey="dialogproveedor = !dialogproveedor"
 					elevation="2"
@@ -170,6 +170,10 @@ export default {
 <style scoped>
 .black-mode-text {
 	color: yellowgreen;
+}
+.button-main{
+	justify-content: start !important;
+	min-width: 9rem !important;
 }
 .white-mode-text {
 	color: black;

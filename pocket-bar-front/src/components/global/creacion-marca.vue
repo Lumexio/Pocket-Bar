@@ -14,7 +14,7 @@
 						v-shortkey="['ctrl', 'shift', 'm']"
 						@shortkey="dialogmarca = !dialogmarca"
 						dark
-						rounded
+						
 						@click.prevent="dialogmarca = !dialogmarca"
 					>
 						<v-icon left large dark>mdi-plus</v-icon>

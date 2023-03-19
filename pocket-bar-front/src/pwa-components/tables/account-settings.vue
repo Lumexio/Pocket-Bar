@@ -3,9 +3,14 @@
 		v-model="dialogaccount"
 		fullscreen
 		hide-overlay
-		transition="dialog-top-transition"
+		transition="dialog-bottom-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
-			<v-toolbar color="transparent" prominent>
+			<v-toolbar 				color="transparent"
+				elevation="0"
+				prominent
+				v-touch="{
+					down: () => swipe('Down'),
+				}">
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag"
@@ -72,11 +77,18 @@ export default {
 		dialogaccount: { default: false },
 	} /*data de llegado de componente padre creacion*/,
 	data: () => ({
+		swipeDirection: "None",
 		switchdark: false,
 		dialogLogout: false,
 	}),
 
 	methods: {
+		swipe(direction) {
+			if (direction === "Down") {
+				this.$emit("update:dialogaccount", false);
+			}
+			this.swipeDirection = direction;
+		},
 		logoutConfirm() {
 			Logout().then((res) => {
 				if (res.status === 200) {

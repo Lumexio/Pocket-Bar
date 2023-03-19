@@ -14,7 +14,7 @@
 						v-shortkey="['ctrl', 'shift', 't']"
 						@shortkey="dialogtipo = !dialogtipo"
 						dark
-						rounded
+						
 						@click.prevent="dialogtipo = !dialogtipo"
 					>
 						<v-icon left large dark>mdi-plus</v-icon>

@@ -10,9 +10,6 @@
 				flat
 				prominent
 				v-touch="{
-					left: () => swipe('Left'),
-					right: () => swipe('Right'),
-					up: () => swipe('Up'),
 					down: () => swipe('Down'),
 				}"
 			>

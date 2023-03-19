@@ -57,11 +57,9 @@ class ArticuloController extends Controller
     public function store(ArticuleValidationRequest $request): JsonResponse
     {
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
-            return response()->json(
-                [
-                    'message' => ['Uno de los parametros ya exite.']
-                ], 409
-            );
+            return response([
+                'message' => ['Uno de los parametros ya exite.']
+            ], 409);
         } else {
             $photo = $request->file('foto_articulo');
             $articulo = $request->all();
@@ -100,7 +98,7 @@ class ArticuloController extends Controller
     {
         $article = Articulo::find($id);
 
-        if(isset($request->foto_articulo)){
+        if (isset($request->foto_articulo)) {
             $newName = $request->nombre_articulo;
             $filename = $article->foto_articulo;
             //lugar donde esta guardado el archivo existente

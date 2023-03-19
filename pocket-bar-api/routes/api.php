@@ -78,12 +78,12 @@ Mostrar un registro no */
          * !Pendiente crear boton para admin y cajero
          * *Francisco
          */
-        Route::post("/cancel", 'TicketController@cancelTicket');
+        Route::put("/cancel", 'TicketController@cancelTicket');
         /**Añadir productos a un ticket existe
          * !Probar
          * *Francisco
          */
-        Route::post('/add/products', 'TicketController@addProducts');
+        Route::put('/add/products', 'TicketController@addProducts');
     });
 
     Route::prefix('ordenes')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {

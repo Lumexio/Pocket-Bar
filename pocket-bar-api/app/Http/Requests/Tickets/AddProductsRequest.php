@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tickets;
 
+use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AddProductsRequest extends FormRequest
@@ -13,7 +14,7 @@ class AddProductsRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() and (auth()->user()->rol_id == 4 or auth()->user()->rol_id == 5);
+        return auth()->check() and (auth()->user()->rol_id == Rol::Bartender->value or auth()->user()->rol_id == Rol::Mesero->value);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tickets;
 
+use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PayRequest extends FormRequest
@@ -14,7 +15,7 @@ class PayRequest extends FormRequest
     public function authorize()
     {
         // return auth()->check() and auth()->user()->rol_id == 3;
-        return true;
+        return auth()->user()->rol_id == Rol::Cajero->value;
     }
 
     /**

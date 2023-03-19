@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Tickets;
+namespace App\Http\Requests;
 
 use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CancelTicketRequest extends FormRequest
+class TicketTipUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class CancelTicketRequest extends FormRequest
      */
     public function authorize()
     {
-        return in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Cajero->value, Rol::Gerencia->value]);
+        return auth()->user()->rol_id == Rol::Bartender->value || auth()->user()->rol_id == Rol::Mesero->value;
     }
 
     /**
@@ -25,9 +25,9 @@ class CancelTicketRequest extends FormRequest
     public function rules()
     {
         return [
+            'tip' => 'nullable|numeric|min:0',
             "id" => "required|exists:tickets_tbl,id",
-            //"ticket_id" => "required|numeric",
-            "confirm_ticket" => "nullable|boolean"
+            "specifictip" => "nullable|numeric|min:0",
         ];
     }
 }

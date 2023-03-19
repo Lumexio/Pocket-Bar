@@ -8,7 +8,6 @@ use App\Enums\TicketStatus;
 use App\Events\BarraEvents;
 use App\Events\MeseroEvents;
 use App\Models\Ticket;
-use Illuminate\Http\Request;
 use App\Http\Requests\TicketCreateRequest;
 use App\Http\Requests\TicketListPwaRequest;
 use App\Models\Workshift;
@@ -23,6 +22,7 @@ use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
 use App\Http\Requests\Tickets\AddProductsRequest;
 use App\Http\Requests\Tickets\CancelTicketRequest;
 use App\Http\Requests\Tickets\PayRequest;
+use App\Http\Requests\TicketTipUpdateRequest;
 use App\Models\Articulo;
 use App\Models\Payment;
 use App\Models\TicketDetail;
@@ -58,14 +58,14 @@ class TicketController extends Controller
         return [$subtotal, $tax, $discounts, $total];
     }
 
-    public function tipUpdate(Request $request)
+    public function tipUpdate(TicketTipUpdateRequest $request): JsonResponse
     {
 
         $ticket = Ticket::findOrFail($request->input('id'));
 
-        $ticket->tip = $request->input('tip');
-        $ticket->specifictip = $request->input('specifictip');
-        (float)$ticket->min_tip = ((float)$ticket->subtotal*(float)$request->input('tip'))/100;
+        $ticket->tip = $request->input('tip') ?? 0;
+        $ticket->specifictip = $request->input('specifictip') ?? 0;
+        $ticket->min_tip = round(($ticket->subtotal * $request->input('tip')) / 100, 2);
         $ticket->save();
         if (auth()->user()->rol_id == 4) {
             ticketCreatedMesero::dispatch(auth()->user()->id);
@@ -76,7 +76,10 @@ class TicketController extends Controller
         }
         broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
         broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-        return response()->json($ticket);
+        return response()->json([
+            "message" => "Se ha actualizado el ticket",
+            "ticket" => $ticket
+        ], 200);
     }
 
     /**
@@ -107,8 +110,8 @@ class TicketController extends Controller
             $ticket->user_name = auth()->user()->name;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
-            $ticket->tip = $request->input('tip');
-            $ticket->min_tip = isset($ticket->tip) ? ((float)$subtotal * (float)$ticket->tip)/100 : 0;
+            $ticket->tip = $request->input('tip') ?? 0;
+            $ticket->min_tip = isset($ticket->tip) ? ((float)$subtotal * (float)$ticket->tip) / 100 : 0;
             $ticket->tax = $tax;
             $ticket->discounts = $discounts;
             $ticket->item_count = $items->count();
@@ -139,14 +142,14 @@ class TicketController extends Controller
         $this->sendNotificationsToBarthenders();
 
         return response()->json([
-            "status" => 200,
+            "status" => 201,
             "error" => 0,
             "message" => "Ticket creado correctamente",
             "data" => $ticket
-        ]);
+        ], 201);
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
 
         $tickets = Ticket::with(['details.articulo:id,nombre_articulo,precio_articulo', "workshift", "payments"])
@@ -175,12 +178,13 @@ class TicketController extends Controller
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa')
+            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa', )
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
             ->get()
             ->map(function (Ticket $ticket) {
+                dd($ticket);
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
@@ -308,26 +312,26 @@ class TicketController extends Controller
 
             if ($ticket->status == TicketStatus::Canceled->value) {
                 return response()->json([
-                    "status" => 500,
+                    "status" => 400,
                     "error" => 1,
                     "message" => "El ticket ya ha sido cancelado",
-                ], 500);
+                ], 400);
             } elseif (auth()->user()->rol_id === Rol::Cajero->value and $ticket->cancel_confirm === false) {
                 return response()->json([
-                    "status" => 500,
+                    "status" => 400,
                     "error" => 1,
                     "message" => "El ticket ya ha sido cancelado por el cajero",
-                ], 500);
+                ], 400);
             }
 
 
 
             if (auth()->user()->rol_id === Rol::Administrativo->value and $ticket->cancel_confirm === true) {
                 return response()->json([
-                    "status" => 500,
+                    "status" => 400,
                     "error" => 1,
                     "message" => "El ticket ya ha sido cancelado por el administrador",
-                ], 500);
+                ], 400);
             }
 
             if (auth()->user()->rol_id == Rol::Cajero->value) {

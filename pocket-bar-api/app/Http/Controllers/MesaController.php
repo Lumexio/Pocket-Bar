@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use App\Events\mesaCreated;
+use App\Http\Requests\MesaUpdateRequest;
 use App\Http\Requests\MesaValidationRequest;
 use App\Models\Mesa;
 
@@ -16,31 +17,42 @@ class MesaController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|Mesa[]
+     * @return JsonResponse
      */
-    public function index(): array|Collection
+    public function index(): JsonResponse
     {
-        return Mesa::all();
+        $mesas = Mesa::all();
+        return response()->json([
+            'message' => 'success',
+            'mesas' => $mesas
+        ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  MesaValidationRequest  $request
-     * @return JsonResponse|Model|Collection
+     * @return JsonResponse
      */
-    public function store(MesaValidationRequest $request): JsonResponse|Model|Collection
+    public function store(MesaValidationRequest $request): JsonResponse
     {
         if (Mesa::where('nombre_mesa', '=', $request->get('nombre_mesa'))->exists()) {
             return response()->json(
                 [
                     'message' => ['Nombre el nombre de la mesa  ya exite.']
-                ], 409
+                ],
+                409
             );
         } else {
             $mesa = Mesa::create($request->all());
             mesaCreated::dispatch($mesa);
-            return $mesa;
+            return response()->json(
+                [
+                    'message' => 'success',
+                    'mesa' => $mesa
+                ],
+                201
+            );
         }
     }
 
@@ -48,25 +60,54 @@ class MesaController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Model|Collection
+     * @return JsonResponse
      */
-    public function show(int $id): Model|Collection
+    public function show(int $id): JsonResponse
     {
-        return Mesa::find($id);
+        $mesa = Mesa::find($id);
+        if (empty($mesa)) {
+            return response()->json(
+                [
+                    'message' => 'Mesa no encontrada'
+                ],
+                404
+            );
+        }
+        return response()->json(
+            [
+                'message' => 'success',
+                'mesa' => $mesa
+            ],
+            200
+        );
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param MesaUpdateRequest $request
      * @param  int  $id
-     * @return Model|Collection
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Model|Collection
+    public function update(MesaUpdateRequest $request, int $id): JsonResponse
     {
         $mesa = Mesa::find($id);
+        if (empty($mesa)) {
+            return response()->json(
+                [
+                    'message' => 'Mesa no encontrada'
+                ],
+                404
+            );
+        }
         $mesa->update($request->all());
-        return $mesa;
+        return response()->json(
+            [
+                'message' => 'success',
+                'mesa' => $mesa
+            ],
+            200
+        );
     }
 
     /**
@@ -75,8 +116,15 @@ class MesaController extends Controller
      * @param int $id
      * @return int
      */
-    public function destroy(int $id): int
+    public function destroy(int $id): JsonResponse
     {
-        return Mesa::destroy($id);
+        $mesa = Mesa::destroy($id);
+        return response()->json(
+            [
+                'message' => 'success',
+                'mesa' => $mesa
+            ],
+            200
+        );
     }
 }

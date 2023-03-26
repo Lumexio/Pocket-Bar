@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProveedorValidationRequest extends FormRequest
+class CategoriaUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class ProveedorValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre_proveedor' => 'required|alpha',
-            'descripcion' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/'
+            'nombre_categoria' => 'required|string|max:255',
+            'descripcion' => 'required|string',
         ];
     }
 }

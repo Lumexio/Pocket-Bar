@@ -9,6 +9,7 @@ use App\Models\Marca;
 
 use App\Events\marcaCreated;
 use App\Http\Requests\ListRequest;
+use App\Http\Requests\MarcaUpdateRequest;
 use App\Http\Requests\MarcaValidationRequest;
 use Illuminate\Support\Collection;
 
@@ -38,9 +39,9 @@ class MarcaController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param  MarcaValidationRequest $request
-     * @return JsonResponse|Model
+     * @return JsonResponse
      */
-    public function store(MarcaValidationRequest $request): JsonResponse|Model
+    public function store(MarcaValidationRequest $request): JsonResponse
     {
         if (Marca::where('nombre_marca', '=', $request->get('nombre_marca'))->exists()) {
             return response()->json([
@@ -49,7 +50,10 @@ class MarcaController extends Controller
         } else {
             $marca = Marca::create($request->all());
             marcaCreated::dispatch($marca);
-            return $marca;
+            return response()->json([
+                'message' => 'success',
+                'marca' => $marca
+            ], 201);
         }
     }
 
@@ -57,25 +61,42 @@ class MarcaController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Model|Collection
+     * @return JsonResponse
      */
-    public function show(int $id): Model|Collection
+    public function show(int $id): JsonResponse
     {
-        return Marca::find($id);
+        $marca = Marca::find($id);
+        if (empty($marca)) {
+            return response()->json([
+                'message' => 'Marca no encontrada'
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'success',
+            'marca' => $marca
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
+     * @param  MarcaUpdateRequest $request
      * @param  int  $id
-     * @return Model|Collection
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Model|Collection
+    public function update(MarcaUpdateRequest $request, int $id): JsonResponse
     {
         $marca = Marca::find($id);
+        if (empty($marca)) {
+            return response()->json([
+                'message' => 'Marca no encontrada'
+            ], 404);
+        }
         $marca->update($request->all());
-        return $marca;
+        return response()->json([
+            'message' => 'success',
+            'marca' => $marca
+        ]);
     }
 
     /**
@@ -90,13 +111,16 @@ class MarcaController extends Controller
     // }
     /**
      * @param int $id
-     * @return Model|Collection
+     * @return JsonResponse
      */
-    public function activate(int $id): Model|Collection
+    public function activate(int $id): JsonResponse
     {
         $marca = Marca::find($id);
         $marca->active = !$marca->active;
         $marca->save();
-        return $marca;
+        return response()->json([
+            'message' => 'success',
+            'marca' => $marca
+        ]);
     }
 }

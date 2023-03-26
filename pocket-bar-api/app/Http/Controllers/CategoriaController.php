@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Events\categoriaCreated;
+use App\Http\Requests\CategoriaUpdateRequest;
 use App\Http\Requests\CategoriaValidationRequest;
 use App\Http\Requests\ListRequest;
 
@@ -38,9 +39,9 @@ class CategoriaController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CategoriaValidationRequest $request
-     * @return JsonResponse|Model
+     * @return JsonResponse
      */
-    public function store(CategoriaValidationRequest $request): JsonResponse|Model
+    public function store(CategoriaValidationRequest $request): JsonResponse
     {
         if (Categoria::where('nombre_categoria', '=', $request->get('nombre_categoria'))->exists()) {
             return response()->json([
@@ -49,7 +50,10 @@ class CategoriaController extends Controller
         } else {
             $categoria = Categoria::create($request->all());
             categoriaCreated::dispatch($categoria);
-            return $categoria;
+            return response()->json([
+                'message' => 'success',
+                'categoria' => $categoria
+            ], 201);
         }
     }
 
@@ -57,25 +61,42 @@ class CategoriaController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Model|Collection
+     * @return JsonResponse
      */
-    public function show(int $id): Model|Collection
+    public function show(int $id): JsonResponse
     {
-        return Categoria::find($id);
+        $categoria = Categoria::find($id);
+        if (empty($categoria)) {
+            return response()->json([
+                'message' => 'Categoria no encontrada'
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'success',
+            'categoria' => $categoria
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param CategoriaUpdateRequest $request
      * @param int $id
-     * @return Model
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Model
+    public function update(CategoriaUpdateRequest $request, int $id): JsonResponse
     {
         $categoria = Categoria::find($id);
+        if (empty($categoria)) {
+            return response()->json([
+                'message' => 'Categoria no encontrada'
+            ], 404);
+        }
         $categoria->update($request->all());
-        return $categoria;
+        return response()->json([
+            'message' => 'success',
+            'categoria' => $categoria
+        ], 200);
     }
 
     /**
@@ -91,11 +112,23 @@ class CategoriaController extends Controller
     //     return Categoria::destroy($id);
     // }
 
-    public function activate(int $id): Model
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function activate(int $id): JsonResponse
     {
         $categoria = Categoria::find($id);
+        if (empty($categoria)) {
+            return response()->json([
+                'message' => 'Categoria no encontrada'
+            ], 404);
+        }
         $categoria->active = !$categoria->active;
         $categoria->save();
-        return $categoria;
+        return response()->json([
+            'message' => 'success',
+            'categoria' => $categoria
+        ], 200);
     }
 }

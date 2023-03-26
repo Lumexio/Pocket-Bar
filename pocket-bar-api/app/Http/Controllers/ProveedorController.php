@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Events\proveedorCreated;
 use App\Http\Requests\ListRequest;
+use App\Http\Requests\ProveedorUpdateRequest;
 use App\Http\Requests\ProveedorValidationRequest;
 use Illuminate\Http\Response;
 use Ramsey\Collection\Collection;
@@ -39,20 +40,27 @@ class ProveedorController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ProveedorValidationRequest $request
-     * @return JsonResponse|Proveedor|Model|Collection
+     * @return JsonResponse
      */
-    public function store(ProveedorValidationRequest $request): JsonResponse|Proveedor|Model|Collection
+    public function store(ProveedorValidationRequest $request): JsonResponse
     {
         if (Proveedor::where('nombre_proveedor', '=', $request->get('nombre_proveedor'))->exists()) {
             return response()->json(
                 [
                     'message' => ['Uno de los parametros ya exite.']
-                ], 409
+                ],
+                409
             );
         } else {
             $proveedor = Proveedor::create($request->all());
             proveedorCreated::dispatch($proveedor);
-            return $proveedor;
+            return response()->json(
+                [
+                    'message' => 'success',
+                    'proveedor' => $proveedor
+                ],
+                201
+            );
         }
     }
 
@@ -60,38 +68,78 @@ class ProveedorController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Proveedor|Model|Collection
+     * @return JsonResponse
      */
-    public function show(int $id): Proveedor|Model|Collection
+    public function show(int $id): JsonResponse
     {
-        return Proveedor::find($id);
+        $proveedor = Proveedor::find($id);
+        if (empty($proveedor))
+            return response()->json(
+                [
+                    'message' => 'No se encontro el proveedor'
+                ],
+                404
+            );
+        return response()->json(
+            [
+                'message' => 'success',
+                'proveedor' => $proveedor
+            ],
+            200
+        );
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param ProveedorUpdateRequest $request
      * @param int $id
-     * @return Proveedor|Model|Collection
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Proveedor|Model|Collection
+    public function update(ProveedorUpdateRequest $request, int $id): JsonResponse
     {
         $proveedor = Proveedor::find($id);
+        if (empty($proveedor))
+            return response()->json(
+                [
+                    'message' => 'No se encontro el proveedor'
+                ],
+                404
+            );
         $proveedor->update($request->all());
-        return $proveedor;
+        return response()->json(
+            [
+                'message' => 'success',
+                'proveedor' => $proveedor
+            ],
+            200
+        );
     }
 
     /**
      * Activate and deactivate the specified resource from storage.
      *
      * @param int $id
-     * @return Model|Collection|Proveedor
+     * @return JsonResponse
      */
-    public function activate(int $id): Model|Collection|Proveedor
+    public function activate(int $id): JsonResponse
     {
         $proveedor = Proveedor::find($id);
+        if (empty($proveedor))
+            return response()->json(
+                [
+                    'message' => 'No se encontro el proveedor'
+                ],
+                404
+            );
         $proveedor->active = !$proveedor->active;
         $proveedor->save();
-        return $proveedor;
+        return response()->json(
+            [
+                'message' => 'success',
+                'proveedor' => $proveedor
+            ],
+            200
+        );
     }
 }

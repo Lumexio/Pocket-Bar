@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Articulo;
 use App\Events\articuloCreated;
 use App\Http\Requests\ArticuleValidationRequest;
+use App\Http\Requests\ArticuloUpdateRequest;
 use App\Http\Requests\ListRequest;
 use File;
 use Illuminate\Http\JsonResponse;
@@ -80,11 +81,15 @@ class ArticuloController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Collection|Model|null
+     * @return JsonResponse
      */
-    public function show(int $id): Collection|Model|null
+    public function show(int $id): JsonResponse
     {
-        return Articulo::find($id);
+        $articulo = Articulo::find($id);
+        if (empty($articulo)) {
+            return response()->json(["message" => "Articulo no encontrado"], 404);
+        }
+        return response()->json(["message" => "success", "articulo" => $articulo], 200);
     }
 
     /**
@@ -94,10 +99,12 @@ class ArticuloController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(ArticuloUpdateRequest $request, int $id): JsonResponse
     {
         $article = Articulo::find($id);
-
+        if (empty($article)) {
+            return response()->json(["message" => "Articulo no encontrado"], 404);
+        }
         if (isset($request->foto_articulo)) {
             $newName = $request->nombre_articulo;
             $filename = $article->foto_articulo;

@@ -25,7 +25,7 @@ class MesaValidationRequest extends FormRequest
     {
         return [
             'nombre_mesa' => 'required',
-            'descripcion_mesa' => 'nullable|alpha',
+            'descripcion_mesa' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
         ];
     }
 }

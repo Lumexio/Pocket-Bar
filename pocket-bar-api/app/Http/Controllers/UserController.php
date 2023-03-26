@@ -29,24 +29,39 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param UsuarioValidationRequest $request
-     * @return User
+     * @return JsonResponse
      */
-    public function store(UsuarioValidationRequest $request): User
+    public function store(UsuarioValidationRequest $request): JsonResponse
     {
         $user = User::create($request->all());
         userCreated::dispatch($user);
-        return $user;
+        return response()->json([
+            'message' => 'success',
+            'user' => $user
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     * @return User
+     * @return JsonResponse
      */
-    public function show(int $id): User
+    public function show(int $id): JsonResponse
     {
-        return User::find($id);
+        $user = User::find($id);
+        if (empty($user)) {
+            return response()->json(
+                [
+                    'message' => 'El usuario no existe.'
+                ],
+                404
+            );
+        }
+        return response()->json([
+            'message' => 'success',
+            'user' => $user
+        ], 200);
     }
 
     /**

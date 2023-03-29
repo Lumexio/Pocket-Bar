@@ -6,8 +6,9 @@
 			:key="item.id"
 			v-show="item.status == hasstatus"
 		>
-			<v-expansion-panel-header>
-				<span>
+			<v-expansion-panel-header >
+				<div class="grid-show">
+				<span style="grid-column: span 3;">
 					<span style="font-size: 18px">
 						<b>Titular: </b>{{ item.titular }}</span
 					>
@@ -19,24 +20,21 @@
 					<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
 				<v-btn
-					class="mr-1"
-					max-width="25px"
-					large
+				class="button-list"
 					:dark="darkonchange"
 					color="cyan darken-3"
 					@click.prevent="(dialogticketviewer = true),(onticket=item)"
 					><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
 				<v-btn
-					class="mr-2"
-					max-width="25px"
-					large
+				class="button-list"
 					:dark="darkonchange"
 					color="#1E88E5"
 					v-if="item.status != 'Cerrado'"
 					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
 					><v-icon>mdi-plus</v-icon>
 				</v-btn>
+			</div>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
 				<v-simple-table dense calculate-widths>
@@ -136,6 +134,13 @@ export default {
 </script>
 
 <style scoped>
+.grid-show {
+	display: grid;
+	gap: .5rem;
+	grid-auto-flow: dense;
+	grid-auto-rows: minmax(100px, 10px);
+	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
 .v-expansion-panels {
 	gap: 10px;
 	max-height: 10% !important;

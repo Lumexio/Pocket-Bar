@@ -52,7 +52,12 @@ export default {
 };
 </script>
 <style >
-
+.button-list{
+	width: 3rem !important;
+					height: 2.6rem !important;
+padding: 0px !important;
+min-width: 0px !important;
+}
 .v-expansion-panel-content__wrap {
 	padding: 0 !important;
 }
@@ -82,8 +87,11 @@ span {
 	border-color: grey;
 	text-align: start;
 }
+.v-application {
+  font-family: "Cascadia code", sans-serif !important;
+	}
 #app {
-	font-family: Cascadio Code, system-ui, -apple-system, BlinkMacSystemFont,
+	font-family: "Cascadia code", system-ui, -apple-system, BlinkMacSystemFont,
 		Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
 		Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 	-webkit-font-smoothing: antialiased;

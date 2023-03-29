@@ -587,6 +587,7 @@ export default {
 .card-p {
 	width: 100%;
 }
+
 .card-prod {
 	text-align: start;
 }

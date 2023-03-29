@@ -57,7 +57,7 @@
 
 						<v-card-text style="text-align: start">
 							<v-row>
-								<v-col>
+								<v-col >
 									<b>Nombre mesero:</b>
 									<p>{{ editedItem.user_name }}</p>
 

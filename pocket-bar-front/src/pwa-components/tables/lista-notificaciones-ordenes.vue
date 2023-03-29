@@ -40,8 +40,8 @@
 				<v-card-actions class="statusbuton">
 					<v-chip dark :color="colorchange(item.status)">{{
 						item.status
-					}}</v-chip>
-
+					}}
+					</v-chip>
 					<v-btn
 						large
 						color="primary"
@@ -56,8 +56,8 @@
 						dark
 						v-if="item.status === 'En preparacion' && hasrol === 'bartender'"
 						@click.prevent="sendStatusPrep(item.id, 'Preparado')"
-						>Terminar</v-btn
-					>
+						>Terminar
+					</v-btn>
 					<v-btn
 						dark
 						v-if="item.status === 'Preparado' && hasrol === 'mesero'"

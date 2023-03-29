@@ -136,10 +136,9 @@ export default {
 <style scoped>
 .grid-show {
 	display: grid;
-	gap: .5rem;
 	grid-auto-flow: dense;
-	grid-auto-rows: minmax(100px, 10px);
-	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	grid-auto-rows: minmax(70px, 10px);
+	grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
 	align-items: center;
 }
 .v-expansion-panels {

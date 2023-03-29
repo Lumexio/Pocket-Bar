@@ -140,6 +140,7 @@ export default {
 	grid-auto-flow: dense;
 	grid-auto-rows: minmax(100px, 10px);
 	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	align-items: center;
 }
 .v-expansion-panels {
 	gap: 10px;

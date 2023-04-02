@@ -25,11 +25,12 @@ class ArticuloUpdateRequest extends FormRequest
     {
         return [
             'nombre_articulo' => 'string|max:255',
+            'cantidad_articulo' => 'integer',
             'descripcion_articulo' => 'string',
             'precio_articulo' => 'numeric',
             'categoria_id' => 'integer',
             'marca_id' => 'integer',
-            'foto_articulo' => 'mimes:png,jpg',
+            'foto_articulo' => 'nullable|mimes:png,jpg',
             'proveedor_id' => 'integer',
             'tipo_id' => 'integer',
             'status_id' => 'integer',

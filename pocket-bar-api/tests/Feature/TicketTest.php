@@ -214,8 +214,7 @@ class TicketTest extends TestCase
             "cajero"
         ];
         $response = $this->post('/api/tickets/create', $request, [
-            'Accept' => 'application/json',
-            "Content-Type" => "application/json"
+            'Accept' => 'application/json'
         ]);
         $response->assertStatus(401);
         foreach ($usersType as $type) {
@@ -279,8 +278,7 @@ class TicketTest extends TestCase
             "cajero"
         ];
         $response = $this->put('/api/tickets/tip', $request, [
-            'Accept' => 'application/json',
-            "Content-Type" => "application/json"
+            'Accept' => 'application/json'
         ]);
         $response->assertStatus(401);
         foreach ($usersType as $type) {
@@ -361,8 +359,7 @@ class TicketTest extends TestCase
             "barra"
         ];
         $response = $this->post('/api/tickets/pay', $request, [
-            'Accept' => 'application/json',
-            "Content-Type" => "application/json"
+            'Accept' => 'application/json'
         ]);
         $response->assertStatus(401);
         foreach ($usersType as $type) {
@@ -411,7 +408,7 @@ class TicketTest extends TestCase
     public function test_ticket_addProduct(): void
     {
         $user = User::where("name", "=", "mesero")->first();
-        $ticket = Ticket::where("user_id", "=", $user->id)->first();
+        $ticket = Ticket::where("status", TicketStatus::Standby)->first();
         $response = $this->actingAs($user)->put('/api/tickets/add/products', [
             "ticket_id" => $ticket->id,
             "productos" => [
@@ -425,6 +422,8 @@ class TicketTest extends TestCase
                     "tax" => 0,
                 ]
             ]
+        ], [
+            'Accept' => 'application/json'
         ]);
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -455,8 +454,7 @@ class TicketTest extends TestCase
             "cajero",
         ];
         $response = $this->put('/api/tickets/add/products', $request, [
-            'Accept' => 'application/json',
-            "Content-Type" => "application/json"
+            'Accept' => 'application/json'
         ]);
         $response->assertStatus(401);
         foreach ($usersType as $type) {

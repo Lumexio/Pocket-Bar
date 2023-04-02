@@ -74,6 +74,14 @@ class UserController extends Controller
     public function update(Request $request, int $id): User
     {
         $user = User::find($id);
+        if (empty($user)) {
+            return response()->json(
+                [
+                    'message' => 'El usuario no existe.'
+                ],
+                404
+            );
+        }
         $user->update($request->all());
         userCreated::dispatch($user);
         return $user;
@@ -88,6 +96,14 @@ class UserController extends Controller
     public function activate(int $id): User
     {
         $user = User::find($id);
+        if (empty($user)) {
+            return response()->json(
+                [
+                    'message' => 'El usuario no existe.'
+                ],
+                404
+            );
+        }
         $user->active = !$user->active;
         $user->save();
         return $user;

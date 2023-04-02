@@ -25,7 +25,7 @@ class MesaUpdateRequest extends FormRequest
     {
         return [
             'nombre_mesa' => 'required|string|max:255',
-            'descripcion_mesa' => 'required|string',
+            'descripcion_mesa' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
         ];
     }
 }

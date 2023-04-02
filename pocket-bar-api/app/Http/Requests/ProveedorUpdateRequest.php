@@ -25,7 +25,7 @@ class ProveedorUpdateRequest extends FormRequest
     {
         return [
             "nombre_proveedor" => "required|string",
-            "descripcion" => "required|string",
+            "descripcion" => "required|regex:/(^[A-Za-z0-9 ]+$)+/",
         ];
     }
 }

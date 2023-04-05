@@ -15,31 +15,39 @@ class TipoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|Tipo|array
+     * @return JsonResponse
      */
-    public function index(): Collection|Tipo|array
+    public function index(): JsonResponse
     {
-        return Tipo::all();
+        $tipos = Tipo::all();
+        return response()->json([
+            'message' => 'success',
+            'tipos' => $tipos
+        ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param TipoValidationRequest $request
-     * @return JsonResponse|Tipo|Collection
+     * @return JsonResponse
      */
-    public function store(TipoValidationRequest $request):JsonResponse|Tipo|Collection
+    public function store(TipoValidationRequest $request): JsonResponse
     {
         if (Tipo::where('nombre_tipo', '=', $request->get('nombre_tipo'))->exists()) {
             return response()->json(
                 [
                     'message' => ['Uno de los parametros ya exite.']
-                ], 409
+                ],
+                409
             );
         } else {
             $tipo = Tipo::create($request->all());
             tipoCreated::dispatch($tipo);
-            return $tipo;
+            return response()->json([
+                'message' => 'success',
+                'tipo' => $tipo
+            ], 201);
         }
     }
 
@@ -47,11 +55,23 @@ class TipoController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @return JsonResponse
      */
-    public function show(int $id):Tipo
+    public function show(int $id): JsonResponse
     {
-        return Tipo::find($id);
+        $tipo = Tipo::find($id);
+        if (empty($tipo)) {
+            return response()->json(
+                [
+                    'message' => ['El tipo no existe.']
+                ],
+                404
+            );
+        }
+        return response()->json([
+            'message' => 'success',
+            'tipo' => $tipo
+        ], 200);
     }
 
     /**
@@ -59,23 +79,65 @@ class TipoController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return Tipo
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Tipo
+    public function update(Request $request, int $id): JsonResponse
     {
         $tipo = Tipo::find($id);
+        if (empty($tipo)) {
+            return response()->json(
+                [
+                    'message' => ['El tipo no existe.']
+                ],
+                404
+            );
+        }
         $tipo->update($request->all());
-        return $tipo;
+        return response()->json([
+            'message' => 'success',
+            'tipo' => $tipo
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return int
+     * @return JsonResponse
      */
-    public function destroy(int $id): int
+    public function destroy(int $id): JsonResponse
     {
-        return Tipo::destroy($id);
+        $tipo = Tipo::destroy($id);
+        return response()->json([
+            'message' => 'success',
+            'tipo' => $tipo
+        ], 200);
+    }
+
+    /**
+     * Activate and deactivate the specified resource from storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function activate(int $id): JsonResponse
+    {
+        $tipo = Tipo::find($id);
+        if (empty($tipo))
+            return response()->json(
+                [
+                    'message' => 'No se encontro el tipo'
+                ],
+                404
+            );
+        $tipo->active = !$tipo->active;
+        $tipo->save();
+        return response()->json(
+            [
+                'message' => 'success',
+                'tipo' => $tipo
+            ],
+            200
+        );
     }
 }

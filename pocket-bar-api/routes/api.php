@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Eliminar no
 Mostrar un registro no */
     Route::resource('tipo', 'TipoController');
+    Route::put('/tipo/activate/{id}', 'TipoController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */

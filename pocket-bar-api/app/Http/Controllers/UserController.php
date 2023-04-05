@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\userCreated;
+use App\Http\Requests\ListRequest;
 use App\Http\Requests\UsuarioValidationRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,12 +18,20 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Collection
+     * @return JsonResponse
      */
-    public function index(): Collection
+    public function index(ListRequest $request): JsonResponse
     {
         $loggeduser = Auth::id();
-        return DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol')->get();
+        $showActive = $request->get('showActive');
+        $users = DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol');
+        if (isset($showActive)) {
+            $users = $users->where('users.active', '=', $showActive);
+        }
+        return response()->json([
+            'message' => 'success',
+            'users' => $users->get()
+        ], 200);
     }
 
     /**
@@ -69,9 +78,9 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return User
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): User
+    public function update(Request $request, int $id): JsonResponse
     {
         $user = User::find($id);
         if (empty($user)) {
@@ -84,16 +93,20 @@ class UserController extends Controller
         }
         $user->update($request->all());
         userCreated::dispatch($user);
-        return $user;
+        return response()->json([
+            'message' => 'success',
+            'user' => $user
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return User
+     * @return JsonResponse
+     
      */
-    public function activate(int $id): User
+    public function activate(int $id): JsonResponse
     {
         $user = User::find($id);
         if (empty($user)) {
@@ -106,7 +119,10 @@ class UserController extends Controller
         }
         $user->active = !$user->active;
         $user->save();
-        return $user;
+        return response()->json([
+            'message' => 'success',
+            'user' => $user
+        ], 200);
     }
 
 

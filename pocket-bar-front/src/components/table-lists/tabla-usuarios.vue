@@ -89,10 +89,13 @@
 				max-width="500px"
 			>
 				<v-card>
-					<v-card-title class="headline"
-						>¿Estas seguro de querer eliminarlo?</v-card-title
-					>
-					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
+					<v-card-title v-show="editedItem.active === false" class="headline">
+						¿Estas seguro de querer habilitarlo?
+					</v-card-title>
+					<v-card-title v-show="editedItem.active === true" class="headline"	>
+						¿Quieres deshabilitarlo?
+					</v-card-title>
+					<v-card-actions v-on:keyup.enter="deleteItemConfirm" >
 						<v-spacer></v-spacer>
 						<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
 						<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm"
@@ -108,10 +111,41 @@
 				{{ item.name_rol }}
 			</v-chip>
 		</template>
+		<template v-slot:[`item.active`]="{ item }">
+			<v-chip :color="getActivo(item.active)" dark>
+				<span
+					v-show="
+						item.active === true && getActivo(item.active) === `amber lighten-1`
+					"
+					>En servicio</span
+				>
+				<span
+					v-show="
+						item.active === false && getActivo(item.active) === `cyan darken-1`
+					"
+					>Fuera de servcio</span
+				>
+			</v-chip>
+		</template>
 		<template v-slot:[`item.actions`]="{ item }">
 			<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
 
-			<v-icon small dark @click.prevent="deleteItem(item)"> mdi-delete </v-icon>
+			<v-icon
+				v-show="item.active === true"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on
+			</v-icon>
+			<v-icon
+				v-show="item.active === false"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on-outline
+			</v-icon>
 		</template>
 		<template v-slot:no-data>
 			<span>Datos no disponibles.</span>
@@ -147,6 +181,7 @@ export default {
 			},
 
 			{ text: "Rol", value: "name_rol" },
+			{ text: "Status", value: "active" },
 
 			{ text: "Acciones", value: "actions", sortable: false },
 		],
@@ -162,14 +197,14 @@ export default {
 		editedItem: {
 			id: "",
 			name: "",
-
 			password: "",
 			name_rol: "",
+			active: null,
 		},
 		defaultItem: {
 			id: "",
 			name: "",
-
+			active: null,
 			password: "",
 			name_rol: "",
 		},
@@ -247,6 +282,13 @@ export default {
 				return "indigo lighten-1";
 			}
 		},
+		getActivo(status) {
+			if (status === true) {
+				return "amber lighten-1";
+			} else if (status == false) {
+				return "cyan darken-1";
+			}
+		},
 		filterOnlyCapsText(value, search) {
 			return (
 				value != null &&
@@ -294,13 +336,18 @@ export default {
 			this.editedIndex = this.usersArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialogDelete = true;
-			let id = this.editedItem.id;
-			axios.delete("api/user/" + id).catch((error) => console.log(error));
 		},
-
 		deleteItemConfirm() {
-			this.usersArray.splice(this.editedIndex, 1);
-			this.closeDelete();
+			axios
+				.put("api/user/activate/" + this.editedItem.id)
+				.then((response) => {
+					console.log(response);
+					if (response.data.message === "success") {
+						this.usersArray.splice(this.editedIndex, 1);
+						this.closeDelete();
+					}
+				})
+				.catch((error) => console.log(error));
 		},
 
 		close() {

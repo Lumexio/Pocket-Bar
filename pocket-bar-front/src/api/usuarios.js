@@ -7,18 +7,22 @@ export function getUsuarios(usersArray) {
     axios
       .get("api/user")
       .then((response) => {
-        let user = response.data;
+        
+        let user = response.data.users;
         let stats = response.status;
+        
         user.forEach((element) => {
           let datos = {
             id: element.id,
             name: element.name,
             name_rol: element.name_rol,
             nominas: element.nominas,
+            active: ((element.active===1)?  true:false),
           };
           if (!datos) return;
           usersArray.push(datos);
         });
+        
 
         resolve({
           usersArray, stats

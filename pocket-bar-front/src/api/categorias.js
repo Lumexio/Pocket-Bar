@@ -9,7 +9,7 @@ export function getCategorias(categoriaArray) {
     axios
       .get("api/categoria")
       .then(response => {
-        const categoria = response.data;
+        const categoria = response.data.categorias;
         const stats = response.status;
         categoria.forEach((element) => {
           let datos = {

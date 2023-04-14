@@ -11,7 +11,7 @@ export function getArticulos(articulosArray) {
     axios
       .get("api/articulo/list")
       .then((response) => {
-        const articulos = response.data;
+        const articulos = response.data.articulos;
         const stats = response.status;
         articulos.forEach((element) => {
           let datos = {

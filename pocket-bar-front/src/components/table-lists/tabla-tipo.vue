@@ -1,7 +1,7 @@
 <template>
 	<v-data-table
 		:dark="this.$store.getters.hasdarkflag"
-		id="tabla"
+		
 		:headers="headers"
 		show-expand
 		:expanded.sync="expanded"
@@ -245,10 +245,5 @@ export default {
 </script>
 
 <style scoped>
-#tabla {
-	width: 60rem;
-}
-.tabla {
-	width: 60rem;
-}
+
 </style>

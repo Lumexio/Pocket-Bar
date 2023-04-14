@@ -9,7 +9,7 @@ export function getTipos(tipoArray) {
     axios
       .get("api/tipo")
       .then(response => {
-        const tipo = response.data;
+        const tipo = response.data.tipos;
         const stats = response.status;
         tipo.forEach((element) => {
           let datos = {

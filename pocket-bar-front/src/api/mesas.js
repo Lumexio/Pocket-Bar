@@ -10,7 +10,7 @@ export function getMesas(mesaArray) {
       .get("api/mesa")
       .then(response => {
 
-        const mesa = response.data;
+        const mesa = response.data.mesas;
         const stats = response.status;
         mesa.forEach((element) => {
           let datos = {

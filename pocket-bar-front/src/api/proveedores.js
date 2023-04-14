@@ -9,7 +9,7 @@ export function getProveedores(proveedorArray) {
     axios
       .get("api/proveedor")
       .then(response => {
-        const proveedor = response.data;
+        const proveedor = response.data.proveedores;
         const stats = response.status;
         proveedor.forEach((element) => {
           let datos = {

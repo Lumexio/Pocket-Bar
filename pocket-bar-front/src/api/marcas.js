@@ -9,7 +9,7 @@ export function getMarcas(marcaArray) {
     axios
       .get("api/marca")
       .then(response => {
-        const marca = response.data;
+        const marca = response.data.marcas;
         const stats = response.status;
         marca.forEach((element) => {
           let datos = {

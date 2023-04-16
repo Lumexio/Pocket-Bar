@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\WorkshiftReport;
 use DB;
 use App\Models\Ticket;
 use App\Models\Workshift;
@@ -36,7 +37,7 @@ class CajaController extends Controller
     public function getMustBe(): JsonResponse
     {
         $mustBeData = $this->getMustBeData(auth()->user()->id);
-        $workshift_report = WorkshiftController::getWorkShiftReport();
+        $workshift_report = (new WorkshiftReport($this->actualWorkshift))->getWorkShiftReport();
         return response()->json([
             "must_be" => $mustBeData,
             "workshift_report" => [...$workshift_report],

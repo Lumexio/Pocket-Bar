@@ -11,15 +11,19 @@ export function getCategorias(categoriaArray) {
       .then(response => {
         const categoria = response.data.categorias;
         const stats = response.status;
+        
         categoria.forEach((element) => {
           let datos = {
             id: element.id,
             nombre_categoria: element.nombre_categoria,
             descripcion_categoria: element.descripcion_categoria,
+            active: ((element.active===1)?  true:false),
+
           };
           if (!datos) return;
           categoriaArray.push(datos);
         });
+        console.log(categoriaArray);
         resolve({
           stats, categoriaArray
         });
@@ -49,7 +53,7 @@ export function postCategorias(enviar) {
     });
 }
 export function deleteCategoria(id) {
-  axios.delete("api/categoria/" + id).catch((error) => console.log(error));
+  axios.put("api/categoria/activate/" + id).catch((error) => console.log(error));
 }
 export function editCategoria(url) {
   axios

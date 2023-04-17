@@ -15,6 +15,7 @@ export function getMarcas(marcaArray) {
           let datos = {
             id: element.id,
             nombre_marca: element.nombre_marca,
+            active: ((element.active===1)?  true:false),
           };
           if (!datos) return;
           marcaArray.push(datos);
@@ -44,7 +45,7 @@ export function postMarcas(enviar) {
     });
 }
 export function deleteMarcas(id) {
-  axios.delete("api/marca/" + id).catch((error) => console.log(error));
+  axios.put("api/marca/activate/" + id).catch((error) => console.log(error));
 }
 export function editMarcas(url) {
   axios

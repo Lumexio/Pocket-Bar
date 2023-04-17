@@ -16,6 +16,7 @@ export function getProveedores(proveedorArray) {
             id: element.id,
             nombre_proveedor: element.nombre_proveedor,
             descripcion: element.descripcion,
+            active: ((element.active===1)?  true:false),
           };
           if (!datos) return;
           proveedorArray.push(datos);
@@ -44,7 +45,7 @@ export function postProveedores(enviar) {
     });
 }
 export function deleteProveedores(id) {
-  axios.delete("api/proveedor/" + id).catch((error) => console.log(error));
+  axios.put("api/proveedor/active" + id).catch((error) => console.log(error));
 }
 export function editProveedores(url) {
   axios

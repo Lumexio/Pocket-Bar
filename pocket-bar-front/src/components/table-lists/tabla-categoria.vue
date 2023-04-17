@@ -82,9 +82,12 @@
 					max-width="500px"
 				>
 					<v-card>
-						<v-card-title class="headline"
-							>¿Estas seguro de querer eliminarlo?</v-card-title
-						>
+						<v-card-title v-show="editedItem.active === false" class="headline">
+						¿Estas seguro de querer habilitarlo?
+					</v-card-title>
+					<v-card-title v-show="editedItem.active === true" class="headline"	>
+						¿Quieres deshabilitarlo?
+					</v-card-title>
 						<v-card-actions>
 							<v-spacer></v-spacer>
 							<v-btn color="blue darken-1" text @click.prevent="closeDelete"
@@ -101,12 +104,41 @@
 					</v-card>
 				</v-dialog>
 			</template>
+			<template v-slot:[`item.active`]="{ item }">
+			<v-chip :color="getActivo(item.active)" dark>
+				<span
+					v-show="
+						item.active === true && getActivo(item.active) === `amber lighten-1`
+					"
+					>En servicio</span
+				>
+				<span
+					v-show="
+						item.active === false && getActivo(item.active) === `cyan darken-1`
+					"
+					>Fuera de servcio</span
+				>
+			</v-chip>
+		</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
 
-				<v-icon small dark @click.prevent="deleteItem(item)">
-					mdi-delete
-				</v-icon>
+				<v-icon
+				v-show="item.active === true"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on
+			</v-icon>
+			<v-icon
+				v-show="item.active === false"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on-outline
+			</v-icon>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -142,6 +174,7 @@ export default {
 				sortable: false,
 				value: "nombre_categoria",
 			},
+			{ text: "Status", value: "active", align: "center" },
 			{ text: "Acciones", value: "actions", sortable: false, align: "center" },
 			{ text: "Descripción", align: "start", value: "data-table-expand" },
 		],
@@ -158,11 +191,13 @@ export default {
 			id: "",
 			nombre_categoria: "",
 			descripcion_categoria: "",
+			active: null,
 		},
 		defaultItem: {
 			id: "",
 			nombre_categoria: "",
 			descripcion_categoria: "",
+			active: null,
 		},
 	}),
 	mounted() {
@@ -200,6 +235,13 @@ export default {
 	created() {},
 
 	methods: {
+		getActivo(status) {
+			if (status === true) {
+				return "amber lighten-1";
+			} else if (status == false) {
+				return "cyan darken-1";
+			}
+		},
 		onFocus() {
 			let stext = document.getElementById("onsearch");
 			stext;
@@ -224,18 +266,14 @@ export default {
 
 			this.dialog = true;
 		},
-
 		deleteItem(item) {
 			this.editedIndex = this.categoriaArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialogDelete = true;
 		},
-
 		deleteItemConfirm() {
 			this.categoriaArray.splice(this.editedIndex, 1);
-			let id = this.editedItem.id;
-			deleteCategoria(id);
-
+			deleteCategoria(this.editedItem.id);
 			this.closeDelete();
 		},
 

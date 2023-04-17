@@ -12,6 +12,7 @@ export function getMesas(mesaArray) {
 
         const mesa = response.data.mesas;
         const stats = response.status;
+        console.log(mesa);
         mesa.forEach((element) => {
           let datos = {
             id: element.id,

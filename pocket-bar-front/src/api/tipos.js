@@ -15,6 +15,7 @@ export function getTipos(tipoArray) {
           let datos = {
             id: element.id,
             nombre_tipo: element.nombre_tipo,
+            active: ((element.active===1)?  true:false),
           };
           if (!datos) return;
           tipoArray.push(datos);
@@ -43,7 +44,7 @@ export function postTipos(enviar) {
     });
 }
 export function deleteTipos(id) {
-  axios.delete("api/tipo/" + id).catch((error) => console.log(error));
+  axios.put("api/tipo/active" + id).catch((error) => console.log(error));
 }
 export function editTipos(url) {
   axios

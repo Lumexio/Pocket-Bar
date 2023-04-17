@@ -70,14 +70,17 @@
 				max-width="500px"
 			>
 				<v-card>
-					<v-card-title class="headline"
-						>¿Estas seguro de querer eliminarlo?</v-card-title
-					>
+					<v-card-title v-show="editedItem.active === false" class="headline">
+						¿Estas seguro de querer habilitarlo?
+					</v-card-title>
+					<v-card-title v-show="editedItem.active === true" class="headline"	>
+						¿Quieres deshabilitarlo?
+					</v-card-title>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
 						<v-btn color="blue darken-1" text @click.prevent="closeDelete"
-							>Cancelar</v-btn
-						>
+							>Cancelar
+						</v-btn>
 						<v-btn color="blue darken-1" text @click.prevent="deleteItemConfirm"
 							>Aceptar</v-btn
 						>
@@ -85,11 +88,43 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
+			
+		</template>
+		<template v-slot:[`item.active`]="{ item }">
+			<v-chip :color="getActivo(item.active)" dark>
+				<span
+					v-show="
+						item.active === true && getActivo(item.active) === `amber lighten-1`
+					"
+					>En servicio</span
+				>
+				<span
+					v-show="
+						item.active === false && getActivo(item.active) === `cyan darken-1`
+					"
+					>Fuera de servcio</span
+				>
+			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
 			<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
 
-			<v-icon small dark @click.prevent="deleteItem(item)"> mdi-delete </v-icon>
+			<v-icon
+				v-show="item.active === true"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on
+			</v-icon>
+			<v-icon
+				v-show="item.active === false"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on-outline
+			</v-icon>
 		</template>
 		<template v-slot:no-data>
 			<span>Datos no disponibles.</span>
@@ -120,6 +155,7 @@ export default {
 				sortable: false,
 				value: "nombre_marca",
 			},
+			{ text: "Status", value: "active", align: "center" },
 			{ text: "Acciones", value: "actions", sortable: false, align: "center" },
 			{ text: "Descripción", align: "start", value: "data-table-expand" },
 		],
@@ -130,10 +166,12 @@ export default {
 		editedItem: {
 			id: "",
 			nombre_marca: "",
+			active: false,
 		},
 		defaultItem: {
 			id: "",
 			nombre_marca: "",
+			active: false,
 		},
 	}),
 	mounted() {
@@ -171,6 +209,13 @@ export default {
 	created() {},
 
 	methods: {
+		getActivo(status) {
+			if (status === true) {
+				return "amber lighten-1";
+			} else if (status == false) {
+				return "cyan darken-1";
+			}
+		},
 		onFocus() {
 			let stext = document.getElementById("onsearch");
 			stext;
@@ -200,8 +245,7 @@ export default {
 			this.editedIndex = this.marcaArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialogDelete = true;
-			let id = this.editedItem.id;
-			deleteMarcas(id);
+			deleteMarcas(this.editedItem.id);
 		},
 
 		deleteItemConfirm() {

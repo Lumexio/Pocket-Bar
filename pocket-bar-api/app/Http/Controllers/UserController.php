@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $loggeduser = Auth::id();
         $showActive = $request->get('showActive');
-        $users = DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'users.nominas', 'users.active', 'rols_tbl.name_rol');
+        $users = DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol');
         if (isset($showActive)) {
             $users = $users->where('users.active', '=', $showActive);
         }
@@ -104,7 +104,7 @@ class UserController extends Controller
      *
      * @param int $id
      * @return JsonResponse
-
+     
      */
     public function activate(int $id): JsonResponse
     {

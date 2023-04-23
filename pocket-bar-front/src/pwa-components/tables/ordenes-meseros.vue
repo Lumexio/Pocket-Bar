@@ -143,13 +143,13 @@ export default {
 }
 .v-expansion-panels {
 	gap: 10px;
-	max-height: 10% !important;
+	max-block-size: 10% !important;
 }
 .row {
 	display: flex;
 	flex-direction: row;
 }
 .sizes {
-	max-width: calc(100% - 0px) !important;
+	max-inline-size: calc(100% - 0px) !important;
 }
 </style>

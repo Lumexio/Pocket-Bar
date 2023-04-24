@@ -306,7 +306,6 @@ export default {
 			nombre_marca: "",
 			nombre_proveedor: "",
 			nombre_status: "",
-
 			foto_articulo: null,
 			descripcion_articulo: "",
 		},
@@ -319,7 +318,6 @@ export default {
 			nombre_marca: "",
 			nombre_proveedor: "",
 			nombre_status: "",
-
 			foto_articulo: null,
 			descripcion_articulo: "",
 		},
@@ -480,12 +478,11 @@ export default {
 			if (this.editedIndex > -1) {
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
-				let url = "api/updatephoto/" + send.id;
 
 				if (this.photo != null) {
 					const formdata = new FormData();
 					formdata.append("foto_articulo", this.photo);
-					postPhoto(url, formdata);
+					postPhoto(send.id, formdata);
 				}
 			} else {
 				this.articulosArray.push(this.editedItem);

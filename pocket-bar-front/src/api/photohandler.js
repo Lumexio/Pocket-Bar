@@ -29,16 +29,17 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 //    .catch((error) => { console.log(error); reject(error); });
 //  });
 // }
-export function postPhoto(url, enviar) {
+export function postPhoto(id, enviar) {
   console.log(enviar);
   axios
-    .post(url, enviar, {
+    .post("api/updatephoto/"+id, enviar, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
     .then((response) => {
-      if (response.statusText == "OK") {
+      if (response.status == 200) {
+        console.log(response);
         store.commit("setsuccess", true);
         setTimeout(store.commit("setsuccess", false), 3000);
         store.commit("increment", 1);

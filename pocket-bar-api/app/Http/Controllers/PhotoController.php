@@ -2,32 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Articulo;
 use File;
 use App\Events\articuloCreated;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
+//use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends Controller
 {
-    public function updatephoto(Request $request, $id): Articulo|Model|Collection
+    public function updatephoto(Request $request, $id)
     {
+
         $articulo = Articulo::find($id);
+
         $filename = $articulo->foto_articulo;
+
         if ($filename != null) {
             $path = public_path("/images/$filename");
             File::delete($path);
+        } else {
+            if (str_contains($request->file('foto_articulo')->getClientOriginalName(), '.png')) {
+                $name_foto =  $articulo->nombre_articulo . '.' . 'png';
+            } elseif (str_contains($request->file('foto_articulo')->getClientOriginalName(), '.jpg')) {
+                $name_foto =  $articulo->nombre_articulo . '.' . 'jpg';
+            }
+            $request->foto_articulo->move(public_path('images'), $name_foto);
+            $articulo->foto_articulo = $name_foto;
+            $articulo->save();
+            articuloCreated::dispatch($articulo);
+            return $articulo;
         }
-        if (str_contains($request->file('foto_articulo')->getClientOriginalName(), '.png')) {
-            $name_foto =  $articulo->nombre_articulo . '.' . 'png';
-        } elseif (str_contains($request->file('foto_articulo')->getClientOriginalName(), '.jpg')) {
-            $name_foto =  $articulo->nombre_articulo . '.' . 'jpg';
-        }
-        $request->foto_articulo->move(public_path('images'), $name_foto);
-        $articulo->foto_articulo = $name_foto;
-        $articulo->save();
-        articuloCreated::dispatch($articulo);
-        return $articulo;
+
     }
 }

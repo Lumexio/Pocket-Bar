@@ -115,13 +115,13 @@
 			<v-chip :color="getActivo(item.active)" dark>
 				<span
 					v-show="
-						item.active === true && getActivo(item.active) === `amber lighten-1`
+						(item.active === true||item.active === 1) && getActivo(item.active) === `amber lighten-1`
 					"
 					>En servicio</span
 				>
 				<span
 					v-show="
-						item.active === false && getActivo(item.active) === `cyan darken-1`
+						(item.active === false||item.active === 0) && getActivo(item.active) === `cyan darken-1`
 					"
 					>Fuera de servcio</span
 				>
@@ -131,7 +131,7 @@
 			<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
 
 			<v-icon
-				v-show="item.active === true"
+				v-show="item.active === true|item.active === 1"
 				small
 				dark
 				@click.prevent="deleteItem(item)"
@@ -139,7 +139,7 @@
 				mdi-lightbulb-on
 			</v-icon>
 			<v-icon
-				v-show="item.active === false"
+				v-show="item.active === false||item.active === 0"
 				small
 				dark
 				@click.prevent="deleteItem(item)"
@@ -213,10 +213,10 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("users").listen("userCreated", (e) => {
-			this.usersArray = e.users;
+			this.usersArray = e.users.original.users;
 		});
 		window.Echo.channel("roles").listen("rolCreated", (e) => {
-			this.itemsrol = e.roles;
+			this.itemsrol = e.roles.original.roles;
 		});
 		getUsuarios(this.usersArray)
 			.then((response) => {
@@ -283,9 +283,9 @@ export default {
 			}
 		},
 		getActivo(status) {
-			if (status === true) {
+			if (status === true||status === 1) {
 				return "amber lighten-1";
-			} else if (status == false) {
+			} else if (status == false||status === 0) {
 				return "cyan darken-1";
 			}
 		},
@@ -341,8 +341,8 @@ export default {
 			axios
 				.put("api/user/activate/" + this.editedItem.id)
 				.then((response) => {
-					console.log(response);
 					if (response.data.message === "success") {
+						console.log(response);
 						this.usersArray.splice(this.editedIndex, 1);
 						this.closeDelete();
 					}
@@ -385,12 +385,6 @@ export default {
 						store.commit("increment", 1);
 					})
 					.catch((error) => console.log(error));
-				window.Echo.channel("users").listen("userCreated", (e) => {
-					this.usersArray = e.users;
-				});
-				window.Echo.channel("roles").listen("rolCreated", (e) => {
-					this.itemsrol = e.roles;
-				});
 			} else {
 				this.usersArray.push(this.editedItem);
 			}
@@ -402,6 +396,6 @@ export default {
 
 <style scoped>
 #tabla {
-	width: 100%;
+	inline-size: 100%;
 }
 </style>

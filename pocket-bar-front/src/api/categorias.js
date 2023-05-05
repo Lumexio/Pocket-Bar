@@ -23,7 +23,7 @@ export function getCategorias(categoriaArray) {
           if (!datos) return;
           categoriaArray.push(datos);
         });
-        console.log(categoriaArray);
+        
         resolve({
           stats, categoriaArray
         });

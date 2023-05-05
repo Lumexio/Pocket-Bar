@@ -191,7 +191,7 @@ export default {
 
 .cont-card {
 	padding: 1rem;
-	width: 24em;
+	inline-size: 24em;
 }
 
 .fade-in-title {

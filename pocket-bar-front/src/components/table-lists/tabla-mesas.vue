@@ -163,7 +163,7 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("mesas").listen("mesaCreated", (e) => {
-			this.mesaArray = e.mesas;
+			this.mesaArray = e.mesas.original.mesas;
 		});
 		getMesas(this.mesaArray)
 			.then((response) => {
@@ -272,9 +272,9 @@ export default {
 
 <style scoped>
 #tabla {
-	width: 60rem;
+	inline-size: 60rem;
 }
 .tabla {
-	width: 60rem;
+	inline-size: 60rem;
 }
 </style>

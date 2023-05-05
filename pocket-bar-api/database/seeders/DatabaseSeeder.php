@@ -106,12 +106,15 @@ class DatabaseSeeder extends Seeder
          */
         DB::table('categorias_tbl')->insert([
             'nombre_categoria' => 'Plomería',
+            'descripcion_categoria' => 'Categoria de plomería',
         ]);
         DB::table('categorias_tbl')->insert([
             'nombre_categoria' => 'Electrícidad',
+            'descripcion_categoria' => 'Categoria de electrícidad',
         ]);
         DB::table('categorias_tbl')->insert([
             'nombre_categoria' => 'General',
+            'descripcion_categoria' => 'Categoria de uso general',
         ]);
 
 
@@ -121,43 +124,54 @@ class DatabaseSeeder extends Seeder
 
         DB::table('marcas_tbl')->insert([
             'nombre_marca' => 'Honda',
+            'descripcion_marca' => 'Marca de motocicletas y autos',
         ]);
         DB::table('marcas_tbl')->insert([
             'nombre_marca' => 'Yamaha',
+            'descripcion_marca' => 'Marca de motocicletas',
         ]);
         DB::table('marcas_tbl')->insert([
             'nombre_marca' => 'Asus',
+            'descripcion_marca' => 'Marca de computadoras',
         ]);
 
 
         DB::table('tipos_tbl')->insert([
             'nombre_tipo' => 'Consumible',
+            'descripcion_tipo' => 'Productos de consumo diario',
         ]);
         DB::table('tipos_tbl')->insert([
             'nombre_tipo' => 'Herramienta',
+            'descripcion_tipo' => 'Herraientas de trabajo',
         ]);
         DB::table('tipos_tbl')->insert([
             'nombre_tipo' => 'General',
+            'descripcion_tipo' => 'Productos de uso general',
         ]);
 
 
         DB::table('proveedores_tbl')->insert([
             'nombre_proveedor' => 'Davila',
+            'descripcion' => 'Proveedor de productos de plomería',
         ]);
         DB::table('proveedores_tbl')->insert([
             'nombre_proveedor' => 'Ortíz',
+            'descripcion' => 'Proveedor de productos de electrícidad',
         ]);
         DB::table('proveedores_tbl')->insert([
             'nombre_proveedor' => 'Desconocido',
+            'descripcion' => 'Proveedor de productos de uso general',
         ]);
 
         //Mesas
         DB::table("mesas_tbl")->insert([
             "nombre_mesa" => "barra",
+            'descripcion_mesa' => 'Mesa de barra',
         ]);
         for ($i = 1; $i < 11; $i++) {
             DB::table("mesas_tbl")->insert([
                 "nombre_mesa" => $i,
+                'descripcion_mesa' => 'Mesa ' . $i,
             ]);
         }
 
@@ -167,17 +181,17 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Articulo::factory(10)->create();
 
-         $tickets = TicketFactory::new()->times(10)->raw();
+        $tickets = TicketFactory::new()->times(10)->raw();
 
-         foreach ($tickets as $ticket) {
-             $ticketToInsert = $ticket;
-             unset($ticketToInsert["items"]);
+        foreach ($tickets as $ticket) {
+            $ticketToInsert = $ticket;
+            unset($ticketToInsert["items"]);
 
-             $id = Ticket::insertGetId($ticketToInsert);
-             foreach ($ticket["items"] as $item) {
-                 $item["ticket_id"] = $id;
-                 TicketDetail::insert($item);
-             }
-         }
+            $id = Ticket::insertGetId($ticketToInsert);
+            foreach ($ticket["items"] as $item) {
+                $item["ticket_id"] = $id;
+                TicketDetail::insert($item);
+            }
+        }
     }
 }

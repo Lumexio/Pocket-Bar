@@ -75,11 +75,8 @@ Mostrar un registro no */
         Route::post('/create', 'TicketController@store'); //Crear ticket
         Route::put('/tip', 'TicketController@tipUpdate'); //Crear ticket
         Route::post('/pay', 'TicketController@pay'); //pagar cuenta
-        /** Cancelar tiket
-         * !Pendiente crear boton para admin y cajero
-         * *Francisco
-         */
-        Route::put("/cancel", 'TicketController@cancelTicket');
+
+        Route::post("/cancel", 'TicketController@cancelTicket');
         /**Añadir productos a un ticket existe
          * !Probar
          * *Francisco

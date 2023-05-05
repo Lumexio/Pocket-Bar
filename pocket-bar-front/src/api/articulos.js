@@ -13,6 +13,7 @@ export function getArticulos(articulosArray) {
       .then((response) => {
         const articulos = response.data.articulos;
         const stats = response.status;
+        console.log(articulos);
         articulos.forEach((element) => {
           let datos = {
             id: element.id,
@@ -25,8 +26,7 @@ export function getArticulos(articulosArray) {
             nombre_marca: element.nombre_marca,
             nombre_proveedor: element.nombre_proveedor,
             nombre_status: element.nombre_status,
-
-
+            deactivated_at: element.deactivated_at,
             foto_articulo: element.foto_articulo,
           };
           if (!datos) return;
@@ -47,20 +47,25 @@ export function postArticulos(enviar) {
       }
     })
     .then((response) => {
+      store.commit("setsuccess", false);
+        store.commit("setsuccessMessage", "");
       if (response.statusText === "Created") {
         store.commit("setsuccess", true);
+        store.commit("setsuccessMessage", "Articulo creado correctamente");
 
       }
     })
     .catch((e) => {
-
+      store.commit("setdanger", false);
+      store.commit("setdanger-message", "");
       if (e) {
         store.commit("setdanger", true);
+        store.commit("setdanger-message", "Error al crear el articulo");
       }
     });
 }
 export function deleteArticulos(id) {
-  axios.delete("api/articulo/delete/" + id).then((response) => { response; /*store.commit("increment", 1);*/ }).catch((error) => console.log(error));
+  axios.put("api/articulo/activate/" + id).then((response) => { response;  }).catch((error) => console.log(error));
 }
 export function editArticulos(url, data) {
 

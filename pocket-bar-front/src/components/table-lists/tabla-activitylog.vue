@@ -82,9 +82,9 @@ export default {
   }),
   mounted() {
     this.onFocus();
-    // window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
-    //   this.activitylogArray = e.activitylog;
-    // });
+    window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
+      this.activitylogArray = e.activitylog.original.activitylog;
+    });
     getActivitylog(this.activitylogArray)
       .then((response) => {
         if (response.stats === 200) {
@@ -120,9 +120,9 @@ export default {
 
 <style scoped>
 #tabla {
-  width: 100%;
+  inline-size: 100%;
 }
 .tabla {
-  width: 100%;
+  inline-size: 100%;
 }
 </style>

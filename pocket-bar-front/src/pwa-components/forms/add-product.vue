@@ -165,7 +165,7 @@
 						</div>
 						<v-card
 							class="mt-4 mb-4"
-							style="width: 100%"
+							style="inline-size: 100%"
 							v-for="(item, index) in pedidoArray"
 							:key="index"
 						>
@@ -421,7 +421,7 @@ export default {
 	justify-content: flex-start;
 }
 .card-p {
-	width: 100%;
+	inline-size: 100%;
 }
 .card-prod {
 	text-align: start;

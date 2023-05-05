@@ -80,12 +80,12 @@
 					</v-card-title>
 						<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 							<v-spacer></v-spacer>
-							<v-btn color="blue darken-1" text @click.prevent="closeDelete"
+							<v-btn  @click.prevent="closeDelete"
 								>Cancelar</v-btn
 							>
 							<v-btn
 								color="blue darken-1"
-								text
+						
 								@click.prevent="deleteItemConfirm"
 								>Aceptar</v-btn
 							>
@@ -193,7 +193,7 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("proveedores").listen("proveedorCreated", (e) => {
-			this.proveedorArray = e.proveedores;
+			this.proveedorArray = e.proveedores.original.proveedores;
 		});
 
 		getProveedores(this.proveedorArray)
@@ -308,9 +308,9 @@ export default {
 
 <style scoped>
 #tabla {
-	width: 100%;
+	inline-size: 100%;
 }
 .tabla {
-	width: 60rem;
+	inline-size: 60rem;
 }
 </style>

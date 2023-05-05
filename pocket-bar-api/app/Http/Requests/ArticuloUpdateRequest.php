@@ -26,7 +26,7 @@ class ArticuloUpdateRequest extends FormRequest
         return [
             'nombre_articulo' => 'string|max:255',
             'cantidad_articulo' => 'integer',
-            'descripcion_articulo' => 'string',
+            'descripcion_articulo' => 'nullable|string',
             'precio_articulo' => 'numeric',
             'categoria_id' => 'integer',
             'marca_id' => 'integer',

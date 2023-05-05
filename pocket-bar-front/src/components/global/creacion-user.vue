@@ -3,7 +3,7 @@
   En esta tarjeta se encuentra el listado de componentes para crear todos los elementos
   dentro del sistema.
 -->
-	<div style="width: 64%" class="pa-3">
+	<div style="inline-size: 64%" class="pa-3">
 		<v-row>
 			<v-col align-self="end" cols="2">
 				<v-row>

@@ -90,12 +90,12 @@
 					</v-card-title>
 						<v-card-actions>
 							<v-spacer></v-spacer>
-							<v-btn color="blue darken-1" text @click.prevent="closeDelete"
+							<v-btn   @click.prevent="closeDelete"
 								>Cancelar</v-btn
 							>
 							<v-btn
 								color="blue darken-1"
-								text
+								
 								@click.prevent="deleteItemConfirm"
 								>Aceptar</v-btn
 							>
@@ -203,7 +203,7 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
-			this.categoriaArray = e.categorias;
+			this.categoriaArray = e.categorias.original.categorias;
 		});
 		getCategorias(this.categoriaArray)
 			.then((response) => {
@@ -318,9 +318,9 @@ export default {
 
 <style scoped>
 #tabla {
-	width: 60rem;
+	inline-size: 60rem;
 }
 .tabla {
-	width: 60rem;
+	inline-size: 60rem;
 }
 </style>

@@ -25,7 +25,7 @@ class MarcaUpdateRequest extends FormRequest
     {
         return [
             'nombre_marca' => 'required|string|max:255',
-            'descripcion_marca' => 'required|string',
+            'descripcion_marca' => 'nullable|string',
         ];
     }
 }

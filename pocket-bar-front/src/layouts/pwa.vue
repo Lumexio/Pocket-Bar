@@ -53,7 +53,7 @@ export default {
 <style scoped>
 /* This is for documentation purposes and will not be needed in your application */
 /* .fullWidth {
-	width: 100vw;
+	inline-size: 100vw;
 	min-height: 100vh;
 	display: flex;
 } */

@@ -360,11 +360,10 @@ export default {
 		window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
 			this.$store.commit("settickets", e.tickets);
 			this.ticketsArray = e.tickets;
+			console.log(e.tickets);
 		});
 		this.onFocus();
-		// window.Echo.channel("activitylog").listen("activitylogCreated", (e) => {
-		//   this.ticketsArray = e.activitylog;
-		// });
+
 		this.getTickets();
 	},
 
@@ -549,9 +548,9 @@ export default {
 
 <style scoped>
 #tabla {
-	width: 100%;
+	inline-size: 100%;
 }
 .tabla {
-	width: 100%;
+	inline-size: 100%;
 }
 </style>

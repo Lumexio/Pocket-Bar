@@ -77,10 +77,10 @@
 					</v-card-title>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click.prevent="closeDelete"
+						<v-btn  @click.prevent="closeDelete"
 							>Cancelar</v-btn
 						>
-						<v-btn color="blue darken-1" text @click.prevent="deleteItemConfirm"
+						<v-btn color="blue darken-1"  @click.prevent="deleteItemConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>
@@ -176,7 +176,7 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("tipos").listen("tipoCreated", (e) => {
-			this.tipoArray = e.tipos;
+			this.tipoArray = e.tipos.original.tipos;
 		});
 		getTipos(this.tipoArray)
 			.then((response) => {

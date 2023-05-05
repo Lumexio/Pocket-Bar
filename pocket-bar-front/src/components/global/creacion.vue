@@ -173,7 +173,7 @@ export default {
 }
 .button-main{
 	justify-content: start !important;
-	min-width: 9rem !important;
+	min-inline-size: 9rem !important;
 }
 .white-mode-text {
 	color: black;

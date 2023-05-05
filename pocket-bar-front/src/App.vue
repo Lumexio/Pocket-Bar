@@ -53,7 +53,7 @@ export default {
 </script>
 <style >
 .button-list{
-	width: 3rem !important;
+	inline-size: 3rem !important;
 					height: 2.6rem !important;
 padding: 0px !important;
 min-width: 0px !important;
@@ -101,7 +101,7 @@ span {
 }
 /* Scroller classes */
 ::-webkit-scrollbar {
-	width: 8px;
+	inline-size: 8px;
 }
 ::-webkit-scrollbar-track {
 	background: #eeeeee;
@@ -127,7 +127,7 @@ span {
 	background-color: #ffca28;
 
 	border-radius: 5px;
-	width: 3rem;
+	inline-size: 3rem;
 	height: 2.6rem;
 	justify-content: center;
 }

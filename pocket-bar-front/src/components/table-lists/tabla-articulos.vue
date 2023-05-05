@@ -136,15 +136,15 @@
 			>
 				<v-card>
 					<v-card-title class="headline"
-						>¿Estas seguro que lo quieres eliminar?</v-card-title
+						>¿Quieres deshabilitarlo?</v-card-title
 					>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click.prevent="closeDelete"
+						<v-btn  @click.prevent="closeDelete"
 							>Cancel</v-btn
 						>
-						<v-btn color="blue darken-1" text @click.prevent="deleteItemConfirm"
-							>OK</v-btn
+						<v-btn color="blue darken-1"  @click.prevent="deleteItemConfirm"
+							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>
 					</v-card-actions>
@@ -198,8 +198,22 @@
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
 			<v-icon small @click.prevent="editItem(item)"> mdi-pencil </v-icon>
-
-			<v-icon small @click.prevent="deleteItem(item)"> mdi-delete </v-icon>
+				<v-icon
+				v-show="item.deactivated_at ===null"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on
+			</v-icon>
+			<v-icon
+				v-show="item.deactivated_at != null"
+				small
+				dark
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on-outline
+			</v-icon>
 
 			<v-icon small @click.prevent="detailItem(item)">
 				mdi-file-eye-outline
@@ -327,23 +341,23 @@ export default {
 	},
 	mounted() {
 		window.Echo.channel("articulos").listen("articuloCreated", (e) => {
-			this.articulosArray = e.articulos;
+			this.articulosArray = e.articulos.original.articulos;
 		});
 
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
-			this.itemsc = e.categorias;
+			this.itemsc = e.categorias.original.categorias;
 		});
 		window.Echo.channel("marcas").listen("marcaCreated", (e) => {
-			this.itemstm = e.marcas;
+			this.itemstm = e.marcas.original.marcas;
 		});
 		window.Echo.channel("proveedores").listen("proveedorCreated", (e) => {
-			this.itemsp = e.proveedores;
+			this.itemsp = e.proveedores.original.proveedores;
 		});
 		window.Echo.channel("status").listen("statusCreated", (e) => {
-			this.itemstst = e.status;
+			this.itemstst = e.status.original.status;
 		});
 		window.Echo.channel("tipos").listen("tipoCreated", (e) => {
-			this.itemstt = e.tipos;
+			this.itemstt = e.tipos.original.tipos;
 		});
 
 		getArticulos(this.articulosArray)
@@ -356,6 +370,9 @@ export default {
 			})
 			.catch((e) => {
 				console.log(e);
+				if (e) {
+					store.commit("setdanger", true);
+				}
 				this.cargando = true;
 			});
 		getCategorias(this.itemsc);
@@ -453,8 +470,7 @@ export default {
 
 		deleteItemConfirm() {
 			this.articulosArray.splice(this.editedIndex, 1);
-			let id = this.editedItem.id;
-			deleteArticulos(id);
+			deleteArticulos(this.editedItem.id);
 			this.closeDelete();
 		},
 

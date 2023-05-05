@@ -17,6 +17,8 @@ const getDefaultState = () => {
         userId: null,
         status: "Por entregar",
         notiLike: null,
+        notiLikeMessage: "",
+        notiDangerMessage: "",
         notiDanger: null,
         statcode: null,
         ticketArray: [],
@@ -36,7 +38,9 @@ export default new Vuex.Store({
         hasrol(state) { return state.rol },
         hastoken(state) { return state.token },
         hassuccess(state) { return state.notiLike },
+        hassuccessMessage(state) { return state.notiLikeMessage },
         hasdanger(state) { return state.notiDanger },
+        hasdangerMessage(state) { return state.notiDangerMessage },
         hasstatus(state) { return state.status },
         hasstatcode(state) { return state.statcode },
         hasdarkflag(state) { return state.darkflag },
@@ -59,7 +63,9 @@ export default new Vuex.Store({
         setrol(state, payload) { state.rol = payload },
         setorder(state, payload) { state.order = payload },
         setsuccess(state, payload) { state.notiLike = payload },
+        setsuccessMessage(state, payload) { state.notiLikeMessage = payload },
         setdanger(state, payload) { state.notiDanger = payload },
+        setdangerMessage(state, payload) { state.notiDangerMessage = payload },
         setstatus(state, payload) { state.status = payload },
         setstatcode(state, payload) { state.statcode = payload },
         setdarkflag(state, payload) { state.darkflag = payload },
@@ -72,7 +78,9 @@ export default new Vuex.Store({
                 state.rol = null,
                 state.status = "Por entregar",
                 state.notiLike = null,
+                state.notiLikeMessage = "",
                 state.notiDanger = null,
+                state.notiDangerMessage = "",
                 state.statcode = null,
                 state.ticketArray = null
             state.order = 0
@@ -89,8 +97,14 @@ export default new Vuex.Store({
         setdanger({ commit }) {
             commit('setdanger')
         },
+        setdangerMessage({ commit }) {
+            commit('setdangerMessage')
+        },
         setsuccess({ commit }) {
             commit('setsuccess')
+        },
+        setsuccessMessage({ commit }) {
+            commit('setsuccessMessage')
         },
         setstatus({ commit }) {
             commit('setstatus')

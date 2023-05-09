@@ -32,42 +32,42 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::put("articulo/activate/{id}", "ArticuloController@activate");
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
 
-    Route::resource('rol', 'RolController');
+    Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
     Route::put('/rol/activate/{id}', 'RolController@activate');
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
-    Route::resource('marca', 'MarcaController');
+    Route::resource('marca', 'MarcaController')->except(['destroy', 'create', 'edit']);
     Route::put('/marca/activate/{id}', 'MarcaController@activate');
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
-    Route::resource('categoria', 'CategoriaController');
+    Route::resource('categoria', 'CategoriaController')->except(['destroy', 'create', 'edit']);
     Route::put('/categoria/activate/{id}', 'CategoriaController@activate');
-    Route::resource('mesa', 'MesaController');
+    Route::resource('mesa', 'MesaController')->except(['destroy', 'create', 'edit']);
 
 
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('tipo', 'TipoController');
+    Route::resource('tipo', 'TipoController')->except(['destroy', 'create', 'edit']);
     Route::put('/tipo/activate/{id}', 'TipoController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('proveedor', 'ProveedorController');
+    Route::resource('proveedor', 'ProveedorController')->except(['destroy', 'create', 'edit']);
     Route::put('/proveedor/activate/{id}', 'ProveedorController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('status', 'StatusController');
+    Route::resource('status', 'StatusController')->except(['destroy', 'create', 'edit']);
     Route::put('/status/activate/{id}', 'StatusController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('user', 'UserController');
+    Route::resource('user', 'UserController')->except(['destroy', 'create', 'edit']);
     Route::put('/user/activate/{id}', 'UserController@activate');
-    Route::resource('activitylog', 'ActivitylogController');
+    Route::resource('activitylog', 'ActivitylogController')->except(['destroy', 'update', 'store', 'create', 'edit', 'show']);
 
     Route::prefix('tickets')->group(function () {
         Route::get('/list', 'TicketController@index'); //Lista para deskstop

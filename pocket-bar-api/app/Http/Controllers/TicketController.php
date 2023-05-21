@@ -61,7 +61,13 @@ class TicketController extends Controller
     public function tipUpdate(TicketTipUpdateRequest $request): JsonResponse
     {
 
-        $ticket = Ticket::findOrFail($request->input('id'));
+        $ticket = Ticket::find($request->input('id'));
+
+        if (empty($ticket)) {
+            return response()->json([
+                "message" => "No se ha encontrado el ticket"
+            ], 404);
+        }
 
         $ticket->tip = $request->input('tip') ?? 0;
         $ticket->specifictip = $request->input('specifictip') ?? 0;

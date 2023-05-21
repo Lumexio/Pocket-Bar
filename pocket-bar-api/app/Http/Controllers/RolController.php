@@ -7,41 +7,60 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Rol;
 use App\Events\rolCreated;
+use Illuminate\Http\JsonResponse;
 
 class RolController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|array|Rol
+     * @return JsonResponse
      */
-    public function index(): Collection|array|Rol
+    public function index(): JsonResponse
     {
-        return Rol::all();
+        $roles = Rol::all();
+        return \response()->json([
+            "message" => "success",
+            "data" => $roles
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Model|Rol|Collection
+     * @return JsonResponse
      */
-    public function store(Request $request): Model|Rol|Collection
+    public function store(Request $request): JsonResponse
     {
         $rol = Rol::create($request->all());
         rolCreated::dispatch($rol);
-        return $rol;
+        return \response()->json([
+            "message" => "success",
+            "data" => $rol
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     * @return Collection|Model|Rol|Rol[]
+     * @return JsonResponse
      */
-    public function show(int $id): array|Model|Collection|Rol
+    public function show(int $id): JsonResponse
     {
-        return Rol::find($id);
+        $rol = Rol::find($id);
+        if (!empty($rol)) {
+            return \response()->json([
+                "message" => "success",
+                "data" => $rol
+            ]);
+        } else {
+            return \response()->json([
+                "message" => "Rol no encontrado",
+                "data" => null
+            ], 404);
+        }
     }
 
     /**
@@ -49,13 +68,22 @@ class RolController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return Collection|Model|Rol|Rol[]
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): array|Model|Collection|Rol
+    public function update(Request $request, int $id): JsonResponse
     {
         $rol = Rol::find($id);
+        if(empty($rol)) {
+            return \response()->json([
+                "message" => "Rol no encontrado",
+                "data" => null
+            ], 404);
+        }
         $rol->update($request->all());
-        return $rol;
+        return \response()->json([
+            "message" => "success",
+            "data" => $rol
+        ]);
     }
 
     /**
@@ -71,12 +99,21 @@ class RolController extends Controller
 
     /**
      * @param $id
-     * @return Collection|Model|Rol
+     * @return JsonResponse
      */
-    public function activate($id): Model|Collection|Rol
+    public function activate($id): JsonResponse
     {
         $rol = Rol::find($id);
+        if(empty($rol)) {
+            return \response()->json([
+                "message" => "Rol no encontrado",
+                "data" => null
+            ], 404);
+        }
         $rol->update(['activo' => !$rol->activo]);
-        return $rol;
+        return \response()->json([
+            "message" => "success",
+            "data" => $rol
+        ]);
     }
 }

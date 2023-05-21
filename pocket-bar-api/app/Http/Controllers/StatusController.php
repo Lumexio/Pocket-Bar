@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Status;
 use App\Events\statusCreated;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
@@ -14,35 +15,52 @@ class StatusController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Status|array|Collection
+     * @return JsonResponse
      */
-    public function index(): Status|array|Collection
+    public function index(): JsonResponse
     {
-        return Status::all();
+        $status = Status::all();
+        return \response()->json([
+            "message" => "success",
+            "data" => $status
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Model|Status|Collection
+     * @return JsonResponse
      */
-    public function store(Request $request): Model|Status|Collection
+    public function store(Request $request): JsonResponse
     {
         $status = Status::create($request->all());
         statusCreated::dispatch($status);
-        return $status;
+        return \response()->json([
+            "message" => "success",
+            "data" => $status
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     * @return Status|Model|Collection
+     * @return JsonResponse
      */
-    public function show(int $id): Status|Model|Collection
+    public function show(int $id): JsonResponse
     {
-        return Status::find($id);
+        $status = Status::find($id);
+        if (!empty($status)) {
+            return \response()->json([
+                "message" => "success",
+                "data" => $status
+            ]);
+        } else {
+            return \response()->json([
+                "message" => "Status no encontrado",
+            ], 404);
+        }
     }
 
     /**
@@ -50,14 +68,23 @@ class StatusController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return Model|Collection|Status
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id): Model|Collection|Status
+    public function update(Request $request, int $id): JsonResponse
     {
         $status = Status::find($id);
-        $status->update($request->all());
-        statusCreated::dispatch($status);
-        return $status;
+        if (!empty($status)) {
+            $status->update($request->all());
+            statusCreated::dispatch($status);
+            return \response()->json([
+                "message" => "success",
+                "data" => $status
+            ]);
+        } else {
+            return \response()->json([
+                "message" => "Status no encontrado",
+            ], 404);
+        }
     }
 
     /**
@@ -77,11 +104,19 @@ class StatusController extends Controller
      * @param int $id
      * @return Status
      */
-    public function activate(int $id): Status
+    public function activate(int $id): JsonResponse
     {
         $status = Status::find($id);
+        if (empty($status)) {
+            return \response()->json([
+                "message" => "Status no encontrado",
+            ], 404);
+        }
         $status->status = !$status->status;
         $status->save();
-        return $status;
+        return \response()->json([
+            "message" => "success",
+            "data" => $status
+        ]);
     }
 }

@@ -98,6 +98,12 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'rol_id' => '5',
         ]);
+        DB::table('users')->insert([
+            'name' => 'guardia',
+            'email' => 'g@g.com',
+            'password' => Hash::make('12345678'),
+            'rol_id' => '6',
+        ]);
 
 
 

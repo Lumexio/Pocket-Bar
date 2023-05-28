@@ -332,7 +332,7 @@ class TicketController extends Controller
 
 
 
-            if (auth()->user()->rol_id === Rol::Administrativo->value and $ticket->cancel_confirm === true) {
+            if ((auth()->user()->rol_id === Rol::Administrativo->value and auth()->user()->rol_id === Rol::Cajero->value) and $ticket->cancel_confirm === true) {
                 return response()->json([
                     "status" => 400,
                     "error" => 1,
@@ -340,15 +340,15 @@ class TicketController extends Controller
                 ], 400);
             }
 
-            if (auth()->user()->rol_id == Rol::Cajero->value) {
-                $ticket->cancel_confirm = false;
-                $ticket->canceled_by_cashier_at = Carbon::now();
-                $ticket->canceled_by_cashier_id = auth()->user()->id;
-            }
+            // if (auth()->user()->rol_id == Rol::Cajero->value) {
+            //     $ticket->cancel_confirm = false;
+            //     $ticket->canceled_by_cashier_at = Carbon::now();
+            //     $ticket->canceled_by_cashier_id = auth()->user()->id;
+            // }
 
 
 
-            if (in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Gerencia->value])) {
+            if (in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Cajero->value, Rol::Gerencia->value])) {
                 TicketDetail::where("ticket_id", $ticket->id)->update(["status" => TicketItemStatus::Canceled->value]);
                 $ticket->cancel_confirm = true;
                 $ticket->canceled_by_admin_at = Carbon::now();

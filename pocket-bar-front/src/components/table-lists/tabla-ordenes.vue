@@ -219,7 +219,7 @@
 						item.status != 'Cerrado' &&
 						item.status != 'Cancelado'
 					"
-					:disabled="disablecheck($store.getters.hasrol, item.cancel_confirm)"
+					
 					small
 					dark
 					color="red darken-4"
@@ -385,15 +385,15 @@ export default {
 			this.changeMoney = Number(payment) - Number(totalToPay);
 			this.amount_cash = Number(payment) - this.changeMoney;
 		},
-		disablecheck(rol, cancelflag) {
-			let disabled;
-			if ((cancelflag == 0 && rol == 3) || (cancelflag == 1 && rol == 3)) {
-				disabled = true;
-			} else {
-				disabled = false;
-			}
-			return disabled;
-		},
+		// disablecheck(rol, cancelflag) {
+		// 	let disabled;
+		// 	if ((cancelflag == 0 && rol == 3) || (cancelflag == 1 && rol == 3)) {
+		// 		disabled = true;
+		// 	} else {
+		// 		disabled = false;
+		// 	}
+		// 	return disabled;
+		// },
 		getColor(status) {
 			if (status === "Por entregar") return "orange lighten-2";
 			else if (status === "Entregado") return "blue darken-1";
@@ -447,13 +447,9 @@ export default {
 				});
 		},
 		cancelConfirm() {
-			// aqui armo la cancelacion
 			postCancelticket({ id: this.editedItemCancel.id, confirm_ticket: false })
 				.then((response) => {
-					// window.Echo.channel("tickets.").listen("ticketCreated", (e) => {
-					// 	this.$store.commit("settickets", e.tickets);
-					// 	this.ticketsArray = e.tickets;
-					// });
+				
 					if (response.response.data.status == 200) {
 						this.dialogCancel = false;
 						this.cargando = false;

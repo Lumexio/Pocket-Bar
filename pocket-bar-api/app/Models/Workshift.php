@@ -10,4 +10,9 @@ class Workshift extends Model
     use HasFactory;
 
     protected $table = "workshifts";
+
+    public function generalIncoming()
+    {
+        return $this->hasMany(GeneralIncoming::class);
+    }
 }

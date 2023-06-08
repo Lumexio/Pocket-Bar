@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Rol;
+use App\Models\Rol as ModelsRol;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
+use App\Models\User;
+use App\Models\Workshift;
 use Database\Factories\TicketFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,27 +22,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        /**
-         * *Rol de usuarios
-         */
-        DB::table('rols_tbl')->insert([
-            'name_rol' => 'Administrativo',
-        ]);
-        DB::table('rols_tbl')->insert([
-            'name_rol' => 'Gerencia',
-        ]);
-        DB::table('rols_tbl')->insert([
-            'name_rol' => 'Cajer@',
-        ]);
-        DB::table('rols_tbl')->insert([
-            'name_rol' => 'Meser@',
-        ]);
-        DB::table('rols_tbl')->insert([
-            'name_rol' => 'Bartender',
-        ]);
-        DB::table('rols_tbl')->insert([
-            'name_rol' => 'Intendencia',
-        ]);
         /**
          * *Status de articulos
          */
@@ -60,51 +43,14 @@ class DatabaseSeeder extends Seeder
         /**
          * *Cuentas de usuario de prueba
          */
-        DB::table('users')->insert([
-            'name' => 'admin',
-            'email' => 'a@a.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '1',
-        ]);
-        DB::table('users')->insert([
-            'name' => 'adminb',
-            'email' => 'ab@ab.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '2',
-        ]);
-        DB::table('users')->insert([
-            'name' => 'cajero',
-            'email' => 'c@c.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '3',
-        ]);
-        DB::table('users')->insert([
-            'name' => 'mesero',
-            'email' => 'm@m.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '4',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'barra',
-            'email' => 'b@b.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '5',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'barra2',
-            'email' => 'b2@b.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '5',
-        ]);
-        DB::table('users')->insert([
-            'name' => 'guardia',
-            'email' => 'g@g.com',
-            'password' => Hash::make('12345678'),
-            'rol_id' => '6',
-        ]);
-
+        foreach (Rol::toArray() as $rol) {
+            DB::table('users')->insert([
+                'name' => $rol->name,
+                'email' => $rol->name . '@' . $rol->name . '.com',
+                'password' => Hash::make('12345678'),
+                'rol_id' => $rol->value,
+            ]);
+        }
 
 
         /**
@@ -181,8 +127,9 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        DB::table("workshifts")->insert([
+        Workshift::create([
             "active" => 1,
+            "start_money" => 1000,
         ]);
 
         \App\Models\Articulo::factory(10)->create();
@@ -198,6 +145,28 @@ class DatabaseSeeder extends Seeder
                 $item["ticket_id"] = $id;
                 TicketDetail::insert($item);
             }
+        }
+
+        for ($i = 1; $i < 11; $i++) {
+            $monto = rand(100, 1000);
+            if (rand(0, 1) == 0) {
+                $rol = ModelsRol::find(Rol::Guardia->value);
+                $descripcion = "Cover";
+            } else {
+                $rol = ModelsRol::find(Rol::Cajero->value);
+                if (rand(0, 1) == 0) {
+                    $monto = $monto * -1;
+                    $descripcion = "Salida general";
+                } else {
+                    $descripcion = "Ingreso general";
+                }
+            }
+            $user = $rol->users()->first();
+            $user->generalIncomings()->create([
+                "workshift_id" => 1,
+                "amount" => $monto,
+                "description" => $descripcion,
+            ]);
         }
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Rol;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,16 @@ class CreateRolsTable extends Migration
             $table->timestamps();
             $table->engine = 'InnoDB';
         });
+
+        /**
+         * *Rol de usuarios
+         * @var Rol $rol
+         */
+        foreach (Rol::toArray() as $rol) {
+            DB::table('rols_tbl')->insert([
+                'name_rol' => $rol->name,
+            ]);
+        }
     }
 
     /**

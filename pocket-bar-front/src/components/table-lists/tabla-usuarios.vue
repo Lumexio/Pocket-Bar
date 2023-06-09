@@ -228,12 +228,13 @@ export default {
 			.catch((error) => console.log(error));
 		getRol(this.itemsrol)
 			.then((response) => {
+				
 				this.itemsrol = response.itemsrol;
+				
 				if (response.stats === 200) {
 					this.cargando = false;
 				}
-			})
-			.catch((error) => console.log(error));
+			}).catch((e) => console.log(e));
 	},
 
 	computed: {
@@ -270,6 +271,7 @@ export default {
 			});
 		},
 		getColor(status) {
+			
 			if (status == "Administrativo") {
 				return "amber lighten-1";
 			} else if (status == "Meser@") {
@@ -342,7 +344,6 @@ export default {
 				.put("api/user/activate/" + this.editedItem.id)
 				.then((response) => {
 					if (response.data.message === "success") {
-						console.log(response);
 						this.usersArray.splice(this.editedIndex, 1);
 						this.closeDelete();
 					}

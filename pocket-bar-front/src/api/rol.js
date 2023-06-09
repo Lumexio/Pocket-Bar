@@ -5,16 +5,14 @@ export function getRol(itemsrol) {
  return new Promise((resolve, reject) => {
   axios
    .get("api/rol")
-   .then((response) => {
-    let categorias = response.data;
+    .then((response) => {
+    let rols = response.data.data;
     let stats = response.status;
-
-    categorias.forEach((element) => {
+    rols.forEach((element) => {
      let datos = {
       rol_id: element.id,
       name_rol: element.name_rol,
      };
-
      if (!datos) return;
      itemsrol.push(datos);
     });

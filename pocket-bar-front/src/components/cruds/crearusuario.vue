@@ -72,6 +72,7 @@
 <script>
 import axios from "axios";
 import store from "@/store";
+import { getRol } from "@/api/rol.js";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
 	"http://" + window.location.hostname /*"127.0.0.1"*/ + ":8000";
@@ -92,24 +93,24 @@ export default {
 		window.Echo.channel("roles").listen("rolCreated", (e) => {
 			this.itemsrol = e.roles;
 		});
-		axios
-			.get("api/rol")
-			.then((response) => {
-				let rol = response.data;
+		getRol(this.itemsrol);
+		// axios
+		// 	.get("api/rol")
+		// 	.then((response) => {
+		// 		let rol = response.data;
+		// 		rol.forEach((element) => {
+		// 			let datos = {
+		// 				rol_id: element.id,
+		// 				name_rol: element.name_rol,
+		// 			};
 
-				rol.forEach((element) => {
-					let datos = {
-						rol_id: element.id,
-						name_rol: element.name_rol,
-					};
-
-					if (!datos) return;
-					this.itemsrol.push(datos);
-				});
-			})
-			.catch((e) => {
-				console.log(e.message);
-			});
+		// 			if (!datos) return;
+		// 			this.itemsrol.push(datos);
+		// 		});
+		// 	})
+		// 	.catch((e) => {
+		// 		console.log(e.message);
+		// 	});
 	},
 	methods: {
 		onClose() {

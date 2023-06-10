@@ -190,7 +190,6 @@ class TicketController extends Controller
             ->where("workshift_id", $actualWorkshift->id ?? null)
             ->get()
             ->map(function (Ticket $ticket) {
-                dd($ticket);
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;

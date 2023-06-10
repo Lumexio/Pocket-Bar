@@ -9,7 +9,7 @@ export function getStatus(statusArray) {
     axios
       .get("api/status")
       .then(response => {
-        const status = response.data;
+        const status = response.data.data;
         const stats = response.status;
         status.forEach((element) => {
           let datos = {

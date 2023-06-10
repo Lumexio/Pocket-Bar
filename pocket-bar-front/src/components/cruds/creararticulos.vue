@@ -144,12 +144,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import store from "@/store";
 import { postArticulos } from "@/api/articulos.js";
 import { getCategorias } from "@/api/categorias.js";
 import { getMarcas } from "@/api/marcas.js";
 import { getProveedores } from "@/api/proveedores.js";
+import { getStatus } from "@/api/status.js";
 
 import { getTipos } from "@/api/tipos.js";
 
@@ -240,25 +240,7 @@ export default {
 				console.log(e);
 				this.cargando = true;
 			});
-		axios
-			.get("api/status")
-			.then((response) => {
-				let status = response.data;
-
-				status.forEach((element) => {
-					let datos = {
-						id: element.id,
-						nombre_status: element.nombre_status,
-					};
-
-					if (!datos) return;
-					this.itemstst.push(datos);
-				});
-			})
-			.catch((e) => {
-				console.log(e.message);
-			});
-
+		getStatus(this.itemstst)
 		getTipos(this.itemstt)
 			.then((response) => {
 				if (response.stats === 200) {

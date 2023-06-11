@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Enums\Rol;
 use App\Enums\TicketStatus;
 use App\Models\Payment;
 use App\Models\Ticket;
@@ -27,7 +28,7 @@ class WorkshiftReport
             ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
             ->addSelect("u.id", "rol.name_rol as rol", "u.name")
             ->where("tickets_tbl.status", TicketStatus::Delivered->value)
-            ->whereIn("rol.id", [4, 5])
+            ->whereIn("rol.id", [Rol::Bartender->value, Rol::Mesero->value])
             ->where('workshift_id', $this->activeWorkshift->id)
             ->groupBy(["rol.name_rol", "u.id", "u.name"])
             ->get();
@@ -42,16 +43,28 @@ class WorkshiftReport
             ->groupBy(["rol.name_rol", "u.id", "u.name"])
             ->get();
 
+        $ingresos = $this->activeWorkshift->generalIncoming()->with("user")->where("amount", ">", 0)->get();
+        $egresos = $this->activeWorkshift->generalIncoming()->with("user")->where("amount", "<", 0)->get();
+        $totalIngresos = $ingresos->sum("amount");
+        $totalEgresos = $egresos->sum("amount");
+        $workshift_report["ingresos"] = [
+            "total" => $totalIngresos,
+            "detail" => $ingresos,
+        ];
+        $workshift_report["egresos"] = [
+            "total" => $totalEgresos,
+            "detail" => $egresos,
+        ];
         foreach ($totalGroupByEmployee as $totalEmployee) {
             $detailEmployee = $totalEmployee->toArray();
 
             self::getTickets([TicketStatus::Closed->value], $totalEmployee->id, $detailEmployee, "closed_tickets", $this->activeWorkshift->id);
             self::getTickets([TicketStatus::Delivered->value], $totalEmployee->id, $detailEmployee, "non_closed_tickets", $this->activeWorkshift->id);
             self::getTickets([TicketStatus::Canceled->value], $totalEmployee->id, $detailEmployee, "canceled_tickets", $this->activeWorkshift->id);
-            $workshift_report[$totalEmployee->id] = $detailEmployee;
+            $workshift_report["userTickets"][$totalEmployee->id] = $detailEmployee;
         }
         foreach ($total_debts as  $total_debt) {
-            if (!isset($workshift_report[$total_debt->id])) {
+            if (!isset($workshift_report["userTickets"][$total_debt->id])) {
                 $detailEmployee = [
                     "total_workshift_sales" => 0,
                     "total_tips" => 0,
@@ -63,11 +76,12 @@ class WorkshiftReport
                 ];
                 self::getTickets([TicketStatus::Delivered->value], $total_debt->id, $detailEmployee, "non_closed_tickets", $this->activeWorkshift->id);
                 self::getTickets([TicketStatus::Canceled->value], $total_debt->id, $detailEmployee, "canceled_tickets", $this->activeWorkshift->id);
-                $workshift_report[$total_debt->id] = $detailEmployee;
+                $workshift_report["userTickets"][$total_debt->id] = $detailEmployee;
             } else {
-                $workshift_report[$total_debt->id]["total_workshift_debt"] = $total_debt->total_workshift_debt;
+                $workshift_report["userTickets"][$total_debt->id]["total_workshift_debt"] = $total_debt->total_workshift_debt;
             }
         }
+        $workshift_report["userTickets"] = array_values($workshift_report["userTickets"]);
         return $workshift_report;
     }
 

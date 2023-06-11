@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Rol;
 use App\Helpers\WorkshiftReport;
 use DB;
 use App\Models\Ticket;
 use App\Models\Workshift;
 use App\Http\Requests\Caja\CloseRequest;
+use App\Http\Requests\Caja\MovementRequest;
 use App\Models\CashRegisterCloseData;
+use App\Models\GeneralIncoming;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -86,5 +89,49 @@ class CajaController extends Controller
         }
 
         return response()->json(['success' => 'Caja cerrada correctamente']);
+    }
+
+    public function addMoney(MovementRequest $request): JsonResponse
+    {
+        $workshift = Workshift::where('active', 1)->first();
+        if (empty($workshift)) {
+            return response()->json([
+                'message' => 'No hay una jornada de trabajo activa'
+            ], 400);
+        }
+        if ($request->user()->rol_id == Rol::Guardia->value) {
+            $descripcion = "Cover";
+        } else {
+            $descripcion = $request->input('description') ?? "Ingreso general";
+        }
+        $result = $request->user()->generalIncomings()->create([
+            "workshift_id" => $workshift->id,
+            "amount" => $request->input('amount'),
+            "description" => $descripcion,
+        ]);
+        return response()->json([
+            'message' => 'Dinero agregado correctamente',
+            'data' => $result
+        ], 200);
+    }
+
+    public function removeMoney(MovementRequest $request): JsonResponse
+    {
+        $workshift = Workshift::where('active', 1)->first();
+        if (empty($workshift)) {
+            return response()->json([
+                'message' => 'No hay una jornada de trabajo activa'
+            ], 400);
+        }
+        $descripcion = $request->input('description') ?? "Retiro general";
+        $result = $request->user()->generalIncomings()->create([
+            "workshift_id" => $workshift->id,
+            "amount" => -$request->input('amount'),
+            "description" => $descripcion,
+        ]);
+        return response()->json([
+            'message' => 'Dinero retirado correctamente',
+            'data' => $result
+        ], 200);
     }
 }

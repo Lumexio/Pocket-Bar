@@ -25,7 +25,7 @@ class StartRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "start_money" => "required|numeric|min:0",
         ];
     }
 }

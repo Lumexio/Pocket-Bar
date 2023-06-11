@@ -17,7 +17,7 @@ export function getCategorias(categoriaArray) {
             id: element.id,
             nombre_categoria: element.nombre_categoria,
             descripcion_categoria: element.descripcion_categoria,
-            active: ((element.active===1)?  true:false),
+            active: element.active,
 
           };
           if (!datos) return;

@@ -98,7 +98,7 @@
 							v-model="selectst"
 							:items="itemstst"
 							item-text="nombre_status"
-							item-value="id"
+							item-value="status_id"
 							label="Estatus"
 							required
 						></v-select>
@@ -193,6 +193,7 @@ export default {
 			(v) => /[0-9]/.test(v) || "Este campo solo acepta numeros",
 		],
 	}),
+
 	mounted() {
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
 			this.itemsc = e.categorias;
@@ -278,6 +279,7 @@ export default {
 			formdata.append("marca_id", this.selectm);
 			formdata.append("descripcion_articulo", this.descripcion_articulo);
 			formdata.append("foto_articulo", this.photo);
+
 			postArticulos(formdata);
 			this.clear();
 		},

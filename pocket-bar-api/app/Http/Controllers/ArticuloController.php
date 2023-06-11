@@ -35,7 +35,7 @@ class ArticuloController extends Controller
         if (isset($showActive)) {
             $dat = $showActive ? $dat->whereNull('art.deactivated_at') : $dat->whereNotNull('art.deactivated_at');
         }
-        $dat = $dat->select('art.id', 'art.nombre_articulo', 'art.cantidad_articulo', 'art.precio_articulo',  'art.descripcion_articulo', 'art.foto_articulo', 'users.name', 'cat.nombre_categoria', 'marcas_tbl.nombre_marca', 'prov.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo', "art.deactivated_at")
+        $dat = $dat->select('art.id', 'art.nombre_articulo', 'art.cantidad_articulo', 'art.precio_articulo', 'art.descripcion_articulo', 'art.foto_articulo', 'users.name', 'cat.nombre_categoria', 'marcas_tbl.nombre_marca', 'prov.nombre_proveedor', 'status_tbl.nombre_status', 'tipos_tbl.nombre_tipo', "art.deactivated_at")
             ->get()
             ->map(
                 function ($item) {
@@ -57,6 +57,7 @@ class ArticuloController extends Controller
      */
     public function store(ArticuleValidationRequest $request): JsonResponse
     {
+
         if (Articulo::where('nombre_articulo', '=', $request->get('nombre_articulo'))->exists()) {
             return response()->json(
                 [

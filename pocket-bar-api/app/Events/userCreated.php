@@ -7,14 +7,16 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
-class userCreated implements ShouldBroadcast
+class userCreated implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
@@ -23,6 +25,7 @@ class userCreated implements ShouldBroadcast
      */
 
     public $users;
+    public bool $afterCommit = true;
     public function __construct()
     {
         $this->users = \App::call('App\Http\Controllers\UserController@index');

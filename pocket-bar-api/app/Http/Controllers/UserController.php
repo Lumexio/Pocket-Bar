@@ -43,6 +43,7 @@ class UserController extends Controller
     public function store(UsuarioValidationRequest $request): JsonResponse
     {
         $user = User::create($request->all());
+        broadcast((new userCreated())->broadcastToEveryone());
         userCreated::dispatch($user);
         return response()->json([
             'message' => 'success',

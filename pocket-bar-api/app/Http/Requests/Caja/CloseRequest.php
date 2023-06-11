@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Caja;
 
+use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CloseRequest extends FormRequest
@@ -13,7 +14,7 @@ class CloseRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() and auth()->user()->rol_id == 3;
+        return auth()->check() and auth()->user()->rol_id == Rol::Cajero->value;
     }
 
     /**

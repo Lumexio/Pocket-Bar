@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Workshift;
+namespace App\Http\Requests\Caja;
 
 use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CloseRequest extends FormRequest
+class MovementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class CloseRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->rol_id == Rol::Gerencia->value or auth()->user()->rol_id == Rol::Administrativo->value;
+        return auth()->check() and (auth()->user()->rol_id == Rol::Cajero->value or auth()->user()->rol_id == Rol::Guardia->value);
     }
 
     /**
@@ -25,7 +25,8 @@ class CloseRequest extends FormRequest
     public function rules()
     {
         return [
-            "end_money" => "required|numeric|min:0",
+            "amount" => "required|numeric|min:1",
+            "description" => "nullable|string|max:255",
         ];
     }
 }

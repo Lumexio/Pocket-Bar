@@ -15,19 +15,18 @@ use Illuminate\Support\Collection;
 
 class WorkshiftController extends Controller
 {
-    public $activeWorkshift;
 
     public function close(CloseRequest $request)
     {
-        $this->activeWorkshift = Workshift::where('active', 1)->first();
+        $activeWorkshift = Workshift::where('active', 1)->first();
 
-        if (empty($this->activeWorkshift)) {
+        if (empty($activeWorkshift)) {
             return response()->json([
                 'message' => 'No hay una jornada de trabajo activa'
             ], 400);
         }
-        $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->get();
-        $workshift_report = (new WorkshiftReport($this->activeWorkshift))->getWorkShiftReport();
+        $pendingTickets = Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->where("workshift_id", $activeWorkshift->id)->get();
+        $workshift_report = (new WorkshiftReport($activeWorkshift))->getWorkShiftReport();
 
         if ($pendingTickets->count() > 0) {
             return response()->json([
@@ -37,7 +36,7 @@ class WorkshiftController extends Controller
         }
 
         $closedTickets = Ticket::whereIn("status", [TicketStatus::Closed->value])->get();
-        $closeCashierData = CashRegisterCloseData::where('workshift_id', $this->activeWorkshift->id)->get();
+        $closeCashierData = CashRegisterCloseData::where('workshift_id', $activeWorkshift->id)->get();
         $totalPaid = $closedTickets->sum('total');
         $totalOfTickets = $closedTickets->sum('total');
         $difference = $totalPaid - $totalOfTickets;
@@ -50,9 +49,9 @@ class WorkshiftController extends Controller
             ], 400);
         }
 
-        $this->activeWorkshift->active = 0;
-
-        if ($this->activeWorkshift->save()) {
+        $activeWorkshift->active = 0;
+        $activeWorkshift->end_money = $request->input('end_money');
+        if ($activeWorkshift->save()) {
             return response()->json([
                 'message' => 'Jornada de trabajo cerrada',
                 "saldoFavor" => $difference,
@@ -71,6 +70,7 @@ class WorkshiftController extends Controller
         }
         $workshift = new Workshift();
         $workshift->active = 1;
+        $workshift->start_money = $request->input('start_money');
         $workshift->save();
         return response()->json([
             'message' => 'Jornada de trabajo iniciada'

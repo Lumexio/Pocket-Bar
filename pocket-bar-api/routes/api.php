@@ -94,6 +94,9 @@ Mostrar un registro no */
     });
 
     Route::prefix("caja")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        Route::post("add-money", "CajaController@addMoney"); //Agregar dinero a caja
+        Route::post("remove-money", "CajaController@removeMoney"); //Quitar dinero a caja
+
         /**Lo que debo de tener en caja
          * *Listo
          */

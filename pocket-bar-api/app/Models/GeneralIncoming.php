@@ -9,7 +9,14 @@ class GeneralIncoming extends Model
 {
     use HasFactory;
 
-    protected $table = 'general_incoming_tbl';
+    protected $fillable = [
+        'user_id',
+        'workshift_id',
+        'amount',
+        'description',
+    ];
+
+    protected $table = 'general_incomings_tbl';
 
     public function user()
     {

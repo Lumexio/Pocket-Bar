@@ -44,12 +44,13 @@ class DatabaseSeeder extends Seeder
          * *Cuentas de usuario de prueba
          */
         foreach (Rol::toArray() as $rol) {
-            DB::table('users')->insert([
+            $user = new User([
                 'name' => $rol->name,
                 'email' => $rol->name . '@' . $rol->name . '.com',
                 'password' => Hash::make('12345678'),
                 'rol_id' => $rol->value,
             ]);
+            $user->save();
         }
 
 

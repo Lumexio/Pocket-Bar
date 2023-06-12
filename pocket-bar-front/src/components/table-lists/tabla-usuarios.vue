@@ -213,7 +213,6 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("users").listen("userCreated", (e) => {
-			console.log(e.users.original.users);
 			this.usersArray = e.users.original.users;
 		});
 		window.Echo.channel("roles").listen("rolCreated", (e) => {

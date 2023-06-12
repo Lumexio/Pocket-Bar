@@ -42,15 +42,24 @@ class DatabaseSeeder extends Seeder
 
         /**
          * *Cuentas de usuario de prueba
+         * ! La correción se comporta extraño, por lo que se optó por que se mantenga el no código comentado
          */
+        // foreach (Rol::toArray() as $rol) {
+        //     $user = new User([
+        //         'name' => $rol->name,
+        //         'email' => $rol->name . '@' . $rol->name . '.com',
+        //         'password' => Hash::make('12345678'),
+        //         'rol_id' => $rol->value,
+        //     ]);
+        //     $user->save();
+        // }
         foreach (Rol::toArray() as $rol) {
-            $user = new User([
+            DB::table('users')->insert([
                 'name' => $rol->name,
                 'email' => $rol->name . '@' . $rol->name . '.com',
                 'password' => Hash::make('12345678'),
                 'rol_id' => $rol->value,
             ]);
-            $user->save();
         }
 
 

@@ -369,7 +369,7 @@ export default {
 				}
 			})
 			.catch((e) => {
-				console.log(e);
+			alert(e);
 				if (e) {
 					store.commit("setdanger", true);
 				}

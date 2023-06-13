@@ -15,11 +15,12 @@ export function getTipos(tipoArray) {
           let datos = {
             id: element.id,
             nombre_tipo: element.nombre_tipo,
-            active: ((element.active===1)?  true:false),
+            active: element.active,
           };
           if (!datos) return;
           tipoArray.push(datos);
         });
+        
         resolve({
           stats, tipoArray
         });
@@ -43,8 +44,12 @@ export function postTipos(enviar) {
       }
     });
 }
-export function deleteTipos(id) {
-  axios.put("api/tipo/active" + id).catch((error) => console.log(error));
+export function activationTipos(id) {
+  return new Promise((resolve, reject) => {
+    axios.put("api/tipo/activate/" + id).then((response) => {
+      resolve(response);
+    }).catch((error) => reject(error) );
+  });
 }
 export function editTipos(url) {
   axios
@@ -55,4 +60,4 @@ export function editTipos(url) {
     .catch((error) => console.log(error));
 }
 
-export default { getTipos, postTipos, deleteTipos, editTipos }
+export default { getTipos, postTipos, activationTipos, editTipos }

@@ -45,7 +45,8 @@ class MesaController extends Controller
             );
         } else {
             $mesa = Mesa::create($request->all());
-            mesaCreated::dispatch($mesa);
+
+            broadcast((new mesaCreated($mesa))->broadcastToEveryone());
             return response()->json(
                 [
                     'message' => 'success',
@@ -101,6 +102,7 @@ class MesaController extends Controller
             );
         }
         $mesa->update($request->all());
+        broadcast((new mesaCreated($mesa))->broadcastToEveryone());
         return response()->json(
             [
                 'message' => 'success',
@@ -119,6 +121,7 @@ class MesaController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $mesa = Mesa::destroy($id);
+        broadcast((new mesaCreated($mesa))->broadcastToEveryone());
         return response()->json(
             [
                 'message' => 'success',

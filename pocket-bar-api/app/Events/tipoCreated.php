@@ -6,14 +6,16 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Tipo;
 
-class tipoCreated implements ShouldBroadcast
+class tipoCreated implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
@@ -22,6 +24,8 @@ class tipoCreated implements ShouldBroadcast
      */
 
     public $tipos;
+    public bool $afterCommit = true;
+
     public function __construct()
     {
         $this->tipos = \App::call('App\Http\Controllers\TipoController@index');
@@ -32,7 +36,7 @@ class tipoCreated implements ShouldBroadcast
      *
      * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel|array
     {
         return new Channel('tipos');
     }

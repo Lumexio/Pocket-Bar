@@ -39,28 +39,25 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory(10)->create();
 
-
         /**
-         * *Cuentas de usuario de prueba
-         * ! La correción se comporta extraño, por lo que se optó por que se mantenga el no código comentado
+         * *Roles
          */
+        foreach (Rol::toArray() as $rol) {
+            $user = new User();
+            $user->name = $rol->name;
+            $user->email = $rol->name . '@' . $rol->name . '.com';
+            $user->password = "12345678";
+            $user->rol_id = $rol->value;
+            $user->save();
+        }
         // foreach (Rol::toArray() as $rol) {
-        //     $user = new User([
+        //     DB::table('users')->insert([
         //         'name' => $rol->name,
         //         'email' => $rol->name . '@' . $rol->name . '.com',
         //         'password' => Hash::make('12345678'),
         //         'rol_id' => $rol->value,
         //     ]);
-        //     $user->save();
         // }
-        foreach (Rol::toArray() as $rol) {
-            DB::table('users')->insert([
-                'name' => $rol->name,
-                'email' => $rol->name . '@' . $rol->name . '.com',
-                'password' => Hash::make('12345678'),
-                'rol_id' => $rol->value,
-            ]);
-        }
 
 
         /**

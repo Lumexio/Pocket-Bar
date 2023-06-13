@@ -33,7 +33,7 @@ class WorkshiftReport
             ->groupBy(["rol.name_rol", "u.id", "u.name"])
             ->get();
 
-        $totalGroupByEmployee = Ticket::selectRaw("SUM(total) as total_workshift_sales, SUM(tip) as totalTips")
+        $totalGroupByEmployee = Ticket::selectRaw("SUM(total) as total_workshift_sales, SUM(tip) as total_tips")
             ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
             ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
             ->addSelect("u.id", "rol.name_rol as rol", "u.name")
@@ -42,11 +42,12 @@ class WorkshiftReport
             ->where('workshift_id', $this->activeWorkshift->id)
             ->groupBy(["rol.name_rol", "u.id", "u.name"])
             ->get();
-
         $ingresos = $this->activeWorkshift->generalIncoming()->with("user")->where("amount", ">", 0)->get();
         $egresos = $this->activeWorkshift->generalIncoming()->with("user")->where("amount", "<", 0)->get();
         $totalIngresos = $ingresos->sum("amount");
         $totalEgresos = $egresos->sum("amount");
+        $total = $totalGroupByEmployee->sum("total_workshift_sales") + $totalIngresos + $totalEgresos;
+        $workshift_report["total"] = $total;
         $workshift_report["ingresos"] = [
             "total" => $totalIngresos,
             "detail" => $ingresos,
@@ -70,7 +71,7 @@ class WorkshiftReport
                     "total_tips" => 0,
                     "user_id" => $total_debt->id,
                     "name" => $total_debt->name,
-                    "rol_name" => $total_debt->rol,
+                    "rol" => $total_debt->rol,
                     "total_workshift_debt" => $total_debt->total_workshift_debt,
                     "closed_tickets" => [],
                 ];

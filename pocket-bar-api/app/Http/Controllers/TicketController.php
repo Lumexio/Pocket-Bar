@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use App\Events\ticketCreated;
 use App\Events\ticketCreatedMesero;
 use App\Events\ticketCreatedBarra;
+use App\Http\Requests\CancelProductRequest;
 use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
 use App\Http\Requests\Tickets\AddProductsRequest;
 use App\Http\Requests\Tickets\CancelTicketRequest;
@@ -184,7 +185,7 @@ class TicketController extends Controller
         $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa', )
+            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
@@ -321,49 +322,14 @@ class TicketController extends Controller
                     "error" => 1,
                     "message" => "El ticket ya ha sido cancelado",
                 ], 400);
-            } elseif (auth()->user()->rol_id === Rol::Cajero->value and $ticket->cancel_confirm === false) {
-                return response()->json([
-                    "status" => 400,
-                    "error" => 1,
-                    "message" => "El ticket ya ha sido cancelado por el cajero",
-                ], 400);
             }
 
-
-
-            if ((auth()->user()->rol_id === Rol::Administrativo->value and auth()->user()->rol_id === Rol::Cajero->value) and $ticket->cancel_confirm === true) {
-                return response()->json([
-                    "status" => 400,
-                    "error" => 1,
-                    "message" => "El ticket ya ha sido cancelado por el administrador",
-                ], 400);
-            }
-
-            // if (auth()->user()->rol_id == Rol::Cajero->value) {
-            //     $ticket->cancel_confirm = false;
-            //     $ticket->canceled_by_cashier_at = Carbon::now();
-            //     $ticket->canceled_by_cashier_id = auth()->user()->id;
-            // }
-
-
-
-            if (in_array(auth()->user()->rol_id, [Rol::Administrativo->value, Rol::Cajero->value, Rol::Gerencia->value])) {
-                TicketDetail::where("ticket_id", $ticket->id)->update(["status" => TicketItemStatus::Canceled->value]);
-                $ticket->cancel_confirm = true;
-                $ticket->canceled_by_admin_at = Carbon::now();
-                $ticket->canceled_by_admin_id = auth()->user()->id;
-                $ticket->status = TicketStatus::Canceled->value;
-            }
+            $ticket->status = TicketStatus::Canceled->value;
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
 
-            if ($ticket->status === TicketStatus::Canceled->value) {
-                /**
-                 * @var TicketDetail $detail
-                 */
-                foreach ($ticket->details as $detail) {
-                    $this->updateArticulo($detail->articulos_tbl_id, $detail->units, true);
-                }
+            foreach ($ticket->details as $detail) {
+                $this->updateArticulo($detail->articulos_tbl_id, $detail->units, true);
             }
             broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
@@ -537,6 +503,41 @@ class TicketController extends Controller
             "error" => 0,
             "message" => "Pago realizado correctamente",
             "data" => $ticket
+        ], 200);
+    }
+
+    public function cancelProduct(CancelProductRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $ticket = Ticket::with("details")->find($request->input("ticket_id"));
+            if (in_array($ticket->status, [TicketStatus::Closed->value, TicketStatus::Canceled->value])) {
+                return response()->json([
+                    "error" => "No puedes cancelar un producto de un ticket cerrado"
+                ], 422);
+            }
+            foreach ($request->products as $product) {
+                $detail = $ticket->details->where("articulos_tbl_id", $product["id"])->first();
+                if ($detail->units <= $product["units"]) {
+                    $detail->delete();
+                } else {
+                    $detail->units = $detail->units - $product["units"];
+                    $detail->save();
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                "error" => $e->getMessage()
+            ], 500);
+        }
+        DB::commit();
+        $newTicket = Ticket::with("details")->find($request->input("ticket_id"));
+        return response()->json([
+            "status" => 200,
+            "error" => 0,
+            "message" => "Productos cancelados correctamente",
+            "data" => $newTicket
         ], 200);
     }
 }

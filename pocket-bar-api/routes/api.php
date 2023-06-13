@@ -75,7 +75,7 @@ Mostrar un registro no */
         Route::post('/create', 'TicketController@store'); //Crear ticket
         Route::put('/tip', 'TicketController@tipUpdate'); //Crear ticket
         Route::post('/pay', 'TicketController@pay'); //pagar cuenta
-
+        Route::put("/cancel-product", 'TicketController@cancelProduct'); //Cancelar producto
         Route::post("/cancel", 'TicketController@cancelTicket');
         /**Añadir productos a un ticket existe
          * !Probar

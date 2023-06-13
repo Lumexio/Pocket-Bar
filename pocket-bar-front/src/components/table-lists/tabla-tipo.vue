@@ -1,7 +1,6 @@
 <template>
 	<v-data-table
 		:dark="this.$store.getters.hasdarkflag"
-		
 		:headers="headers"
 		show-expand
 		:expanded.sync="expanded"
@@ -38,7 +37,6 @@
 					<v-card-title>
 						<h1 class="headline">{{ formTitle }}</h1>
 					</v-card-title>
-
 					<v-card-text>
 						<v-container>
 							<v-row>
@@ -51,7 +49,6 @@
 							</v-row>
 						</v-container>
 					</v-card-text>
-
 					<v-card-actions v-on:keyup.enter="save">
 						<v-spacer></v-spacer>
 						<v-btn color="blue darken-1" text @click.prevent="close">
@@ -192,13 +189,11 @@ export default {
 				this.cargando = true;
 			});
 	},
-
 	computed: {
 		formTitle() {
 			return this.editedIndex === -1 ? "New Item" : "Editar tipo";
 		},
 	},
-
 	watch: {
 		dialog(val) {
 			val || this.close();
@@ -232,29 +227,24 @@ export default {
 				value.toString().toLocaleUpperCase().indexOf(search) !== -1
 			);
 		},
-
 		editItem(item) {
 			this.editedIndex = this.tipoArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 
 			this.dialog = true;
 		},
-
 		deleteItem(item) {
 			this.editedIndex = this.tipoArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialogDelete = true;
 		},
-
 		activationConfirm() {
 			activationTipos(Number(this.editedItem.id)).then((response) => {
 				if (response.status===200) {
 					this.closeDelete();
 				} 
 			})
-			
 		},
-
 		close() {
 			this.dialog = false;
 			this.$nextTick(() => {
@@ -262,7 +252,6 @@ export default {
 				this.editedIndex = -1;
 			});
 		},
-
 		closeDelete() {
 			this.dialogDelete = false;
 			this.$nextTick(() => {
@@ -270,7 +259,6 @@ export default {
 				this.editedIndex = -1;
 			});
 		},
-
 		save() {
 			if (this.editedIndex > -1) {
 				Object.assign(this.tipoArray[this.editedIndex], this.editedItem);
@@ -288,7 +276,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped>
-
-</style>

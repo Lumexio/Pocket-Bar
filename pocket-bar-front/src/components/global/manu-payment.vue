@@ -1,7 +1,7 @@
 <template>
 	<v-row class="align-start">
-		<mustbeReport :workshift_report="workshift_report" />
-		<menuList :data_resp="data_resp" />
+		<mustbeReport :userTickets="userTickets" />
+		<menuList :ingresos="ingresos" />
 	</v-row>
 </template>
 
@@ -14,8 +14,8 @@ export default {
 	name: "menuPayment",
 	components: { mustbeReport, menuList },
 	data: () => ({
-		data_resp: {},
-		workshift_report: [],
+		ingresos: {},
+		userTickets: [],
 	}),
 	whatch: {},
 	methods: {
@@ -24,8 +24,9 @@ export default {
 	mounted() {
 		getCotizado()
 			.then((response) => {
-				this.data_resp = response.data;
-				this.workshift_report = response.workshift_report;
+				console.log(response);
+				this.ingresos = response.workshift_report.ingresos;
+				this.userTickets = response.workshift_report.userTickets;
 			})
 			.catch((e) => {
 				console.log(e);

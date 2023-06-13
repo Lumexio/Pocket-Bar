@@ -192,11 +192,11 @@
 							>¿Estas seguro de querer cancelar este ticket?</v-card-title
 						>
 						<v-card-actions>
-							<v-btn color="danger" outlined @click.prevent="closeCancelTicket"
+							<v-btn   @click.prevent="closeCancelTicket"
 								>Cancelar</v-btn
 							>
 							<v-spacer></v-spacer>
-							<v-btn color="success" outlined @click.prevent="cancelConfirm"
+							<v-btn color="success"  @click.prevent="cancelConfirm"
 								>Aceptar</v-btn
 							>
 						</v-card-actions>

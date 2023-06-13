@@ -72,10 +72,10 @@
 					max-width="500px"
 				>
 					<v-card>
-						<v-card-title v-show="editedItem.active === false" class="headline">
+						<v-card-title v-show="editedItem.active === 0" class="headline">
 						¿Estas seguro de querer habilitarlo?
 					</v-card-title>
-					<v-card-title v-show="editedItem.active === true" class="headline"	>
+					<v-card-title v-show="editedItem.active === 1" class="headline"	>
 						¿Quieres deshabilitarlo?
 					</v-card-title>
 						<v-card-actions v-on:keyup.enter="deleteItemConfirm">
@@ -98,13 +98,13 @@
 			<v-chip :color="getActivo(item.active)" dark>
 				<span
 					v-show="
-						item.active === true && getActivo(item.active) === `amber lighten-1`
+						item.active === 1 && getActivo(item.active) === `amber lighten-1`
 					"
 					>En servicio</span
 				>
 				<span
 					v-show="
-						item.active === false && getActivo(item.active) === `cyan darken-1`
+						item.active === 0 && getActivo(item.active) === `cyan darken-1`
 					"
 					>Fuera de servcio</span
 				>
@@ -114,7 +114,7 @@
 				<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
 
 				<v-icon
-				v-show="item.active === true"
+				v-show="item.active === 1"
 				small
 				dark
 				@click.prevent="deleteItem(item)"
@@ -122,7 +122,7 @@
 				mdi-lightbulb-on
 			</v-icon>
 			<v-icon
-				v-show="item.active === false"
+				v-show="item.active === 0"
 				small
 				dark
 				@click.prevent="deleteItem(item)"
@@ -146,7 +146,7 @@
 <script>
 import {
 	getProveedores,
-	deleteProveedores,
+	activationProveedores,
 	editProveedores,
 } from "@/api/proveedores.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
@@ -182,12 +182,12 @@ export default {
 		editedItem: {
 			id: "",
 			nombre_proveedor: "",
-			active: false,
+			active: null,
 		},
 		defaultItem: {
 			id: "",
 			nombre_proveedor: "",
-			active: false,
+			active: null,
 		},
 	}),
 	mounted() {
@@ -222,14 +222,11 @@ export default {
 			val || this.closeDelete();
 		},
 	},
-
-	created() {},
-
 	methods: {
 		getActivo(status) {
-			if (status === true) {
+			if (status === 1) {
 				return "amber lighten-1";
-			} else if (status == false) {
+			} else if (status === 0) {
 				return "cyan darken-1";
 			}
 		},
@@ -261,13 +258,9 @@ export default {
 			this.editedIndex = this.proveedorArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
 			this.dialogDelete = true;
-
-			let id = this.editedItem.id;
-			deleteProveedores(id);
 		},
-
 		deleteItemConfirm() {
-			this.proveedorArray.splice(this.editedIndex, 1);
+			activationProveedores(this.editedItem.id);
 			this.closeDelete();
 		},
 

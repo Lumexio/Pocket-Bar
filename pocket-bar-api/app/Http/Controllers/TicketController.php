@@ -518,10 +518,15 @@ class TicketController extends Controller
             }
             foreach ($request->products as $product) {
                 $detail = $ticket->details->where("articulos_tbl_id", $product["id"])->first();
+                if (!isset($detail)) {
+                    continue;
+                }
                 if ($detail->units <= $product["units"]) {
+                    $this->updateArticulo($product["id"], $detail->units, true);
                     $detail->delete();
                 } else {
                     $detail->units = $detail->units - $product["units"];
+                    $this->updateArticulo($product["id"], $product["units"], true);
                     $detail->save();
                 }
             }
@@ -531,6 +536,10 @@ class TicketController extends Controller
                 "error" => $e->getMessage()
             ], 500);
         }
+        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+        broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+        broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
+        broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         DB::commit();
         $newTicket = Ticket::with("details")->find($request->input("ticket_id"));
         return response()->json([

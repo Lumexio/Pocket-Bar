@@ -53,7 +53,7 @@ class ProveedorController extends Controller
             );
         } else {
             $proveedor = Proveedor::create($request->all());
-            proveedorCreated::dispatch($proveedor);
+            broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
             return response()->json(
                 [
                     'message' => 'success',
@@ -73,13 +73,14 @@ class ProveedorController extends Controller
     public function show(int $id): JsonResponse
     {
         $proveedor = Proveedor::find($id);
-        if (empty($proveedor))
+        if (empty($proveedor)) {
             return response()->json(
                 [
                     'message' => 'No se encontro el proveedor'
                 ],
                 404
             );
+        }
         return response()->json(
             [
                 'message' => 'success',
@@ -99,14 +100,16 @@ class ProveedorController extends Controller
     public function update(ProveedorUpdateRequest $request, int $id): JsonResponse
     {
         $proveedor = Proveedor::find($id);
-        if (empty($proveedor))
+        if (empty($proveedor)) {
             return response()->json(
                 [
                     'message' => 'No se encontro el proveedor'
                 ],
                 404
             );
+        }
         $proveedor->update($request->all());
+        broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
         return response()->json(
             [
                 'message' => 'success',
@@ -125,15 +128,17 @@ class ProveedorController extends Controller
     public function activate(int $id): JsonResponse
     {
         $proveedor = Proveedor::find($id);
-        if (empty($proveedor))
+        if (empty($proveedor)) {
             return response()->json(
                 [
                     'message' => 'No se encontro el proveedor'
                 ],
                 404
             );
+        }
         $proveedor->active = !$proveedor->active;
         $proveedor->save();
+        broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
         return response()->json(
             [
                 'message' => 'success',

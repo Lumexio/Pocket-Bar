@@ -2,7 +2,7 @@
 	<v-col cols="12" sm="9" md="9" lg="8">
 		<v-data-iterator
 			:dark="this.$store.getters.hasdarkflag"
-			:items="workshift_report"
+			:items="userTickets"
 			:items-per-page.sync="itemsPerPage"
 			:page.sync="page"
 			:search="search"
@@ -59,9 +59,7 @@
 							<v-card-title class="subheading font-weight-bold">
 								{{ item.name }}
 							</v-card-title>
-
 							<v-divider></v-divider>
-
 							<v-list dense>
 								<v-list-item>
 									<v-list-item-content class="text-left">
@@ -210,7 +208,7 @@
 export default {
 	name: "report",
 	props: {
-		workshift_report: {
+		userTickets: {
 			type: Array,
 			default: () => [],
 		},
@@ -246,7 +244,7 @@ export default {
 	}),
 	computed: {
 		numberOfPages() {
-			return Math.ceil(this.workshift_report.length / this.itemsPerPage);
+			return Math.ceil(this.userTickets.length / this.itemsPerPage);
 		},
 		filteredKeys() {
 			return this.keys.filter((key) => key !== "Name");

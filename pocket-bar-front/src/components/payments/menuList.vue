@@ -3,7 +3,7 @@
 		<v-card :dark="this.$store.getters.hasdarkflag">
 			<v-card-title
 				>Cortes y pagos <v-spacer></v-spacer> Ganancia actual: ${{
-					data_resp.total_night
+					ingresos.total
 				}}</v-card-title
 			>
 			<v-list flat>
@@ -26,7 +26,7 @@
 export default {
 	name: "menuList",
 	props: {
-		data_resp: {
+		ingresos: {
 			type: Object,
 			default: () => {},
 		},

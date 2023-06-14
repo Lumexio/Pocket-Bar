@@ -17,6 +17,7 @@ class CreateMesasTable extends Migration
             $table->id();
             $table->string('nombre_mesa', 100);
             $table->longText('descripcion_mesa')->nullable();
+            $table->boolean("active")->default(true);
             $table->timestamps();
             $table->engine = 'InnoDB';
         });

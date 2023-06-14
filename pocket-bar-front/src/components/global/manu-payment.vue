@@ -25,7 +25,7 @@ export default {
 		getCotizado()
 			.then((response) => {
 				console.log(response);
-				this.ingresos = response.workshift_report.ingresos;
+				this.ingresos = response.workshift_report;
 				this.userTickets = response.workshift_report.userTickets;
 			})
 			.catch((e) => {

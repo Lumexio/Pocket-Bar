@@ -65,7 +65,7 @@
 									<v-list-item-content class="text-left">
 										Tipo: {{ item.rol }}<br />
 										Total de venta: ${{ item.total_workshift_sales }}<br />
-										Total de propinas: ${{ item.totalTips }}
+										Total de propinas: ${{ item.total_tips }}
 									</v-list-item-content>
 								</v-list-item>
 								<v-list-group

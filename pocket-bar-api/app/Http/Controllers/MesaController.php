@@ -130,4 +130,30 @@ class MesaController extends Controller
             200
         );
     }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function activate(int $id): JsonResponse
+    {
+        $mesa = Mesa::find($id);
+        if (empty($mesa)) {
+            return response()->json(
+                [
+                    'message' => 'Mesa no encontrada'
+                ],
+                404
+            );
+        }
+        $mesa->active = !$mesa->active;
+        broadcast((new mesaCreated($mesa))->broadcastToEveryone());
+        return response()->json(
+            [
+                'message' => 'success',
+                'mesa' => $mesa
+            ],
+            200
+        );
+    }
 }

@@ -29,7 +29,10 @@
 				</v-list-item-group>
 			</v-list>
 		</v-card>
-	<modalConfirmation :dialogConfirmation.sync="dialogConfirmation" :title.sync="title" :placeholdertext.sync="placeholdertext" :flagBottonCreate="flagBottonCreate" >
+	<modalConfirmation :dialogConfirmation.sync="dialogConfirmation" :title.sync="title"  :flagBottonCreate="flagBottonCreate" >
+		<template v-slot:textmoneygeneral >
+			<v-text-field max-width="80%" clearable :label="placeholdertext"></v-text-field>
+		</template>
 		<template v-slot:buttonsuccess>
     <v-btn color="success">Aceptar</v-btn>
   </template>

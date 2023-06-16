@@ -3,7 +3,7 @@
   <v-card>
    <v-card-title>{{title}}</v-card-title>
    <v-card-text>
-    <v-text-field max-width="80%" clearable :label="placeholdertext"></v-text-field>
+    <slot name="textmoneygeneral"></slot>
    </v-card-text>
    <v-card-actions class="ma-2"><v-btn @click="onClose">{{cancel}}</v-btn>
    <v-spacer></v-spacer>
@@ -24,12 +24,6 @@ export default {
    type: String,
    default: "Confirmación",
   },
- 
-   placeholdertext: {
-   type: String,
-   default: "Dinero en caja",
-  },
- 
   cancel: {
    type: String,
    default: "Cancelar",

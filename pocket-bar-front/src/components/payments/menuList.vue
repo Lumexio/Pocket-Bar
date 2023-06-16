@@ -9,10 +9,10 @@
 			<v-card-text>
 				<v-row>
 					<v-col cols="12" sm="12" md="6" lg="6">
-						<v-btn @click.prevent="dialogConfirmation = true" color="purple darken-4">Inciar turno</v-btn>
+						<v-btn @click.prevent="toggleBox('open')" color="purple darken-4">Abrir caja</v-btn>
 					</v-col>
 					<v-col cols="12" sm="12" md="6" lg="6">
-						<v-btn color="pink darken-4">Terminar turno</v-btn>
+						<v-btn @click.prevent="toggleBox('close')" color="pink darken-4">Cerrar caja</v-btn>
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -29,7 +29,11 @@
 				</v-list-item-group>
 			</v-list>
 		</v-card>
-	<modalConfirmation :dialogConfirmation.sync="dialogConfirmation" />
+	<modalConfirmation :dialogConfirmation.sync="dialogConfirmation" :title.sync="title" :placeholdertext.sync="placeholdertext" :flagBottonCreate="flagBottonCreate" >
+		<template v-slot:buttonsuccess>
+    <v-btn color="success">Aceptar</v-btn>
+  </template>
+	</modalConfirmation>
 	</v-col>
 </template>
 
@@ -49,6 +53,9 @@ export default {
 	},
 	data: () => ({
 		dialogConfirmation: false,
+		flagBottonCreate: true,
+		title: "",
+		placeholdertext: "",
 		selectedItem: 1,
 
 		items: [
@@ -56,6 +63,19 @@ export default {
 			{ text: "Corte de la noche", icon: "mdi-cash-100", path: "/cortes" },
 		],
 	}),
+	methods: {
+		toggleBox(param) {
+			this.dialogConfirmation = true;
+			if (param==="open") {
+			this.title = "Abrir caja";
+			this.placeholdertext	="Dinero inicial en caja";
+			}else if (param==="close") {
+				
+				this.title = "Cerrar caja";
+				this.placeholdertext	="Dinero final en caja";
+			}
+		},
+	},
 };
 </script>
 

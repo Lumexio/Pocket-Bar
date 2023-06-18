@@ -15,7 +15,6 @@ export function getCotizado() {
           data.total_night = item.total_night;
           data.type = item.type;
           data.details = item.details;
-
         });
         const workshift_report = response.data.workshift_report;
 
@@ -93,8 +92,63 @@ export function postCancelticket(pack) {
       });
   });
 }
+export function postBoxOpen(pack) { 
+  console.log(pack);
+  return new Promise((resolve, reject) => {
+    axios
+      .post("api/workshift/start", pack)
+      .then(response => {
+        if (response.status === 200) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+            store.commit("setstatcode", null);
+          }, 2000);
+        }
+        resolve({
+          response
+        });
+      })
+      .catch((error) => {
+        reject(error);
+        if (error) {
+          store.commit("setdanger", true);
+        }
+      });
+  });
+}
+export function putBoxClose(pack) { 
+  console.log(pack);
+  return new Promise((resolve, reject) => {
+    axios
+      .put("api/workshift/close", pack)
+      .then(response => {
+        if (response.status === 200) {
+          store.commit("setsuccess", true);
+          store.commit("setstatcode", 200);
+          setTimeout(function () {
+            store.commit("setsuccess", null);
+            store.commit("setstatcode", null);
+          }, 2000);
+        }
+        resolve({
+          response
+        });
+      })
+      .catch((error) => {
+        reject(error);
+        if (error) {
+          store.commit("setdanger", true);
+          setTimeout(function () {
+            store.commit("setdanger", null);
+          }, 2000);
+        }
+      });
+  });
+}
 
 
 
 
-export default { getCotizado, postCerrarticket, postCancelticket, postNominas }
+export default { getCotizado, postCerrarticket, postCancelticket, postNominas, postBoxOpen,putBoxClose }

@@ -15,7 +15,6 @@ use Illuminate\Support\Collection;
 
 class WorkshiftController extends Controller
 {
-
     public function close(CloseRequest $request)
     {
         $activeWorkshift = Workshift::where('active', 1)->first();

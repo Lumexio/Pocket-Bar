@@ -38,16 +38,7 @@ class Articulo extends Model
     //ACtivity log system
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()
-            ->logOnly([
-                'nombre_articulo',
-                'cantidad_articulo',
-            ]);
-        // Chain fluent methods for configuration options
-        //$user = Auth::user();
-        //Auth::login($user);
-        activity()
-            ->causedBy(Auth::id());
+        return LogOptions::defaults();
     }
     public function user()
     {

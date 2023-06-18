@@ -86,11 +86,7 @@ export default {
 			{ text: "Corte de la noche", icon: "mdi-cash-100", path: "/cortes" },
 		],
 	}),
-	watch: {
-		activityIdentifier(val) {
-			console.log(val);
-		},
-	},
+
 	methods: {
 		moneyCheck(val) {
 			if (val === null && val <= 0) {
@@ -126,6 +122,3 @@ export default {
 	},
 };
 </script>
-
-<style>
-</style>

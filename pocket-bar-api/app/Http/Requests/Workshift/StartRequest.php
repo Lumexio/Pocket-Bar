@@ -14,7 +14,8 @@ class StartRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->rol_id == Rol::Gerencia->value or auth()->user()->rol_id == Rol::Administrativo->value or auth()->user()->rol_id == Rol::Cajero->value;
+
+        return auth()->user()->rol_id===Rol::Cajero->value;
     }
 
     /**

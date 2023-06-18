@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
@@ -52,9 +53,11 @@ class WorkshiftTest extends TestCase
      */
     public function test_start_workshift(): void
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Cajero->value)->first();
         Workshift::where('active', 1)->update(['active' => 0]);
-        $response = $this->actingAs($user)->post('/api/workshift/start');
+        $response = $this->actingAs($user)->post('/api/workshift/start', [
+            "start_money" => 1000
+        ]);
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -64,7 +67,7 @@ class WorkshiftTest extends TestCase
 
     public function test_start_workshift_unauthorized(): void
     {
-        $response = $this->post('/api/workshift/start', [], [
+        $response = $this->post('/api/workshift/start', ["start_money" => 1000], [
             'Accept' => 'application/json',
         ]);
 
@@ -73,8 +76,8 @@ class WorkshiftTest extends TestCase
 
     public function test_start_workshift_duplicated(): void
     {
-        $user = User::where("rol_id", "=", 1)->first();
-        $response = $this->actingAs($user)->post('/api/workshift/start', [], [
+        $user = User::where("rol_id", "=", Rol::Cajero->value)->first();
+        $response = $this->actingAs($user)->post('/api/workshift/start', ["start_money" => 1000], [
             'Accept' => 'application/json',
         ]);
 
@@ -86,9 +89,9 @@ class WorkshiftTest extends TestCase
 
     public function test_close_workshift(): void
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Cajero->value)->first();
         Ticket::whereNotIn("status", [TicketStatus::Closed->value, TicketStatus::Canceled->value])->update(['status' => TicketStatus::Closed->value]);
-        $response = $this->actingAs($user)->put('/api/workshift/close', [], [
+        $response = $this->actingAs($user)->put('/api/workshift/close', ["end_money" => 1000], [
             'Accept' => 'application/json',
         ]);
 
@@ -97,21 +100,31 @@ class WorkshiftTest extends TestCase
             'message',
             'saldoFavor',
             'workshift_report' => [
-                "*" => [
-                    "total_workshift_sales",
-                    "totalTips",
-                    "id",
-                    "rol",
-                    "name",
-                    "closed_tickets" => [
-                        "*" => $this->ticketStructure
-                    ],
-                    "non_closed_tickets" => [
-                        "*" => $this->ticketStructure
-                    ],
-                    "canceled_tickets" => [
-                        "*" => $this->ticketStructure
-                    ],
+                "ingresos" => [
+                    "total",
+                    "detail"
+                ],
+                "egresos" => [
+                    "total",
+                    "detail"
+                ],
+                "userTickets" => [
+                    "*" => [
+                        "total_workshift_sales",
+                        "total_tips",
+                        "id",
+                        "rol",
+                        "name",
+                        "closed_tickets" => [
+                            "*" => $this->ticketStructure
+                        ],
+                        "non_closed_tickets" => [
+                            "*" => $this->ticketStructure
+                        ],
+                        "canceled_tickets" => [
+                            "*" => $this->ticketStructure
+                        ],
+                    ]
                 ]
             ],
 
@@ -120,7 +133,7 @@ class WorkshiftTest extends TestCase
 
     public function test_close_workshift_unauthorized(): void
     {
-        $response = $this->put('/api/workshift/close', [], [
+        $response = $this->put('/api/workshift/close', ["end_money" => 1000], [
             'Accept' => 'application/json',
         ]);
 
@@ -129,9 +142,9 @@ class WorkshiftTest extends TestCase
 
     public function test_close_workshift_no_active(): void
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Cajero->value)->first();
         Workshift::where('active', 1)->update(['active' => 0]);
-        $response = $this->actingAs($user)->put('/api/workshift/close', [], [
+        $response = $this->actingAs($user)->put('/api/workshift/close', ["end_money" => 1000], [
             'Accept' => 'application/json',
         ]);
 

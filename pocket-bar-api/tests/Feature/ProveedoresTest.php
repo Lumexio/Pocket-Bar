@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,7 +22,7 @@ class ProveedoresTest extends TestCase
      */
     public function test_proveedores_list(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/proveedor/', [
             "Accept" => "application/json"
         ]);
@@ -45,7 +46,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_create(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/proveedor/', [
             "nombre_proveedor" => "ProveedorDePrueba",
             "descripcion" => "Descripcion de prueba",
@@ -70,7 +71,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_create_fail(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/proveedor/', [
             "nombre_proveedor" => "ProveedorDePrueba",
             "descripcion" => "Descripcion de prueba",
@@ -95,7 +96,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_update(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/proveedor/', [
             "nombre_proveedor" => "ProveedorDePrueba",
             "descripcion" => "Descripcion de prueba",
@@ -141,7 +142,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_update_not_found(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/proveedor/100', [
             "nombre_proveedor" => "ProveedorDePrueba",
             "descripcion" => "Descripcion de prueba",
@@ -154,7 +155,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_show(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/proveedor/1', [
             "Accept" => "application/json"
         ]);
@@ -175,7 +176,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_show_not_found(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/proveedor/100', [
             "Accept" => "application/json"
         ]);
@@ -224,7 +225,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_activate(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/proveedor/activate/1', [], [
             "Accept" => "application/json"
         ]);
@@ -245,7 +246,7 @@ class ProveedoresTest extends TestCase
 
     public function test_proveedores_activate_not_found(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/proveedor/activate/100', [], [
             "Accept" => "application/json"
         ]);

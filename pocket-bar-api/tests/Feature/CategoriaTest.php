@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,7 +22,7 @@ class CategoriaTest extends TestCase
      */
     public function test_categoria_list(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/categoria/');
         $response->assertStatus(200);
         $response->assertJsonStructure(
@@ -43,7 +44,7 @@ class CategoriaTest extends TestCase
 
     public function test_categoria_create(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/categoria/', [
             "nombre_categoria" => "categoriaUnoUwU",
             "descripcion_categoria" => "descripcion de la categoria"
@@ -83,7 +84,7 @@ class CategoriaTest extends TestCase
 
     public function test_categoria_create_conflict(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/categoria/', [
             "nombre_categoria" => "categoriaUnoUwU",
             "descripcion_categoria" => "descripcion de la categoria"
@@ -119,7 +120,7 @@ class CategoriaTest extends TestCase
 
     public function test_categoria_update(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/categoria/', [
             "nombre_categoria" => "categoriaUnoUwU",
             "descripcion_categoria" => "descripcion de la categoria"
@@ -178,7 +179,7 @@ class CategoriaTest extends TestCase
 
     public function test_categoria_update_not_found(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/categoria/100', [
             "nombre_categoria" => "categoriaUnoUwU",
             "descripcion_categoria" => "descripcion de la categoria"
@@ -195,7 +196,7 @@ class CategoriaTest extends TestCase
 
     public function test_categoria_activate(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/categoria/activate/1', [], [
             "Accept" => "application/json"
         ]);
@@ -247,7 +248,7 @@ class CategoriaTest extends TestCase
 
     public function test_categoria_activate_not_found(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/categoria/activate/100', [], [
             "Accept" => "application/json"
         ]);

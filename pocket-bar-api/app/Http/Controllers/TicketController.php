@@ -36,7 +36,10 @@ class TicketController extends Controller
     {
         $bartenders = User::where("rol_id", Rol::Bartender->value)->get();
         foreach ($bartenders as $bartender) {
-            broadcast((new BarraEvents($bartender->id, 5))->broadcastToEveryone());
+            try {
+                broadcast((new BarraEvents($bartender->id, 5))->broadcastToEveryone());
+            } catch (Throwable) {
+            }
         }
     }
 
@@ -74,15 +77,16 @@ class TicketController extends Controller
         $ticket->specifictip = $request->input('specifictip') ?? 0;
         $ticket->min_tip = round(($ticket->subtotal * $request->input('tip')) / 100, 2);
         $ticket->save();
-        if (auth()->user()->rol_id == 4) {
-            ticketCreatedMesero::dispatch(auth()->user()->id);
+        try {
+            if (auth()->user()->rol_id == 4) {
+                ticketCreatedMesero::dispatch(auth()->user()->id);
+            } elseif (auth()->user()->rol_id == 5) {
+                ticketCreatedBarra::dispatch(auth()->user()->id);
+            }
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-        } elseif (auth()->user()->rol_id == 5) {
-            ticketCreatedBarra::dispatch(auth()->user()->id);
-            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+        } catch (\Throwable $th) {
         }
-        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-        broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         return response()->json([
             "message" => "Se ha actualizado el ticket",
             "ticket" => $ticket
@@ -130,15 +134,18 @@ class TicketController extends Controller
             $this->createTicketDetails($items, $ticket);
             DB::commit();
             //ticketCreated::dispatch(auth()->user()->id);
-            if (auth()->user()->rol_id == 4) {
-                ticketCreatedMesero::dispatch(auth()->user()->id);
+            try {
+                if (auth()->user()->rol_id == 4) {
+                    ticketCreatedMesero::dispatch(auth()->user()->id);
+                    broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+                } elseif (auth()->user()->rol_id == 5) {
+                    ticketCreatedBarra::dispatch(auth()->user()->id);
+                    broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+                }
+                broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-            } elseif (auth()->user()->rol_id == 5) {
-                ticketCreatedBarra::dispatch(auth()->user()->id);
-                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            } catch (\Throwable $th) {
             }
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Exception $th) {
             DB::rollBack();
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
@@ -331,10 +338,13 @@ class TicketController extends Controller
             foreach ($ticket->details as $detail) {
                 $this->updateArticulo($detail->articulos_tbl_id, $detail->units, true);
             }
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            try {
+                broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+            } catch (\Throwable) {
+            }
             DB::commit();
         } catch (Throwable $th) {
             return response()->json([
@@ -417,17 +427,14 @@ class TicketController extends Controller
 
                 throw_if(!$ticket->save(), "Error al guardar en base de datos");
             }
-            if ($user->rol_id == Rol::Mesero->value) {
+            try {
+                broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-            } elseif ($user->rol_id == Rol::Bartender->value) {
-                broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
-                broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new MeseroEvents($ticketDetail->waiter_id))->broadcastToEveryone());
+            } catch (\Throwable) {
             }
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (Throwable $th) {
 
             return response()->json([
@@ -435,7 +442,7 @@ class TicketController extends Controller
             ], 500);
         }
 
-        broadcast((new MeseroEvents($ticketDetail->waiter_id))->broadcastToEveryone());
+
 
         $this->sendNotificationsToBarthenders();
 
@@ -480,18 +487,14 @@ class TicketController extends Controller
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             DB::commit();
-            ticketCreated::dispatch(auth()->user()->id);
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-            # code...
-            broadcast((new ticketCreatedMesero($ticket->user_id))->broadcastToEveryone());
-            broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
-
-            # code...
-            broadcast((new ticketCreatedBarra($ticket->user_id))->broadcastToEveryone());
-            //broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
-
-            //broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-            //broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
+            try {
+                ticketCreated::dispatch(auth()->user()->id);
+                broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new ticketCreatedMesero($ticket->user_id))->broadcastToEveryone());
+                broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
+                broadcast((new ticketCreatedBarra($ticket->user_id))->broadcastToEveryone());
+            } catch (\Throwable) {
+            }
         } catch (Throwable $th) {
             DB::rollBack();
             return response()->json([
@@ -536,10 +539,13 @@ class TicketController extends Controller
                 "error" => $e->getMessage()
             ], 500);
         }
-        broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-        broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
-        broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
-        broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+        try {
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         DB::commit();
         $newTicket = Ticket::with("details")->find($request->input("ticket_id"));
         return response()->json([

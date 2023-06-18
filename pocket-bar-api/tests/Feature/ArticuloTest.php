@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,7 +22,7 @@ class ArticuloTest extends TestCase
      */
     public function test_articulo_create()
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/articulo/create', [
             'nombre_articulo' => 'test',
             'cantidad_articulo' => 1,
@@ -55,7 +56,6 @@ class ArticuloTest extends TestCase
                 ]
             ]
         );
-
     }
 
     public function test_articulo_create_unauthorized()
@@ -90,7 +90,7 @@ class ArticuloTest extends TestCase
 
     public function test_articulo_list()
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/articulo/list');
         $response->assertStatus(200);
         $response->assertJsonStructure(
@@ -125,7 +125,7 @@ class ArticuloTest extends TestCase
 
     public function test_articulo_deactivate()
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/articulo/activate/1');
         $response->assertStatus(200);
         $response->assertJsonStructure(
@@ -153,8 +153,9 @@ class ArticuloTest extends TestCase
         );
     }
 
-    public function test_articulo_update(){
-        $user = User::where("name", "=", "admin")->first();
+    public function test_articulo_update()
+    {
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/articulo/update/1', [
             'nombre_articulo' => 'test',
             'cantidad_articulo' => 1,

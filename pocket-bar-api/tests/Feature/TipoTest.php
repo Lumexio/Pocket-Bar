@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,7 +22,7 @@ class TipoTest extends TestCase
      */
     public function test_tipo_index()
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/tipo');
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -40,7 +41,7 @@ class TipoTest extends TestCase
 
     public function test_tipo_store()
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/tipo', [
             'nombre_tipo' => 'test',
             'descripcion_tipo' => 'test'
@@ -60,7 +61,7 @@ class TipoTest extends TestCase
 
     public function test_tipo_show()
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/tipo/1');
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -77,7 +78,7 @@ class TipoTest extends TestCase
 
     public function test_tipo_update()
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/tipo/1', [
             'nombre_tipo' => 'test',
             'descripcion_tipo' => 'test'
@@ -97,7 +98,7 @@ class TipoTest extends TestCase
 
     public function test_tipo_active()
     {
-        $user = User::where("rol_id", "=", 1)->first();
+        $user = User::where("rol_id", "=", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/tipo/activate/1');
         $response->assertStatus(200);
         $response->assertJsonStructure([

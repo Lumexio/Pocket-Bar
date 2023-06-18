@@ -53,7 +53,10 @@ class ProveedorController extends Controller
             );
         } else {
             $proveedor = Proveedor::create($request->all());
-            broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+            try {
+                broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+            } catch (\Throwable) {
+            }
             return response()->json(
                 [
                     'message' => 'success',
@@ -109,7 +112,10 @@ class ProveedorController extends Controller
             );
         }
         $proveedor->update($request->all());
-        broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+        try {
+            broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json(
             [
                 'message' => 'success',
@@ -138,7 +144,10 @@ class ProveedorController extends Controller
         }
         $proveedor->active = !$proveedor->active;
         $proveedor->save();
-        broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+        try {
+            broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json(
             [
                 'message' => 'success',

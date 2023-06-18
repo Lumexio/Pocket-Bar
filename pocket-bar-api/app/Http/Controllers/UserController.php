@@ -43,8 +43,11 @@ class UserController extends Controller
     public function store(UsuarioValidationRequest $request): JsonResponse
     {
         $user = User::create($request->all());
-        broadcast((new userCreated())->broadcastToEveryone());
-        userCreated::dispatch($user);
+        try {
+            broadcast((new userCreated())->broadcastToEveryone());
+            userCreated::dispatch($user);
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'user' => $user
@@ -93,7 +96,10 @@ class UserController extends Controller
             );
         }
         $user->update($request->all());
-        userCreated::dispatch($user);
+        try {
+            userCreated::dispatch($user);
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'user' => $user
@@ -120,7 +126,10 @@ class UserController extends Controller
         }
         $user->active = !$user->active;
         $user->save();
-        userCreated::dispatch($user);
+        try {
+            userCreated::dispatch($user);
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'user' => $user

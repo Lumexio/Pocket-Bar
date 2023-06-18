@@ -35,7 +35,9 @@ jobs:
         run: cd pocket-bar-api
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+        run: |
+          cd pocket-bar-api
+          composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
       - name: Copy .env file
         run: cp .env.example .env

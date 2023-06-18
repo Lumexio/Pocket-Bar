@@ -1,0 +1,56 @@
+name: Laravel CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: testing_db
+          MYSQL_USER: testing_user
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: secret
+      
+      redis:
+        image: redis
+          
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1' # Ajusta la versión de PHP según tus necesidades
+          tools: composer
+      
+      - name: Change to Laravel directory
+        run: cd pocket-bar-api
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --no-suggest
+
+      - name: Copy .env file
+        run: cp .env.example .env
+
+      - name: Set up database
+        run: |
+          php artisan config:cache
+          php artisan migrate --seed
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Start websockets
+        run: php artisan websockets:serve
+        background: true
+
+      - name: Run tests
+        run: php artisan test

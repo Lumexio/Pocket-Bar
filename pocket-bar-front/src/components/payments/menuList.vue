@@ -38,6 +38,9 @@
 			:title.sync="title"
 			:flagBottonCreate="flagBottonCreate"
 		>
+			<template v-slot:textalert>
+				{{ message }}
+			</template>
 			<template v-slot:textmoneygeneral>
 				<v-text-field
 					prepend-inner-icon="mdi-cash"
@@ -52,8 +55,15 @@
 					:disabled="moneyCheck(dinero_inicial)"
 					@click="openBox()"
 					color="success"
-					>Aceptar</v-btn
 				>
+					<span v-show="cargando == false">aceptar</span>
+					<v-progress-circular
+						v-show="cargando == true"
+						:active="cargando"
+						:indeterminate="cargando"
+						:size="20"
+					></v-progress-circular
+				></v-btn>
 			</template>
 		</modalConfirmation>
 	</v-col>
@@ -78,7 +88,9 @@ export default {
 		flagBottonCreate: true,
 		activityIdentifier: "",
 		title: "",
+		cargando: false,
 		placeholdertext: "",
+		message: "",
 		selectedItem: 1,
 		dinero_inicial: null,
 		items: [
@@ -89,7 +101,7 @@ export default {
 
 	methods: {
 		moneyCheck(val) {
-			if (val === null && val <= 0) {
+			if ((val === null && val <= 0) || this.cargando === true) {
 				return true;
 			} else if (val >= 0) {
 				return false;
@@ -109,11 +121,23 @@ export default {
 		},
 		openBox() {
 			if (this.activityIdentifier === "open") {
-				postBoxOpen({ start_money: this.dinero_inicial }).then((response) => {
-					console.log(response);
-				});
-			} else if (this.activityIdentifier === "close") {
+				postBoxOpen({ start_money: this.dinero_inicial })
+					.then((response) => {
+						console.log(response);
+						
+					})
+					.catch((error) => {
+						if (error.data.message) {
+							this.message = error.data.message;
+							this.cargando = true;
+							setTimeout(() => {
+								this.message = "";
+								this.cargando = false;
+							}, 2000);
 				
+						}
+					});
+			} else if (this.activityIdentifier === "close") {
 				putBoxClose({ end_money: this.dinero_inicial }).then((response) => {
 					console.log(response);
 				});

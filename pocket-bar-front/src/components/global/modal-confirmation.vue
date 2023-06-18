@@ -4,6 +4,7 @@
    <v-card-title>{{title}}</v-card-title>
    <v-card-text>
     <slot name="textmoneygeneral"></slot>
+    <slot name="textalert"></slot>
    </v-card-text>
    <v-card-actions class="ma-2"><v-btn @click="onClose">{{cancel}}</v-btn>
    <v-spacer></v-spacer>

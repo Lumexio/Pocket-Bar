@@ -13,11 +13,10 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: test_db
-        ports:
-          - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          MYSQL_DATABASE: testing_db
+          MYSQL_USER: testing_user
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: secret1
       
       redis:
         image: redis
@@ -43,19 +42,20 @@ jobs:
       - name: Copy .env file
         run: cp pocket-bar-api/.env.example pocket-bar-api/.env
 
-      # - name: Set up database
-      #   run: |
-      #     cd pocket-bar-api
-      #     php artisan config:cache
-      #     sleep 10 # Espera de 10 segundos
-      #     php artisan migrate --seed
+      - name: Set up database
+        run: |
+          cd pocket-bar-api
+          php artisan config:cache
+          sleep 10 # Espera de 10 segundos
+          php artisan migrate --seed
+
 
       - name: Generate application key
         run: |
           cd pocket-bar-api
           php artisan key:generate
 
-      - name: Execute tests (Unit and Feature tests) using PHPUnit
-        env:
-          DB_PORT: ${{ job.services.mysql.ports[3306] }}
-        run: ./vendor/bin/phpunit
+      - name: Run tests
+        run: |
+          cd pocket-bar-api
+          php artisan test

@@ -42,20 +42,20 @@ jobs:
       - name: Copy .env file
         run: cp pocket-bar-api/.env.example pocket-bar-api/.env
 
-      - name: Set up database
-        run: |
-          cd pocket-bar-api
-          php artisan config:cache
-          sleep 10 # Espera de 10 segundos
-          php artisan migrate --seed
-
-
       - name: Generate application key
         run: |
           cd pocket-bar-api
           php artisan key:generate
 
       - name: Run tests
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: testing_db
+          DB_USERNAME: root
+          DB_PASSWORD: secret1
         run: |
           cd pocket-bar-api
+          php artisan migrate --seed
           php artisan test

@@ -13,10 +13,14 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: testing_db
-          MYSQL_USER: testing_user
+          MYSQL_USER: user
           MYSQL_PASSWORD: secret
-          MYSQL_ROOT_PASSWORD: secret1
+          MYSQL_DATABASE: testdatabase
+          MYSQL_ROOT_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       
       redis:
         image: redis
@@ -50,11 +54,10 @@ jobs:
       - name: Run tests
         env:
           DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
+          DB_PORT: 33306
           DB_DATABASE: testing_db
           DB_USERNAME: root
-          DB_PASSWORD: secret1
+          DB_PASSWORD: root
         run: |
           cd pocket-bar-api
           php artisan migrate --seed

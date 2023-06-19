@@ -142,8 +142,8 @@ export function putBoxClose(pack) {
         });
       })
       .catch((error) => {
-        reject(error);
-        if (error) {
+        reject(error.response);
+        if (error.response.status != 400&& error.response.status != 200) {
           store.commit("setdanger", true);
           setTimeout(function () {
             store.commit("setdanger", null);

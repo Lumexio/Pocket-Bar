@@ -9,12 +9,22 @@
 			<v-card-text>
 				<v-row>
 					<v-col cols="12" sm="12" md="6" lg="6">
-						<v-btn @click.prevent="toggleBox('open')" color="purple darken-4"
+						<v-btn
+							@click.prevent="toggleBox('open')"
+							:color="
+								$store.getters.hasdarkflag
+									? 'purple darken-4'
+									: 'purple accent-1'
+							"
 							>Abrir caja</v-btn
 						>
 					</v-col>
 					<v-col cols="12" sm="12" md="6" lg="6">
-						<v-btn @click.prevent="toggleBox('close')" color="pink darken-4"
+						<v-btn @click.prevent="toggleBox('close')" :color="
+								$store.getters.hasdarkflag
+									? 'pink darken-4'
+									: 'pink accent-1'
+							"
 							>Cerrar caja</v-btn
 						>
 					</v-col>
@@ -54,7 +64,7 @@
 				<v-btn
 					:disabled="moneyCheck(dinero_inicial)"
 					@click="openBox()"
-					color="success"
+					:color="$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'"
 				>
 					<span v-show="cargando == false">aceptar</span>
 					<v-progress-circular
@@ -124,7 +134,6 @@ export default {
 				postBoxOpen({ start_money: this.dinero_inicial })
 					.then((response) => {
 						console.log(response);
-						
 					})
 					.catch((error) => {
 						if (error.data.message) {
@@ -134,13 +143,23 @@ export default {
 								this.message = "";
 								this.cargando = false;
 							}, 2000);
-				
 						}
 					});
 			} else if (this.activityIdentifier === "close") {
-				putBoxClose({ end_money: this.dinero_inicial }).then((response) => {
-					console.log(response);
-				});
+				putBoxClose({ end_money: this.dinero_inicial })
+					.then((response) => {
+						console.log(response);
+					})
+					.catch((error) => {
+						if (error.data.message) {
+							this.message = error.data.message;
+							this.cargando = true;
+							setTimeout(() => {
+								this.message = "";
+								this.cargando = false;
+							}, 2000);
+						}
+					});
 			}
 		},
 	},

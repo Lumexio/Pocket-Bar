@@ -16,7 +16,7 @@ jobs:
           MYSQL_DATABASE: testing_db
           MYSQL_USER: testing_user
           MYSQL_PASSWORD: secret
-          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: secret1
       
       redis:
         image: redis
@@ -40,9 +40,7 @@ jobs:
           composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
       - name: Copy .env file
-        run: |
-          cd pocket-bar-api
-          cp .env.example .env
+        run: cp pocket-bar-api/.env.example pocket-bar-api/.env
 
       - name: Set up database
         run: |

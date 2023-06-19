@@ -130,35 +130,25 @@
 					<v-icon left>mdi-logout</v-icon> Cerrar sesión
 				</v-btn>
 			</div>
-			<!-- <v-dialog
-				:dark="$store.getters.hasdarkflag"
-				v-model="dialogLogout"
-				max-width="500px"
-			>
-				<v-card>
-					<v-card-title class="headline justify-center"
-						>¿Quieres cerrar sesión?</v-card-title
-					>
-					<v-card-actions>
-						<v-spacer></v-spacer>
-						<v-btn large @click.prevent="dialogLogout = false">Cancelar</v-btn>
-						<v-btn large color="success" @click.prevent="logoutConfirm"
-							>Aceptar</v-btn
-						>
-						<v-spacer></v-spacer>
-					</v-card-actions>
-				</v-card>
-			</v-dialog> -->
-			<modalConfirmation
-				:dialogConfirmation.sync="dialogLogout"
-			>
-			<template	v-slot:titledialog>
-					¿Quieres cerrar sesión?
-			</template>
+			<modalConfirmation :dialogConfirmation.sync="dialogLogout">
+				<template v-slot:titledialog> ¿Quieres cerrar sesión? </template>
 				<template v-slot:buttonsuccess>
-					<v-btn large :color="$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'" @click.prevent="logoutConfirm"
-						>Aceptar</v-btn
+					<v-btn
+						large
+						:disabled="cargando == true"
+						:color="
+							$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
+						"
+						@click.prevent="logoutConfirm"
 					>
+						<span v-show="cargando == false">confirmar</span>
+						<v-progress-circular
+							v-show="cargando == true"
+							:active="cargando"
+							:indeterminate="cargando"
+							:size="20"
+						></v-progress-circular>
+					</v-btn>
 				</template>
 			</modalConfirmation>
 		</template>
@@ -175,9 +165,8 @@ export default {
 	data: () => ({
 		dialogLogout: false,
 		switchdark: false,
-	
+		cargando: false,
 		itemsmain: [
-			//{ path: "/home", title: "Home", icon: "mdi-home" },
 			{ path: "/usuarios", title: "Usuarios", icon: "mdi-account-multiple" },
 			{
 				path: "/articulos",
@@ -245,7 +234,6 @@ export default {
 		],
 	}),
 	computed: {
-
 		hasrol() {
 			return store.getters.hasrol;
 		},
@@ -254,21 +242,32 @@ export default {
 		switchdark(val) {
 			this.$store.commit("setdarkflag", val);
 		},
-		// dialogDelete(val) {
-		// 	val || this.closeDelete();
-		// },
 	},
 	created() {
 		this.checkDark();
 	},
 	methods: {
 		logoutConfirm() {
-			Logout().then((res) => {
-				if (res.status === 200) {
-					this.logout();
-					this.dialogLogout = false;
-				}
-			});
+			this.cargando = true;
+			Logout()
+				.then((res) => {
+					if (res.status === 200) {
+						this.logout()
+							this.cargando = false;
+						this.dialogLogout = false;
+					
+					}
+				})
+				.catch((error) => {
+					if (error.data.message) {
+						this.message = error.data.message;
+						this.cargando = true;
+						setTimeout(() => {
+							this.message = "";
+							this.cargando = false;
+						}, 2000);
+					}
+				});
 		},
 		closeDelete() {
 			this.dialogDelete = false;
@@ -307,7 +306,6 @@ export default {
 		},
 		logout() {
 			let commit = (store.state.token = null);
-
 			this.$store.dispatch("logout", commit);
 			this.$router.push("/");
 		},

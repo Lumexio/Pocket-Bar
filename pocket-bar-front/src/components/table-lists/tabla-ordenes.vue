@@ -57,7 +57,7 @@
 
 						<v-card-text style="text-align: start">
 							<v-row>
-								<v-col >
+								<v-col>
 									<b>Nombre mesero:</b>
 									<p>{{ editedItem.user_name }}</p>
 
@@ -182,7 +182,7 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog
+				<!-- <v-dialog
 					:dark="$store.getters.hasdarkflag"
 					v-model="dialogCancel"
 					max-width="550px"
@@ -192,16 +192,37 @@
 							>¿Estas seguro de querer cancelar este ticket?</v-card-title
 						>
 						<v-card-actions>
-							<v-btn   @click.prevent="closeCancelTicket"
-								>Cancelar</v-btn
-							>
+							<v-btn @click.prevent="closeCancelTicket">Cancelar</v-btn>
 							<v-spacer></v-spacer>
-							<v-btn color="success"  @click.prevent="cancelConfirm"
+							<v-btn color="success" @click.prevent="cancelConfirm"
 								>Aceptar</v-btn
 							>
 						</v-card-actions>
 					</v-card>
-				</v-dialog>
+				</v-dialog> -->
+				<modalConfirmation :dialogConfirmation.sync="dialogCancel">
+					<template v-slot:titledialog>
+						¿Estas seguro de querer cancelar este ticket?
+					</template>
+					<template v-slot:buttonsuccess>
+						<v-btn
+							large
+							:disabled="cargando2 == true"
+							:color="
+								$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
+							"
+							@click.prevent="cancelConfirm"
+						>
+							<span v-show="cargando2 == false">confirmar</span>
+							<v-progress-circular
+								v-show="cargando2 == true"
+								:active="cargando2"
+								:indeterminate="cargando2"
+								:size="20"
+							></v-progress-circular>
+						</v-btn>
+					</template>
+				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-btn
@@ -219,7 +240,6 @@
 						item.status != 'Cerrado' &&
 						item.status != 'Cancelado'
 					"
-					
 					small
 					dark
 					color="red darken-4"
@@ -245,14 +265,17 @@
 <script>
 import { getTickets } from "@/api/tickets.js";
 import { postCerrarticket, postCancelticket } from "@/api/cortes.js";
+import modalConfirmation from "../global/modal-confirmation.vue";
 export default {
 	name: "tabla-ordenes",
+	components: { modalConfirmation },
 	data: () => ({
 		changeMoney: 0,
 		bringedMoney: 0,
 		type_pay_cash: "cash",
 		type_pay_card: "",
 		amount_card: null,
+		cargando2:false,
 		amount_cash: null,
 		amount_cash_ingresed: null,
 		voucher: null,
@@ -447,12 +470,13 @@ export default {
 				});
 		},
 		cancelConfirm() {
+			this.cargando2 = true;
 			postCancelticket({ id: this.editedItemCancel.id, confirm_ticket: false })
 				.then((response) => {
-				
 					if (response.response.data.status == 200) {
 						this.dialogCancel = false;
 						this.cargando = false;
+						this.cargando2 = false;
 					}
 				})
 				.catch((e) => {

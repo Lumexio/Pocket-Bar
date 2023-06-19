@@ -130,7 +130,7 @@
 					<v-icon left>mdi-logout</v-icon> Cerrar sesión
 				</v-btn>
 			</div>
-			<v-dialog
+			<!-- <v-dialog
 				:dark="$store.getters.hasdarkflag"
 				v-model="dialogLogout"
 				max-width="500px"
@@ -148,20 +148,34 @@
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-dialog>
+			</v-dialog> -->
+			<modalConfirmation
+				:dialogConfirmation.sync="dialogLogout"
+			>
+			<template	v-slot:titledialog>
+					¿Quieres cerrar sesión?
+			</template>
+				<template v-slot:buttonsuccess>
+					<v-btn large :color="$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'" @click.prevent="logoutConfirm"
+						>Aceptar</v-btn
+					>
+				</template>
+			</modalConfirmation>
 		</template>
 	</v-navigation-drawer>
 </template>
 <script>
 import store from "@/store.js";
 import router from "@/router";
+import modalConfirmation from "../global/modal-confirmation.vue";
 import { Logout } from "@/api/usuarios.js";
 export default {
 	name: "sidebar",
-	components: {},
+	components: { modalConfirmation },
 	data: () => ({
 		dialogLogout: false,
 		switchdark: false,
+	
 		itemsmain: [
 			//{ path: "/home", title: "Home", icon: "mdi-home" },
 			{ path: "/usuarios", title: "Usuarios", icon: "mdi-account-multiple" },
@@ -231,6 +245,7 @@ export default {
 		],
 	}),
 	computed: {
+
 		hasrol() {
 			return store.getters.hasrol;
 		},
@@ -301,7 +316,8 @@ export default {
 </script>
 <style lang="scss">
 #app {
-	font-family:  "Cascadia code", Verdana, Tahoma, sans-serif, Helvetica, Arial, sans-serif;
+	font-family: "Cascadia code", Verdana, Tahoma, sans-serif, Helvetica, Arial,
+		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;

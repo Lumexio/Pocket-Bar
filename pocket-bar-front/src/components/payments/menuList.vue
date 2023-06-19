@@ -20,10 +20,10 @@
 						>
 					</v-col>
 					<v-col cols="12" sm="12" md="6" lg="6">
-						<v-btn @click.prevent="toggleBox('close')" :color="
-								$store.getters.hasdarkflag
-									? 'pink darken-4'
-									: 'pink accent-1'
+						<v-btn
+							@click.prevent="toggleBox('close')"
+							:color="
+								$store.getters.hasdarkflag ? 'pink darken-4' : 'pink accent-1'
 							"
 							>Cerrar caja</v-btn
 						>
@@ -43,11 +43,10 @@
 				</v-list-item-group>
 			</v-list>
 		</v-card>
-		<modalConfirmation
-			:dialogConfirmation.sync="dialogConfirmation"
-			:title.sync="title"
-			:flagBottonCreate="flagBottonCreate"
-		>
+		<modalConfirmation :dialogConfirmation.sync="dialogConfirmation">
+			<template v-slot:titledialog>
+				{{ title }}
+			</template>
 			<template v-slot:textalert>
 				{{ message }}
 			</template>
@@ -64,7 +63,9 @@
 				<v-btn
 					:disabled="moneyCheck(dinero_inicial)"
 					@click="openBox()"
-					:color="$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'"
+					:color="
+						$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
+					"
 				>
 					<span v-show="cargando == false">aceptar</span>
 					<v-progress-circular

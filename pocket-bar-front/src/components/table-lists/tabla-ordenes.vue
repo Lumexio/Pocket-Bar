@@ -154,52 +154,37 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialogCierreConfirm"
-					max-width="550px"
-				>
-					<v-card>
-						<v-card-title class="headline"
-							>¿Estas seguro de querer cerrar este ticket?</v-card-title
-						>
-						<v-card-text class="text-left"
-							><h2 v-if="amount_cash">Efectivo: {{ bringedMoney }}</h2>
+				<modalConfirmation :dialogConfirmation.sync="dialogCierreConfirm">
+					<template v-slot:titledialog>
+						¿Estas seguro de querer cerrar este ticket?
+					</template>
+					<template v-slot:textalert>
+						<h2 v-if="amount_cash">Efectivo: {{ bringedMoney }}</h2>
 							<h2 v-if="amount_card">Tarjeta: {{ amount_card }}</h2>
 							<h2>
 								Total ingresado: ${{ toNumber(amount_cash, amount_card) }}
 							</h2>
-							<h2>Cambio: ${{ changeMoney }}</h2></v-card-text
+							<h2>Cambio: ${{ changeMoney }}</h2>
+					</template>
+					<template v-slot:buttonsuccess>
+						<v-btn
+							large
+							:disabled="cargando2 == true"
+							:color="
+								$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
+							"
+							@click.prevent="cierreItemConfirm"
 						>
-						<v-card-actions>
-							<v-btn color="danger" outlined @click.prevent="closeCierreTicket"
-								>Cancelar</v-btn
-							>
-							<v-spacer></v-spacer>
-							<v-btn color="success" outlined @click.prevent="cierreItemConfirm"
-								>Aceptar</v-btn
-							>
-						</v-card-actions>
-					</v-card>
-				</v-dialog>
-				<!-- <v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialogCancel"
-					max-width="550px"
-				>
-					<v-card>
-						<v-card-title class="headline"
-							>¿Estas seguro de querer cancelar este ticket?</v-card-title
-						>
-						<v-card-actions>
-							<v-btn @click.prevent="closeCancelTicket">Cancelar</v-btn>
-							<v-spacer></v-spacer>
-							<v-btn color="success" @click.prevent="cancelConfirm"
-								>Aceptar</v-btn
-							>
-						</v-card-actions>
-					</v-card>
-				</v-dialog> -->
+							<span v-show="cargando2 == false">confirmar</span>
+							<v-progress-circular
+								v-show="cargando2 == true"
+								:active="cargando2"
+								:indeterminate="cargando2"
+								:size="20"
+							></v-progress-circular>
+						</v-btn>
+					</template>
+				</modalConfirmation>
 				<modalConfirmation :dialogConfirmation.sync="dialogCancel">
 					<template v-slot:titledialog>
 						¿Estas seguro de querer cancelar este ticket?
@@ -209,7 +194,7 @@
 							large
 							:disabled="cargando2 == true"
 							:color="
-								$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
+								$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
 							"
 							@click.prevent="cancelConfirm"
 						>
@@ -402,21 +387,11 @@ export default {
 
 			return b;
 		},
-
 		changePayment(payment, totalToPay) {
 			this.bringedMoney = Number(payment);
 			this.changeMoney = Number(payment) - Number(totalToPay);
 			this.amount_cash = Number(payment) - this.changeMoney;
 		},
-		// disablecheck(rol, cancelflag) {
-		// 	let disabled;
-		// 	if ((cancelflag == 0 && rol == 3) || (cancelflag == 1 && rol == 3)) {
-		// 		disabled = true;
-		// 	} else {
-		// 		disabled = false;
-		// 	}
-		// 	return disabled;
-		// },
 		getColor(status) {
 			if (status === "Por entregar") return "orange lighten-2";
 			else if (status === "Entregado") return "blue darken-1";
@@ -433,10 +408,6 @@ export default {
 		},
 		closeCierreTicket() {
 			this.dialogCierreConfirm = false;
-			// this.$nextTick(() => {
-			// 	this.editedItemCancel = Object.assign({}, this.defaultItem);
-			// 	this.editedIndex = -1;
-			// });
 		},
 		closeCancelTicket() {
 			this.dialogCancel = false;

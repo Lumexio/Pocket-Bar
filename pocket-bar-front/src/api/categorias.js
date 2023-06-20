@@ -11,7 +11,7 @@ export function getCategorias(categoriaArray) {
       .then(response => {
         const categoria = response.data.categorias;
         const stats = response.status;
-        
+
         categoria.forEach((element) => {
           let datos = {
             id: element.id,
@@ -23,7 +23,7 @@ export function getCategorias(categoriaArray) {
           if (!datos) return;
           categoriaArray.push(datos);
         });
-        
+
         resolve({
           stats, categoriaArray
         });
@@ -52,8 +52,13 @@ export function postCategorias(enviar) {
       }
     });
 }
-export function deleteCategoria(id) {
-  axios.put("api/categoria/activate/" + id).catch((error) => console.log(error));
+export function activateCategoria(id) {
+  return new Promise((resolve, reject) => {
+    axios.put("api/categoria/activate/" + id).then((response) => {
+      response;
+      resolve(response);
+    }).catch((error) => console.log(reject(error)));
+  });
 }
 export function editCategoria(url) {
   axios
@@ -64,4 +69,4 @@ export function editCategoria(url) {
     .catch((error) => console.log(error));
 }
 
-export default { getCategorias, postCategorias, deleteCategoria, editCategoria }
+export default { getCategorias, postCategorias, activateCategoria, editCategoria }

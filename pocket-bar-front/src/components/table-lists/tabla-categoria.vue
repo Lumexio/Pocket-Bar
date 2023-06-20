@@ -76,33 +76,34 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialogDelete"
-					max-width="500px"
-				>
-					<v-card>
-						<v-card-title v-show="editedItem.active === 0" class="headline">
+				<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+					<template v-slot:titledialog>
+						<span v-show="editedItem.active === 0" class="headline">
 						¿Estas seguro de querer habilitarlo?
-					</v-card-title>
-					<v-card-title v-show="editedItem.active === 1" class="headline"	>
+					</span>
+					<span v-show="editedItem.active === 1" class="headline"	>
 						¿Quieres deshabilitarlo?
-					</v-card-title>
-						<v-card-actions>
-							<v-spacer></v-spacer>
-							<v-btn   @click.prevent="closeDelete"
-								>Cancelar</v-btn
-							>
-							<v-btn
-								color="blue darken-1"
-								
-								@click.prevent="deleteItemConfirm"
-								>Aceptar</v-btn
-							>
-							<v-spacer></v-spacer>
-						</v-card-actions>
-					</v-card>
-				</v-dialog>
+					</span>
+					</template>
+					<template v-slot:buttonsuccess>
+						<v-btn
+							large
+							:disabled="cargando2 == true"
+							:color="
+								$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
+							"
+							@click.prevent="activateItemConfirm"
+						>
+							<span v-show="cargando2 == false">confirmar</span>
+							<v-progress-circular
+								v-show="cargando2 == true"
+								:active="cargando2"
+								:indeterminate="cargando2"
+								:size="20"
+							></v-progress-circular>
+						</v-btn>
+					</template>
+				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
 			<v-chip :color="getActivo(item.active)" dark>
@@ -149,22 +150,29 @@
 				</td>
 			</template>
 		</v-data-table>
+
 	</v-card>
+	
 </template>
 
 <script>
+import modalConfirmation from "../global/modal-confirmation.vue";
 import {
 	getCategorias,
-	deleteCategoria,
+	activateCategoria,
 	editCategoria,
 } from "@/api/categorias.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
-	nombre_categoria: "tabla-categoria",
+	name: "tabla-categoria",
+	components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		dialog: false,
-		dialogDelete: false,
+		dialogActivate: false,
 		search: "",
+		cargando2: false,
 		cargando: true,
 		expanded: [],
 		headers: [
@@ -228,7 +236,7 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
@@ -271,11 +279,15 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.categoriaArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
-		deleteItemConfirm() {
-			this.categoriaArray.splice(this.editedIndex, 1);
-			deleteCategoria(this.editedItem.id);
+		activateItemConfirm() {
+			this.cargando2 = true;
+			activateCategoria(this.editedItem.id).then((response) => {
+				if (response.status === 200) {
+					this.cargando2 = false;
+				}
+			})
 			this.closeDelete();
 		},
 
@@ -288,7 +300,7 @@ export default {
 		},
 
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;

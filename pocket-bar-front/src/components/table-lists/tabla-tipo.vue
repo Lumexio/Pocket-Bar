@@ -1,38 +1,16 @@
 <template>
-	<v-data-table
-		:dark="this.$store.getters.hasdarkflag"
-		:headers="headers"
-		show-expand
-		:expanded.sync="expanded"
-		:items="tipoArray"
-		sort-by="cantidad_articulo"
-		class="elevation-1"
-		:search="search"
-		:custom-filter="filterOnlyCapsText.toUpperCase"
-	>
+	<v-data-table :dark="this.$store.getters.hasdarkflag" :headers="headers" show-expand :expanded.sync="expanded"
+		:items="tipoArray" sort-by="cantidad_articulo" class="elevation-1" :search="search"
+		:custom-filter="filterOnlyCapsText.toUpperCase">
 		<template v-slot:top>
 			<v-toolbar flat color="transparent">
 				<v-toolbar-title>Tabla tipo</v-toolbar-title>
 				<v-divider class="ml-4" inset vertical></v-divider>
 				<v-spacer></v-spacer>
-				<v-text-field
-					v-model="search"
-					label="Buscar tipo"
-					class="mt-4"
-					id="onsearch"
-				></v-text-field>
+				<v-text-field v-model="search" label="Buscar tipo" class="mt-4" id="onsearch"></v-text-field>
 			</v-toolbar>
-			<v-progress-linear
-				height="6"
-				indeterminate
-				color="cyan"
-				:active="cargando"
-			></v-progress-linear>
-			<v-dialog
-				:dark="$store.getters.hasdarkflag"
-				v-model="dialog"
-				max-width="500px"
-			>
+			<v-progress-linear height="6" indeterminate color="cyan" :active="cargaTabla"></v-progress-linear>
+			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
 				<v-card>
 					<v-card-title>
 						<h1 class="headline">{{ formTitle }}</h1>
@@ -41,10 +19,7 @@
 						<v-container>
 							<v-row>
 								<v-col cols="12" sm="6" md="4">
-									<v-text-field
-										v-model="editedItem.nombre_tipo"
-										label="Nombre"
-									></v-text-field>
+									<v-text-field v-model="editedItem.nombre_tipo" label="Nombre"></v-text-field>
 								</v-col>
 							</v-row>
 						</v-container>
@@ -60,64 +35,42 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
-			<v-dialog
-				:dark="$store.getters.hasdarkflag"
-				v-model="dialogDelete"
-				max-width="500px"
-			>
-				<v-card>
-					<v-card-title v-show="editedItem.active === 0" class="headline">
+
+			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+				<template v-slot:titledialog>
+					<span v-show="editedItem.active === 0" class="headline">
 						¿Estas seguro de querer habilitarlo?
-					</v-card-title>
-					<v-card-title v-show="editedItem.active === 1" class="headline"	>
+					</span>
+					<span v-show="editedItem.active === 1" class="headline">
 						¿Quieres deshabilitarlo?
-					</v-card-title>
-					<v-card-actions v-on:keyup.enter="activationConfirm">
-						<v-spacer></v-spacer>
-						<v-btn  @click.prevent="closeDelete"
-							>Cancelar</v-btn
-						>
-						<v-btn color="blue darken-1"  @click.prevent="activationConfirm"
-							>Aceptar</v-btn
-						>
-						<v-spacer></v-spacer>
-					</v-card-actions>
-				</v-card>
-			</v-dialog>
+					</span>
+				</template>
+				<template v-slot:buttonsuccess>
+					<v-btn v-on:keyup.enter="activationConfirm" large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
+						" @click.prevent="activationConfirm">
+						<span v-show="cargaDialog == false">confirmar</span>
+						<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
+							:size="20"></v-progress-circular>
+					</v-btn>
+				</template>
+			</modalConfirmation>
 		</template>
 		<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" dark>
-				<span
-					v-show="
-						item.active === 1 && getActivo(item.active) === `amber lighten-1`
-					"
-					>En servicio</span
-				>
-				<span
-					v-show="
-						item.active === 0 && getActivo(item.active) === `cyan darken-1`
-					"
-					>Fuera de servcio</span
-				>
+			<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
+				<span v-show="item.active === 1 && getActivo(item.active) === `amber lighten-1`
+					">En servicio</span>
+				<span v-show="item.active === 0 && getActivo(item.active) === `cyan darken-1`
+					">Fuera de servcio</span>
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
-
-			<v-icon
-				v-show="item.active === 1"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
+			<v-icon small :dark="$store.getters.hasdarkflag" @click.prevent="editItem(item)">
+				mdi-pencil
+			</v-icon>
+			<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
 				mdi-lightbulb-on
 			</v-icon>
-			<v-icon
-				v-show="item.active === 0"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
+			<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
 				mdi-lightbulb-on-outline
 			</v-icon>
 		</template>
@@ -133,15 +86,20 @@
 </template>
 
 <script>
+import modalConfirmation from "../global/modal-confirmation.vue";
 import { getTipos, activationTipos, editTipos } from "@/api/tipos.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
-	nombre_tipo: "tabla-tipo",
+	name: "tabla-tipo",
+	components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		dialog: false,
-		dialogDelete: false,
+		dialogActivate: false,
 		search: "",
-		cargando: true,
+		cargaTabla: true,
+		cargaDialog: false,
 		expanded: [],
 		headers: [
 			{
@@ -162,15 +120,15 @@ export default {
 		editedItem: {
 			id: {
 				dafault: null,
-			type:	Number,
+				type: Number,
 			},
 			nombre_tipo: "",
-			active:null
+			active: null,
 		},
 		defaultItem: {
 			id: null,
 			nombre_tipo: "",
-			active:null
+			active: null,
 		},
 	}),
 	mounted() {
@@ -181,12 +139,12 @@ export default {
 		getTipos(this.tipoArray)
 			.then((response) => {
 				if (response.stats === 200) {
-					this.cargando = false;
+					this.cargaTabla = false;
 				}
 			})
 			.catch((e) => {
 				console.log(e);
-				this.cargando = true;
+				this.cargaTabla = true;
 			});
 	},
 	computed: {
@@ -198,7 +156,7 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
@@ -236,14 +194,16 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.tipoArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
 		activationConfirm() {
+			this.cargaDialog = true;
 			activationTipos(Number(this.editedItem.id)).then((response) => {
-				if (response.status===200) {
+				if (response.status === 200) {
+					this.cargaDialog = false;
 					this.closeDelete();
-				} 
-			})
+				}
+			});
 		},
 		close() {
 			this.dialog = false;
@@ -253,7 +213,7 @@ export default {
 			});
 		},
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;

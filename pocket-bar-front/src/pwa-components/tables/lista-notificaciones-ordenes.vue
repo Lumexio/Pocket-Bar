@@ -38,7 +38,7 @@
 					</v-col>
 				</v-row>
 				<v-card-actions class="statusbuton">
-					<v-chip dark :color="colorchange(item.status)">{{
+					<v-chip :dark="$store.getters.hasdarkflag" :color="colorchange(item.status)">{{
 						item.status
 					}}
 					</v-chip>
@@ -85,7 +85,7 @@
 					</v-col>
 				</v-row>
 				<v-card-actions class="statusbuton">
-					<v-chip dark :color="colorchange(item.status)">{{
+					<v-chip :dark="$store.getters.hasdarkflag" :color="colorchange(item.status)">{{
 						item.status
 					}}</v-chip>
 

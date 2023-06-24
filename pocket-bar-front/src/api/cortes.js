@@ -92,12 +92,13 @@ export function postCancelticket(pack) {
       });
   });
 }
-export function postBoxOpen(pack) { 
-  console.log(pack);
+export function postBoxOpen(pack) {
+
   return new Promise((resolve, reject) => {
     axios
       .post("api/workshift/start", pack)
       .then(response => {
+
         if (response.status === 200) {
           store.commit("setsuccess", true);
           store.commit("setstatcode", 200);
@@ -111,19 +112,23 @@ export function postBoxOpen(pack) {
         });
       })
       .catch((error) => {
-        reject(error);
-        if (error) {
+        reject(error.response);
+        if (error.response.status != 400 && error.response.status != 200) {
           store.commit("setdanger", true);
+          setTimeout(function () {
+            store.commit("setdanger", null);
+          }, 2000);
         }
       });
   });
 }
-export function putBoxClose(pack) { 
+export function putBoxClose(pack) {
   console.log(pack);
   return new Promise((resolve, reject) => {
     axios
       .put("api/workshift/close", pack)
       .then(response => {
+
         if (response.status === 200) {
           store.commit("setsuccess", true);
           store.commit("setstatcode", 200);
@@ -137,8 +142,8 @@ export function putBoxClose(pack) {
         });
       })
       .catch((error) => {
-        reject(error);
-        if (error) {
+        reject(error.response);
+        if (error.response.status != 400 && error.response.status != 200) {
           store.commit("setdanger", true);
           setTimeout(function () {
             store.commit("setdanger", null);
@@ -151,4 +156,4 @@ export function putBoxClose(pack) {
 
 
 
-export default { getCotizado, postCerrarticket, postCancelticket, postNominas, postBoxOpen,putBoxClose }
+export default { getCotizado, postCerrarticket, postCancelticket, postNominas, postBoxOpen, putBoxClose }

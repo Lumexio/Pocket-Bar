@@ -111,7 +111,7 @@
 
 		<!--<v-row class="ma-2">
           <v-btn elevation="2"
-                dark  @click.prevent="dialogstatus = !dialogstatus">
+                :dark="$store.getters.hasdarkflag"  @click.prevent="dialogstatus = !dialogstatus">
             Status
           </v-btn>
         </v-row>-->

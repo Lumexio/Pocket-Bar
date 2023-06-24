@@ -4,36 +4,15 @@
 			<v-toolbar-title>Tabla categoria</v-toolbar-title>
 			<v-divider class="ml-4" inset vertical></v-divider>
 			<v-spacer></v-spacer>
-			<v-text-field
-				v-model="search"
-				label="Buscar categoria"
-				class="mt-4"
-				id="onsearch"
-			></v-text-field>
+			<v-text-field v-model="search" label="Buscar categoria" class="mt-4" id="onsearch"></v-text-field>
 		</v-toolbar>
 
-		<v-data-table
-			:headers="headers"
-			show-expand
-			:expanded.sync="expanded"
-			:items="categoriaArray"
-			sort-by="cantidad_articulo"
-			class="elevation-1"
-			:search="search"
-			:custom-filter="filterOnlyCapsText.toUpperCase"
-		>
+		<v-data-table :headers="headers" show-expand :expanded.sync="expanded" :items="categoriaArray"
+			sort-by="cantidad_articulo" class="elevation-1" :search="search"
+			:custom-filter="filterOnlyCapsText.toUpperCase">
 			<template v-slot:top>
-				<v-progress-linear
-					height="6"
-					indeterminate
-					color="cyan"
-					:active="cargando"
-				></v-progress-linear>
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialog"
-					max-width="500px"
-				>
+				<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
+				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
 					<v-card>
 						<v-card-title>
 							<h1 class="headline">{{ formTitle }}</h1>
@@ -43,31 +22,18 @@
 							<v-container>
 								<v-row>
 									<v-col>
-										<v-text-field
-											v-model="editedItem.nombre_categoria"
-											label="Nombre"
-										></v-text-field>
+										<v-text-field v-model="editedItem.nombre_categoria" label="Nombre"></v-text-field>
 									</v-col>
 								</v-row>
-								<v-row
-									><v-col>
-										<v-textarea
-											v-model="editedItem.descripcion_categoria"
-											label="Descrpción"
-											type="text"
-										></v-textarea> </v-col
-								></v-row>
+								<v-row><v-col>
+										<v-textarea v-model="editedItem.descripcion_categoria" label="Descrpción"
+											type="text"></v-textarea> </v-col></v-row>
 							</v-container>
 						</v-card-text>
 
 						<v-card-actions>
 							<v-spacer></v-spacer>
-							<v-btn
-								color="blue darken-1"
-								v-on:keyup.enter="save"
-								text
-								@click.prevent="close"
-							>
+							<v-btn color="blue darken-1" v-on:keyup.enter="save" text @click.prevent="close">
 								Cancelar
 							</v-btn>
 							<v-btn color="blue darken-1" text @click.prevent="save">
@@ -76,69 +42,46 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialogDelete"
-					max-width="500px"
-				>
-					<v-card>
-						<v-card-title v-show="editedItem.active === 0" class="headline">
-						¿Estas seguro de querer habilitarlo?
-					</v-card-title>
-					<v-card-title v-show="editedItem.active === 1" class="headline"	>
-						¿Quieres deshabilitarlo?
-					</v-card-title>
-						<v-card-actions>
-							<v-spacer></v-spacer>
-							<v-btn   @click.prevent="closeDelete"
-								>Cancelar</v-btn
-							>
-							<v-btn
-								color="blue darken-1"
-								
-								@click.prevent="deleteItemConfirm"
-								>Aceptar</v-btn
-							>
-							<v-spacer></v-spacer>
-						</v-card-actions>
-					</v-card>
-				</v-dialog>
+				<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+					<template v-slot:titledialog>
+						<span v-show="editedItem.active === 0" class="headline">
+							¿Estas seguro de querer habilitarlo?
+						</span>
+						<span v-show="editedItem.active === 1" class="headline">
+							¿Quieres deshabilitarlo?
+						</span>
+					</template>
+					<template v-slot:buttonsuccess>
+						<v-btn large :disabled="cargando2 == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
+							" @click.prevent="activateItemConfirm">
+							<span v-show="cargando2 == false">confirmar</span>
+							<v-progress-circular v-show="cargando2 == true" :active="cargando2" :indeterminate="cargando2"
+								:size="20"></v-progress-circular>
+						</v-btn>
+					</template>
+				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" dark>
-				<span
-					v-show="
-						item.active===1 && getActivo(item.active) === `amber lighten-1`
-					"
-					>En servicio</span
-				>
-				<span
-					v-show="
-						item.active===0 && getActivo(item.active) === `cyan darken-1`
-					"
-					>Fuera de servcio</span
-				>
-			</v-chip>
-		</template>
+				<v-chip :color="getActivo(item.active)" dark>
+					<span v-show="item.active === 1 && getActivo(item.active) === `amber lighten-1`
+						">En servicio</span>
+					<span v-show="item.active === 0 && getActivo(item.active) === `cyan darken-1`
+						">Fuera de servcio</span>
+				</v-chip>
+			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+				<v-icon small :dark="$store.getters.hasdarkflag" @click.prevent="editItem(item)">
+					mdi-pencil
+				</v-icon>
 
-				<v-icon
-				v-show="item.active === 1"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
-				mdi-lightbulb-on
-			</v-icon>
-			<v-icon
-				v-show="item.active === 0"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
-				mdi-lightbulb-on-outline
-			</v-icon>
+				<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)">
+					mdi-lightbulb-on
+				</v-icon>
+				<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)">
+					mdi-lightbulb-on-outline
+				</v-icon>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -153,18 +96,23 @@
 </template>
 
 <script>
+import modalConfirmation from "../global/modal-confirmation.vue";
 import {
 	getCategorias,
-	deleteCategoria,
+	activateCategoria,
 	editCategoria,
 } from "@/api/categorias.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
-	nombre_categoria: "tabla-categoria",
+	name: "tabla-categoria",
+	components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		dialog: false,
-		dialogDelete: false,
+		dialogActivate: false,
 		search: "",
+		cargando2: false,
 		cargando: true,
 		expanded: [],
 		headers: [
@@ -202,8 +150,8 @@ export default {
 	}),
 	mounted() {
 		this.onFocus();
-		window.Echo.channel("categorias").listen("categoriaCreated", (e) => { 
-			
+		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
+
 			this.categoriaArray = e.categorias.original.categorias;
 		});
 		getCategorias(this.categoriaArray)
@@ -228,17 +176,16 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
 
-	created() {},
+	created() { },
 
 	methods: {
 		getActivo(status) {
-			
-			if (	status === 1) {
+			if (status === 1) {
 				return "amber lighten-1";
 			} else if (status === 0) {
 				return "cyan darken-1";
@@ -271,11 +218,16 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.categoriaArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
-		deleteItemConfirm() {
-			this.categoriaArray.splice(this.editedIndex, 1);
-			deleteCategoria(this.editedItem.id);
+		activateItemConfirm() {
+			this.cargando2 = true;
+			activateCategoria(this.editedItem.id).then((response) => {
+				if (response.status === 200) {
+					this.cargando2 = false;
+					this.closeDelete();
+				}
+			});
 			this.closeDelete();
 		},
 
@@ -288,7 +240,7 @@ export default {
 		},
 
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;
@@ -302,9 +254,8 @@ export default {
 				send.nombre_categoria = upperConverter(send.nombre_categoria);
 				let url = "api/categoria/";
 				url = url + send.id;
-				url = `${url}?${"nombre_categoria=" + send.nombre_categoria}&${
-					"descripcion_categoria=" + send.descripcion_categoria
-				}`;
+				url = `${url}?${"nombre_categoria=" + send.nombre_categoria}&${"descripcion_categoria=" + send.descripcion_categoria
+					}`;
 				editCategoria(url);
 				window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
 					this.itemsc = e.categorias;
@@ -322,6 +273,7 @@ export default {
 #tabla {
 	inline-size: 60rem;
 }
+
 .tabla {
 	inline-size: 60rem;
 }

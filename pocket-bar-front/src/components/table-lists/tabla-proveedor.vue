@@ -4,39 +4,16 @@
 			<v-toolbar-title>Tabla proveedor</v-toolbar-title>
 			<v-divider class="ml-4" inset vertical></v-divider>
 			<v-spacer></v-spacer>
-			<v-text-field
-				v-model="search"
-				label="Buscar proveedor"
-				class="mx-4"
-				id="onsearch"
-			></v-text-field>
+			<v-text-field v-model="search" label="Buscar proveedor" class="mx-4" id="onsearch"></v-text-field>
 		</v-toolbar>
 
-		<v-data-table
-			:dark="this.$store.getters.hasdarkflag"
-			id="tabla"
-			:headers="headers"
-			show-expand
-			:expanded.sync="expanded"
-			:items="proveedorArray"
-			sort-by="cantidad_articulo"
-			class="elevation-1"
-			:search="search"
-			:custom-filter="filterOnlyCapsText.toUpperCase"
-		>
+		<v-data-table :dark="this.$store.getters.hasdarkflag" id="tabla" :headers="headers" show-expand
+			:expanded.sync="expanded" :items="proveedorArray" sort-by="cantidad_articulo" class="elevation-1"
+			:search="search" :custom-filter="filterOnlyCapsText.toUpperCase">
 			<template v-slot:top>
-				<v-progress-linear
-					height="6"
-					indeterminate
-					color="cyan"
-					:active="cargando"
-				></v-progress-linear>
+				<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
 
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialog"
-					max-width="500px"
-				>
+				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
 					<v-card>
 						<v-card-title>
 							<h1 class="headline">{{ formTitle }}</h1>
@@ -46,10 +23,7 @@
 							<v-container>
 								<v-row>
 									<v-col cols="12" sm="6" md="4">
-										<v-text-field
-											v-model="editedItem.nombre_proveedor"
-											label="Nombre"
-										></v-text-field>
+										<v-text-field v-model="editedItem.nombre_proveedor" label="Nombre"></v-text-field>
 									</v-col>
 								</v-row>
 							</v-container>
@@ -66,69 +40,42 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialogDelete"
-					max-width="500px"
-				>
+				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogDelete" max-width="500px">
 					<v-card>
 						<v-card-title v-show="editedItem.active === 0" class="headline">
-						¿Estas seguro de querer habilitarlo?
-					</v-card-title>
-					<v-card-title v-show="editedItem.active === 1" class="headline"	>
-						¿Quieres deshabilitarlo?
-					</v-card-title>
+							¿Estas seguro de querer habilitarlo?
+						</v-card-title>
+						<v-card-title v-show="editedItem.active === 1" class="headline">
+							¿Quieres deshabilitarlo?
+						</v-card-title>
 						<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 							<v-spacer></v-spacer>
-							<v-btn  @click.prevent="closeDelete"
-								>Cancelar</v-btn
-							>
-							<v-btn
-								color="blue darken-1"
-						
-								@click.prevent="deleteItemConfirm"
-								>Aceptar</v-btn
-							>
+							<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
+							<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm">Aceptar</v-btn>
 							<v-spacer></v-spacer>
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" dark>
-				<span
-					v-show="
-						item.active === 1 && getActivo(item.active) === `amber lighten-1`
-					"
-					>En servicio</span
-				>
-				<span
-					v-show="
-						item.active === 0 && getActivo(item.active) === `cyan darken-1`
-					"
-					>Fuera de servcio</span
-				>
-			</v-chip>
-		</template>
+				<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
+					<span v-show="item.active === 1 && getActivo(item.active) === `amber lighten-1`
+						">En servicio</span>
+					<span v-show="item.active === 0 && getActivo(item.active) === `cyan darken-1`
+						">Fuera de servcio</span>
+				</v-chip>
+			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+				<v-icon small :dark="$store.getters.hasdarkflag" @click.prevent="editItem(item)">
+					mdi-pencil
+				</v-icon>
 
-				<v-icon
-				v-show="item.active === 1"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
-				mdi-lightbulb-on
-			</v-icon>
-			<v-icon
-				v-show="item.active === 0"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
-				mdi-lightbulb-on-outline
-			</v-icon>
+				<v-icon v-show="item.active === 1" small dark @click.prevent="deleteItem(item)">
+					mdi-lightbulb-on
+				</v-icon>
+				<v-icon v-show="item.active === 0" small dark @click.prevent="deleteItem(item)">
+					mdi-lightbulb-on-outline
+				</v-icon>
 			</template>
 
 			<template v-slot:no-data>
@@ -303,6 +250,7 @@ export default {
 #tabla {
 	inline-size: 100%;
 }
+
 .tabla {
 	inline-size: 60rem;
 }

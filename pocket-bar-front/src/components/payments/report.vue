@@ -195,7 +195,7 @@
 					>
 						<v-icon>mdi-chevron-left</v-icon>
 					</v-btn>
-					<v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
+					<v-btn fab :dark="$store.getters.hasdarkflag" color="blue darken-3" class="ml-1" @click="nextPage">
 						<v-icon>mdi-chevron-right</v-icon>
 					</v-btn>
 				</v-row>

@@ -17,7 +17,7 @@
 						
 						@click.prevent="dialogtipo = !dialogtipo"
 					>
-						<v-icon left large dark>mdi-plus</v-icon>
+						<v-icon left large :dark="$store.getters.hasdarkflag">mdi-plus</v-icon>
 						Tipo
 					</v-btn>
 				</v-row>

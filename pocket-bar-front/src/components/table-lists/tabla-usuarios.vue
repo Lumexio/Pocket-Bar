@@ -92,13 +92,13 @@
 					<v-card-title v-show="editedItem.active === false" class="headline">
 						¿Estas seguro de querer habilitarlo?
 					</v-card-title>
-					<v-card-title v-show="editedItem.active === true" class="headline"	>
+					<v-card-title v-show="editedItem.active === true" class="headline">
 						¿Quieres deshabilitarlo?
 					</v-card-title>
-					<v-card-actions v-on:keyup.enter="deleteItemConfirm" >
+					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
 						<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
-						<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm"
+						<v-btn :color="$store.getters.hasdarkflag ? 'blue darken-1':'blue lighten-1'" @click.prevent="deleteItemConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>
@@ -107,41 +107,55 @@
 			</v-dialog>
 		</template>
 		<template v-slot:[`item.name_rol`]="{ item }">
-			<v-chip :color="getColor(item.name_rol)" dark>
+			<v-chip
+				:color="getColor(item.name_rol)"
+				:dark="$store.getters.hasdarkflag"
+			>
 				{{ item.name_rol }}
 			</v-chip>
 		</template>
 		<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" dark>
+			<v-chip
+				:color="getActivo(item.active)"
+				:dark="$store.getters.hasdarkflag"
+			>
 				<span
 					v-show="
-						(item.active === true||item.active === 1) && getActivo(item.active) === `amber lighten-1`
+						(item.active === true || item.active === 1) &&
+						getActivo(item.active) === `amber lighten-1`
 					"
 					>En servicio</span
 				>
 				<span
 					v-show="
-						(item.active === false||item.active === 0) && getActivo(item.active) === `cyan darken-1`
+						(item.active === false || item.active === 0) &&
+						getActivo(item.active) === `cyan darken-1`
 					"
 					>Fuera de servcio</span
 				>
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+			<v-icon
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="editItem(item)"
+			>
+				mdi-pencil
+			</v-icon>
 
 			<v-icon
-				v-show="item.active === true|item.active === 1"
+				v-show="(item.active === true) | (item.active === 1)"
 				small
-				dark
+				:dark="$store.getters.hasdarkflag"
 				@click.prevent="deleteItem(item)"
 			>
 				mdi-lightbulb-on
 			</v-icon>
 			<v-icon
-				v-show="item.active === false||item.active === 0"
+				v-show="item.active === false || item.active === 0"
 				small
-				dark
+				:dark="$store.getters.hasdarkflag"
 				@click.prevent="deleteItem(item)"
 			>
 				mdi-lightbulb-on-outline
@@ -228,13 +242,13 @@ export default {
 			.catch((error) => console.log(error));
 		getRol(this.itemsrol)
 			.then((response) => {
-				
 				this.itemsrol = response.itemsrol;
-				
+
 				if (response.stats === 200) {
 					this.cargando = false;
 				}
-			}).catch((e) => console.log(e));
+			})
+			.catch((e) => console.log(e));
 	},
 
 	computed: {
@@ -271,7 +285,6 @@ export default {
 			});
 		},
 		getColor(status) {
-			
 			if (status == "Administrativo") {
 				return "amber lighten-1";
 			} else if (status == "Meser@") {
@@ -285,9 +298,9 @@ export default {
 			}
 		},
 		getActivo(status) {
-			if (status === true||status === 1) {
+			if (status === true || status === 1) {
 				return "amber lighten-1";
-			} else if (status == false||status === 0) {
+			} else if (status == false || status === 0) {
 				return "cyan darken-1";
 			}
 		},

@@ -1,6 +1,6 @@
 <template>
 	<v-dialog max-width="40rem" persistent v-model="dialogConfirmation">
-		<v-card :dark="$store.getters.hasdarkflag">
+		<v-card  :dark="$store.getters.hasdarkflag" >
 			<v-card-title><slot name="titledialog"></slot></v-card-title>
 			<v-card-text class="text-left">
 				<slot name="textmoneygeneral"></slot>

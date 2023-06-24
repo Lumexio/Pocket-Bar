@@ -18,7 +18,7 @@
 						
 						@click.prevent="dialogproveedor = !dialogproveedor"
 					>
-						<v-icon left large dark>mdi-plus</v-icon>
+						<v-icon left large :dark="$store.getters.hasdarkflag">mdi-plus</v-icon>
 						Proveedor
 					</v-btn>
 				</v-row>

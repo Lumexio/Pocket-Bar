@@ -135,15 +135,11 @@
 				max-width="500px"
 			>
 				<v-card>
-					<v-card-title class="headline"
-						>¿Quieres deshabilitarlo?</v-card-title
-					>
+					<v-card-title class="headline">¿Quieres deshabilitarlo?</v-card-title>
 					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
 						<v-spacer></v-spacer>
-						<v-btn  @click.prevent="closeDelete"
-							>Cancel</v-btn
-						>
-						<v-btn color="blue darken-1"  @click.prevent="deleteItemConfirm"
+						<v-btn @click.prevent="closeDelete">Cancel</v-btn>
+						<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm"
 							>Aceptar</v-btn
 						>
 						<v-spacer></v-spacer>
@@ -192,16 +188,16 @@
 		</template>
 
 		<template v-slot:[`item.nombre_status`]="{ item }">
-			<v-chip :color="getColor(item.nombre_status)" dark>
+			<v-chip :color="getColor(item.nombre_status)" :dark="$store.getters.hasdarkflag">
 				{{ item.nombre_status }}
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small @click.prevent="editItem(item)"> mdi-pencil </v-icon>
-				<v-icon
-				v-show="item.deactivated_at ===null"
+			<v-icon small @click.prevent="editItem(item)" :dark="$store.getters.hasdarkflag"> mdi-pencil </v-icon>
+			<v-icon
+				v-show="item.deactivated_at === null"
 				small
-				dark
+				:dark="$store.getters.hasdarkflag"
 				@click.prevent="deleteItem(item)"
 			>
 				mdi-lightbulb-on
@@ -209,7 +205,7 @@
 			<v-icon
 				v-show="item.deactivated_at != null"
 				small
-				dark
+				:dark="$store.getters.hasdarkflag"
 				@click.prevent="deleteItem(item)"
 			>
 				mdi-lightbulb-on-outline
@@ -369,7 +365,7 @@ export default {
 				}
 			})
 			.catch((e) => {
-			alert(e);
+				alert(e);
 				if (e) {
 					store.commit("setdanger", true);
 				}
@@ -512,14 +508,14 @@ export default {
 				send.nombre_articulo = upperConverter(send.nombre_articulo);
 				let url = "api/articulo/update/" + send.id;
 				const pack = {
-					"nombre_articulo": send.nombre_articulo,
-					"cantidad_articulo": send.cantidad_articulo,
-					"categoria_id": this.selectc,
-					"proveedor_id": this.selectp,
-					"tipo_id": this.selectt,
-					"status_id": this.selectst,
-					"marca_id": this.selectm,
-					"descripcion_articulo": send.descripcion_articulo
+					nombre_articulo: send.nombre_articulo,
+					cantidad_articulo: send.cantidad_articulo,
+					categoria_id: this.selectc,
+					proveedor_id: this.selectp,
+					tipo_id: this.selectt,
+					status_id: this.selectst,
+					marca_id: this.selectm,
+					descripcion_articulo: send.descripcion_articulo,
 				};
 
 				editArticulos(url, pack);

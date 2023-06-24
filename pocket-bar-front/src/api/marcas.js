@@ -45,7 +45,12 @@ export function postMarcas(enviar) {
     });
 }
 export function avtivationMarcas(id) {
-  axios.put("api/marca/activate/" + id).catch((error) => console.log(error));
+  return new Promise((resolve, reject) => {
+  axios.put("api/marca/activate/" + id).then((response) => {
+    response;
+    resolve(response);
+  }).catch((error) => console.log(reject(error)));
+});
 }
 export function editMarcas(url) {
   axios

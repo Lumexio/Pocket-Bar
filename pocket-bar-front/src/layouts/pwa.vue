@@ -20,7 +20,7 @@
 		>
 
 		<tomarorden :dialogorden.sync="dialogorden" />
-		<!-- <v-footer outlined dark fixed padless>
+		<!-- <v-footer outlined :dark="$store.getters.hasdarkflag" fixed padless>
 			<v-row justify="center" no-gutters>
 				<v-col class="py-4 text-center white--text" cols="12"> v-btn </v-col>
 			</v-row>

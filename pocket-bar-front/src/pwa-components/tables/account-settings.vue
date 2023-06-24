@@ -46,7 +46,7 @@
 			>
 		</v-card>
 		<v-dialog
-			:dark="$store.getters.hasdarkflag"
+			 :dark="$store.getters.hasdarkflag" 
 			v-model="dialogLogout"
 			max-width="500px"
 		>

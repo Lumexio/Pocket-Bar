@@ -79,11 +79,11 @@
 				<modalConfirmation :dialogConfirmation.sync="dialogActivate">
 					<template v-slot:titledialog>
 						<span v-show="editedItem.active === 0" class="headline">
-						¿Estas seguro de querer habilitarlo?
-					</span>
-					<span v-show="editedItem.active === 1" class="headline"	>
-						¿Quieres deshabilitarlo?
-					</span>
+							¿Estas seguro de querer habilitarlo?
+						</span>
+						<span v-show="editedItem.active === 1" class="headline">
+							¿Quieres deshabilitarlo?
+						</span>
 					</template>
 					<template v-slot:buttonsuccess>
 						<v-btn
@@ -106,40 +106,46 @@
 				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" dark>
-				<span
-					v-show="
-						item.active===1 && getActivo(item.active) === `amber lighten-1`
-					"
-					>En servicio</span
-				>
-				<span
-					v-show="
-						item.active===0 && getActivo(item.active) === `cyan darken-1`
-					"
-					>Fuera de servcio</span
-				>
-			</v-chip>
-		</template>
+				<v-chip :color="getActivo(item.active)" dark>
+					<span
+						v-show="
+							item.active === 1 && getActivo(item.active) === `amber lighten-1`
+						"
+						>En servicio</span
+					>
+					<span
+						v-show="
+							item.active === 0 && getActivo(item.active) === `cyan darken-1`
+						"
+						>Fuera de servcio</span
+					>
+				</v-chip>
+			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small dark @click.prevent="editItem(item)"> mdi-pencil </v-icon>
+				<v-icon
+					small
+					:dark="$store.getters.hasdarkflag"
+					@click.prevent="editItem(item)"
+				>
+					mdi-pencil
+				</v-icon>
 
 				<v-icon
-				v-show="item.active === 1"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
-				mdi-lightbulb-on
-			</v-icon>
-			<v-icon
-				v-show="item.active === 0"
-				small
-				dark
-				@click.prevent="deleteItem(item)"
-			>
-				mdi-lightbulb-on-outline
-			</v-icon>
+					v-show="item.active === 1"
+					small
+					:dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)"
+				>
+					mdi-lightbulb-on
+				</v-icon>
+				<v-icon
+					v-show="item.active === 0"
+					small
+					:dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)"
+				>
+					mdi-lightbulb-on-outline
+				</v-icon>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -150,9 +156,7 @@
 				</td>
 			</template>
 		</v-data-table>
-
 	</v-card>
-	
 </template>
 
 <script>
@@ -210,8 +214,7 @@ export default {
 	}),
 	mounted() {
 		this.onFocus();
-		window.Echo.channel("categorias").listen("categoriaCreated", (e) => { 
-			
+		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
 			this.categoriaArray = e.categorias.original.categorias;
 		});
 		getCategorias(this.categoriaArray)
@@ -245,8 +248,7 @@ export default {
 
 	methods: {
 		getActivo(status) {
-			
-			if (	status === 1) {
+			if (status === 1) {
 				return "amber lighten-1";
 			} else if (status === 0) {
 				return "cyan darken-1";
@@ -286,8 +288,9 @@ export default {
 			activateCategoria(this.editedItem.id).then((response) => {
 				if (response.status === 200) {
 					this.cargando2 = false;
+					this.closeDelete();
 				}
-			})
+			});
 			this.closeDelete();
 		},
 

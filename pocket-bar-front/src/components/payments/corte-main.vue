@@ -1,5 +1,5 @@
 <template>
-  <v-card :dark="$store.getters.hasdarkflag">
+  <v-card  :dark="$store.getters.hasdarkflag" >
     <v-card-title>Corte</v-card-title>
     <v-card-text>
       Cuerpo de tarjeta

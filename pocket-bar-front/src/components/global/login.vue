@@ -10,7 +10,7 @@
 				><code class="font-weight-light">Pocket</code
 				><strong
 					:class="[
-						this.$store.getters.hasdarkflag === true
+						$store.getters.hasdarkflag === true
 							? 'black-mode-text'
 							: 'white-mode-text',
 					]"
@@ -19,7 +19,7 @@
 				</strong>
 				<v-progress-circular
 					:class="[
-						this.$store.getters.hasdarkflag === true
+						$store.getters.hasdarkflag === true
 							? 'black-mode-text'
 							: 'white-mode-text',
 					]"
@@ -59,7 +59,7 @@
 					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
-				<v-btn large color="#4caf50" dark class="mr-4" v-on:click="login()">
+				<v-btn large color="#4caf50"  :dark="$store.getters.hasdarkflag"  class="mr-4" v-on:click="login()">
 					Iniciar sesión
 				</v-btn>
 			</v-card-actions>

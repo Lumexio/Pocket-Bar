@@ -160,11 +160,9 @@
 					</template>
 					<template v-slot:textalert>
 						<h2 v-if="amount_cash">Efectivo: {{ bringedMoney }}</h2>
-							<h2 v-if="amount_card">Tarjeta: {{ amount_card }}</h2>
-							<h2>
-								Total ingresado: ${{ toNumber(amount_cash, amount_card) }}
-							</h2>
-							<h2>Cambio: ${{ changeMoney }}</h2>
+						<h2 v-if="amount_card">Tarjeta: {{ amount_card }}</h2>
+						<h2>Total ingresado: ${{ toNumber(amount_cash, amount_card) }}</h2>
+						<h2>Cambio: ${{ changeMoney }}</h2>
 					</template>
 					<template v-slot:buttonsuccess>
 						<v-btn
@@ -239,7 +237,7 @@
 			</template>
 
 			<template v-slot:[`item.status`]="{ item }">
-				<v-chip :color="getColor(item.status)" dark>
+				<v-chip :color="getColor(item.status)" :dark="$store.getters.hasdarkflag">
 					{{ item.status }}
 				</v-chip>
 			</template>
@@ -260,7 +258,7 @@ export default {
 		type_pay_cash: "cash",
 		type_pay_card: "",
 		amount_card: null,
-		cargando2:false,
+		cargando2: false,
 		amount_cash: null,
 		amount_cash_ingresed: null,
 		voucher: null,

@@ -78,7 +78,7 @@
 									flat
 									light
 									class="mb-1"
-									:dark="$store.getters.hasdarkflag"
+									 :dark="$store.getters.hasdarkflag" 
 									color="transparent"
 								>
 									<v-text-field
@@ -145,10 +145,10 @@
 									<span class="mr-4 grey--text">
 										Page {{ page }} of {{ numberOfPages }}
 									</span>
-									<v-btn dark class="mr-1" @click.prevent="formerPage">
+									<v-btn :dark="$store.getters.hasdarkflag" class="mr-1" @click.prevent="formerPage">
 										<v-icon>mdi-chevron-left</v-icon>
 									</v-btn>
-									<v-btn dark class="ml-1" @click.prevent="nextPage">
+									<v-btn :dark="$store.getters.hasdarkflag" class="ml-1" @click.prevent="nextPage">
 										<v-icon>mdi-chevron-right</v-icon>
 									</v-btn>
 								</v-row>
@@ -159,7 +159,7 @@
 
 					<v-stepper-content class="pa-0" step="2">
 						<div class="back">
-							<v-btn dark @click.prevent="e6 = 1" class="mb-4 ml-2">
+							<v-btn :dark="$store.getters.hasdarkflag" @click.prevent="e6 = 1" class="mb-4 ml-2">
 								<v-icon>mdi-chevron-left</v-icon>
 							</v-btn>
 						</div>

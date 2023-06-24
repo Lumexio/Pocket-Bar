@@ -5,12 +5,14 @@
 		hide-overlay
 		transition="dialog-bottom-transition"
 		><v-card :dark="this.$store.getters.hasdarkflag">
-			<v-toolbar 				color="transparent"
+			<v-toolbar
+				color="transparent"
 				elevation="0"
 				prominent
 				v-touch="{
 					down: () => swipe('Down'),
-				}">
+				}"
+			>
 				<v-btn
 					icon
 					:dark="this.$store.getters.hasdarkflag"
@@ -46,7 +48,7 @@
 			>
 		</v-card>
 		<v-dialog
-			 :dark="$store.getters.hasdarkflag" 
+			:dark="$store.getters.hasdarkflag"
 			v-model="dialogLogout"
 			max-width="500px"
 		>

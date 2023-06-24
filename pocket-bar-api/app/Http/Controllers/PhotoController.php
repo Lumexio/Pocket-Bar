@@ -29,7 +29,10 @@ class PhotoController extends Controller
         $request->foto_articulo->move(public_path('images'), $name_foto);
         $articulo->foto_articulo = $name_foto;
         $articulo->save();
-        articuloCreated::dispatch($articulo);
+        try {
+            event(new articuloCreated($articulo));
+        } catch (\Throwable $th) {
+        }
         return response()->json(["message" => "success"], 200);
     }
 }

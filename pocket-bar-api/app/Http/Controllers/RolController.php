@@ -34,7 +34,10 @@ class RolController extends Controller
     public function store(Request $request): JsonResponse
     {
         $rol = Rol::create($request->all());
-        rolCreated::dispatch($rol);
+        try {
+            broadcast((new rolCreated($rol))->broadcastToEveryone());
+        } catch (\Exception) {
+        }
         return \response()->json([
             "message" => "success",
             "data" => $rol
@@ -73,7 +76,7 @@ class RolController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $rol = Rol::find($id);
-        if(empty($rol)) {
+        if (empty($rol)) {
             return \response()->json([
                 "message" => "Rol no encontrado",
                 "data" => null
@@ -104,7 +107,7 @@ class RolController extends Controller
     public function activate($id): JsonResponse
     {
         $rol = Rol::find($id);
-        if(empty($rol)) {
+        if (empty($rol)) {
             return \response()->json([
                 "message" => "Rol no encontrado",
                 "data" => null

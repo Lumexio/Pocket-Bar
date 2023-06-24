@@ -49,7 +49,10 @@ class MarcaController extends Controller
             ], 409);
         } else {
             $marca = Marca::create($request->all());
-            broadcast((new marcaCreated($marca))->broadcastToEveryone());
+            try {
+                broadcast((new marcaCreated($marca))->broadcastToEveryone());
+            } catch (\Throwable) {
+            }
             return response()->json([
                 'message' => 'success',
                 'marca' => $marca
@@ -93,7 +96,10 @@ class MarcaController extends Controller
             ], 404);
         }
         $marca->update($request->all());
-        broadcast((new marcaCreated($marca))->broadcastToEveryone());
+        try {
+            broadcast((new marcaCreated($marca))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'marca' => $marca
@@ -119,7 +125,10 @@ class MarcaController extends Controller
         $marca = Marca::find($id);
         $marca->active = !$marca->active;
         $marca->save();
-        broadcast((new marcaCreated($marca))->broadcastToEveryone());
+        try {
+            broadcast((new marcaCreated($marca))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'marca' => $marca

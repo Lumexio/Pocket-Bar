@@ -4,52 +4,23 @@
 			<v-toolbar-title>Tabla de ordenes</v-toolbar-title>
 			<v-divider inset vertical class="ml-4"></v-divider>
 			<v-spacer></v-spacer>
-			<v-text-field
-				:dark="this.$store.getters.hasdarkflag"
-				v-model="search"
-				label="Buscar orden"
-				class="mt-6"
-				id="onsearch"
-			></v-text-field>
+			<v-text-field :dark="this.$store.getters.hasdarkflag" v-model="search" label="Buscar orden" class="mt-6"
+				id="onsearch"></v-text-field>
 		</v-toolbar>
 
-		<v-data-table
-			:dark="this.$store.getters.hasdarkflag"
-			id="tabla"
-			:headers="headers"
-			show-expand
-			:expanded.sync="expanded"
-			:items="ticketsArray"
-			:ticketsArray="ticketsArray"
-			@update:ticketsArray="getTickets()"
-			sort-by="cantidad_articulo"
-			:search="search"
-			:custom-filter="filterOnlyCapsText.toUpperCase"
-		>
-			<template v-slot:expanded-item="{ item }"
-				><td :colspan="headers.length">
-					<v-data-table
-						hide-default-footer
-						dense
-						:items="item.details"
-						class="elevation-0"
-						:headers="headersDetails"
-					>
+		<v-data-table :dark="this.$store.getters.hasdarkflag" id="tabla" :headers="headers" show-expand
+			:expanded.sync="expanded" :items="ticketsArray" :ticketsArray="ticketsArray" @update:ticketsArray="getTickets()"
+			sort-by="cantidad_articulo" :search="search" :custom-filter="filterOnlyCapsText.toUpperCase">
+			<template v-slot:expanded-item="{ item }">
+				<td :colspan="headers.length">
+					<v-data-table hide-default-footer dense :items="item.details" class="elevation-0"
+						:headers="headersDetails">
 					</v-data-table>
 				</td>
 			</template>
 			<template v-slot:top>
-				<v-progress-linear
-					height="6"
-					indeterminate
-					color="cyan"
-					:active="cargando"
-				></v-progress-linear>
-				<v-dialog
-					:dark="$store.getters.hasdarkflag"
-					v-model="dialog"
-					max-width="500px"
-				>
+				<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
+				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
 					<v-card>
 						<v-card-title>
 							<h1 class="headline">{{ formTitle }}</h1>
@@ -69,69 +40,31 @@
 								</v-col>
 								<v-col>
 									<v-subheader>Tipo de pago</v-subheader>
-									<v-checkbox
-										v-model="type_pay_cash"
-										label="Efectivo"
-										value="cash"
-									></v-checkbox>
-									<v-checkbox
-										v-model="type_pay_card"
-										label="Tarjeta"
-										value="card"
-									></v-checkbox>
+									<v-checkbox v-model="type_pay_cash" label="Efectivo" value="cash"></v-checkbox>
+									<v-checkbox v-model="type_pay_card" label="Tarjeta" value="card"></v-checkbox>
 								</v-col>
 							</v-row>
 						</v-card-text>
 						<v-row class="ml-3 mr-3">
 							<v-col>
-								<v-subheader v-show="type_pay_cash == 'cash'"
-									>Pago en efectivo</v-subheader
-								>
-								<v-text-field
-									v-show="type_pay_cash == 'cash'"
-									label="Dinero en efectivo"
-									:dark="$store.getters.hasdarkflag"
-									outlined
-									v-model="amount_cash"
-									prefix="$"
-								></v-text-field>
-								<v-text-field
-									v-show="type_pay_card == 'card' || type_pay_cash == 'cash'"
-									label="Propina efectivo"
-									:dark="$store.getters.hasdarkflag"
-									outlined
-									v-model="tip_cash"
-									prefix="$"
-								></v-text-field>
+								<v-subheader v-show="type_pay_cash == 'cash'">Pago en efectivo</v-subheader>
+								<v-text-field v-show="type_pay_cash == 'cash'" label="Dinero en efectivo"
+									:dark="$store.getters.hasdarkflag" outlined v-model="amount_cash"
+									prefix="$"></v-text-field>
+								<v-text-field v-show="type_pay_card == 'card' || type_pay_cash == 'cash'"
+									label="Propina efectivo" :dark="$store.getters.hasdarkflag" outlined v-model="tip_cash"
+									prefix="$"></v-text-field>
 							</v-col>
 							<v-col>
-								<v-subheader v-show="type_pay_card == 'card'"
-									>Pago con tarjeta</v-subheader
-								>
-								<v-text-field
-									v-show="type_pay_card == 'card'"
-									label="Pago con tarjeta"
-									:dark="$store.getters.hasdarkflag"
-									outlined
-									v-model="amount_card"
-									prefix="$"
-								></v-text-field>
-								<v-text-field
-									v-show="type_pay_card == 'card'"
-									label="Voucher"
-									v-model="voucher"
-									:dark="$store.getters.hasdarkflag"
-									outlined
-									prefix="$"
-								></v-text-field>
-								<v-text-field
-									v-show="type_pay_card == 'card'"
-									label="Propina tarjeta"
-									:dark="$store.getters.hasdarkflag"
-									outlined
-									v-model="tip_card"
-									prefix="$"
-								></v-text-field>
+								<v-subheader v-show="type_pay_card == 'card'">Pago con tarjeta</v-subheader>
+								<v-text-field v-show="type_pay_card == 'card'" label="Pago con tarjeta"
+									:dark="$store.getters.hasdarkflag" outlined v-model="amount_card"
+									prefix="$"></v-text-field>
+								<v-text-field v-show="type_pay_card == 'card'" label="Voucher" v-model="voucher"
+									:dark="$store.getters.hasdarkflag" outlined prefix="$"></v-text-field>
+								<v-text-field v-show="type_pay_card == 'card'" label="Propina tarjeta"
+									:dark="$store.getters.hasdarkflag" outlined v-model="tip_card"
+									prefix="$"></v-text-field>
 							</v-col>
 						</v-row>
 						<v-card-actions>
@@ -139,16 +72,10 @@
 								Cancelar
 							</v-btn>
 							<v-spacer></v-spacer>
-							<v-btn
-								color="success"
-								v-on:keyup.enter="save"
-								outlined
-								:ticketsArray="ticketsArray"
-								@update:ticketsArray="getTickets()"
-								@click.prevent="
+							<v-btn color="success" v-on:keyup.enter="save" outlined :ticketsArray="ticketsArray"
+								@update:ticketsArray="getTickets()" @click.prevent="
 									changePayment(amount_cash, editedItem.total), save()
-								"
-							>
+									">
 								Efectuar pago caja
 							</v-btn>
 						</v-card-actions>
@@ -165,21 +92,11 @@
 						<h2>Cambio: ${{ changeMoney }}</h2>
 					</template>
 					<template v-slot:buttonsuccess>
-						<v-btn
-							large
-							:disabled="cargando2 == true"
-							:color="
-								$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
-							"
-							@click.prevent="cierreItemConfirm"
-						>
+						<v-btn large :disabled="cargando2 == true" :color="$store.getters.hasdarkflag ? 'lime darken-1' : 'lime lighten-1'
+							" @click.prevent="cierreItemConfirm">
 							<span v-show="cargando2 == false">confirmar</span>
-							<v-progress-circular
-								v-show="cargando2 == true"
-								:active="cargando2"
-								:indeterminate="cargando2"
-								:size="20"
-							></v-progress-circular>
+							<v-progress-circular v-show="cargando2 == true" :active="cargando2" :indeterminate="cargando2"
+								:size="20"></v-progress-circular>
 						</v-btn>
 					</template>
 				</modalConfirmation>
@@ -188,47 +105,24 @@
 						¿Estas seguro de querer cancelar este ticket?
 					</template>
 					<template v-slot:buttonsuccess>
-						<v-btn
-							large
-							:disabled="cargando2 == true"
-							:color="
-								$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
-							"
-							@click.prevent="cancelConfirm"
-						>
+						<v-btn large :disabled="cargando2 == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
+							" @click.prevent="cancelConfirm">
 							<span v-show="cargando2 == false">confirmar</span>
-							<v-progress-circular
-								v-show="cargando2 == true"
-								:active="cargando2"
-								:indeterminate="cargando2"
-								:size="20"
-							></v-progress-circular>
+							<v-progress-circular v-show="cargando2 == true" :active="cargando2" :indeterminate="cargando2"
+								:size="20"></v-progress-circular>
 						</v-btn>
 					</template>
 				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-btn
-					v-show="item.status == 'Entregado' && $store.getters.hasrol === 3"
-					small
-					class="mr-2"
-					color="success"
-					@click.prevent="editItem(item)"
-				>
+				<v-btn v-show="item.status == 'Entregado' && $store.getters.hasrol === 3" small class="mr-2" color="success"
+					@click.prevent="editItem(item)">
 					<v-icon> mdi-cash-100 </v-icon>
 				</v-btn>
-				<v-btn
-					v-show="
-						(item.cancel_confirm == null || item.cancel_confirm == 0) &&
-						item.status != 'Cerrado' &&
-						item.status != 'Cancelado'
-					"
-					small
-					dark
-					color="red darken-4"
-					class="mr-2"
-					@click.prevent="editItemCancel(item)"
-				>
+				<v-btn v-show="(item.cancel_confirm == null || item.cancel_confirm == 0) &&
+					item.status != 'Cerrado' &&
+					item.status != 'Cancelado'
+					" small dark color="red darken-4" class="mr-2" @click.prevent="editItemCancel(item)">
 					<v-icon> mdi-close </v-icon>
 				</v-btn>
 			</template>
@@ -539,6 +433,7 @@ export default {
 #tabla {
 	inline-size: 100%;
 }
+
 .tabla {
 	inline-size: 100%;
 }

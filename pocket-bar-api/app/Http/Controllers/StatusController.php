@@ -35,7 +35,10 @@ class StatusController extends Controller
     public function store(Request $request): JsonResponse
     {
         $status = Status::create($request->all());
-        statusCreated::dispatch($status);
+        try {
+            statusCreated::dispatch($status);
+        } catch (\Exception) {
+        }
         return \response()->json([
             "message" => "success",
             "data" => $status
@@ -75,7 +78,10 @@ class StatusController extends Controller
         $status = Status::find($id);
         if (!empty($status)) {
             $status->update($request->all());
-            statusCreated::dispatch($status);
+            try {
+                statusCreated::dispatch($status);
+            } catch (\Exception) {
+            }
             return \response()->json([
                 "message" => "success",
                 "data" => $status

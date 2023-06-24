@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
@@ -20,7 +21,7 @@ class TicketTest extends TestCase
      */
     public function test_ticket_list(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/tickets/list');
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -77,7 +78,7 @@ class TicketTest extends TestCase
 
     public function test_ticket_list_pwa()
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->json('GET', '/api/tickets/pwa/list', [
             "status" => "Entregado",
         ], [
@@ -132,7 +133,7 @@ class TicketTest extends TestCase
 
     public function test_ticket_create(): void
     {
-        $user = User::where("name", "=", "mesero")->first();
+        $user = User::where("rol_id", Rol::Mesero->value)->first();
         $response = $this->actingAs($user)->post('/api/tickets/create', [
             "mesa_id" => 1,
             "titular" => "Test",
@@ -210,8 +211,8 @@ class TicketTest extends TestCase
             ]
         ];
         $usersType = [
-            "admin",
-            "cajero"
+            Rol::Administrativo->name,
+            Rol::Cajero->name,
         ];
         $response = $this->post('/api/tickets/create', $request, [
             'Accept' => 'application/json'
@@ -226,7 +227,7 @@ class TicketTest extends TestCase
 
     public function test_ticket_tip(): void
     {
-        $user = User::where("name", "=", "mesero")->first();
+        $user = User::where("rol_id", Rol::Mesero->value)->first();
         $ticket = Ticket::where("user_id", "=", $user->id)->first();
         $response = $this->actingAs($user)->put('/api/tickets/tip', [
             "id" => $ticket->id,
@@ -274,8 +275,8 @@ class TicketTest extends TestCase
             "tip" => 10,
         ];
         $usersType = [
-            "admin",
-            "cajero"
+            Rol::Administrativo->name,
+            Rol::Cajero->name,
         ];
         $response = $this->put('/api/tickets/tip', $request, [
             'Accept' => 'application/json'
@@ -290,7 +291,7 @@ class TicketTest extends TestCase
 
     public function test_ticket_pay(): void
     {
-        $user = User::where("name", "=", "cajero")->first();
+        $user = User::where("rol_id", Rol::Cajero->value)->first();
         $ticket = Ticket::where("status", "!=", TicketStatus::Closed)->first();
         $response = $this->actingAs($user)->post('/api/tickets/pay', [
             "ticket_id" => $ticket->id,
@@ -354,9 +355,9 @@ class TicketTest extends TestCase
             ]
         ];
         $usersType = [
-            "admin",
-            "mesero",
-            "barra"
+            Rol::Administrativo->name,
+            Rol::Mesero->name,
+            Rol::Bartender->name,
         ];
         $response = $this->post('/api/tickets/pay', $request, [
             'Accept' => 'application/json'
@@ -373,10 +374,16 @@ class TicketTest extends TestCase
     {
         $user = User::where("name", "=", "cajero")->first();
         $ticket = Ticket::where("status", "!=", TicketStatus::Closed)->first();
-        $response = $this->actingAs($user)->put('/api/tickets/cancel', [
+        $response = $this->actingAs($user)->post('/api/tickets/cancel', [
             "id" => $ticket->id,
-            "confirm_ticket" => false,
         ]);
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            "message",
+            "status",
+            "error",
+        ]);
+
         $response->assertStatus(200);
         $response->assertJsonStructure([
             "message",
@@ -385,22 +392,6 @@ class TicketTest extends TestCase
         ]);
         $this->assertDatabaseHas("tickets_tbl", [
             "id" => $ticket->id,
-            "cancel_confirm" => 0,
-        ]);
-        $user = User::where("name", "=", "admin")->first();
-        $response = $this->actingAs($user)->put('/api/tickets/cancel', [
-            "id" => $ticket->id,
-            "confirm_ticket" => true,
-        ]);
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            "message",
-            "status",
-            "error",
-        ]);
-        $this->assertDatabaseHas("tickets_tbl", [
-            "id" => $ticket->id,
-            "cancel_confirm" => 1,
             "status" => TicketStatus::Canceled,
         ]);
     }
@@ -450,8 +441,8 @@ class TicketTest extends TestCase
             ]
         ];
         $usersType = [
-            "admin",
-            "cajero",
+            Rol::Administrativo->name,
+            Rol::Cajero->name,
         ];
         $response = $this->put('/api/tickets/add/products', $request, [
             'Accept' => 'application/json'

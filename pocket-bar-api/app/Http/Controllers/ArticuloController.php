@@ -76,7 +76,10 @@ class ArticuloController extends Controller
                 $articulo["foto_articulo"] = $name_foto;
             }
             $articulo = Articulo::create($articulo);
-            broadcast((new articuloCreated($articulo))->broadcastToEveryone());
+            try {
+                broadcast((new articuloCreated())->broadcastToEveryone());
+            } catch (\Exception) {
+            }
             return response()->json(["message" => "success", "articulo" => $articulo], 201);
         }
     }
@@ -121,7 +124,10 @@ class ArticuloController extends Controller
         }
         $article->update($request->all());
         $article['user_id'] = Auth::id();
-        broadcast((new articuloCreated())->broadcastToEveryone());
+        try {
+            broadcast((new articuloCreated())->broadcastToEveryone());
+        } catch (\Exception) {
+        }
         return response()->json(["message" => "success", "articulo" => $article], 200);
     }
 
@@ -148,7 +154,10 @@ class ArticuloController extends Controller
             $message = "Articulo Desactivado";
         }
         $articulo->save();
-        broadcast((new articuloCreated($articulo))->broadcastToEveryone());
+        try {
+            broadcast((new articuloCreated())->broadcastToEveryone());
+        } catch (\Exception) {
+        }
         return response()->json(['message' => $message, 'articulo' => $articulo]);
     }
 }

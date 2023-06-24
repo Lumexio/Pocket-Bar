@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Rol;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,7 +22,7 @@ class MarcaTest extends TestCase
      */
     public function test_marca_list(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/marca/');
         $response->assertStatus(200);
         $response->assertJsonStructure(
@@ -43,7 +44,7 @@ class MarcaTest extends TestCase
 
     public function test_marca_create(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->post('/api/marca/', [
             "nombre_marca" => "Marca de prueba",
             "descripcion_marca" => "Descripcion de prueba",
@@ -68,7 +69,7 @@ class MarcaTest extends TestCase
 
     public function test_marca_update(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/marca/1', [
             "nombre_marca" => "Marca de prueba",
             "descripcion_marca" => "Descripcion de prueba",
@@ -93,7 +94,7 @@ class MarcaTest extends TestCase
 
     public function test_marca_show(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->get('/api/marca/1');
         $response->assertStatus(200);
         $response->assertJsonStructure(
@@ -112,7 +113,7 @@ class MarcaTest extends TestCase
 
     public function test_marca_activate(): void
     {
-        $user = User::where("name", "=", "admin")->first();
+        $user = User::where("rol_id", Rol::Administrativo->value)->first();
         $response = $this->actingAs($user)->put('/api/marca/activate/1');
         $response->assertStatus(200);
         $response->assertJsonStructure(

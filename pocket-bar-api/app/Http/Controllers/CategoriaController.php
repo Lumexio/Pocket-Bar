@@ -50,7 +50,10 @@ class CategoriaController extends Controller
         } else {
             $categoria = Categoria::create($request->all());
             // categoriaCreated::dispatch($categoria);
-            broadcast((new categoriaCreated($categoria))->broadcastToEveryone());
+            try {
+                broadcast((new categoriaCreated($categoria))->broadcastToEveryone());
+            } catch (\Throwable) {
+            }
             return response()->json([
                 'message' => 'success',
                 'categoria' => $categoria
@@ -94,7 +97,10 @@ class CategoriaController extends Controller
             ], 404);
         }
         $categoria->update($request->all());
-        broadcast((new categoriaCreated($categoria))->broadcastToEveryone());
+        try {
+            broadcast((new categoriaCreated($categoria))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'categoria' => $categoria
@@ -128,7 +134,10 @@ class CategoriaController extends Controller
         }
         $categoria->active = !$categoria->active;
         $categoria->save();
-        broadcast((new categoriaCreated($categoria))->broadcastToEveryone());
+        try {
+            broadcast((new categoriaCreated($categoria))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'categoria' => $categoria

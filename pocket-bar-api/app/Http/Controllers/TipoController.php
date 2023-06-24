@@ -43,8 +43,11 @@ class TipoController extends Controller
             );
         } else {
             $tipo = Tipo::create($request->all());
-            tipoCreated::dispatch($tipo);
-            broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+            try {
+                tipoCreated::dispatch($tipo);
+                broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+            } catch (\Throwable) {
+            }
             return response()->json([
                 'message' => 'success',
                 'tipo' => $tipo
@@ -94,7 +97,10 @@ class TipoController extends Controller
             );
         }
         $tipo->update($request->all());
-        broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+        try {
+            broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'tipo' => $tipo
@@ -110,7 +116,10 @@ class TipoController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $tipo = Tipo::destroy($id);
-        broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+        try {
+            broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json([
             'message' => 'success',
             'tipo' => $tipo
@@ -136,7 +145,10 @@ class TipoController extends Controller
         }
         $tipo->active = !$tipo->active;
         $tipo->save();
-        broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+        try {
+            broadcast((new tipoCreated($tipo))->broadcastToEveryone());
+        } catch (\Throwable) {
+        }
         return response()->json(
             [
                 'message' => 'success',

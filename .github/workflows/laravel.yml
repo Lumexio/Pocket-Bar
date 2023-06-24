@@ -1,0 +1,64 @@
+name: Laravel CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: secret
+          MYSQL_DATABASE: testdatabase
+          MYSQL_ROOT_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      
+      redis:
+        image: redis
+          
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1' # Ajusta la versión de PHP según tus necesidades
+          tools: composer
+      
+      - name: Change to Laravel directory
+        run: cd pocket-bar-api
+
+      - name: Install dependencies
+        run: |
+          cd pocket-bar-api
+          composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+
+      - name: Copy .env file
+        run: cp pocket-bar-api/.env.example pocket-bar-api/.env
+
+      - name: Generate application key
+        run: |
+          cd pocket-bar-api
+          php artisan key:generate
+
+      - name: Run tests
+        env:
+          DB_CONNECTION: mysql
+          DB_PORT: 33306
+          DB_DATABASE: testdatabase
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: |
+          cd pocket-bar-api
+          php artisan migrate --seed
+          php artisan test

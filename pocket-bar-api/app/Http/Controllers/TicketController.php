@@ -463,6 +463,10 @@ class TicketController extends Controller
 
             $payments = collect($request->payments);
             $totalOfPayments = $payments->sum("amount");
+            $totalTip = $payments->sum("tip");
+            $totalCash = $payments->where("payment_type", "cash")->sum("amount");
+            $totalCard = $payments->where("payment_type", "card")->sum("amount");
+            $change = $totalCash - $ticket->total;
             if ($ticket->total != $totalOfPayments) {
                 return response()->json([
                     "error" => "El total de los pagos no coincide con el total del ticket"
@@ -505,7 +509,13 @@ class TicketController extends Controller
             "status" => 200,
             "error" => 0,
             "message" => "Pago realizado correctamente",
-            "data" => $ticket
+            "data" => [
+                "ticket" => $ticket,
+                "total_tip" => $totalTip,
+                "total_cash" => $totalCash,
+                "total_card" => $totalCard,
+                "change" => $change
+            ]
         ], 200);
     }
 

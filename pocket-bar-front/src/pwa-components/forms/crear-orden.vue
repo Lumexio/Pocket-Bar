@@ -78,7 +78,7 @@
 									flat
 									light
 									class="mb-1"
-									 :dark="$store.getters.hasdarkflag" 
+									:dark="$store.getters.hasdarkflag"
 									color="transparent"
 								>
 									<v-text-field
@@ -93,7 +93,7 @@
 							</template>
 
 							<template v-slot:default="props">
-								<v-row v-for="item in props.items" :key="item.id" >
+								<v-row v-for="item in props.items" :key="item.id">
 									<v-card
 										:color="cambio(item)"
 										@click.prevent="cajaProductos(item)"
@@ -141,10 +141,18 @@
 									<span class="mr-4 grey--text">
 										Page {{ page }} of {{ numberOfPages }}
 									</span>
-									<v-btn :dark="$store.getters.hasdarkflag" class="mr-1" @click.prevent="formerPage">
+									<v-btn
+										:dark="$store.getters.hasdarkflag"
+										class="mr-1"
+										@click.prevent="formerPage"
+									>
 										<v-icon>mdi-chevron-left</v-icon>
 									</v-btn>
-									<v-btn :dark="$store.getters.hasdarkflag" class="ml-1" @click.prevent="nextPage">
+									<v-btn
+										:dark="$store.getters.hasdarkflag"
+										class="ml-1"
+										@click.prevent="nextPage"
+									>
 										<v-icon>mdi-chevron-right</v-icon>
 									</v-btn>
 								</v-row>

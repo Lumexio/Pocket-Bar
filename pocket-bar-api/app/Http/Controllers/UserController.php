@@ -127,8 +127,8 @@ class UserController extends Controller
         $user->active = !$user->active;
         $user->save();
         try {
-            userCreated::dispatch($user);
-        } catch (\Throwable) {
+            broadcast((new userCreated())->broadcastToEveryone());
+        } catch (\Exception) {
         }
         return response()->json([
             'message' => 'success',

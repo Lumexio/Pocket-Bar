@@ -11,7 +11,7 @@
 			sort-by="cantidad_articulo" class="elevation-1" :search="search"
 			:custom-filter="filterOnlyCapsText.toUpperCase">
 			<template v-slot:top>
-				<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
+				<v-progress-linear height="6" indeterminate color="cyan" :active="cargaTabla"></v-progress-linear>
 				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
 					<v-card>
 						<v-card-title>
@@ -52,21 +52,19 @@
 						</span>
 					</template>
 					<template v-slot:buttonsuccess>
-						<v-btn large :disabled="cargando2 == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
+						<v-btn large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
 							" @click.prevent="activateItemConfirm">
-							<span v-show="cargando2 == false">confirmar</span>
-							<v-progress-circular v-show="cargando2 == true" :active="cargando2" :indeterminate="cargando2"
+							<span v-show="cargaDialog == false">confirmar</span>
+							<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
 								:size="20"></v-progress-circular>
 						</v-btn>
 					</template>
 				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
-				<v-chip :color="getActivo(item.active)" dark>
-					<span v-show="item.active === 1 && getActivo(item.active) === `amber lighten-1`
-						">En servicio</span>
-					<span v-show="item.active === 0 && getActivo(item.active) === `cyan darken-1`
-						">Fuera de servcio</span>
+				<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
+					<span v-show="item.active === 1">En servicio</span>
+					<span v-show="item.active === 0">Fuera de servcio</span>
 				</v-chip>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
@@ -112,8 +110,8 @@ export default {
 		dialog: false,
 		dialogActivate: false,
 		search: "",
-		cargando2: false,
-		cargando: true,
+		cargaDialog: false,
+		cargaTabla: true,
 		expanded: [],
 		headers: [
 			{
@@ -157,12 +155,12 @@ export default {
 		getCategorias(this.categoriaArray)
 			.then((response) => {
 				if (response.stats === 200) {
-					this.cargando = false;
+					this.cargaTabla = false;
 				}
 			})
 			.catch((e) => {
 				console.log(e);
-				this.cargando = true;
+				this.cargaTabla = true;
 			});
 	},
 
@@ -186,9 +184,9 @@ export default {
 	methods: {
 		getActivo(status) {
 			if (status === 1) {
-				return "amber lighten-1";
+				return this.$store.getters.hasdarkflag?"amber darken-1":"amber lighten-1";
 			} else if (status === 0) {
-				return "cyan darken-1";
+				return this.$store.getters.hasdarkflag?"cyan darken-1":"cyan lighten-1";
 			}
 		},
 		onFocus() {
@@ -221,10 +219,10 @@ export default {
 			this.dialogActivate = true;
 		},
 		activateItemConfirm() {
-			this.cargando2 = true;
+			this.cargaDialog = true;
 			activateCategoria(this.editedItem.id).then((response) => {
 				if (response.status === 200) {
-					this.cargando2 = false;
+					this.cargaDialog = false;
 					this.closeDelete();
 				}
 			});

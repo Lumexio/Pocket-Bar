@@ -47,7 +47,7 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogDelete" max-width="500px">
+			<!-- <v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogActivate" max-width="500px">
 				<v-card>
 					<v-card-title v-show="editedItem.active === false" class="headline">
 						¿Estas seguro de querer habilitarlo?
@@ -55,15 +55,33 @@
 					<v-card-title v-show="editedItem.active === true" class="headline">
 						¿Quieres deshabilitarlo?
 					</v-card-title>
-					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
+					<v-card-actions v-on:keyup.enter="activateItemConfirm">
 						<v-spacer></v-spacer>
 						<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
 						<v-btn :color="$store.getters.hasdarkflag ? 'blue darken-1' : 'blue lighten-1'"
-							@click.prevent="deleteItemConfirm">Aceptar</v-btn>
+							@click.prevent="activateItemConfirm">Aceptar</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-dialog>
+			</v-dialog> -->
+			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+					<template v-slot:titledialog>
+						<span v-show="editedItem.active === false" class="headline">
+							¿Estas seguro de querer habilitarlo?
+						</span>
+						<span v-show="editedItem.active === true" class="headline">
+							¿Quieres deshabilitarlo?
+						</span>
+					</template>
+					<template v-slot:buttonsuccess>
+						<v-btn v-on:keyup.enter="activateItemConfirm" large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
+							" @click.prevent="activateItemConfirm">
+							<span v-show="cargaDialog == false">confirmar</span>
+							<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
+								:size="20"></v-progress-circular>
+						</v-btn>
+					</template>
+				</modalConfirmation>
 		</template>
 		<template v-slot:[`item.name_rol`]="{ item }">
 			<v-chip :color="getColor(item.name_rol)" :dark="$store.getters.hasdarkflag">
@@ -101,6 +119,7 @@
 </template>
 
 <script>
+import modalConfirmation from "../global/modal-confirmation.vue";
 import axios from "axios";
 import store from "@/store";
 import { upperConverter } from "@/special/uppercases-converter.js";
@@ -111,12 +130,16 @@ axios.defaults.baseURL =
 	"http://" + window.location.hostname /*"127.0.0.1"*/ + ":8000";
 export default {
 	name: "tabla-usuarios",
+	components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		dialog: false,
-		dialogDelete: false,
+		dialogActivate: false,
 		search: "",
 		password: "",
 		cargando: true,
+		cargaDialog:	false,
 		show3: false,
 
 		headers: [
@@ -201,7 +224,7 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
@@ -285,14 +308,16 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.usersArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
-		deleteItemConfirm() {
+		activateItemConfirm() {
+			this.cargaDialog	= true;
 			axios
 				.put("api/user/activate/" + this.editedItem.id)
 				.then((response) => {
 					if (response.data.message === "success") {
 						this.usersArray.splice(this.editedIndex, 1);
+						this.cargaDialog	= false;
 						this.closeDelete();
 					}
 				})
@@ -308,7 +333,7 @@ export default {
 		},
 
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;

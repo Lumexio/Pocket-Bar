@@ -1,17 +1,40 @@
 <template>
-	<v-data-table :dark="this.$store.getters.hasdarkflag" id="tabla" :headers="headers" show-expand
-		:expanded.sync="expanded" :items="marcaArray" sort-by="cantidad_articulo" class="elevation-1" :search="search"
-		:custom-filter="filterOnlyCapsText.toUpperCase">
+	<v-data-table
+		:dark="this.$store.getters.hasdarkflag"
+		id="tabla"
+		:headers="headers"
+		show-expand
+		:expanded.sync="expanded"
+		:items="marcaArray"
+		sort-by="cantidad_articulo"
+		class="elevation-1"
+		:search="search"
+		:custom-filter="filterOnlyCapsText.toUpperCase"
+	>
 		<template v-slot:top>
 			<v-toolbar flat color="transparent">
 				<v-toolbar-title>Tabla marca</v-toolbar-title>
 				<v-divider inset vertical class="ml-4"></v-divider>
 				<v-spacer></v-spacer>
-				<v-text-field v-model="search" label="Buscar marca" class="mt-4" id="onsearch"></v-text-field>
+				<v-text-field
+					v-model="search"
+					label="Buscar marca"
+					class="mt-4"
+					id="onsearch"
+				></v-text-field>
 			</v-toolbar>
-			<v-progress-linear height="6" indeterminate color="cyan" :active="cargando">
+			<v-progress-linear
+				height="6"
+				indeterminate
+				color="cyan"
+				:active="cargando"
+			>
 			</v-progress-linear>
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
+			<v-dialog
+				:dark="$store.getters.hasdarkflag"
+				v-model="dialog"
+				max-width="500px"
+			>
 				<v-card>
 					<v-card-title>
 						<h1 class="headline">{{ formTitle }}</h1>
@@ -21,7 +44,10 @@
 						<v-container>
 							<v-row>
 								<v-col cols="12" sm="6" md="4">
-									<v-text-field v-model="editedItem.nombre_marca" label="Nombre"></v-text-field>
+									<v-text-field
+										v-model="editedItem.nombre_marca"
+										label="Nombre"
+									></v-text-field>
 								</v-col>
 							</v-row>
 						</v-container>
@@ -48,31 +74,71 @@
 					</span>
 				</template>
 				<template v-slot:buttonsuccess>
-					<v-btn large :disabled="cargando2 == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
-						" @click.prevent="activateItemConfirm">
+					<v-btn
+						large
+						:disabled="cargando2 == true"
+						:color="
+							$store.getters.hasdarkflag
+								? editedItem.active == 1
+									? 'red darken-4'
+									: 'lime darken-2'
+								: editedItem.active == 1
+								? 'red lighten-2'
+								: 'lime accent-4'"
+						@click.prevent="activateItemConfirm"
+					>
 						<span v-show="cargando2 == false">confirmar</span>
-						<v-progress-circular v-show="cargando2 == true" :active="cargando2" :indeterminate="cargando2"
-							:size="20"></v-progress-circular>
+						<v-progress-circular
+							v-show="cargando2 == true"
+							:active="cargando2"
+							:indeterminate="cargando2"
+							:size="20"
+						></v-progress-circular>
 					</v-btn>
 				</template>
 			</modalConfirmation>
 		</template>
 		<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
-				<span v-show="item.active === 1 && getActivo(item.active) === `amber lighten-1`
-					">En servicio</span>
-				<span v-show="item.active === 0 && getActivo(item.active) === `cyan darken-1`
-					">Fuera de servcio</span>
+			<v-chip
+				:color="getActivo(item.active)"
+				:dark="$store.getters.hasdarkflag"
+			>
+				<span
+					v-show="
+						item.active === 1 && getActivo(item.active) === `amber lighten-1`
+					"
+					>En servicio</span
+				>
+				<span
+					v-show="
+						item.active === 0 && getActivo(item.active) === `cyan darken-1`
+					"
+					>Fuera de servcio</span
+				>
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small :dark="$store.getters.hasdarkflag" @click.prevent="editItem(item)">
+			<v-icon
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="editItem(item)"
+			>
 				mdi-pencil
 			</v-icon>
-			<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
+			<v-icon
+				v-show="item.active === 1"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
 				mdi-lightbulb-on
 			</v-icon>
-			<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
+			<v-icon
+				v-show="item.active === 0"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
 				mdi-lightbulb-on-outline
 			</v-icon>
 		</template>

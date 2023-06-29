@@ -35,7 +35,6 @@
     "watch": "^1.0.2"
   },
   "devDependencies": {
-    "@vue/runtime-dom": "latest",
     "@types/store": "^2.0.2",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-eslint": "^4.5.13",

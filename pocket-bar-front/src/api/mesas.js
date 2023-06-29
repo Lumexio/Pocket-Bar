@@ -18,6 +18,7 @@ export function getMesas(mesaArray) {
             id: element.id,
             nombre_mesa: element.nombre_mesa,
             descripcion_mesa: element.descripcion_mesa,
+            active: element.active,
           };
           if (!datos) return;
           mesaArray.push(datos);
@@ -50,8 +51,12 @@ export function postMesas(enviar) {
       }
     });
 }
-export function deleteMesa(id) {
-  axios.delete("api/mesa/" + id).catch((error) => console.log(error));
+export function activationMesas(id) {
+  return new Promise((resolve, reject) => {
+    axios.put("api/mesa/activate/" + id).then((response) => {
+      resolve(response);
+    }).catch((error) => reject(error) );
+  });
 }
 export function editMesa(url) {
   axios
@@ -62,4 +67,4 @@ export function editMesa(url) {
     .catch((error) => console.log(error));
 }
 
-export default { getMesas, postMesas, deleteMesa, editMesa }
+export default { getMesas, postMesas, activationMesas, editMesa }

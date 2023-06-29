@@ -45,7 +45,6 @@ class MesaController extends Controller
             );
         } else {
             $mesa = Mesa::create($request->all());
-
             try {
                 broadcast((new mesaCreated($mesa))->broadcastToEveryone());
             } catch (\Exception) {
@@ -168,5 +167,9 @@ class MesaController extends Controller
             ],
             200
         );
+    }
+    public function test()
+    {
+        dd("test");
     }
 }

@@ -26,7 +26,7 @@
 					height="6"
 					indeterminate
 					color="cyan"
-					:active="cargando"
+					:active="cargaTabla"
 				></v-progress-linear>
 				<v-dialog
 					:dark="$store.getters.hasdarkflag"
@@ -75,9 +75,9 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog
+				<!-- <v-dialog
 					:dark="$store.getters.hasdarkflag"
-					v-model="dialogDelete"
+					v-model="dialogActivate"
 					max-width="500px"
 				>
 					<v-card>
@@ -92,13 +92,47 @@
 							<v-btn
 								color="blue darken-1"
 								text
-								@click.prevent="deleteItemConfirm"
+								@click.prevent="activationConfirm"
 								>Aceptar</v-btn
 							>
 							<v-spacer></v-spacer>
 						</v-card-actions>
 					</v-card>
-				</v-dialog>
+				</v-dialog> -->
+				<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+				<template v-slot:titledialog>
+					<span v-show="editedItem.active === 0" class="headline">
+						¿Estas seguro de querer habilitarlo?
+					</span>
+					<span v-show="editedItem.active === 1" class="headline">
+						¿Quieres deshabilitarlo?
+					</span>
+				</template>
+				<template v-slot:buttonsuccess>
+					<v-btn
+						v-on:keyup.enter="activationConfirm"
+						large
+						:disabled="cargaDialog == true"
+						:color="
+							$store.getters.hasdarkflag
+								? editedItem.active == 1
+									? 'red darken-4'
+									: 'lime darken-2'
+								: editedItem.active == 1
+								? 'red lighten-2'
+								: 'lime accent-4'"
+						@click.prevent="activationConfirm"
+					>
+						<span v-show="cargaDialog == false">confirmar</span>
+						<v-progress-circular
+							v-show="cargaDialog == true"
+							:active="cargaDialog"
+							:indeterminate="cargaDialog"
+							:size="20"
+						></v-progress-circular>
+					</v-btn>
+				</template>
+			</modalConfirmation>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon
@@ -110,12 +144,21 @@
 				</v-icon>
 
 				<v-icon
-					small
-					:dark="$store.getters.hasdarkflag"
-					@click.prevent="deleteItem(item)"
-				>
-					mdi-delete
-				</v-icon>
+				v-show="item.active === 1"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on
+			</v-icon>
+			<v-icon
+				v-show="item.active === 0"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
+				mdi-lightbulb-on-outline
+			</v-icon>
 			</template>
 			<template v-slot:no-data>
 				<span>Datos no disponibles.</span>
@@ -130,15 +173,20 @@
 </template>
 
 <script>
-import { getMesas, deleteMesa, editMesa } from "@/api/mesas.js";
+import modalConfirmation from "../global/modal-confirmation.vue";
+import { getMesas, activationMesas, editMesa } from "@/api/mesas.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
-	nombre_mesa: "tabla-mesa",
+	name: "tabla-mesa",
+	components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		dialog: false,
-		dialogDelete: false,
+		dialogActivate: false,
 		search: "",
-		cargando: true,
+		cargaTabla: true,
+		cargaDialog: false,
 		expanded: [],
 		headers: [
 			{
@@ -178,12 +226,12 @@ export default {
 		getMesas(this.mesaArray)
 			.then((response) => {
 				if (response.stats === 200) {
-					this.cargando = false;
+					this.cargaTabla = false;
 				}
 			})
 			.catch((e) => {
 				console.log(e);
-				this.cargando = true;
+				this.cargaTabla = true;
 			});
 	},
 
@@ -197,7 +245,7 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
@@ -233,15 +281,18 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.mesaArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
 
-		deleteItemConfirm() {
-			this.mesaArray.splice(this.editedIndex, 1);
-			let id = this.editedItem.id;
-			deleteMesa(id);
-
-			this.closeDelete();
+		activationConfirm() {
+			this.cargaDialog = false;
+			activationMesas(this.editedItem.id).then((response) => {
+				console.log(response);
+				if (response.stats === 200) {
+					this.cargaDialog = false;
+					this.closeDelete();
+				}
+			});
 		},
 
 		close() {
@@ -253,7 +304,7 @@ export default {
 		},
 
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;

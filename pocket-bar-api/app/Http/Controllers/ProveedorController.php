@@ -145,7 +145,7 @@ class ProveedorController extends Controller
         $proveedor->active = !$proveedor->active;
         $proveedor->save();
         try {
-            broadcast((new proveedorCreated($proveedor))->broadcastToEveryone());
+            broadcast((new proveedorCreated())->broadcastToEveryone());
         } catch (\Throwable) {
         }
         return response()->json(

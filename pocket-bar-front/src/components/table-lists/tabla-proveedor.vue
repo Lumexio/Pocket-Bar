@@ -230,11 +230,9 @@ export default {
 		},
 		activateItemConfirm() {
 			activationProveedores(this.editedItem.id).then((response) => {
-				
 				if (response.status === 200) {
 					this.cargaDialog = false;
 					this.closeDelete();
-					console.log(response);
 				}
 			});
 		},

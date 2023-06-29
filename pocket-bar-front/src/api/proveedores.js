@@ -45,7 +45,12 @@ export function postProveedores(enviar) {
     });
 }
 export function activationProveedores(id) {
-  axios.put("api/proveedor/activate/" + id).catch((error) => console.log(error));
+  return new Promise((resolve, reject) => {
+    axios.put("api/proveedor/activate/" + id).then((response) => {
+      response;
+      resolve(response);
+    }).catch((error) => console.log(reject(error)));
+  });
 }
 export function editProveedores(url) {
   axios

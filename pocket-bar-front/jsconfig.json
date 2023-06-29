@@ -1,5 +1,6 @@
 {
  "compilerOptions": {
+   // "target": 2, // For Vue version <= 2.6.14
   "module": "commonjs",
   "target": "es6",
   "allowJs": true,

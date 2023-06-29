@@ -4,15 +4,36 @@
 			<v-toolbar-title>Tabla categoria</v-toolbar-title>
 			<v-divider class="ml-4" inset vertical></v-divider>
 			<v-spacer></v-spacer>
-			<v-text-field v-model="search" label="Buscar categoria" class="mt-4" id="onsearch"></v-text-field>
+			<v-text-field
+				v-model="search"
+				label="Buscar categoria"
+				class="mt-4"
+				id="onsearch"
+			></v-text-field>
 		</v-toolbar>
 
-		<v-data-table :headers="headers" show-expand :expanded.sync="expanded" :items="categoriaArray"
-			sort-by="cantidad_articulo" class="elevation-1" :search="search"
-			:custom-filter="filterOnlyCapsText.toUpperCase">
+		<v-data-table
+			:headers="headers"
+			show-expand
+			:expanded.sync="expanded"
+			:items="categoriaArray"
+			sort-by="cantidad_articulo"
+			class="elevation-1"
+			:search="search"
+			:custom-filter="filterOnlyCapsText.toUpperCase"
+		>
 			<template v-slot:top>
-				<v-progress-linear height="6" indeterminate color="cyan" :active="cargaTabla"></v-progress-linear>
-				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
+				<v-progress-linear
+					height="6"
+					indeterminate
+					color="cyan"
+					:active="cargaTabla"
+				></v-progress-linear>
+				<v-dialog
+					:dark="$store.getters.hasdarkflag"
+					v-model="dialog"
+					max-width="500px"
+				>
 					<v-card>
 						<v-card-title>
 							<h1 class="headline">{{ formTitle }}</h1>
@@ -22,18 +43,31 @@
 							<v-container>
 								<v-row>
 									<v-col>
-										<v-text-field v-model="editedItem.nombre_categoria" label="Nombre"></v-text-field>
+										<v-text-field
+											v-model="editedItem.nombre_categoria"
+											label="Nombre"
+										></v-text-field>
 									</v-col>
 								</v-row>
-								<v-row><v-col>
-										<v-textarea v-model="editedItem.descripcion_categoria" label="Descrpción"
-											type="text"></v-textarea> </v-col></v-row>
+								<v-row
+									><v-col>
+										<v-textarea
+											v-model="editedItem.descripcion_categoria"
+											label="Descrpción"
+											type="text"
+										></v-textarea> </v-col
+								></v-row>
 							</v-container>
 						</v-card-text>
 
 						<v-card-actions>
 							<v-spacer></v-spacer>
-							<v-btn color="blue darken-1" v-on:keyup.enter="save" text @click.prevent="close">
+							<v-btn
+								color="blue darken-1"
+								v-on:keyup.enter="save"
+								text
+								@click.prevent="close"
+							>
 								Cancelar
 							</v-btn>
 							<v-btn color="blue darken-1" text @click.prevent="save">
@@ -52,32 +86,62 @@
 						</span>
 					</template>
 					<template v-slot:buttonsuccess>
-						<v-btn large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
-							" @click.prevent="activateItemConfirm">
+						<v-btn
+							large
+							:disabled="cargaDialog == true"
+							:color="
+							$store.getters.hasdarkflag
+								? editedItem.active == 1
+									? 'red darken-4'
+									: 'lime darken-2'
+								: editedItem.active == 1
+								? 'red lighten-2'
+								: 'lime accent-4'"		
+							@click.prevent="activateItemConfirm"
+						>
 							<span v-show="cargaDialog == false">confirmar</span>
-							<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
-								:size="20"></v-progress-circular>
+							<v-progress-circular
+								v-show="cargaDialog == true"
+								:active="cargaDialog"
+								:indeterminate="cargaDialog"
+								:size="20"
+							></v-progress-circular>
 						</v-btn>
 					</template>
 				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
-				<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
+				<v-chip
+					:color="getActivo(item.active)"
+					:dark="$store.getters.hasdarkflag"
+				>
 					<span v-show="item.active === 1">En servicio</span>
 					<span v-show="item.active === 0">Fuera de servcio</span>
 				</v-chip>
 			</template>
 			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon small :dark="$store.getters.hasdarkflag" @click.prevent="editItem(item)">
+				<v-icon
+					small
+					:dark="$store.getters.hasdarkflag"
+					@click.prevent="editItem(item)"
+				>
 					mdi-pencil
 				</v-icon>
 
-				<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag"
-					@click.prevent="deleteItem(item)">
+				<v-icon
+					v-show="item.active === 1"
+					small
+					:dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)"
+				>
 					mdi-lightbulb-on
 				</v-icon>
-				<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag"
-					@click.prevent="deleteItem(item)">
+				<v-icon
+					v-show="item.active === 0"
+					small
+					:dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)"
+				>
 					mdi-lightbulb-on-outline
 				</v-icon>
 			</template>
@@ -149,7 +213,6 @@ export default {
 	mounted() {
 		this.onFocus();
 		window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
-
 			this.categoriaArray = e.categorias.original.categorias;
 		});
 		getCategorias(this.categoriaArray)
@@ -179,14 +242,18 @@ export default {
 		},
 	},
 
-	created() { },
+	created() {},
 
 	methods: {
 		getActivo(status) {
 			if (status === 1) {
-				return this.$store.getters.hasdarkflag?"amber darken-1":"amber lighten-1";
+				return this.$store.getters.hasdarkflag
+					? "amber darken-1"
+					: "amber lighten-1";
 			} else if (status === 0) {
-				return this.$store.getters.hasdarkflag?"cyan darken-1":"cyan lighten-1";
+				return this.$store.getters.hasdarkflag
+					? "cyan darken-1"
+					: "cyan lighten-1";
 			}
 		},
 		onFocus() {
@@ -226,7 +293,7 @@ export default {
 					this.closeDelete();
 				}
 			});
-			this.closeDelete();
+			
 		},
 
 		close() {
@@ -252,8 +319,9 @@ export default {
 				send.nombre_categoria = upperConverter(send.nombre_categoria);
 				let url = "api/categoria/";
 				url = url + send.id;
-				url = `${url}?${"nombre_categoria=" + send.nombre_categoria}&${"descripcion_categoria=" + send.descripcion_categoria
-					}`;
+				url = `${url}?${"nombre_categoria=" + send.nombre_categoria}&${
+					"descripcion_categoria=" + send.descripcion_categoria
+				}`;
 				editCategoria(url);
 				window.Echo.channel("categorias").listen("categoriaCreated", (e) => {
 					this.itemsc = e.categorias;

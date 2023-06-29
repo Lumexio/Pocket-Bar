@@ -11,7 +11,7 @@
 			:expanded.sync="expanded" :items="proveedorArray" sort-by="cantidad_articulo" class="elevation-1"
 			:search="search" :custom-filter="filterOnlyCapsText.toUpperCase">
 			<template v-slot:top>
-				<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
+				<v-progress-linear height="6" indeterminate color="cyan" :active="cargandoTabla"></v-progress-linear>
 
 				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
 					<v-card>
@@ -40,22 +40,39 @@
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
-				<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogDelete" max-width="500px">
-					<v-card>
-						<v-card-title v-show="editedItem.active === 0" class="headline">
+				<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+					<template v-slot:titledialog>
+						<span v-show="editedItem.active === 0" class="headline">
 							¿Estas seguro de querer habilitarlo?
-						</v-card-title>
-						<v-card-title v-show="editedItem.active === 1" class="headline">
+						</span>
+						<span v-show="editedItem.active === 1" class="headline">
 							¿Quieres deshabilitarlo?
-						</v-card-title>
-						<v-card-actions v-on:keyup.enter="deleteItemConfirm">
-							<v-spacer></v-spacer>
-							<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
-							<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm">Aceptar</v-btn>
-							<v-spacer></v-spacer>
-						</v-card-actions>
-					</v-card>
-				</v-dialog>
+						</span>
+					</template>
+					<template v-slot:buttonsuccess>
+						<v-btn
+							large
+							:disabled="cargaDialog == true"
+							:color="
+							$store.getters.hasdarkflag
+								? editedItem.active == 1
+									? 'red darken-4'
+									: 'lime darken-2'
+								: editedItem.active == 1
+								? 'red lighten-2'
+								: 'lime accent-4'"		
+							@click.prevent="activateItemConfirm"
+						>
+							<span v-show="cargaDialog == false">confirmar</span>
+							<v-progress-circular
+								v-show="cargaDialog == true"
+								:active="cargaDialog"
+								:indeterminate="cargaDialog"
+								:size="20"
+							></v-progress-circular>
+						</v-btn>
+					</template>
+				</modalConfirmation>
 			</template>
 			<template v-slot:[`item.active`]="{ item }">
 				<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
@@ -70,10 +87,10 @@
 					mdi-pencil
 				</v-icon>
 
-				<v-icon v-show="item.active === 1" small dark @click.prevent="deleteItem(item)">
+				<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
 					mdi-lightbulb-on
 				</v-icon>
-				<v-icon v-show="item.active === 0" small dark @click.prevent="deleteItem(item)">
+				<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
 					mdi-lightbulb-on-outline
 				</v-icon>
 			</template>
@@ -91,6 +108,7 @@
 </template>
 
 <script>
+import modalConfirmation from "../global/modal-confirmation.vue";
 import {
 	getProveedores,
 	activationProveedores,
@@ -99,11 +117,15 @@ import {
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
 	nombre_proveedor: "tabla-proveedor",
+		components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		dialog: false,
-		dialogDelete: false,
+		dialogActivate: false,
+		cargaDialog: false,
 		search: "",
-		cargando: true,
+		cargandoTabla: true,
 		expanded: [],
 
 		headers: [
@@ -146,12 +168,12 @@ export default {
 		getProveedores(this.proveedorArray)
 			.then((response) => {
 				if (response.stats === 200) {
-					this.cargando = false;
+					this.cargandoTabla = false;
 				}
 			})
 			.catch((e) => {
 				console.log(e);
-				this.cargando = true;
+				this.cargandoTabla = true;
 			});
 	},
 
@@ -165,7 +187,7 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
@@ -204,11 +226,17 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.proveedorArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
-		deleteItemConfirm() {
-			activationProveedores(this.editedItem.id);
-			this.closeDelete();
+		activateItemConfirm() {
+			activationProveedores(this.editedItem.id).then((response) => {
+				
+				if (response.status === 200) {
+					this.cargaDialog = false;
+					this.closeDelete();
+					console.log(response);
+				}
+			});
 		},
 
 		close() {
@@ -220,7 +248,7 @@ export default {
 		},
 
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;

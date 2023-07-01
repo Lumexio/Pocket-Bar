@@ -40,7 +40,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('categoria', 'CategoriaController')->except(['destroy', 'create', 'edit']);
     Route::put('/categoria/activate/{id}', 'CategoriaController@activate');
     Route::resource('mesa', 'MesaController')->except(['destroy', 'create', 'edit']);
-    Route::get('/mesa/activ', 'MesaController@activ');
+    Route::put('/mesa/activate/{id}', 'MesaController@activate');
 
 
 

@@ -42,6 +42,15 @@ class UserController extends Controller
      */
     public function store(UsuarioValidationRequest $request): JsonResponse
     {
+        $user = User::where('name', $request->name)->first();
+        if (!empty($user)) {
+            return response()->json(
+                [
+                    'message' => 'El usuario ya existe.'
+                ],
+                404
+            );
+        }
         $user = User::create($request->all());
         try {
             broadcast((new userCreated())->broadcastToEveryone());

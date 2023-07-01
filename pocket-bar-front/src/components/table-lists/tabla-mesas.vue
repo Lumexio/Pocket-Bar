@@ -287,8 +287,7 @@ export default {
 		activationConfirm() {
 			this.cargaDialog = false;
 			activationMesas(this.editedItem.id).then((response) => {
-				console.log(response);
-				if (response.stats === 200) {
+				if (response.status === 200) {
 					this.cargaDialog = false;
 					this.closeDelete();
 				}

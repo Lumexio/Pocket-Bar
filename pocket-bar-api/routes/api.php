@@ -29,32 +29,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/list', 'ArticuloController@index');
         Route::put('/activate/{id}', 'ArticuloController@activate');
     });
-    // Route::put("articulo/activate/{id}", "ArticuloController@activate");
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
 
     Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
     Route::put('/rol/activate/{id}', 'RolController@activate');
-    /*Crear  si
-    Eliminar no
-    Mostrar un registro no */
+
     Route::resource('marca', 'MarcaController')->except(['destroy', 'create', 'edit']);
     Route::put('/marca/activate/{id}', 'MarcaController@activate');
-    /*Crear  si
-    Eliminar no
-    Mostrar un registro no */
+
     Route::resource('categoria', 'CategoriaController')->except(['destroy', 'create', 'edit']);
     Route::put('/categoria/activate/{id}', 'CategoriaController@activate');
     Route::resource('mesa', 'MesaController')->except(['destroy', 'create', 'edit']);
-    Route::put('/mesa/activate/{id}', 'MesaController@activate');
+    Route::get('/mesa/activ', 'MesaController@activ');
 
-    /*Crear  si
-Eliminar no
-Mostrar un registro no */
+
+
+
     Route::resource('tipo', 'TipoController')->except(['destroy', 'create', 'edit']);
     Route::put('/tipo/activate/{id}', 'TipoController@activate');
-    /*Crear  si
-Eliminar no
-Mostrar un registro no */
+
     Route::resource('proveedor', 'ProveedorController')->except(['destroy', 'create', 'edit']);
     Route::put('/proveedor/activate/{id}', 'ProveedorController@activate');
     /*Crear  si

@@ -117,27 +117,22 @@ class MesaController extends Controller
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return int
-     */
-    public function destroy(int $id): JsonResponse
-    {
-        $mesa = Mesa::destroy($id);
-        try {
-            broadcast((new mesaCreated($mesa))->broadcastToEveryone());
-        } catch (\Throwable) {
-        }
-        return response()->json(
-            [
-                'message' => 'success',
-                'mesa' => $mesa
-            ],
-            200
-        );
-    }
+
+    // public function destroy(int $id): JsonResponse
+    // {
+    //     $mesa = Mesa::destroy($id);
+    //     try {
+    //         broadcast((new mesaCreated($mesa))->broadcastToEveryone());
+    //     } catch (\Throwable) {
+    //     }
+    //     return response()->json(
+    //         [
+    //             'message' => 'success',
+    //             'mesa' => $mesa
+    //         ],
+    //         200
+    //     );
+    // }
 
     /**
      * @param int $id
@@ -167,9 +162,5 @@ class MesaController extends Controller
             ],
             200
         );
-    }
-    public function test()
-    {
-        dd("test");
     }
 }

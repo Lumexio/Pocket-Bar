@@ -47,7 +47,7 @@ export function postArticulos(enviar) {
     })
     .then((response) => {
       store.commit("setsuccess", false);
-        store.commit("setsuccessMessage", "");
+      store.commit("setsuccessMessage", "");
       if (response.statusText === "Created") {
         store.commit("setsuccess", true);
         store.commit("setsuccessMessage", "Articulo creado correctamente");
@@ -63,8 +63,12 @@ export function postArticulos(enviar) {
       }
     });
 }
-export function deleteArticulos(id) {
-  axios.put("api/articulo/activate/" + id).then((response) => { response;  }).catch((error) => console.log(error));
+export function activateArticulos(id) {
+  return new Promise((resolve, reject) => {
+    axios.put("api/articulo/activate/" + id).then((response) => {
+      resolve(response);
+    }).catch((error) => reject(error));
+  });
 }
 export function editArticulos(url, data) {
 
@@ -75,9 +79,8 @@ export function editArticulos(url, data) {
       if (response.statusText === "Created") {
         store.commit("setsuccess", true);
       }
-      //store.commit("increment", 1);
     })
     .catch((error) => console.log(error));
 }
 
-export default { getArticulos, postArticulos, deleteArticulos, editArticulos }
+export default { getArticulos, postArticulos, activateArticulos, editArticulos }

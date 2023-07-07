@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\Reflection\DocBlock\Type\Collection;
-use Illuminate\Database\Eloquent\Model;
+
+
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+
 
 use App\Events\mesaCreated;
 use App\Http\Requests\MesaUpdateRequest;
@@ -116,23 +116,6 @@ class MesaController extends Controller
             200
         );
     }
-
-
-    // public function destroy(int $id): JsonResponse
-    // {
-    //     $mesa = Mesa::destroy($id);
-    //     try {
-    //         broadcast((new mesaCreated($mesa))->broadcastToEveryone());
-    //     } catch (\Throwable) {
-    //     }
-    //     return response()->json(
-    //         [
-    //             'message' => 'success',
-    //             'mesa' => $mesa
-    //         ],
-    //         200
-    //     );
-    // }
 
     /**
      * @param int $id

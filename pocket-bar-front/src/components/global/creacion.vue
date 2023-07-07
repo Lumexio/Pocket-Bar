@@ -8,12 +8,12 @@
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
 					large
-					color="primary"
+					:dark="$store.getters.hasdarkflag"
+					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
 					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'a']"
 					@shortkey="dialogarticulo = !dialogarticulo"
 					elevation="2"
-					dark
 					@click.prevent="dialogarticulo = true"
 					v-bind="attrs"
 					v-on="on"
@@ -29,12 +29,12 @@
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
 					large
-					color="primary"
+					:dark="$store.getters.hasdarkflag"
+					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
 					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'c']"
 					@shortkey="dialogcategoria = !dialogcategoria"
 					elevation="2"
-					dark
 					@click.prevent="dialogcategoria = true"
 					v-bind="attrs"
 					v-on="on"
@@ -50,12 +50,12 @@
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
 					large
-					color="primary"
+					:dark="$store.getters.hasdarkflag"
+					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
 					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'm']"
 					@shortkey="dialogmarca = !dialogmarca"
 					elevation="2"
-					dark
 					@click.prevent="dialogmarca = true"
 					v-bind="attrs"
 					v-on="on"
@@ -71,12 +71,12 @@
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
 					large
-					color="primary"
+					:dark="$store.getters.hasdarkflag"
+					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
 					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 't']"
 					@shortkey="dialogtipo = !dialogtipo"
 					elevation="2"
-					dark
 					@click.prevent="dialogtipo = true"
 					v-bind="attrs"
 					v-on="on"
@@ -92,12 +92,12 @@
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
 					large
-					color="primary"
+					:dark="$store.getters.hasdarkflag"
+					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
 					class="mt-3 button-main"
 					v-shortkey="['ctrl', 'shift', 'p']"
 					@shortkey="dialogproveedor = !dialogproveedor"
 					elevation="2"
-					dark
 					@click.prevent="dialogproveedor = true"
 					v-bind="attrs"
 					v-on="on"
@@ -171,7 +171,7 @@ export default {
 .black-mode-text {
 	color: yellowgreen;
 }
-.button-main{
+.button-main {
 	justify-content: start !important;
 	min-inline-size: 9rem !important;
 }

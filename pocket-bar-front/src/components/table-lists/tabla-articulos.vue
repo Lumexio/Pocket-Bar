@@ -1,17 +1,40 @@
 <template>
-	<v-data-table :dark="this.$store.getters.hasdarkflag" :headers="headers" :items="articulosArray"
-		:expanded.sync="expanded" sort-by="cantidad_articulo" class="elevation-1" :search="search" show-expand
-		:custom-filter="filterOnlyCapsText.toUpperCase">
+	<v-data-table
+		:dark="this.$store.getters.hasdarkflag"
+		:headers="headers"
+		:items="articulosArray"
+		:expanded.sync="expanded"
+		sort-by="cantidad_articulo"
+		class="elevation-1"
+		:search="search"
+		show-expand
+		:custom-filter="filterOnlyCapsText.toUpperCase"
+	>
 		<template v-slot:top>
 			<v-toolbar color="transparent" flat>
 				<v-card-title>Tabla artículos</v-card-title>
 				<v-divider inset vertical></v-divider>
 				<v-spacer></v-spacer>
-				<v-text-field label="Buscar artículo" placeholder="Nombre, cantidad, categoria, tipo ...." class="mt-4"
-					v-model="search" id="onsearch" />
+				<v-text-field
+					label="Buscar artículo"
+					placeholder="Nombre, cantidad, categoria, tipo ...."
+					class="mt-4"
+					v-model="search"
+					id="onsearch"
+				/>
 			</v-toolbar>
-			<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" min-width="300px" max-width="600px">
+			<v-progress-linear
+				height="6"
+				indeterminate
+				color="cyan"
+				:active="cargando"
+			></v-progress-linear>
+			<v-dialog
+				:dark="$store.getters.hasdarkflag"
+				v-model="dialog"
+				min-width="300px"
+				max-width="600px"
+			>
 				<v-card>
 					<v-card-title>
 						<h1 class="headline">{{ formTitle }}</h1>
@@ -21,37 +44,76 @@
 						<v-container>
 							<v-row>
 								<v-col sm="4" md="6">
-									<v-text-field v-model="editedItem.nombre_articulo" label="Nombre"></v-text-field>
+									<v-text-field
+										v-model="editedItem.nombre_articulo"
+										label="Nombre"
+									></v-text-field>
 								</v-col>
 								<v-col sm="1" md="2">
-									<v-text-field v-model="editedItem.cantidad_articulo" type="number"
-										label="Cantidad"></v-text-field>
+									<v-text-field
+										v-model="editedItem.cantidad_articulo"
+										type="number"
+										label="Cantidad"
+									></v-text-field>
 								</v-col>
 								<v-col sm="3" md="4">
-									<v-select v-model="selectc" :items="itemsc" item-text="nombre_categoria" item-value="id"
-										label="Categoría"></v-select>
+									<v-select
+										v-model="selectc"
+										:items="itemsc"
+										item-text="nombre_categoria"
+										item-value="id"
+										label="Categoría"
+									></v-select>
 								</v-col>
 								<v-col sm="4" md="6">
-									<v-select v-model="selectt" :items="itemstt" item-text="nombre_tipo" item-value="id"
-										label="Tipo">
+									<v-select
+										v-model="selectt"
+										:items="itemstt"
+										item-text="nombre_tipo"
+										item-value="id"
+										label="Tipo"
+									>
 									</v-select>
 								</v-col>
 								<v-col sm="4" md="6">
-									<v-select v-model="selectm" :items="itemstm" item-text="nombre_marca" item-value="id"
-										label="Marca" required></v-select>
+									<v-select
+										v-model="selectm"
+										:items="itemstm"
+										item-text="nombre_marca"
+										item-value="id"
+										label="Marca"
+										required
+									></v-select>
 								</v-col>
 								<v-col sm="4" md="6">
-									<v-select v-model="selectp" :items="itemsp" item-text="nombre_proveedor" item-value="id"
-										label="Proveedor" required></v-select>
+									<v-select
+										v-model="selectp"
+										:items="itemsp"
+										item-text="nombre_proveedor"
+										item-value="id"
+										label="Proveedor"
+										required
+									></v-select>
 								</v-col>
 								<v-col sm="4" md="6">
-									<v-select v-model="selectst" :items="itemstst" item-text="nombre_status"
-										item-value="status_id" label="Estatus" required></v-select>
+									<v-select
+										v-model="selectst"
+										:items="itemstst"
+										item-text="nombre_status"
+										item-value="status_id"
+										label="Estatus"
+										required
+									></v-select>
 								</v-col>
 							</v-row>
-							<v-row><v-col>
-									<v-textarea v-model="editedItem.descripcion_articulo" label="Descrpción"
-										type="text"></v-textarea> </v-col></v-row>
+							<v-row
+								><v-col>
+									<v-textarea
+										v-model="editedItem.descripcion_articulo"
+										label="Descrpción"
+										type="text"
+									></v-textarea> </v-col
+							></v-row>
 						</v-container>
 					</v-card-text>
 
@@ -67,31 +129,86 @@
 				</v-card>
 			</v-dialog>
 
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogDelete" max-width="500px">
+			<!-- <v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogActivate" max-width="500px">
 				<v-card>
 					<v-card-title class="headline">¿Quieres deshabilitarlo?</v-card-title>
-					<v-card-actions v-on:keyup.enter="deleteItemConfirm">
+					<v-card-actions v-on:keyup.enter="activateItemConfirm">
 						<v-spacer></v-spacer>
 						<v-btn @click.prevent="closeDelete">Cancel</v-btn>
-						<v-btn color="blue darken-1" @click.prevent="deleteItemConfirm">Aceptar</v-btn>
+						<v-btn color="blue darken-1" @click.prevent="activateItemConfirm">Aceptar</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-dialog>
-			<v-dialog v-model="dialogDetail" transition="dialog-bottom-transition" max-width="600">
+			</v-dialog> -->
+			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+				<template v-slot:titledialog>
+					<span v-show="editedItem.deactivated_at === null" class="headline">
+						¿Estas seguro de querer habilitarlo?
+					</span>
+					<span v-show="editedItem.deactivated_at != null" class="headline">
+						¿Quieres deshabilitarlo?
+					</span>
+				</template>
+				<template v-slot:buttonsuccess>
+					<v-btn
+						v-on:keyup.enter="activateItemConfirm"
+						large
+						:disabled="cargaDialog == true"
+						:color="
+							$store.getters.hasdarkflag
+								? editedItem.deactivated_at != null
+									? 'red darken-4'
+									: 'lime darken-2'
+								: editedItem.deactivated_at != null
+								? 'red lighten-2'
+								: 'lime accent-4'
+						"
+						@click.prevent="activateItemConfirm"
+					>
+						<span v-show="cargaDialog == false">confirmar</span>
+						<v-progress-circular
+							v-show="cargaDialog == true"
+							:active="cargaDialog"
+							:indeterminate="cargaDialog"
+							:size="20"
+						></v-progress-circular>
+					</v-btn>
+				</template>
+			</modalConfirmation>
+			<v-dialog
+				v-model="dialogDetail"
+				transition="dialog-bottom-transition"
+				max-width="600"
+			>
 				<template v-slot:default="dialogDetail">
 					<v-card :dark="$store.getters.hasdarkflag" :key="count">
 						<v-toolbar flat color="transparent">
 							<v-card-title>
-								Foto {{ editedItem.nombre_articulo }}</v-card-title></v-toolbar>
+								Foto {{ editedItem.nombre_articulo }}</v-card-title
+							></v-toolbar
+						>
 						<v-card-text>
-							<v-img :colspan="headers.length" v-bind:lazy-src="editedItem.foto_articulo" max-height="500"
-								max-width="600" v-bind:src="editedItem.foto_articulo"></v-img>
+							<v-img
+								:colspan="headers.length"
+								v-bind:lazy-src="editedItem.foto_articulo"
+								max-height="500"
+								max-width="600"
+								v-bind:src="editedItem.foto_articulo"
+							></v-img>
 						</v-card-text>
 						<v-card-actions class="justify-end">
-							<v-file-input v-model="photo" prepend-icon="mdi-camera" hide-input
-								label="File input"></v-file-input>
-							<v-btn v-show="photo != null" color="orange" @click.prevent="photochange()">Subir Imagen</v-btn>
+							<v-file-input
+								v-model="photo"
+								prepend-icon="mdi-camera"
+								hide-input
+								label="File input"
+							></v-file-input>
+							<v-btn
+								v-show="photo != null"
+								color="orange"
+								@click.prevent="photochange()"
+								>Subir Imagen</v-btn
+							>
 							<v-btn @click.prevent="dialogDetail.value = false">Close</v-btn>
 						</v-card-actions>
 					</v-card>
@@ -100,18 +217,35 @@
 		</template>
 
 		<template v-slot:[`item.nombre_status`]="{ item }">
-			<v-chip :color="getColor(item.nombre_status)" :dark="$store.getters.hasdarkflag">
+			<v-chip
+				:color="getColor(item.nombre_status)"
+				:dark="$store.getters.hasdarkflag"
+			>
 				{{ item.nombre_status }}
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small @click.prevent="editItem(item)" :dark="$store.getters.hasdarkflag"> mdi-pencil </v-icon>
-			<v-icon v-show="item.deactivated_at === null" small :dark="$store.getters.hasdarkflag"
-				@click.prevent="deleteItem(item)">
+			<v-icon
+				small
+				@click.prevent="editItem(item)"
+				:dark="$store.getters.hasdarkflag"
+			>
+				mdi-pencil
+			</v-icon>
+			<v-icon
+				v-show="item.deactivated_at === null"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
 				mdi-lightbulb-on
 			</v-icon>
-			<v-icon v-show="item.deactivated_at != null" small :dark="$store.getters.hasdarkflag"
-				@click.prevent="deleteItem(item)">
+			<v-icon
+				v-show="item.deactivated_at != null"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
 				mdi-lightbulb-on-outline
 			</v-icon>
 
@@ -131,11 +265,12 @@
 </template>
 
 <script>
+import modalConfirmation from "../global/modal-confirmation.vue";
 import store from "@/store";
 import { postPhoto } from "@/api/photohandler.js";
 import {
 	getArticulos,
-	deleteArticulos,
+	activateArticulos,
 	editArticulos,
 } from "@/api/articulos.js";
 
@@ -156,13 +291,17 @@ import {
 
 export default {
 	name: "tabla-articulos",
+	components: {
+		modalConfirmation,
+	},
 	data: () => ({
 		search: "",
 		dialog: false,
 		singleExpand: false,
-		dialogDelete: false,
+		dialogActivate: false,
 		dialogDetail: false,
 		cargando: true,
+		cargaDialog: false,
 		expanded: [],
 
 		headers: [
@@ -298,7 +437,7 @@ export default {
 		dialog(val) {
 			val || this.close();
 		},
-		dialogDelete(val) {
+		dialogActivate(val) {
 			val || this.closeDelete();
 		},
 	},
@@ -358,7 +497,7 @@ export default {
 		deleteItem(item) {
 			this.editedIndex = this.articulosArray.indexOf(item);
 			this.editedItem = Object.assign({}, item);
-			this.dialogDelete = true;
+			this.dialogActivate = true;
 		},
 		detailItem(item) {
 			this.editedIndex = this.articulosArray.indexOf(item);
@@ -367,10 +506,15 @@ export default {
 			this.dialogDetail = true;
 		},
 
-		deleteItemConfirm() {
-			this.articulosArray.splice(this.editedIndex, 1);
-			deleteArticulos(this.editedItem.id);
-			this.closeDelete();
+		activateItemConfirm() {
+			this.cargaDialog = true;
+			activateArticulos(this.editedItem.id).then((response) => {
+				console.log(response);
+				if (response.status === 200) {
+					this.cargaDialog = false;
+					this.closeDelete();
+				}
+			});
 		},
 
 		close() {
@@ -383,7 +527,7 @@ export default {
 		},
 
 		closeDelete() {
-			this.dialogDelete = false;
+			this.dialogActivate = false;
 			this.$nextTick(() => {
 				this.editedItem = Object.assign({}, this.defaultItem);
 				this.editedIndex = -1;

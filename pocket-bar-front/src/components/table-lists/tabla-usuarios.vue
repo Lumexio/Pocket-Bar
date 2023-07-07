@@ -1,16 +1,37 @@
 <template>
-	<v-data-table :dark="this.$store.getters.hasdarkflag" id="tabla" :headers="headers" :items="usersArray"
-		class="elevation-1" :search="search" :custom-filter="filterOnlyCapsText.toUpperCase">
+	<v-data-table
+		:dark="this.$store.getters.hasdarkflag"
+		id="tabla"
+		:headers="headers"
+		:items="usersArray"
+		class="elevation-1"
+		:search="search"
+		:custom-filter="filterOnlyCapsText.toUpperCase"
+	>
 		<template v-slot:top>
 			<v-toolbar flat color="transparent">
 				<v-toolbar-title>Tabla usuarios</v-toolbar-title>
 				<v-divider class="mx-4" inset vertical></v-divider>
 				<v-spacer></v-spacer>
-				<v-text-field v-model="search" label="Buscar usuario" placeholder="Nombre, correo y rol" class="mt-4"
-					id="onsearch"></v-text-field>
+				<v-text-field
+					v-model="search"
+					label="Buscar usuario"
+					placeholder="Nombre, correo y rol"
+					class="mt-4"
+					id="onsearch"
+				></v-text-field>
 			</v-toolbar>
-			<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
+			<v-progress-linear
+				height="6"
+				indeterminate
+				color="cyan"
+				:active="cargando"
+			></v-progress-linear>
+			<v-dialog
+				:dark="$store.getters.hasdarkflag"
+				v-model="dialog"
+				max-width="500px"
+			>
 				<v-card>
 					<v-card-title>
 						<h1 class="headline">{{ formTitle }}</h1>
@@ -20,20 +41,35 @@
 						<v-container>
 							<v-row>
 								<v-col cols="12">
-									<v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
+									<v-text-field
+										v-model="editedItem.name"
+										label="Nombre"
+									></v-text-field>
 								</v-col>
 
 								<v-col cols="12">
-									<v-select v-model="selectrol" :items="itemsrol" v-on="usersync()" item-text="name_rol"
-										item-value="rol_id" label="Rol"></v-select>
+									<v-select
+										v-model="selectrol"
+										:items="itemsrol"
+										v-on="usersync()"
+										item-text="name_rol"
+										item-value="rol_id"
+										label="Rol"
+									></v-select>
 								</v-col>
 							</v-row>
 							<v-row>
 								<v-col cols="12">
-									<v-text-field :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
-										v-model="editedItem.password" :type="show3 ? 'text' : 'password'"
-										hint="Minimo 8 caracteres" :counter="8" @click:append="show3 = !show3"
-										label="Contraseña" placeholder="Contraseña">
+									<v-text-field
+										:append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
+										v-model="editedItem.password"
+										:type="show3 ? 'text' : 'password'"
+										hint="Minimo 8 caracteres"
+										:counter="8"
+										@click:append="show3 = !show3"
+										label="Contraseña"
+										placeholder="Contraseña"
+									>
 									</v-text-field>
 								</v-col>
 							</v-row>
@@ -65,50 +101,93 @@
 				</v-card>
 			</v-dialog> -->
 			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
-					<template v-slot:titledialog>
-						<span v-show="editedItem.active === false" class="headline">
-							¿Estas seguro de querer habilitarlo?
-						</span>
-						<span v-show="editedItem.active === true" class="headline">
-							¿Quieres deshabilitarlo?
-						</span>
-					</template>
-					<template v-slot:buttonsuccess>
-						<v-btn v-on:keyup.enter="activateItemConfirm" large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag ? 'red darken-4' : 'red lighten-1'
-							" @click.prevent="activateItemConfirm">
-							<span v-show="cargaDialog == false">confirmar</span>
-							<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
-								:size="20"></v-progress-circular>
-						</v-btn>
-					</template>
-				</modalConfirmation>
+				<template v-slot:titledialog>
+					<span v-show="editedItem.active === false" class="headline">
+						¿Estas seguro de querer habilitarlo?
+					</span>
+					<span v-show="editedItem.active === true" class="headline">
+						¿Quieres deshabilitarlo?
+					</span>
+				</template>
+				<template v-slot:buttonsuccess>
+					<v-btn
+						v-on:keyup.enter="activateItemConfirm"
+						large
+						:disabled="cargaDialog == true"
+						:color="
+							$store.getters.hasdarkflag
+								? editedItem.active == 1
+									? 'red darken-4'
+									: 'lime darken-2'
+								: editedItem.active == 1
+								? 'red lighten-2'
+								: 'lime accent-4'
+						"
+						@click.prevent="activateItemConfirm"
+					>
+						<span v-show="cargaDialog == false">confirmar</span>
+						<v-progress-circular
+							v-show="cargaDialog == true"
+							:active="cargaDialog"
+							:indeterminate="cargaDialog"
+							:size="20"
+						></v-progress-circular>
+					</v-btn>
+				</template>
+			</modalConfirmation>
 		</template>
 		<template v-slot:[`item.name_rol`]="{ item }">
-			<v-chip :color="getColor(item.name_rol)" :dark="$store.getters.hasdarkflag">
+			<v-chip
+				:color="getColor(item.name_rol)"
+				:dark="$store.getters.hasdarkflag"
+			>
 				{{ item.name_rol }}
 			</v-chip>
 		</template>
 		<template v-slot:[`item.active`]="{ item }">
-			<v-chip :color="getActivo(item.active)" :dark="$store.getters.hasdarkflag">
-				<span v-show="(item.active === true || item.active === 1) &&
-					getActivo(item.active) === `amber lighten-1`
-					">En servicio</span>
-				<span v-show="(item.active === false || item.active === 0) &&
-					getActivo(item.active) === `cyan darken-1`
-					">Fuera de servcio</span>
+			<v-chip
+				:color="getActivo(item.active)"
+				:dark="$store.getters.hasdarkflag"
+			>
+				<span
+					v-show="
+						(item.active === true || item.active === 1) &&
+						getActivo(item.active) === `amber lighten-1`
+					"
+					>En servicio</span
+				>
+				<span
+					v-show="
+						(item.active === false || item.active === 0) &&
+						getActivo(item.active) === `cyan darken-1`
+					"
+					>Fuera de servcio</span
+				>
 			</v-chip>
 		</template>
 		<template v-slot:[`item.actions`]="{ item }">
-			<v-icon small :dark="$store.getters.hasdarkflag" @click.prevent="editItem(item)">
+			<v-icon
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="editItem(item)"
+			>
 				mdi-pencil
 			</v-icon>
 
-			<v-icon v-show="(item.active === true) | (item.active === 1)" small :dark="$store.getters.hasdarkflag"
-				@click.prevent="deleteItem(item)">
+			<v-icon
+				v-show="(item.active === true) | (item.active === 1)"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
 				mdi-lightbulb-on
 			</v-icon>
-			<v-icon v-show="item.active === false || item.active === 0" small :dark="$store.getters.hasdarkflag"
-				@click.prevent="deleteItem(item)">
+			<v-icon
+				v-show="item.active === false || item.active === 0"
+				small
+				:dark="$store.getters.hasdarkflag"
+				@click.prevent="deleteItem(item)"
+			>
 				mdi-lightbulb-on-outline
 			</v-icon>
 		</template>
@@ -139,7 +218,7 @@ export default {
 		search: "",
 		password: "",
 		cargando: true,
-		cargaDialog:	false,
+		cargaDialog: false,
 		show3: false,
 
 		headers: [
@@ -198,7 +277,6 @@ export default {
 			.catch((error) => console.log(error));
 		getRol(this.itemsrol)
 			.then((response) => {
-
 				this.itemsrol = response.itemsrol;
 
 				if (response.stats === 200) {
@@ -228,9 +306,6 @@ export default {
 			val || this.closeDelete();
 		},
 	},
-
-	created() { },
-
 	methods: {
 		onFocus() {
 			let stext = document.getElementById("onsearch");
@@ -242,17 +317,30 @@ export default {
 			});
 		},
 		getColor(status) {
-
 			if (status == "Administrativo") {
-				return "amber lighten-1";
-			} else if (status == "Meser@") {
-				return "cyan darken-1";
-			} else if (status == "Cajer@") {
-				return "purple darken-1";
+				return this.$store.getters.hasdarkflag
+					? "amber darken-2"
+					: "amber lighten-1";
+			} else if (status == "Gerencia") {
+				return this.$store.getters.hasdarkflag
+					? "amber darken-4"
+					: "orange lighten-1";
+			} else if (status == "Mesero") {
+				return this.$store.getters.hasdarkflag
+					? "cyan darken-1"
+					: "cyan lighten-1";
+			} else if (status == "Cajero") {
+				return this.$store.getters.hasdarkflag
+					? "purple darken-1"
+					: "purple lighten-3";
 			} else if (status == "Bartender") {
-				return "pink darken-1";
-			} else if (status == "Intendencia") {
-				return "indigo lighten-1";
+				return this.$store.getters.hasdarkflag
+					? "pink darken-1"
+					: "pink lighten-3";
+			} else if (status == "Guardia") {
+				return this.$store.getters.hasdarkflag
+					? "indigo darken-1"
+					: "indigo lighten-2";
 			}
 		},
 		getActivo(status) {
@@ -311,17 +399,13 @@ export default {
 			this.dialogActivate = true;
 		},
 		activateItemConfirm() {
-			this.cargaDialog	= true;
-			axios
-				.put("api/user/activate/" + this.editedItem.id)
-				.then((response) => {
-					if (response.data.message === "success") {
-						this.usersArray.splice(this.editedIndex, 1);
-						this.cargaDialog	= false;
-						this.closeDelete();
-					}
-				})
-				.catch((error) => console.log(error));
+			this.cargaDialog = true;
+			axios.put("api/user/activate/" + this.editedItem.id).then((response) => {
+				if (response.data.message === "success") {
+					this.cargaDialog = false;
+					this.closeDelete();
+				}
+			});
 		},
 
 		close() {
@@ -348,8 +432,9 @@ export default {
 				let url = "api/user/";
 
 				url = url + send.id;
-				url = `${url}?${"name=" + send.name}&${"password=" + send.password}&${"rol_id=" + this.selectrol
-					}`;
+				url = `${url}?${"name=" + send.name}&${"password=" + send.password}&${
+					"rol_id=" + this.selectrol
+				}`;
 
 				axios
 					.put(url)

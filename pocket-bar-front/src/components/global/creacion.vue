@@ -168,14 +168,8 @@ export default {
 };
 </script>
 <style scoped>
-.black-mode-text {
-	color: yellowgreen;
-}
 .button-main {
 	justify-content: start !important;
 	min-inline-size: 9rem !important;
-}
-.white-mode-text {
-	color: black;
 }
 </style>

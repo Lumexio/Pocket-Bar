@@ -3,52 +3,33 @@
   En esta tarjeta se encuentra el listado de componentes para crear todos los elementos
   dentro del sistema.
 -->
-	<div style="inline-size: 64%" class="pa-3">
-		<v-row>
-			<v-col align-self="end" cols="2">
-				<v-row>
-					<v-btn
-						large
-						v-shortkey="['ctrl', 'shift', 'u']"
-						@shortkey="dialogusuarios = !dialogusuarios"
-						elevation="2"
-						color="primary"
-						dark
-						
-						@click.prevent="dialogusuarios = true"
-					>
-						<v-icon left large>mdi-plus</v-icon>
-						Usuarios
-					</v-btn>
-				</v-row>
-				<!-- <v-row>
-          <v-btn color="primary" text @click.prevent="dialogrol = !dialogrol">
-            Rol
-          </v-btn>
-        </v-row>-->
-			</v-col>
-		</v-row>
+	<div>
+		<v-btn
+			large
+			v-shortkey="['ctrl', 'shift', 'u']"
+			@shortkey="dialogusuarios = !dialogusuarios"
+			elevation="2"
+			:dark="$store.getters.hasdarkflag"
+			:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
+			@click.prevent="dialogusuarios = true"
+		>
+			<v-icon left large>mdi-plus</v-icon>
+			Usuarios
+		</v-btn>
 
 		<crearusuario :dialogusuarios.sync="dialogusuarios" />
-		<!--
-    <crearrol
-      :parentdialog="dialogrol"
-      v-on:dialogFromChild="syncFromRol($event)"
-     
-    />-->
 	</div>
 </template>
 
 <script>
 import crearusuario from "../cruds/crearusuario.vue";
-//import crearrol from "../cruds/crearrol.vue";
+
 import store from "@/store";
 export default {
 	name: "crearlist",
 
 	components: {
 		crearusuario,
-		//crearrol,
 	},
 	computed: {
 		count() {

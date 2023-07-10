@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<v-row>
-			<v-col sm="6" md="10" class="size-table">
+			<v-col sm="6" md="10">
 				<!-- <tablaArticulos :key="count" /> -->
 				<tablaArticulos />
 			</v-col>
@@ -37,7 +37,4 @@ export default {
 </script>
 
 <style scoped>
-.size-table {
-	max-width: 90%;
-}
 </style>

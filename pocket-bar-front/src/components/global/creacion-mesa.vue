@@ -3,26 +3,19 @@
   En esta tarjeta se encuentra el listado de componentes para crear todos los elementos
   dentro del sistema.
 -->
-	<div style="inline-size: 64%" class="pa-3">
-		<v-row>
-			<v-col align-self="end" cols="2">
-				<v-row>
-					<v-btn
-						large
-						elevation="2"
-						color="primary"
-						v-shortkey="['ctrl', 'shift', 'c']"
-						@shortkey="dialogmesa = !dialogmesa"
-						dark
-						
-						@click.prevent="dialogmesa = !dialogmesa"
-					>
-						<v-icon left large>mdi-plus</v-icon>
-						Mesa
-					</v-btn>
-				</v-row>
-			</v-col>
-		</v-row>
+	<div>
+		<v-btn
+			large
+			elevation="2"
+			:dark="$store.getters.hasdarkflag"
+			:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
+			v-shortkey="['ctrl', 'shift', 'c']"
+			@shortkey="dialogmesa = !dialogmesa"
+			@click.prevent="dialogmesa = !dialogmesa"
+		>
+			<v-icon left large>mdi-plus</v-icon>
+			Mesa
+		</v-btn>
 
 		<crearmesa :dialogmesa.sync="dialogmesa" />
 	</div>
@@ -44,13 +37,4 @@ export default {
 };
 </script>
 <style scoped>
-.list-card {
-	display: flex;
-	align-content: center;
-	justify-content: center;
-	padding: 1em;
-
-	inline-size: 7rem;
-	height: 3em;
-}
 </style>

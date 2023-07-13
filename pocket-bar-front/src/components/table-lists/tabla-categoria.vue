@@ -90,13 +90,14 @@
 							large
 							:disabled="cargaDialog == true"
 							:color="
-							$store.getters.hasdarkflag
-								? editedItem.active == 1
-									? 'red darken-4'
-									: 'lime darken-2'
-								: editedItem.active == 1
-								? 'red lighten-2'
-								: 'lime accent-4'"		
+								$store.getters.hasdarkflag
+									? editedItem.active == 1
+										? 'red darken-4'
+										: 'lime darken-2'
+									: editedItem.active == 1
+									? 'red lighten-2'
+									: 'lime accent-4'
+							"
 							@click.prevent="activateItemConfirm"
 						>
 							<span v-show="cargaDialog == false">confirmar</span>
@@ -293,7 +294,6 @@ export default {
 					this.closeDelete();
 				}
 			});
-			
 		},
 
 		close() {
@@ -336,11 +336,4 @@ export default {
 </script>
 
 <style scoped>
-#tabla {
-	inline-size: 60rem;
-}
-
-.tabla {
-	inline-size: 60rem;
-}
 </style>

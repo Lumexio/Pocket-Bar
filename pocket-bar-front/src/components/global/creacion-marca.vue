@@ -4,19 +4,27 @@
   dentro del sistema.
 -->
 	<div>
-		<v-btn
-			large
-			elevation="2"
-			v-shortkey="['ctrl', 'shift', 'm']"
-			@shortkey="dialogmarca = !dialogmarca"
-			:dark="$store.getters.hasdarkflag"
-			:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
-			@click.prevent="dialogmarca = !dialogmarca"
-		>
-			<v-icon left large :dark="$store.getters.hasdarkflag">mdi-plus</v-icon>
-			Marca
-		</v-btn>
-
+		<v-tooltip open-delay="500" left>
+			<template v-slot:activator="{ on, attrs }">
+				<v-btn
+					class="button-main"
+					large
+					elevation="2"
+					v-shortkey="['ctrl', 'shift', 'm']"
+					@shortkey="dialogmarca = !dialogmarca"
+					:dark="$store.getters.hasdarkflag"
+					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
+					@click.prevent="dialogmarca = !dialogmarca"
+					v-bind="attrs"
+					v-on="on"
+				>
+					<v-icon left large :dark="$store.getters.hasdarkflag"
+						>mdi-plus</v-icon
+					>
+					Marca
+				</v-btn>
+			</template>
+		</v-tooltip>
 		<crearmarca :dialogmarca.sync="dialogmarca" />
 	</div>
 </template>
@@ -37,4 +45,9 @@ export default {
 };
 </script>
 <style scoped>
+.button-main {
+	margin-block-start: 10px;
+	justify-content: start !important;
+	min-inline-size: 9rem !important;
+}
 </style>

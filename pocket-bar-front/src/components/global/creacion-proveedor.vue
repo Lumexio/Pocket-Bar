@@ -6,6 +6,7 @@
 -->
 	<div>
 		<v-btn
+			class="button-main"
 			large
 			elevation="2"
 			v-shortkey="['ctrl', 'shift', 'p']"
@@ -37,4 +38,9 @@ export default {
 };
 </script>
 <style scoped>
+.button-main {
+	margin-block-start: 10px;
+	justify-content: start !important;
+	min-inline-size: 9rem !important;
+}
 </style>

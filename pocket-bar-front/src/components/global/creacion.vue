@@ -4,128 +4,36 @@
   dentro del sistema.
 -->
 	<div>
-		<v-tooltip open-delay="500" left>
+		<v-tooltip
+			v-for="(item, index) in buttonsArray"
+			:key="index"
+			open-delay="500"
+			left
+		>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn
 					large
 					:dark="$store.getters.hasdarkflag"
 					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
 					class="mt-3 button-main"
-					v-shortkey="['ctrl', 'shift', 'a']"
-					@shortkey="dialogarticulo = !dialogarticulo"
+					v-shortkey="['ctrl', 'shift', item.shortkey]"
+					@shortkey="openShortkey(item.title)"
 					elevation="2"
-					@click.prevent="dialogarticulo = true"
+					@click.prevent="openDialog(item.title)"
 					v-bind="attrs"
 					v-on="on"
 				>
 					<v-icon left large>mdi-plus</v-icon>
-					Artículos
+					{{ item.title }}
 				</v-btn>
 			</template>
-			<code>abrir y cerrar:ctrl+shift+a</code>
+			<code>{{ item.tooltipTitle }}</code>
 		</v-tooltip>
-
-		<v-tooltip open-delay="500" left>
-			<template v-slot:activator="{ on, attrs }">
-				<v-btn
-					large
-					:dark="$store.getters.hasdarkflag"
-					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
-					class="mt-3 button-main"
-					v-shortkey="['ctrl', 'shift', 'c']"
-					@shortkey="dialogcategoria = !dialogcategoria"
-					elevation="2"
-					@click.prevent="dialogcategoria = true"
-					v-bind="attrs"
-					v-on="on"
-				>
-					<v-icon left large>mdi-plus</v-icon>
-					Categoría
-				</v-btn>
-			</template>
-			<code>abrir y cerrar:ctrl+shift+c</code>
-		</v-tooltip>
-
-		<v-tooltip open-delay="500" left>
-			<template v-slot:activator="{ on, attrs }">
-				<v-btn
-					large
-					:dark="$store.getters.hasdarkflag"
-					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
-					class="mt-3 button-main"
-					v-shortkey="['ctrl', 'shift', 'm']"
-					@shortkey="dialogmarca = !dialogmarca"
-					elevation="2"
-					@click.prevent="dialogmarca = true"
-					v-bind="attrs"
-					v-on="on"
-				>
-					<v-icon left large>mdi-plus</v-icon>
-					Marca
-				</v-btn>
-			</template>
-			<code>abrir y cerrar:ctrl+shift+m</code>
-		</v-tooltip>
-
-		<v-tooltip open-delay="500" left>
-			<template v-slot:activator="{ on, attrs }">
-				<v-btn
-					large
-					:dark="$store.getters.hasdarkflag"
-					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
-					class="mt-3 button-main"
-					v-shortkey="['ctrl', 'shift', 't']"
-					@shortkey="dialogtipo = !dialogtipo"
-					elevation="2"
-					@click.prevent="dialogtipo = true"
-					v-bind="attrs"
-					v-on="on"
-				>
-					<v-icon left large>mdi-plus</v-icon>
-					Tipo
-				</v-btn>
-			</template>
-			<code>abrir y cerrar:ctrl+shift+t</code>
-		</v-tooltip>
-
-		<v-tooltip open-delay="500" left>
-			<template v-slot:activator="{ on, attrs }">
-				<v-btn
-					large
-					:dark="$store.getters.hasdarkflag"
-					:color="$store.getters.hasdarkflag ? 'deep-purple darken-1' : ''"
-					class="mt-3 button-main"
-					v-shortkey="['ctrl', 'shift', 'p']"
-					@shortkey="dialogproveedor = !dialogproveedor"
-					elevation="2"
-					@click.prevent="dialogproveedor = true"
-					v-bind="attrs"
-					v-on="on"
-				>
-					<v-icon left large>mdi-plus</v-icon>
-					Proveedor
-				</v-btn>
-			</template>
-			<code>abrir y cerrar:ctrl+shift+p</code>
-		</v-tooltip>
-
-		<!--<v-row class="ma-2">
-          <v-btn elevation="2"
-                :dark="$store.getters.hasdarkflag"  @click.prevent="dialogstatus = !dialogstatus">
-            Status
-          </v-btn>
-        </v-row>-->
-
-		<creararticulo :key="count" :dialogarticulo.sync="dialogarticulo" />
+		<creararticulo :dialogarticulo.sync="dialogarticulo" />
 		<crearcategoria :dialogcategoria.sync="dialogcategoria" />
 		<crearmarca :dialogmarca.sync="dialogmarca" />
 		<creartipo :dialogtipo.sync="dialogtipo" />
 		<crearproveedor :dialogproveedor.sync="dialogproveedor" />
-		<!--<crearstatus
-      :parentdialog="dialogstatus"
-      v-on:dialogFromChild="syncFromStatus($event)"
-     
-    />-->
 	</div>
 </template>
 
@@ -136,10 +44,6 @@ import crearmarca from "../cruds/crearmarca.vue";
 import creartipo from "../cruds/creartipo.vue";
 import crearproveedor from "../cruds/crearproveedor.vue";
 
-//import crearstatus from "../cruds/crearstatus.vue";
-
-import store from "@/store";
-
 export default {
 	name: "crearlist",
 
@@ -149,21 +53,85 @@ export default {
 		crearmarca,
 		creartipo,
 		crearproveedor,
-		//crearstatus,
 	},
-	computed: {
-		count() {
-			return store.getters.counter;
+	mounted() {
+		this.buttonsArray = [
+			{
+				title: "Artículos",
+				shortkey: 'a',
+				tooltipTitle: "abrir y cerrar:ctrl+shift+a",
+			},
+						{
+				title: "Categoría",
+				shortkey: 'c',
+				tooltipTitle: "abrir y cerrar:ctrl+shift+c",
+			},
+			{
+				title: "Marca",
+				shortkey: 'm',
+				tooltipTitle: "abrir y cerrar:ctrl+shift+m",
+			},
+			{
+				title: "Tipo",
+				shortkey: 't',
+				tooltipTitle: "abrir y cerrar:ctrl+shift+t",
+			},
+			{
+				title: "Proveedor",
+				shortkey: 'p',
+				tooltipTitle: "abrir y cerrar:ctrl+shift+p",
+			}
+		];
+	},
+	methods: {
+		openDialog(val) {
+			switch (val) {
+				case "Artículos":
+					this.dialogarticulo = true;
+					break;
+				case "Categoría":
+					this.dialogcategoria = true;
+					break;
+				case "Marca":
+					this.dialogmarca = true;
+					break;
+				case "Tipo":
+					this.dialogtipo = true;
+					break;
+				case "Proveedor":
+					this.dialogproveedor = true;
+					break;
+			}
+		},
+
+		openShortkey(val) {
+			
+			switch (val) {
+				case "Artículos":
+					this.dialogarticulo = !this.dialogarticulo;
+					break;
+				case "Categoría":
+					this.dialogcategoria = !this.dialogcategoria;
+					break;
+				case "Marca":
+					this.dialogmarca = !this.dialogmarca;
+					break;
+				case "Tipo":
+					this.dialogtipo = !this.dialogtipo;
+					break;
+				case "Proveedor":
+					this.dialogproveedor = !this.dialogproveedor;
+					break;
+			}
 		},
 	},
-
 	data: () => ({
 		dialogarticulo: false,
 		dialogcategoria: false,
 		dialogmarca: false,
 		dialogtipo: false,
 		dialogproveedor: false,
-		//dialogstatus: false,
+		buttonsArray: [],
 	}),
 };
 </script>

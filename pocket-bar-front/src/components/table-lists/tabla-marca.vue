@@ -1,7 +1,6 @@
 <template>
 	<v-data-table
 		:dark="this.$store.getters.hasdarkflag"
-		id="tabla"
 		:headers="headers"
 		show-expand
 		:expanded.sync="expanded"
@@ -84,7 +83,8 @@
 									: 'lime darken-2'
 								: editedItem.active == 1
 								? 'red lighten-2'
-								: 'lime accent-4'"
+								: 'lime accent-4'
+						"
 						@click.prevent="activateItemConfirm"
 					>
 						<span v-show="cargando2 == false">confirmar</span>

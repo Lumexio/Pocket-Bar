@@ -5,7 +5,7 @@
 		:items="articulosArray"
 		:expanded.sync="expanded"
 		sort-by="cantidad_articulo"
-		class="elevation-1"
+		class="elevation-2"
 		:search="search"
 		show-expand
 		:custom-filter="filterOnlyCapsText.toUpperCase"
@@ -128,18 +128,6 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
-
-			<!-- <v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogActivate" max-width="500px">
-				<v-card>
-					<v-card-title class="headline">¿Quieres deshabilitarlo?</v-card-title>
-					<v-card-actions v-on:keyup.enter="activateItemConfirm">
-						<v-spacer></v-spacer>
-						<v-btn @click.prevent="closeDelete">Cancel</v-btn>
-						<v-btn color="blue darken-1" @click.prevent="activateItemConfirm">Aceptar</v-btn>
-						<v-spacer></v-spacer>
-					</v-card-actions>
-				</v-card>
-			</v-dialog> -->
 			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
 				<template v-slot:titledialog>
 					<span v-show="editedItem.deactivated_at === null" class="headline">

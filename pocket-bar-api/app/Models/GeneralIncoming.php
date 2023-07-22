@@ -16,7 +16,7 @@ class GeneralIncoming extends Model
         'description',
     ];
 
-    protected $table = 'general_incomings_tbl';
+    protected $table = 'general_incomings';
 
     public function user()
     {

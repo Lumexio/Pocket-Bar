@@ -13,10 +13,10 @@ class CreateCategoriasTable extends Migration
      */
     public function up()
     {
-        Schema::create('categorias_tbl', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_categoria', 100);
-            $table->longText('descripcion_categoria')->nullable();
+            $table->string('name', 100);
+            $table->longText('description')->nullable();
             $table->timestamps();
             $table->boolean('active')->default(true);
             $table->engine = 'InnoDB';
@@ -30,6 +30,6 @@ class CreateCategoriasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categorias_tbl');
+        Schema::dropIfExists('categories');
     }
 }

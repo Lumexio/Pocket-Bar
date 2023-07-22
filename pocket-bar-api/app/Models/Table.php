@@ -9,6 +9,13 @@ class Table extends Model
 {
     use HasFactory;
 
-
-    protected $table = "mesas_tbl";
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'description'
+    ];
 }

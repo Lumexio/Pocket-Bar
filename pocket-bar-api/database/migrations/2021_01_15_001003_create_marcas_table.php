@@ -13,10 +13,10 @@ class CreateMarcasTable extends Migration
      */
     public function up()
     {
-        Schema::create('marcas_tbl', function (Blueprint $table) {
+        Schema::create('brands', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_marca', 100);
-            $table->longText('descripcion_marca')->nullable();
+            $table->string('name', 100);
+            $table->longText('description')->nullable();
             $table->timestamps();
             $table->boolean("active")->default(true);
             $table->engine = 'InnoDB';
@@ -30,6 +30,6 @@ class CreateMarcasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marcas_tbl');
+        Schema::dropIfExists('brands');
     }
 }

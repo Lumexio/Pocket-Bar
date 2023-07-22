@@ -10,26 +10,18 @@ use App\Models\Workshift;
 use App\Http\Requests\Caja\CloseRequest;
 use App\Http\Requests\Caja\MovementRequest;
 use App\Models\CashRegisterCloseData;
-use App\Models\GeneralIncoming;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Throwable;
 
 class CajaController extends Controller
 {
-    public Workshift $actualWorkshift;
-    private function getMustBeData($userId): JsonResponse|Model|Collection
+
+    private function getMustBeData(int $userID, Workshift $actualWorkshift): JsonResponse|Collection
     {
-        $this->actualWorkshift = Workshift::where('active', 1)->first();
-        if (empty($this->actualWorkshift)) {
-            return response()->json([
-                'message' => 'No hay una jornada de trabajo activa'
-            ], 400);
-        }
-        return Ticket::where('workshift_id', $this->actualWorkshift->id)
+        return Ticket::where('workshift_id', $actualWorkshift->id)
             ->where('status', '!=', 'cancelado')
-            ->where("cashier_id", "=", $userId)
+            ->where("cashier_id", "=", $userID)
             ->with('details')
             ->join('payments_tbl', 'payments_tbl.ticket_id', '=', 'tickets_tbl.id')
             ->selectRaw("SUM(payments_tbl.total) as total_night, payments_tbl.type")
@@ -39,8 +31,15 @@ class CajaController extends Controller
 
     public function getMustBe(): JsonResponse
     {
-        $mustBeData = $this->getMustBeData(auth()->user()->id);
-        $workshift_report = (new WorkshiftReport($this->actualWorkshift))->getWorkShiftReport();
+        $user = auth()->user();
+        $actualWorkshift = Workshift::where('active', 1)->where("branch_id", $user->branch_id)->first();
+        if (empty($actualWorkshift)) {
+            return response()->json([
+                'message' => 'No hay una jornada de trabajo activa'
+            ], 400);
+        }
+        $mustBeData = $this->getMustBeData($user->id, $actualWorkshift);
+        $workshift_report = (new WorkshiftReport($actualWorkshift))->getWorkShiftReport();
         return response()->json([
             "must_be" => $mustBeData,
             "workshift_report" => [...$workshift_report],
@@ -52,9 +51,15 @@ class CajaController extends Controller
      */
     public function close(CloseRequest $request): JsonResponse
     {
-        $dataInDatabase = $this->getMustBeData(auth()->user()->id)->groupBy('type');
+        $user = auth()->user();
+        $actualWorkshift = Workshift::where('active', 1)->where("branch_id", $user->branch_id)->first();
+        if (empty($actualWorkshift)) {
+            return response()->json([
+                'message' => 'No hay una jornada de trabajo activa'
+            ], 400);
+        }
+        $dataInDatabase = $this->getMustBeData($user->id, $actualWorkshift)->groupBy('type');
         $dataSended = collect($request->input('data'))->groupBy('type');
-        $activeWorkshift = Workshift::where('active', 1)->first();
 
         DB::beginTransaction();
         try {
@@ -64,7 +69,7 @@ class CajaController extends Controller
                 $diff = $databaseInfo->amount - $cashierInfo->amount;
                 if ($diff >= -1 and $diff <= 1) {
                     $model = new CashRegisterCloseData();
-                    $model->workshift_id = $activeWorkshift->id;
+                    $model->workshift_id = $actualWorkshift->id;
                     $model->type = $key;
                     $model->total = $cashierInfo->amount;
                     $model->total_tip = $cashierInfo->tip;
@@ -93,13 +98,14 @@ class CajaController extends Controller
 
     public function addMoney(MovementRequest $request): JsonResponse
     {
-        $workshift = Workshift::where('active', 1)->first();
+        $user = auth()->user();
+        $workshift = Workshift::where('active', 1)->where("branch_id", $user->branch_id)->first();
         if (empty($workshift)) {
             return response()->json([
                 'message' => 'No hay una jornada de trabajo activa'
             ], 400);
         }
-        if ($request->user()->rol_id == Rol::Guardia->value) {
+        if ($user->rol_id == Rol::Guardia->value) {
             $descripcion = "Cover";
         } else {
             $descripcion = $request->input('description') ?? "Ingreso general";
@@ -117,7 +123,8 @@ class CajaController extends Controller
 
     public function removeMoney(MovementRequest $request): JsonResponse
     {
-        $workshift = Workshift::where('active', 1)->first();
+        $user = auth()->user();
+        $workshift = Workshift::where('active', 1)->where("branch_id", $user->branch_id)->first();
         if (empty($workshift)) {
             return response()->json([
                 'message' => 'No hay una jornada de trabajo activa'

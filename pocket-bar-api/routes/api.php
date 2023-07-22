@@ -1,6 +1,6 @@
 <?php
 
-//use App\Http\Controllers\ArticuloController;
+//use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,16 +23,22 @@ Route::middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->get('/us
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::prefix('articulo')->group(function () {
-        Route::post('/create', 'ArticuloController@store');
-        Route::put('/update/{id}', 'ArticuloController@update');
-        Route::get('/list', 'ArticuloController@index');
-        Route::put('/activate/{id}', 'ArticuloController@activate');
+    Route::prefix('product')->group(function () {
+        Route::post('/create', 'ProductController@store');
+        Route::put('/update/{id}', 'ProductController@update');
+        Route::get('/', 'ProductController@index');
+        Route::get('/{id}', 'ProductController@show');
+        Route::put('/activate/{id}', 'ProductController@activate');
     });
+<<<<<<< HEAD
+=======
+    // Route::put("articulo/activate/{id}", "ProductController@activate");
+>>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events))
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
 
     Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
     Route::put('/rol/activate/{id}', 'RolController@activate');
+<<<<<<< HEAD
 
     Route::resource('marca', 'MarcaController')->except(['destroy', 'create', 'edit']);
     Route::put('/marca/activate/{id}', 'MarcaController@activate');
@@ -50,6 +56,31 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::resource('proveedor', 'ProveedorController')->except(['destroy', 'create', 'edit']);
     Route::put('/proveedor/activate/{id}', 'ProveedorController@activate');
+=======
+    /*Crear  si
+    Eliminar no
+    Mostrar un registro no */
+    Route::resource('brand', 'BrandController')->except(['destroy', 'create', 'edit']);
+    Route::put('/brand/activate/{id}', 'BrandController@activate');
+    /*Crear  si
+    Eliminar no
+    Mostrar un registro no */
+    Route::resource('category', 'CategoryController')->except(['destroy', 'create', 'edit']);
+    Route::put('/category/activate/{id}', 'CategoryController@activate');
+    Route::resource('table', 'TableController')->except(['destroy', 'create', 'edit']);
+    Route::put('/table/activate/{id}', 'TableController@activate');
+
+    /*Crear  si
+Eliminar no
+Mostrar un registro no */
+    Route::resource('type', 'TypeController')->except(['destroy', 'create', 'edit']);
+    Route::put('/type/activate/{id}', 'TypeController@activate');
+    /*Crear  si
+Eliminar no
+Mostrar un registro no */
+    Route::resource('provider', 'ProviderController')->except(['destroy', 'create', 'edit']);
+    Route::put('/provider/activate/{id}', 'ProviderController@activate');
+>>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events))
     /*Crear  si
 Eliminar no
 Mostrar un registro no */

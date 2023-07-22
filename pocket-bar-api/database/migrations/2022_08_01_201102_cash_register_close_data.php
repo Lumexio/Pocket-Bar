@@ -13,7 +13,7 @@ class CashRegisterCloseData extends Migration
      */
     public function up()
     {
-        Schema::create('cash_register_close_data_tbl', function (Blueprint $table) {
+        Schema::create('cash_register_close_data', function (Blueprint $table) {
             $table->id();
             $table->string("type")->nullable(false);
             $table->decimal("total_tip", 10, 2)->nullable(false);

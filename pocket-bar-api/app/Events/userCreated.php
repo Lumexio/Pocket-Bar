@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
-class userCreated implements ShouldBroadcastNow
+class UserCreated implements ShouldBroadcastNow
 {
     use Dispatchable;
     use InteractsWithSockets;

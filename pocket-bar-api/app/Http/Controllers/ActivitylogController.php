@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Facades\DB;
 
 
@@ -11,7 +10,8 @@ class ActivitylogController extends Controller
 {
     public function index(): JsonResponse
     {
-        $dat = DB::table("activity_log")->join('users', 'activity_log.causer_id', '=', 'users.id')->select("activity_log.description", "users.name", "activity_log.subject_type", "activity_log.properties",  "activity_log.created_at", "activity_log.updated_at")->get();
+        $dat = DB::table("activity_log")->join('users', 'activity_log.causer_id', '=', 'users.id')->join("branches", "users.branch_id", "=", "branches.id")
+            ->select("activity_log.description", "users.name", "activity_log.subject_type", "activity_log.properties",  "activity_log.created_at", "activity_log.updated_at")->get();
         $dat = $dat->map(function ($item) {
             $item->properties = json_decode($item->properties, true);
             $subject = str_replace("App\Models\\", "", $item->subject_type);
@@ -23,11 +23,11 @@ class ActivitylogController extends Controller
             };
             $item->subject_type = match ($subject) {
                 "User" => "Usuario",
-                "Articulo" => "Artículo",
+                "Product" => "Artículo",
                 "Rol" => "Rol",
-                "Categoria" => "Categoría",
-                "Proveedor" => "Proveedor",
-                "Tipo" => "Tipo de Artículo",
+                "Category" => "Categoría",
+                "Provider" => "Proveedor",
+                "Type" => "Tipo de Artículo",
                 "Ticket" => "Ticket",
                 default => "Otro"
             };

@@ -13,7 +13,7 @@ use App\Models\Workshift;
 use App\Models\Ticket;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ticketCreatedMesero implements ShouldBroadcastNow
+class TicketCreatedMesero implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -39,7 +39,7 @@ class ticketCreatedMesero implements ShouldBroadcastNow
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
-            $data["nombre_mesa"] = $ticket->nombre_mesa;
+                $data["nombre_mesa"] = $ticket->nombre_mesa;
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;

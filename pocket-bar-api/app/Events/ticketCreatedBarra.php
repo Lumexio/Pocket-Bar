@@ -13,7 +13,7 @@ use App\Models\Workshift;
 use App\Models\Ticket;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ticketCreatedBarra implements ShouldBroadcastNow
+class TicketCreatedBarra implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

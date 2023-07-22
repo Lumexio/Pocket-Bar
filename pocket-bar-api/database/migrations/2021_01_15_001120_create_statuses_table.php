@@ -13,10 +13,9 @@ class CreateStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('status_tbl', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_status');
-            $table->boolean('active')->default(true);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('status_tbl');
+        Schema::dropIfExists('statuses');
     }
 }

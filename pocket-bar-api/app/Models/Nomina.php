@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Nomina extends Model
 {
     use HasFactory;
-    protected $table = 'nominas_tbl';
+    protected $table = 'nominas';
 }

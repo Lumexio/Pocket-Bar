@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Rol;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -25,12 +26,11 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            'email_verified_at' => now(),
-            'rol_id' => $this->faker->unique(true)->numberBetween(1, 2, 3, 4, 5, 6),
+            'rol_id' => $this->faker->unique(true)->numberBetween(1, count(Rol::toArray())),
             'nominas' => $this->faker->numerify('###.##'),
             'password' => '12345678', // password
             'remember_token' => Str::random(10),
-
+            'branch_id' => 1,
         ];
     }
 }

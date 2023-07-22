@@ -13,10 +13,10 @@ class CreateTiposTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipos_tbl', function (Blueprint $table) {
+        Schema::create('types', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_tipo');
-            $table->longText('descripcion_tipo')->nullable();
+            $table->string('name');
+            $table->longText('description')->nullable();
             $table->timestamps();
             $table->engine = 'InnoDB';
         });
@@ -29,6 +29,6 @@ class CreateTiposTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipos_tbl');
+        Schema::dropIfExists('types');
     }
 }

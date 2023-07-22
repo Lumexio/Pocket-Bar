@@ -13,10 +13,11 @@ class CreateMesasTable extends Migration
      */
     public function up()
     {
-        Schema::create('mesas_tbl', function (Blueprint $table) {
+        Schema::create('tables', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_mesa', 100);
-            $table->longText('descripcion_mesa')->nullable();
+            $table->string('name', 100);
+            $table->longText('description')->nullable();
+            $table->foreignId('branch_id')->references('id')->on('branches')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean("active")->default(true);
             $table->timestamps();
             $table->engine = 'InnoDB';
@@ -30,6 +31,6 @@ class CreateMesasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mesas_tbl');
+        Schema::dropIfExists('tables');
     }
 }

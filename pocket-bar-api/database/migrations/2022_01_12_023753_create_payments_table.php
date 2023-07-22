@@ -13,7 +13,7 @@ class CreatePaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payments_tbl', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string("type")->nullable(false);
             $table->decimal("tip", 10, 2)->nullable(false);
@@ -22,7 +22,7 @@ class CreatePaymentsTable extends Migration
             $table->decimal("nominas_paid", 10, 2)->nullable('NULL');
             $table->json("vouchers")->nullable('NULL');
             $table->json("nominas")->nullable('NULL');
-            $table->foreignId("ticket_id")->nullable(false)->references('id')->on('tickets_tbl');
+            $table->foreignId("ticket_id")->nullable(false)->references('id')->on('tickets');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class CreatePaymentsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists("payments");
     }
 }

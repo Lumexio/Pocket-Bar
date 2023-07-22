@@ -13,7 +13,7 @@ class AddActiveToTiposTbl extends Migration
      */
     public function up()
     {
-        Schema::table('tipos_tbl', function (Blueprint $table) {
+        Schema::table('types', function (Blueprint $table) {
             $table->boolean('active')->default(true);
         });
     }
@@ -25,7 +25,7 @@ class AddActiveToTiposTbl extends Migration
      */
     public function down()
     {
-        Schema::table('tipos_tbl', function (Blueprint $table) {
+        Schema::table('types', function (Blueprint $table) {
             $table->dropColumn('active');
         });
     }

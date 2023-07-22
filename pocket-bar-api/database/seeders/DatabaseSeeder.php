@@ -3,9 +3,16 @@
 namespace Database\Seeders;
 
 use App\Enums\Rol;
+use App\Models\Branch;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Provider;
 use App\Models\Rol as ModelsRol;
+use App\Models\Table;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
+use App\Models\Type;
 use App\Models\User;
 use App\Models\Workshift;
 use Database\Factories\TicketFactory;
@@ -22,17 +29,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        Branch::create([
+            'name' => 'Sucursal 1',
+            'address' => 'Calle 1',
+        ]);
+
+        Branch::create([
+            'name' => 'Sucursal 2',
+            'address' => 'Calle 2',
+        ]);
+
         /**
          * *Status de articulos
          */
-        DB::table('status_tbl')->insert([
-            'nombre_status' => 'Disponible',
+        DB::table('statuses')->insert([
+            'name' => 'Disponible',
         ]);
-        DB::table('status_tbl')->insert([
-            'nombre_status' => 'Agotado',
+        DB::table('statuses')->insert([
+            'name' => 'Agotado',
         ]);
-        DB::table('status_tbl')->insert([
-            'nombre_status' => 'En uso',
+        DB::table('statuses')->insert([
+            'name' => 'En uso',
         ]);
 
 
@@ -48,98 +65,96 @@ class DatabaseSeeder extends Seeder
             $user->email = $rol->name . '@' . $rol->name . '.com';
             $user->password = "12345678";
             $user->rol_id = $rol->value;
+            $user->branch_id = 1;
             $user->save();
         }
-        // foreach (Rol::toArray() as $rol) {
-        //     DB::table('users')->insert([
-        //         'name' => $rol->name,
-        //         'email' => $rol->name . '@' . $rol->name . '.com',
-        //         'password' => Hash::make('12345678'),
-        //         'rol_id' => $rol->value,
-        //     ]);
-        // }
 
 
         /**
          * [Insersiones a categorias]
          */
-        DB::table('categorias_tbl')->insert([
-            'nombre_categoria' => 'Plomería',
-            'descripcion_categoria' => 'Categoria de plomería',
+        Category::create([
+            'name' => 'Plomería',
+            'description' => 'Categoria de plomería',
         ]);
-        DB::table('categorias_tbl')->insert([
-            'nombre_categoria' => 'Electrícidad',
-            'descripcion_categoria' => 'Categoria de electrícidad',
+        Category::create([
+            'name' => 'Electrícidad',
+            'description' => 'Categoria de electrícidad',
         ]);
-        DB::table('categorias_tbl')->insert([
-            'nombre_categoria' => 'General',
-            'descripcion_categoria' => 'Categoria de uso general',
-        ]);
-
-
-
-
-
-
-        DB::table('marcas_tbl')->insert([
-            'nombre_marca' => 'Honda',
-            'descripcion_marca' => 'Marca de motocicletas y autos',
-        ]);
-        DB::table('marcas_tbl')->insert([
-            'nombre_marca' => 'Yamaha',
-            'descripcion_marca' => 'Marca de motocicletas',
-        ]);
-        DB::table('marcas_tbl')->insert([
-            'nombre_marca' => 'Asus',
-            'descripcion_marca' => 'Marca de computadoras',
+        Category::create([
+            'name' => 'General',
+            'description' => 'Categoria de uso general',
         ]);
 
+        Brand::create([
+            'name' => 'Honda',
+            'description' => 'Marca de motocicletas y autos',
+        ]);
+        Brand::create([
+            'name' => 'Yamaha',
+            'description' => 'Marca de motocicletas',
+        ]);
+        Brand::create([
+            'name' => 'Asus',
+            'description' => 'Marca de computadoras',
+        ]);
 
-        DB::table('tipos_tbl')->insert([
-            'nombre_tipo' => 'Consumible',
-            'descripcion_tipo' => 'Productos de consumo diario',
+        Type::create([
+            'name' => 'Consumible',
+            'description' => 'Productos de consumo diario',
         ]);
-        DB::table('tipos_tbl')->insert([
-            'nombre_tipo' => 'Herramienta',
-            'descripcion_tipo' => 'Herraientas de trabajo',
+        Type::create([
+            'name' => 'Herramienta',
+            'description' => 'Herraientas de trabajo',
         ]);
-        DB::table('tipos_tbl')->insert([
-            'nombre_tipo' => 'General',
-            'descripcion_tipo' => 'Productos de uso general',
+        Type::create([
+            'name' => 'General',
+            'description' => 'Productos de uso general',
         ]);
 
-
-        DB::table('proveedores_tbl')->insert([
-            'nombre_proveedor' => 'Davila',
-            'descripcion' => 'Proveedor de productos de plomería',
+        Provider::create([
+            'name' => 'Honda',
+            'description' => 'Proveedor de motocicletas y autos',
         ]);
-        DB::table('proveedores_tbl')->insert([
-            'nombre_proveedor' => 'Ortíz',
-            'descripcion' => 'Proveedor de productos de electrícidad',
+        Provider::create([
+            'name' => 'Yamaha',
+            'description' => 'Proveedor de motocicletas',
         ]);
-        DB::table('proveedores_tbl')->insert([
-            'nombre_proveedor' => 'Desconocido',
-            'descripcion' => 'Proveedor de productos de uso general',
+        Provider::create([
+            'name' => 'Asus',
+            'description' => 'Proveedor de computadoras',
         ]);
 
         //Mesas
-        DB::table("mesas_tbl")->insert([
-            "nombre_mesa" => "barra",
-            'descripcion_mesa' => 'Mesa de barra',
+        Table::create([
+            "name" => "barra",
+            'description' => 'Mesa de barra',
+            "branch_id" => 1,
         ]);
         for ($i = 1; $i < 11; $i++) {
-            DB::table("mesas_tbl")->insert([
-                "nombre_mesa" => $i,
-                'descripcion_mesa' => 'Mesa ' . $i,
+            Table::create([
+                "name" => "mesa " . $i,
+                'description' => 'Mesa ' . $i,
+                "branch_id" => 1,
             ]);
         }
 
         Workshift::create([
             "active" => 1,
             "start_money" => 1000,
+            "branch_id" => 1,
         ]);
 
-        \App\Models\Articulo::factory(10)->create();
+        \App\Models\Product::factory(10)->create();
+
+        foreach (Branch::all() as $branch) {
+            Product::all()->each(function ($product) use ($branch) {
+                $branch->stock()->create([
+                    "product_id" => $product->id,
+                    "units" => rand(0, 100),
+                ]);
+            });
+        }
 
         $tickets = TicketFactory::new()->times(10)->raw();
 

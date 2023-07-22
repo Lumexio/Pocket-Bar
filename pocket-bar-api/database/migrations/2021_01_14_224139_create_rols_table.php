@@ -14,9 +14,9 @@ class CreateRolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('rols_tbl', function (Blueprint $table) {
+        Schema::create('rols', function (Blueprint $table) {
             $table->id();
-            $table->string('name_rol');
+            $table->string('name');
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->engine = 'InnoDB';
@@ -27,8 +27,8 @@ class CreateRolsTable extends Migration
          * @var Rol $rol
          */
         foreach (Rol::toArray() as $rol) {
-            DB::table('rols_tbl')->insert([
-                'name_rol' => $rol->name,
+            DB::table('rols')->insert([
+                'name' => $rol->name,
             ]);
         }
     }
@@ -40,6 +40,6 @@ class CreateRolsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rols_tbl');
+        Schema::dropIfExists('rols');
     }
 }

@@ -17,13 +17,13 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->nullable()->unique();
-            $table->timestamp('email_verified_at')->nullable('NULL');
             $table->timestamps();
             $table->float("nominas")->nullable('NULL');
             $table->string('password');
             $table->rememberToken();
             $table->engine = 'InnoDB';
-            $table->foreignId('rol_id')->nullable('NULL')->references('id')->on('rols_tbl');
+            $table->foreignId('rol_id')->nullable('NULL')->references('id')->on('rols')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('branch_id')->references('id')->on('branches')->onDelete('cascade')->onUpdate("cascade");
             $table->boolean('active')->default(true);
         });
     }

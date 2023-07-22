@@ -103,26 +103,4 @@ class StatusController extends Controller
     // {
     //     return Status::destroy($id);
     // }
-
-    /**
-     * Activate the specified resource.
-     *
-     * @param int $id
-     * @return Status
-     */
-    public function activate(int $id): JsonResponse
-    {
-        $status = Status::find($id);
-        if (empty($status)) {
-            return \response()->json([
-                "message" => "Status no encontrado",
-            ], 404);
-        }
-        $status->status = !$status->status;
-        $status->save();
-        return \response()->json([
-            "message" => "success",
-            "data" => $status
-        ]);
-    }
 }

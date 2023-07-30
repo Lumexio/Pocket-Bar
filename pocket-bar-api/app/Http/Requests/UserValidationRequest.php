@@ -28,7 +28,8 @@ class UserValidationRequest extends FormRequest
             'name' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'email' => 'nullable|email',
             'password' => 'required',
-            'rol_id' => 'required'
+            'rol_id' => 'required',
+            'branch_id' => 'nullable|exists:branches,id'
         ];
     }
 }

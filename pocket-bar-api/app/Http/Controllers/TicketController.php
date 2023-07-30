@@ -20,6 +20,7 @@ use App\Events\ticketCreatedMesero;
 use App\Events\ticketCreatedBarra;
 use App\Http\Requests\CancelProductRequest;
 use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
+use App\Http\Requests\Ordenes\ProductUpdateStatusRequest;
 use App\Http\Requests\Tickets\AddProductsRequest;
 use App\Http\Requests\Tickets\CancelTicketRequest;
 use App\Http\Requests\Tickets\PayRequest;
@@ -65,7 +66,7 @@ class TicketController extends Controller
     public function tipUpdate(TicketTipUpdateRequest $request): JsonResponse
     {
 
-        $ticket = Ticket::find($request->input('id'));
+        $ticket = Ticket::where("id", $request->input("id"))->where("branch_id", auth()->user()->branch_id)->first();
 
         if (empty($ticket)) {
             return response()->json([
@@ -79,11 +80,11 @@ class TicketController extends Controller
         $ticket->save();
         try {
             if (auth()->user()->rol_id == 4) {
-                ticketCreatedMesero::dispatch(auth()->user()->id);
+                TicketCreatedMesero::dispatch(auth()->user()->id);
             } elseif (auth()->user()->rol_id == 5) {
-                ticketCreatedBarra::dispatch(auth()->user()->id);
+                TicketCreatedBarra::dispatch(auth()->user()->id);
             }
-            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new TicketCreated(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Throwable $th) {
         }
@@ -100,7 +101,7 @@ class TicketController extends Controller
      */
     public function store(TicketCreateRequest $request): JsonResponse
     {
-        $workshift = Workshift::where("active", true)->first();
+        $workshift = Workshift::where("active", true)->where("branch_id", auth()->user()->branch_id)->first();
         if (!$workshift) {
             return response()->json([
                 "message" => "No se ha iniciado turno de trabajo"
@@ -129,6 +130,7 @@ class TicketController extends Controller
             $ticket->timezone = "America/Denver";
             $ticket->total = $total;
             $ticket->workshift_id = $workshift->id;
+            $ticket->branch_id = auth()->user()->branch_id;
 
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
             $this->createTicketDetails($items, $ticket);
@@ -168,6 +170,7 @@ class TicketController extends Controller
 
         $tickets = Ticket::with(['details.articulo:id,nombre_articulo,precio_articulo', "workshift", "payments"])
             ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
+            ->where("branch_id", auth()->user()->branch_id)
             ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'tickets_tbl.cancel_confirm', 'mesas_tbl.nombre_mesa')
             ->orderBy("ticket_date", "desc")
             ->get();
@@ -196,6 +199,7 @@ class TicketController extends Controller
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
+            ->where("branch_id", $user->branch_id)
             ->get()
             ->map(function (Ticket $ticket) {
                 $data = [];
@@ -270,7 +274,7 @@ class TicketController extends Controller
     public function addProducts(AddProductsRequest $request): JsonResponse
     {
         DB::beginTransaction();
-        $ticket = Ticket::find($request->input('ticket_id'));
+        $ticket = Ticket::where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
 
         if (in_array($ticket->status, [TicketStatus::Closed->value, TicketStatus::Canceled->value])) {
             return response()->json([
@@ -320,7 +324,7 @@ class TicketController extends Controller
 
         try {
 
-            $ticket = Ticket::with("details")->find($request->input('id'));
+            $ticket = Ticket::with("details")->where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
 
 
             if ($ticket->status == TicketStatus::Canceled->value) {
@@ -361,7 +365,7 @@ class TicketController extends Controller
         ], 200);
     }
 
-    public function updateStatus(ProductoUpdateStatusRequest $request): JsonResponse
+    public function updateStatus(ProductUpdateStatusRequest $request): JsonResponse
     {
 
         /**
@@ -378,7 +382,7 @@ class TicketController extends Controller
 
         $ticketDetail = TicketDetail::find($request->input("id"));
 
-        $ticket = Ticket::find($ticketDetail->ticket_id);
+        $ticket = Ticket::where("id", $ticketDetail->ticket_id)->where("branch_id", auth()->user()->branch_id)->first();
 
         if ($ticket->status == TicketStatus::Closed->value) {
 
@@ -454,7 +458,7 @@ class TicketController extends Controller
 
         DB::beginTransaction();
         try {
-            $ticket = Ticket::find($request->input("ticket_id"));
+            $ticket = Ticket::where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
             if ($ticket->status == TicketStatus::Closed->value) {
                 return response()->json([
                     "error" => "No puedes pagar un ticket cerrado"
@@ -523,7 +527,7 @@ class TicketController extends Controller
     {
         DB::beginTransaction();
         try {
-            $ticket = Ticket::with("details")->find($request->input("ticket_id"));
+            $ticket = Ticket::with("details")->where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
             if (in_array($ticket->status, [TicketStatus::Closed->value, TicketStatus::Canceled->value])) {
                 return response()->json([
                     "error" => "No puedes cancelar un producto de un ticket cerrado"

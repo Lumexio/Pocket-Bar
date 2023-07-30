@@ -17,6 +17,7 @@ class CreateStockTable extends Migration
             $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate("cascade");
             $table->foreignId('branch_id')->references('id')->on('branches')->onDelete('cascade')->onUpdate("cascade");
             $table->integer('units');
+            $table->date("deactivated_at")->nullable();
             $table->primary(['product_id', 'branch_id']);
             $table->timestamps();
         });

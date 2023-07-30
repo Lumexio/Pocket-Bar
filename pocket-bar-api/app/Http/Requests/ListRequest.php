@@ -25,6 +25,7 @@ class ListRequest extends FormRequest
     {
         return [
             "active" => "nullable|boolean",
+            "branch_id" => "nullable|exists:branches,id"
         ];
     }
 }

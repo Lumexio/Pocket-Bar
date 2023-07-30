@@ -33,11 +33,11 @@ class ProductController extends Controller
             ->leftJoin('statuses', 'art.status_id', '=', 'statuses.id')
             ->leftJoin('types', 'art.type_id', '=', 'types.id')
             ->join("stocks", "art.id", "=", "stocks.product_id")
-            ->where("stocks.branch_id", "=", $request->user()->branch_id);
+            ->where("stocks.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id));
         if (isset($showActive)) {
-            $dat = $showActive ? $dat->whereNull('art.deactivated_at') : $dat->whereNotNull('art.deactivated_at');
+            $dat = $showActive ? $dat->whereNull('stocks.deactivated_at') : $dat->whereNotNull('stocks.deactivated_at');
         }
-        $dat = $dat->select('art.id', 'art.name', 'stocks.units', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name', 'brands.name', 'prov.name', 'statuses.name', 'types.name', "art.deactivated_at")
+        $dat = $dat->select('art.id', 'art.name', 'stocks.units', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name', 'brands.name', 'prov.name', 'statuses.name', 'types.name', "stocks.deactivated_at")
             ->get()
             ->map(
                 function ($item) {
@@ -62,7 +62,7 @@ class ProductController extends Controller
         if (Product::where('name', '=', $request->name)->exists()) {
             return response()->json(
                 [
-                    'message' => ['Uno de los parametros ya exite.']
+                    'message' => ["Ya hay un producto existente con este nombre {$request->name}."]
                 ],
                 409
             );
@@ -86,7 +86,7 @@ class ProductController extends Controller
             }
             $newProduct->save();
             Branch::all()->each(function ($branch) use ($newProduct, $request) {
-                $branch->stocks()->create([
+                $branch->stock()->create([
                     'product_id' => $newProduct->id,
                     'units' => $branch->id == $request->user()->branch_id ? $request->units : 0,
                 ]);
@@ -161,18 +161,16 @@ class ProductController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function activate(int $id): JsonResponse
+    public function activate(Request $request, int $id): JsonResponse
     {
-        $articulo = Product::find($id);
+        $request->validate([
+            "branch_id" => "nullable|exists:branches,id"
+        ]);
+        $articulo = Stock::where("product_id", "=", $id)->where("branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))->first();
         if (isset($articulo->deactivated_at)) {
             $articulo->deactivated_at = null;
             $message = "Articulo Activado";
         } else {
-            $filename = $articulo->foto_articulo;
-            if (isset($filename)) {
-                $path = public_path("/images/$filename");
-                File::delete($path);
-            }
             $articulo->deactivated_at = now();
             $message = "Articulo Desactivado";
         }

@@ -188,6 +188,31 @@ const routes = [
     }
   },
   {
+    path: '/guardias',
+    name: 'guardias',
+    component: () => import('../pwa-components/specialized-screens/main-guardias.vue'), meta: {
+      authenticated: true,
+      layout: 'default',
+      name: 'default'
+    },
+    beforeEnter: (to, from, next) => {
+      let validado = to.matched.some(record => record.meta.authenticated);
+      if (store.state.token) {
+        next();
+        if (validado == true && from.path !== '/') {
+          next();
+        }
+      }
+      else if (!validado) {
+        next({ name: 'login' });
+      }
+      else {
+        next({ name: 'login' });
+      }
+
+    }
+  },
+  {
     path: '/categorias',
     name: 'categorias',
     component: () => import('../views/main-categorias.vue'),

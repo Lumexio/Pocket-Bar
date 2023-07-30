@@ -82,6 +82,25 @@
 						</v-list-item-content>
 					</v-list-item>
 				</v-list>
+				<v-list v-else-if="hasrol === 6" flat>
+					<v-list-item
+						v-for="item in itemsguardias"
+						:key="item.title"
+						link
+						:to="item.path"
+						v-shortkey="{
+							articulos: ['ctrl', 'g'],
+						}"
+						@shortkey="paths"
+					>
+						<v-list-item-icon>
+							<v-icon>{{ item.icon }}</v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title>{{ item.title }}</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+				</v-list>
 			</v-list-item-group>
 
 			<v-list-group
@@ -204,6 +223,13 @@ export default {
 				icon: "mdi-cash-multiple",
 			},
 		],
+		itemsguardias: [
+			{
+				path: "/guardias",
+				title: "Guardias",
+				icon: "mdi-folder-multiple",
+			},
+		],
 		itemstable: [
 			{
 				path: "/categorias",
@@ -296,6 +322,9 @@ export default {
 					break;
 				case "tipos":
 					router.push("/tipos").catch(() => {});
+					break;
+					case "guardias":
+					router.push("/guardias").catch(() => {});
 					break;
 				case "proveedores":
 					router.push("/proveedores").catch(() => {});

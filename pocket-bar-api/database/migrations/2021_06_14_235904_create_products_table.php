@@ -22,11 +22,9 @@ class CreateProductsTable extends Migration
             $table->foreignId('brand_id')->nullable('NULL')->references('id')->on('brands');
             $table->foreignId('provider_id')->nullable('NULL')->references('id')->on('providers');
             $table->foreignId('type_id')->nullable('NULL')->references('id')->on('types');
-            $table->foreignId('status_id')->nullable('NULL')->references('id')->on('statuses');
             $table->string('image')->nullable('NULL');
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
-            $table->date('deactivated_at')->nullable('NULL');
             $table->engine = 'InnoDB';
         });
     }

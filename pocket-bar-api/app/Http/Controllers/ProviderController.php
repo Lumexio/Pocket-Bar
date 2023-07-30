@@ -141,11 +141,7 @@ class ProviderController extends Controller
         $proveedor->active = !$proveedor->active;
         $proveedor->save();
         try {
-<<<<<<< HEAD:pocket-bar-api/app/Http/Controllers/ProveedorController.php
-            broadcast((new proveedorCreated())->broadcastToEveryone());
-=======
             broadcast((new Provider($proveedor))->broadcastToEveryone());
->>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events)):pocket-bar-api/app/Http/Controllers/ProviderController.php
         } catch (\Throwable) {
         }
         return response()->json(

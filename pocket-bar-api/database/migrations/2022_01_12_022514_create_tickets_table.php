@@ -34,6 +34,7 @@ class CreateTicketsTable extends Migration
             $table->boolean("closed")->default(false);
             $table->boolean("cancel_confirm")->default(null)->nullable(true);
             $table->foreignId("workshift_id")->nullable(false)->references("id")->on("workshifts");
+            $table->foreignId("branch_id")->nullable(false)->references("id")->on("branches");
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class WorkshiftController extends Controller
 {
     public function close(CloseRequest $request)
     {
-        $activeWorkshift = Workshift::where('active', 1)->first();
+        $activeWorkshift = Workshift::where('active', 1)->where("branch_id", auth()->user()->branch_id)->first();
 
         if (empty($activeWorkshift)) {
             return response()->json([
@@ -61,7 +61,7 @@ class WorkshiftController extends Controller
 
     public function start(StartRequest $request)
     {
-        $activeWorkshift = Workshift::where('active', 1)->first();
+        $activeWorkshift = Workshift::where('active', 1)->where("branch_id", auth()->user()->branch_id)->first();
         if ($activeWorkshift) {
             return response()->json([
                 'message' => 'Ya hay una jornada de trabajo activa'
@@ -70,6 +70,7 @@ class WorkshiftController extends Controller
         $workshift = new Workshift();
         $workshift->active = 1;
         $workshift->start_money = $request->input('start_money');
+        $workshift->branch_id = auth()->user()->branch_id;
         $workshift->save();
         return response()->json([
             'message' => 'Jornada de trabajo iniciada'

@@ -26,6 +26,7 @@ class TableValidationRequest extends FormRequest
         return [
             'nombre_mesa' => 'required',
             'descripcion_mesa' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'branch_id' => 'nullable|exists:branches,id'
         ];
     }
 }

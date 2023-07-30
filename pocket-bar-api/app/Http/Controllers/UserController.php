@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\userCreated;
 use App\Http\Requests\ListRequest;
+use App\Http\Requests\UserValidationRequest;
 use App\Http\Requests\UsuarioValidationRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +25,10 @@ class UserController extends Controller
     {
         $loggeduser = Auth::id();
         $showActive = $request->get('showActive');
-        $users = DB::table('users')->where('users.id', '!=', $loggeduser)->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')->select('users.id', 'users.name', 'users.active', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol');
+        $users = DB::table('users')->where('users.id', '!=', $loggeduser)
+            ->where("users.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))
+            ->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')
+            ->select('users.id', 'users.name', 'users.active', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol');
         if (isset($showActive)) {
             $users = $users->where('users.active', '=', $showActive);
         }
@@ -37,10 +41,10 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param UsuarioValidationRequest $request
+     * @param UserValidationRequest $request
      * @return JsonResponse
      */
-    public function store(UsuarioValidationRequest $request): JsonResponse
+    public function store(UserValidationRequest $request): JsonResponse
     {
         $user = User::where('name', $request->name)->first();
         if (!empty($user)) {
@@ -52,6 +56,8 @@ class UserController extends Controller
             );
         }
         $user = User::create($request->all());
+        $user->branch_id = $request->input("branch_id", auth()->user()->branch_id);
+        $user->save();
         try {
             broadcast((new userCreated())->broadcastToEveryone());
             userCreated::dispatch($user);
@@ -69,9 +75,9 @@ class UserController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
-        $user = User::find($id);
+        $user = User::where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->find($id);
         if (empty($user)) {
             return response()->json(
                 [
@@ -95,7 +101,7 @@ class UserController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $user = User::find($id);
+        $user = User::where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->find($id);
         if (empty($user)) {
             return response()->json(
                 [
@@ -122,9 +128,9 @@ class UserController extends Controller
      * @return JsonResponse
 
      */
-    public function activate(int $id): JsonResponse
+    public function activate(Request $request, int $id): JsonResponse
     {
-        $user = User::find($id);
+        $user = User::where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->find($id);
         if (empty($user)) {
             return response()->json(
                 [
@@ -153,7 +159,7 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = User::where('name', $request->name)->where("active", true)->first();
+        $user = User::where('name', $request->name)->where("active", true)->where("branch_id", $request->input("branch_id"))->first();
 
         // print_r($data);
         if (!$user || !Hash::check($request->password, $user->password)) {

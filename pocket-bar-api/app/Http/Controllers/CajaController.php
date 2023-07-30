@@ -12,6 +12,7 @@ use App\Http\Requests\Caja\MovementRequest;
 use App\Models\CashRegisterCloseData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Request;
 use Throwable;
 
 class CajaController extends Controller
@@ -29,10 +30,13 @@ class CajaController extends Controller
             ->get();
     }
 
-    public function getMustBe(): JsonResponse
+    public function getMustBe(Request $request): JsonResponse
     {
+        $request->validate([
+            "branch_id" => "nullable|exists:branches,id"
+        ]);
         $user = auth()->user();
-        $actualWorkshift = Workshift::where('active', 1)->where("branch_id", $user->branch_id)->first();
+        $actualWorkshift = Workshift::where('active', 1)->where("branch_id", $request->input("branch_id", $user->branch_id))->first();
         if (empty($actualWorkshift)) {
             return response()->json([
                 'message' => 'No hay una jornada de trabajo activa'

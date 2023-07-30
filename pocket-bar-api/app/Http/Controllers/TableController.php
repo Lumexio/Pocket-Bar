@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD:pocket-bar-api/app/Http/Controllers/MesaController.php
 
 
-use Illuminate\Http\JsonResponse;
 
-=======
+
+
 use App\Events\TableCreated;
 use App\Http\Requests\TableUpdateRequest;
 use App\Http\Requests\TableValidationRequest;
 use App\Models\Table;
 use Illuminate\Http\JsonResponse;
->>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events)):pocket-bar-api/app/Http/Controllers/TableController.php
+
+use Request;
+
 
 class TableController extends Controller
 {
@@ -39,7 +40,7 @@ class TableController extends Controller
      */
     public function store(TableValidationRequest $request): JsonResponse
     {
-        if (Table::where('nombre_mesa', '=', $request->get('nombre_mesa'))->exists()) {
+        if (Table::where('nombre_mesa', '=', $request->get('nombre_mesa'))->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->exists()) {
             return response()->json(
                 [
                     'message' => ['Nombre el nombre de la mesa  ya exite.']
@@ -47,12 +48,8 @@ class TableController extends Controller
                 409
             );
         } else {
-<<<<<<< HEAD:pocket-bar-api/app/Http/Controllers/MesaController.php
-            $mesa = Mesa::create($request->all());
-=======
             $mesa = Table::create($request->all());
 
->>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events)):pocket-bar-api/app/Http/Controllers/TableController.php
             try {
                 broadcast((new TableCreated($mesa))->broadcastToEveryone());
             } catch (\Exception) {
@@ -73,9 +70,9 @@ class TableController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
-        $mesa = Table::find($id);
+        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
         if (empty($mesa)) {
             return response()->json(
                 [
@@ -102,7 +99,7 @@ class TableController extends Controller
      */
     public function update(TableUpdateRequest $request, int $id): JsonResponse
     {
-        $mesa = Table::find($id);
+        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
         if (empty($mesa)) {
             return response()->json(
                 [
@@ -126,16 +123,15 @@ class TableController extends Controller
     }
 
     /**
-<<<<<<< HEAD:pocket-bar-api/app/Http/Controllers/MesaController.php
-=======
      * Remove the specified resource from storage.
      *
      * @param int $id
      * @return int
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
-        $mesa = Table::destroy($id);
+        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
+        $mesa->delete();
         try {
             broadcast((new TableCreated($mesa))->broadcastToEveryone());
         } catch (\Throwable) {
@@ -150,13 +146,12 @@ class TableController extends Controller
     }
 
     /**
->>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events)):pocket-bar-api/app/Http/Controllers/TableController.php
      * @param int $id
      * @return JsonResponse
      */
-    public function activate(int $id): JsonResponse
+    public function activate(Request $request, int $id): JsonResponse
     {
-        $mesa = Table::find($id);
+        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
         if (empty($mesa)) {
             return response()->json(
                 [

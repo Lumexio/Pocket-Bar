@@ -19,7 +19,6 @@ use App\Events\ticketCreated;
 use App\Events\ticketCreatedMesero;
 use App\Events\ticketCreatedBarra;
 use App\Http\Requests\CancelProductRequest;
-use App\Http\Requests\Ordenes\ProductoUpdateStatusRequest;
 use App\Http\Requests\Ordenes\ProductUpdateStatusRequest;
 use App\Http\Requests\Tickets\AddProductsRequest;
 use App\Http\Requests\Tickets\CancelTicketRequest;
@@ -27,6 +26,7 @@ use App\Http\Requests\Tickets\PayRequest;
 use App\Http\Requests\TicketTipUpdateRequest;
 use App\Models\Articulo;
 use App\Models\Payment;
+use App\Models\Stock;
 use App\Models\TicketDetail;
 use Illuminate\Support\Collection;
 use Throwable;
@@ -47,7 +47,7 @@ class TicketController extends Controller
     public function calculateGeneralData(Collection $items): array
     {
         $subtotal = $items->sum(function ($item) {
-            return $item['piezas'] * $item['precio_articulo'];
+            return $item['units'] * $item['price'];
         });
 
         $tax = $items->sum(function ($item) {
@@ -55,7 +55,7 @@ class TicketController extends Controller
         });
 
         $discounts = $items->sum(function ($item) {
-            return $item['descuento'] ?? 0;
+            return $item['discount'] ?? 0;
         });
 
         $total = $subtotal + $tax - $discounts;
@@ -107,19 +107,15 @@ class TicketController extends Controller
                 "message" => "No se ha iniciado turno de trabajo"
             ], 400);
         }
-        //Cambiar migraciòn de tickets eliminando nombre_mesa
-        $items = collect($request->input('productos'));
+        $items = collect($request->input('products'));
         [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
-        // $table = Mesa::find();
         DB::beginTransaction();
         try {
             $ticket = new Ticket();
-            $ticket->mesa_id = $request->input('mesa_id');
-            //$ticket->nombre_mesa = $table->nombre_mesa;
+            $ticket->table_id = $request->input('table_id');
             $ticket->status = TicketStatus::Standby->value;
-            $ticket->client_name = $request->input('titular');
+            $ticket->client_name = $request->input('holder');
             $ticket->user_id = auth()->user()->id;
-            $ticket->user_name = auth()->user()->name;
             $ticket->ticket_date = date('Y-m-d H:i:s');
             $ticket->subtotal = $subtotal;
             $ticket->tip = $request->input('tip') ?? 0;
@@ -167,14 +163,17 @@ class TicketController extends Controller
 
     public function index(): JsonResponse
     {
-
-        $tickets = Ticket::with(['details.articulo:id,nombre_articulo,precio_articulo', "workshift", "payments"])
-            ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->where("branch_id", auth()->user()->branch_id)
-            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'tickets_tbl.cancel_confirm', 'mesas_tbl.nombre_mesa')
+        $workshift = Workshift::where("active", true)->where("branch_id", auth()->user()->branch_id)->first();
+        $tickets = Ticket::with(['details.product:id,name,price', "workshift", "payments", "user:id,name"])
+            ->join('tables', 'tickets.table_id', '=', 'tables.id')
+            ->where("tickets.workshift_id", $workshift->id)
             ->orderBy("ticket_date", "desc")
-            ->get();
-
+            ->get()
+            ->toArray();
+        $tickets = collect($tickets)->map(function ($ticket) {
+            $data = collect($ticket)->only(['id', 'status', 'client_name', 'ticket_date', 'total', 'cancel_confirm', 'name', 'details', 'workshift', 'payments', 'user']);
+            return $data;
+        });
         return response()->json([
             "status" => 200,
             "error" => 0,
@@ -187,19 +186,19 @@ class TicketController extends Controller
     {
         /**
          * Indexsado de tickets para la pwa
-         * @var User
+         * @var User $user
          */
 
         $user = auth()->user();
-        $actualWorkshift = Workshift::where("active", 1)->first();
-        $tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
+        $actualWorkshift = Workshift::where("active", 1)
+            ->where("branch_id", $user->branch_id)
+            ->first();
+        $tickets = Ticket::with(['user', 'table', 'details.product', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
-            ->leftJoin('mesas_tbl', 'tickets_tbl.mesa_id', '=', 'mesas_tbl.id')
-            ->select('tickets_tbl.id', 'tickets_tbl.status', 'tickets_tbl.tip', 'tickets_tbl.specifictip', 'tickets_tbl.client_name', 'tickets_tbl.user_name', 'tickets_tbl.ticket_date', 'tickets_tbl.total', 'mesas_tbl.nombre_mesa',)
+            ->join('tables', 'tickets.table_id', '=', 'tables.id')
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
-            ->where("branch_id", $user->branch_id)
             ->get()
             ->map(function (Ticket $ticket) {
                 $data = [];
@@ -243,38 +242,36 @@ class TicketController extends Controller
     {
         foreach ($items as $item) {
             $ticketDetail = new \App\Models\TicketDetail();
-            $ticketDetail->units = $item['piezas'];
-            $ticketDetail->unit_price = $item['precio_articulo'];
+            $ticketDetail->units = $item['units'];
             $ticketDetail->tax = $item['tax'];
-            $ticketDetail->discounts = $item['descuento'];
-            $ticketDetail->subtotal = $item['piezas'] * $item['precio_articulo'];
+            $ticketDetail->discounts = $item['discount'];
+            $ticketDetail->subtotal = $item['units'] * $item['price'];
             $ticketDetail->waiter_id = auth()->user()->id;
-            $ticketDetail->total = $item['piezas'] * $item['precio_articulo'] + $item['tax'] - $item['descuento'];
-            $ticketDetail->articulos_tbl_id = $item['id'];
-            $ticketDetail->articulos_img = $item["foto_articulo"];
+            $ticketDetail->total = $item['units'] * $item['price'] + $item['tax'] - $item['discount'];
+            $ticketDetail->product_id = $item['id'];
             $ticketDetail->status = TicketItemStatus::Standby->value;
             $ticketDetail->ticket_id = $ticket->id;
             throw_if(!$ticketDetail->save(), \Exception::class, "Error al guardar el detalle del ticket");
 
-            $this->updateArticulo($item['id'], $item['piezas']);
+            $this->updateArticulo($item['id'], $item['units']);
         }
     }
 
     public function updateArticulo($id, $units, $sum = false)
     {
-        $articulo = Articulo::find($id);
+        $stock = Stock::where("branch_id", auth()->user()->branch_id)->where("product_id", $id)->first();
         if ($sum) {
-            $articulo->cantidad_articulo += $units;
+            $stock->stock += $units;
         } else {
-            $articulo->cantidad_articulo -= $units;
+            $stock->stock -= $units;
         }
-        throw_if(!$articulo->save(), \Exception::class, "Error al actualizar el articulo");
+        throw_if(!$stock->save(), \Exception::class, "Error al actualizar el articulo");
     }
 
     public function addProducts(AddProductsRequest $request): JsonResponse
     {
         DB::beginTransaction();
-        $ticket = Ticket::where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
+        $ticket = Ticket::where("id", $request->input("id"))->first();
 
         if (in_array($ticket->status, [TicketStatus::Closed->value, TicketStatus::Canceled->value])) {
             return response()->json([
@@ -285,13 +282,13 @@ class TicketController extends Controller
         }
 
         try {
-            $this->createTicketDetails(collect($request->input("productos")), $ticket);
+            $this->createTicketDetails(collect($request->input("products")), $ticket);
             $items = $ticket->details->map(function ($item) {
                 return [
-                    "piezas" => $item->units,
-                    "precio_articulo" => $item->unit_price,
+                    "units" => $item->units,
                     "tax" => $item->tax,
-                    "descuento" => $item->discounts,
+                    "discount" => $item->discounts,
+                    "price" => $item->price,
                 ];
             });
             [$subtotal, $tax, $discounts, $total] = $this->calculateGeneralData($items);
@@ -324,10 +321,10 @@ class TicketController extends Controller
 
         try {
 
-            $ticket = Ticket::with("details")->where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
+            $ticket = Ticket::with("details")->where("id", $request->input("id"))->first();
 
 
-            if ($ticket->status == TicketStatus::Canceled->value) {
+            if ($ticket->status == TicketStatus::Canceled->value || $ticket->status == TicketStatus::Closed->value) {
                 return response()->json([
                     "status" => 400,
                     "error" => 1,
@@ -340,7 +337,7 @@ class TicketController extends Controller
             throw_if(!$ticket->save(), \Exception::class, "Error al guardar el ticket");
 
             foreach ($ticket->details as $detail) {
-                $this->updateArticulo($detail->articulos_tbl_id, $detail->units, true);
+                $this->updateArticulo($detail->product_id, $detail->units, true);
             }
             try {
                 broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
@@ -455,7 +452,6 @@ class TicketController extends Controller
 
     public function pay(PayRequest $request)
     {
-
         DB::beginTransaction();
         try {
             $ticket = Ticket::where("id", $request->input("ticket_id"))->where("branch_id", auth()->user()->branch_id)->first();
@@ -471,7 +467,7 @@ class TicketController extends Controller
             $totalCash = $payments->where("payment_type", "cash")->sum("amount");
             $totalCard = $payments->where("payment_type", "card")->sum("amount");
             $change = $totalCash - $ticket->total;
-            if ($ticket->total != $totalOfPayments) {
+            if ($ticket->total > $totalOfPayments) {
                 return response()->json([
                     "error" => "El total de los pagos no coincide con el total del ticket"
                 ], 422);
@@ -534,7 +530,7 @@ class TicketController extends Controller
                 ], 422);
             }
             foreach ($request->products as $product) {
-                $detail = $ticket->details->where("articulos_tbl_id", $product["id"])->first();
+                $detail = $ticket->details->where("product_id", $product["id"])->first();
                 if (!isset($detail)) {
                     continue;
                 }

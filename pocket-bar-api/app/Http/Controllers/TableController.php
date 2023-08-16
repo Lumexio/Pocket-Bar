@@ -8,12 +8,12 @@ namespace App\Http\Controllers;
 
 
 use App\Events\TableCreated;
+use App\Http\Requests\ListRequest;
 use App\Http\Requests\TableUpdateRequest;
 use App\Http\Requests\TableValidationRequest;
 use App\Models\Table;
 use Illuminate\Http\JsonResponse;
-
-use Request;
+use Illuminate\Http\Request;
 
 
 class TableController extends Controller
@@ -23,12 +23,17 @@ class TableController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ListRequest $request): JsonResponse
     {
-        $mesas = Table::all();
+        $mesas = Table::query();
+        $mesas->where("branch_id", $request->input("branch_id", auth()->user()->branch_id));
+        $active = $request->get('active');
+        if (isset($active)) {
+            $mesas->where('active', $request->get('active'));
+        }
         return response()->json([
             'message' => 'success',
-            'mesas' => $mesas
+            'mesas' => $mesas->get()
         ], 200);
     }
 
@@ -40,7 +45,7 @@ class TableController extends Controller
      */
     public function store(TableValidationRequest $request): JsonResponse
     {
-        if (Table::where('nombre_mesa', '=', $request->get('nombre_mesa'))->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->exists()) {
+        if (Table::where('name', '=', $request->get('name'))->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->exists()) {
             return response()->json(
                 [
                     'message' => ['Nombre el nombre de la mesa  ya exite.']
@@ -48,7 +53,11 @@ class TableController extends Controller
                 409
             );
         } else {
-            $mesa = Table::create($request->all());
+            $mesa = new Table();
+            $mesa->name = $request->get('name');
+            $mesa->description = $request->get('description');
+            $mesa->branch_id = $request->input("branch_id", auth()->user()->branch_id);
+            $mesa->save();
 
             try {
                 broadcast((new TableCreated($mesa))->broadcastToEveryone());
@@ -70,9 +79,9 @@ class TableController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show(Request $request, int $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
+        $mesa = Table::find($id);
         if (empty($mesa)) {
             return response()->json(
                 [
@@ -99,7 +108,7 @@ class TableController extends Controller
      */
     public function update(TableUpdateRequest $request, int $id): JsonResponse
     {
-        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
+        $mesa = Table::find($id);
         if (empty($mesa)) {
             return response()->json(
                 [
@@ -128,9 +137,17 @@ class TableController extends Controller
      * @param int $id
      * @return int
      */
-    public function destroy(Request $request, int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
+        $mesa = Table::find($id);
+        if (empty($mesa)) {
+            return response()->json(
+                [
+                    'message' => 'Mesa no encontrada'
+                ],
+                404
+            );
+        }
         $mesa->delete();
         try {
             broadcast((new TableCreated($mesa))->broadcastToEveryone());
@@ -149,9 +166,9 @@ class TableController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function activate(Request $request, int $id): JsonResponse
+    public function activate(int $id): JsonResponse
     {
-        $mesa = Table::where('id', $id)->where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->first();
+        $mesa = Table::find($id);
         if (empty($mesa)) {
             return response()->json(
                 [

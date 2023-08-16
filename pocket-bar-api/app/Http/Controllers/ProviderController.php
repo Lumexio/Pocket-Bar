@@ -40,7 +40,7 @@ class ProviderController extends Controller
      */
     public function store(ProviderValidationRequest $request): JsonResponse
     {
-        if (Provider::where('nombre_proveedor', '=', $request->get('nombre_proveedor'))->exists()) {
+        if (Provider::where('name', '=', $request->get('name'))->exists()) {
             return response()->json(
                 [
                     'message' => ['Uno de los parametros ya exite.']

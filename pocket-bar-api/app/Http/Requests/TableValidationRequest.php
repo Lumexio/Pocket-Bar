@@ -24,8 +24,8 @@ class TableValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre_mesa' => 'required',
-            'descripcion_mesa' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'name' => 'required',
+            'description' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
             'branch_id' => 'nullable|exists:branches,id'
         ];
     }

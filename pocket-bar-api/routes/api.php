@@ -24,39 +24,21 @@ Route::middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->get('/us
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('product')->group(function () {
-        Route::post('/create', 'ProductController@store');
-        Route::put('/update/{id}', 'ProductController@update');
+        Route::post('/', 'ProductController@store');
+        Route::put('/{id}', 'ProductController@update');
         Route::get('/', 'ProductController@index');
         Route::get('/{id}', 'ProductController@show');
         Route::put('/activate/{id}', 'ProductController@activate');
     });
-<<<<<<< HEAD
-=======
     // Route::put("articulo/activate/{id}", "ProductController@activate");
->>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events))
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
+
 
     Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
     Route::put('/rol/activate/{id}', 'RolController@activate');
-<<<<<<< HEAD
 
-    Route::resource('marca', 'MarcaController')->except(['destroy', 'create', 'edit']);
-    Route::put('/marca/activate/{id}', 'MarcaController@activate');
-
-    Route::resource('categoria', 'CategoriaController')->except(['destroy', 'create', 'edit']);
-    Route::put('/categoria/activate/{id}', 'CategoriaController@activate');
-    Route::resource('mesa', 'MesaController')->except(['destroy', 'create', 'edit']);
-    Route::put('/mesa/activate/{id}', 'MesaController@activate');
-
-
-
-
-    Route::resource('tipo', 'TipoController')->except(['destroy', 'create', 'edit']);
-    Route::put('/tipo/activate/{id}', 'TipoController@activate');
-
-    Route::resource('proveedor', 'ProveedorController')->except(['destroy', 'create', 'edit']);
-    Route::put('/proveedor/activate/{id}', 'ProveedorController@activate');
-=======
+    // Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
+    // Route::put('/rol/activate/{id}', 'RolController@activate');
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
@@ -80,12 +62,10 @@ Eliminar no
 Mostrar un registro no */
     Route::resource('provider', 'ProviderController')->except(['destroy', 'create', 'edit']);
     Route::put('/provider/activate/{id}', 'ProviderController@activate');
->>>>>>> 3bea85a (BREAKING CHANGE: refactor all spanish classes to english (include: request, controllers, models, migrations, factories and events))
-    /*Crear  si
-Eliminar no
-Mostrar un registro no */
-    Route::resource('status', 'StatusController')->except(['destroy', 'create', 'edit']);
-    Route::put('/status/activate/{id}', 'StatusController@activate');
+
+
+    // Route::resource('status', 'StatusController')->except(['destroy', 'create', 'edit']);
+    // Route::put('/status/activate/{id}', 'StatusController@activate');
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
@@ -93,60 +73,48 @@ Mostrar un registro no */
     Route::put('/user/activate/{id}', 'UserController@activate');
     Route::resource('activitylog', 'ActivitylogController')->except(['destroy', 'update', 'store', 'create', 'edit', 'show']);
 
-    Route::prefix('tickets')->group(function () {
-        Route::get('/list', 'TicketController@index'); //Lista para deskstop
-        Route::get('/pwa/list', 'TicketController@indexPwa'); //Lista para pantallas moviles
-        Route::post('/create', 'TicketController@store'); //Crear ticket
+    Route::prefix('ticket')->group(function () {
+        Route::get('/', 'TicketController@index'); //Lista para deskstop
+        Route::get('/pwa', 'TicketController@indexPwa'); //Lista para pantallas moviles
+        Route::post('/', 'TicketController@store'); //Crear ticket
         Route::put('/tip', 'TicketController@tipUpdate'); //Crear ticket
         Route::post('/pay', 'TicketController@pay'); //pagar cuenta
         Route::put("/cancel-product", 'TicketController@cancelProduct'); //Cancelar producto
         Route::post("/cancel", 'TicketController@cancelTicket');
-        /**Añadir productos a un ticket existe
-         * !Probar
-         * *Francisco
-         */
-        Route::put('/add/products', 'TicketController@addProducts');
+        Route::put('/add-products', 'TicketController@addProducts');
     });
 
-    Route::prefix('ordenes')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+    Route::prefix('order')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
         /**
          * *listo
          */
-        Route::get('/notificacion/productos', 'OrdenesController@index');
+        Route::get('/notificacion/productos', 'OrdersController@index');
 
         Route::put('/notificacion/productos', 'TicketController@updateStatus');
     });
 
-    Route::prefix("caja")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        Route::post("add-money", "CajaController@addMoney"); //Agregar dinero a caja
-        Route::post("remove-money", "CajaController@removeMoney"); //Quitar dinero a caja
+    Route::prefix("cashdesk")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
+        Route::post("add-money", "CashDeskController@addMoney"); //Agregar dinero a caja
+        Route::post("remove-money", "CashDeskController@removeMoney"); //Quitar dinero a caja
 
-        /**Lo que debo de tener en caja
-         * *Listo
-         */
-        Route::get('/mustbe', 'CajaController@getMustBe');
-        /**Lo que debo de tener en caja
-         * !Por probar
-         * *Francisco
-         */
-        Route::post('/close', 'CajaController@close'); //Lo que debo de tener en caja enviando desde el front para comparar
+        Route::get('/mustbe', 'CashDeskController@getMustBe');
+        Route::post('/close', 'CashDeskController@close'); //Lo que debo de tener en caja enviando desde el front para comparar
     });
 
     Route::prefix("nominas")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        /**Lo que debo de tener en caja
-         * !Por probar
-         * *Francisco
-         */
         Route::post('/pay', 'NominasController@nominasToPay');
     });
 
     Route::prefix("workshift")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        /**Lo que debo de tener en caja
-         * !Por probar
-         * *Francisco
-         */
         Route::post('/start', 'WorkshiftController@start');
         Route::put('/close', 'WorkshiftController@close');
+    });
+
+    Route::prefix("currency")->group(function () {
+        Route::get('/', 'CurrencyController@index');
+        Route::post('/', 'CurrencyController@store');
+        Route::get('/{id}', 'CurrencyController@show');
+        Route::put('set-default/{id}', 'CurrencyController@setDefault');
     });
 });
 

@@ -14,11 +14,12 @@ class CreateStockTable extends Migration
     public function up()
     {
         Schema::create('stocks', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate("cascade");
             $table->foreignId('branch_id')->references('id')->on('branches')->onDelete('cascade')->onUpdate("cascade");
-            $table->integer('units');
-            $table->date("deactivated_at")->nullable();
-            $table->primary(['product_id', 'branch_id']);
+            $table->integer('stock')->default(0)->nullable('NULL');
+            $table->date("deactivated_at")->nullable("NULL");
+            $table->unique(['product_id', 'branch_id']);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateStockTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock');
+        Schema::dropIfExists('stocks');
     }
 }

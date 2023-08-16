@@ -24,8 +24,8 @@ class BrandUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre_marca' => 'required|string|max:255',
-            'descripcion_marca' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ];
     }
 }

@@ -24,8 +24,8 @@ class ProviderUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "nombre_proveedor" => "required|string",
-            "descripcion" => "nullable|regex:/(^[A-Za-z0-9 ]+$)+/",
+            "name" => "required|string",
+            "description" => "nullable|regex:/(^[A-Za-z0-9 ]+$)+/",
         ];
     }
 }

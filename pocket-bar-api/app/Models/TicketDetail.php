@@ -19,9 +19,9 @@ class TicketDetail extends Model
         return $this->belongsTo(Ticket::class, "ticket_id");
     }
 
-    public function articulo()
+    public function product()
     {
-        return $this->belongsTo(Articulo::class, "articulos_tbl_id");
+        return $this->belongsTo(Product::class, "articulos_tbl_id");
     }
 
     public function mesero()

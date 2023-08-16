@@ -24,23 +24,23 @@ class WorkshiftReport
     {
         $workshift_report = [];
         $total_debts = Ticket::selectRaw("SUM(total) as total_workshift_debt")
-            ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
-            ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
-            ->addSelect("u.id", "rol.name_rol as rol", "u.name")
-            ->where("tickets_tbl.status", TicketStatus::Delivered->value)
+            ->join("users as u", "u.id", "=", "tickets.user_id")
+            ->join("rols as rol", "rol.id", "=", "u.rol_id")
+            ->addSelect("u.id", "rol.name as rol", "u.name")
+            ->where("tickets.status", TicketStatus::Delivered->value)
             ->whereIn("rol.id", [Rol::Bartender->value, Rol::Mesero->value])
             ->where('workshift_id', $this->activeWorkshift->id)
-            ->groupBy(["rol.name_rol", "u.id", "u.name"])
+            ->groupBy(["rol.name", "u.id", "u.name"])
             ->get();
 
         $totalGroupByEmployee = Ticket::selectRaw("SUM(total) as total_workshift_sales, SUM(tip) as total_tips")
-            ->join("users as u", "u.id", "=", "tickets_tbl.user_id")
-            ->join("rols_tbl as rol", "rol.id", "=", "u.rol_id")
-            ->addSelect("u.id", "rol.name_rol as rol", "u.name")
-            ->where("tickets_tbl.status", "=", TicketStatus::Closed->value)
+            ->join("users as u", "u.id", "=", "tickets.user_id")
+            ->join("rols as rol", "rol.id", "=", "u.rol_id")
+            ->addSelect("u.id", "rol.name as rol", "u.name")
+            ->where("tickets.status", "=", TicketStatus::Closed->value)
             ->whereIn("rol.id", [4, 5])
             ->where('workshift_id', $this->activeWorkshift->id)
-            ->groupBy(["rol.name_rol", "u.id", "u.name"])
+            ->groupBy(["rol.name", "u.id", "u.name"])
             ->get();
         $ingresos = $this->activeWorkshift->generalIncoming()->with("user")->where("amount", ">", 0)->get();
         $egresos = $this->activeWorkshift->generalIncoming()->with("user")->where("amount", "<", 0)->get();
@@ -107,18 +107,17 @@ class WorkshiftReport
 
     private function getDetails(int $ticketId): Collection
     {
-        $details = DB::table("ticket_details_tbl as td")
+        $details = DB::table("ticket_details as td")
             ->where("ticket_id", $ticketId)
-            ->join("articulos_tbl as art", "art.id", "=", "td.articulos_tbl_id")
+            ->join("products as product", "product.id", "=", "td.product_id")
             ->addSelect(
-                "art.nombre_articulo",
+                "product.name",
                 "td.units",
                 "td.unit_price",
                 "td.discounts",
                 "td.tax",
                 "td.subtotal",
-                "td.articulos_tbl_id as id_articulo",
-                "td.articulos_img",
+                "td.product_id as id_articulo",
                 "td.status",
                 "td.barTender_id",
                 "td.waiter_id",

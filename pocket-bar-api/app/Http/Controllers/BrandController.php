@@ -39,7 +39,7 @@ class BrandController extends Controller
      */
     public function store(BrandValidationRequest $request): JsonResponse
     {
-        if (Brand::where('nombre_marca', '=', $request->get('nombre_marca'))->exists()) {
+        if (Brand::where('name', '=', $request->get('name'))->exists()) {
             return response()->json([
                 'message' => ['Uno de los parametros ya exite.']
             ], 409);

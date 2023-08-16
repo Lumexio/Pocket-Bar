@@ -19,8 +19,8 @@ class Provider extends Model
         'name',
         'description',
     ];
-    public function articulo()
+    public function products()
     {
-        return $this->hasMany(Articulo::class);
+        return $this->hasMany(Product::class);
     }
 }

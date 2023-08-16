@@ -11,11 +11,12 @@ use App\Http\Requests\Caja\CloseRequest;
 use App\Http\Requests\Caja\MovementRequest;
 use App\Models\CashRegisterCloseData;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Request;
 use Throwable;
+use Validator;
 
-class CajaController extends Controller
+class CashDeskController extends Controller
 {
 
     private function getMustBeData(int $userID, Workshift $actualWorkshift): JsonResponse|Collection
@@ -24,16 +25,16 @@ class CajaController extends Controller
             ->where('status', '!=', 'cancelado')
             ->where("cashier_id", "=", $userID)
             ->with('details')
-            ->join('payments_tbl', 'payments_tbl.ticket_id', '=', 'tickets_tbl.id')
-            ->selectRaw("SUM(payments_tbl.total) as total_night, payments_tbl.type")
-            ->groupBy('payments_tbl.type')
+            ->join('payments', 'payments.ticket_id', '=', 'tickets.id')
+            ->selectRaw("SUM(payments.total) as total_night, payments.type")
+            ->groupBy('payments.type')
             ->get();
     }
 
     public function getMustBe(Request $request): JsonResponse
     {
         $request->validate([
-            "branch_id" => "nullable|exists:branches,id"
+            "branch_id" => "nullable|integer|exists:branches,id",
         ]);
         $user = auth()->user();
         $actualWorkshift = Workshift::where('active', 1)->where("branch_id", $request->input("branch_id", $user->branch_id))->first();

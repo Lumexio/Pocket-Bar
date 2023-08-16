@@ -16,7 +16,6 @@ class CreateTicketDetailsTable extends Migration
         Schema::create('ticket_details', function (Blueprint $table) {
             $table->id();
             $table->integer("units")->nullable(false);
-            $table->decimal("unit_price", 10, 2)->nullable(false);
             $table->decimal("discounts", 10, 2);
             $table->decimal("tax", 10, 2);
             $table->decimal("subtotal", 10, 2)->nullable(false);

@@ -25,7 +25,6 @@ class ProductUpdateRequest extends FormRequest
     {
         return [
             'name' => 'string|max:255',
-            'units' => 'integer',
             'description' => 'nullable|string',
             'price' => 'numeric',
             'cetegory_id' => 'integer|exists:categories,id',
@@ -33,7 +32,6 @@ class ProductUpdateRequest extends FormRequest
             'image' => 'nullable|mimes:png,jpg',
             'provider_id' => 'integer|exists:providers,id',
             'type_id' => 'integer|exists:types,id',
-            'status_id' => 'integer|exists:statuses,id',
         ];
     }
 }

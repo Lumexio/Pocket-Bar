@@ -27,8 +27,8 @@ class UserController extends Controller
         $showActive = $request->get('showActive');
         $users = DB::table('users')->where('users.id', '!=', $loggeduser)
             ->where("users.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))
-            ->leftJoin('rols_tbl', 'users.rol_id', '=', 'rols_tbl.id')
-            ->select('users.id', 'users.name', 'users.active', 'users.email', 'users.password', 'users.nominas', 'rols_tbl.name_rol');
+            ->leftJoin('rols', 'users.rol_id', '=', 'rols.id')
+            ->select('users.id', 'users.name', 'users.active', 'users.email', 'users.password', 'users.nominas', 'rols.name');
         if (isset($showActive)) {
             $users = $users->where('users.active', '=', $showActive);
         }
@@ -46,16 +46,20 @@ class UserController extends Controller
      */
     public function store(UserValidationRequest $request): JsonResponse
     {
-        $user = User::where('name', $request->name)->first();
+        $user = User::where("name", $request->input("name"))->where("active", true)->first();
         if (!empty($user)) {
             return response()->json(
                 [
                     'message' => 'El usuario ya existe.'
                 ],
-                404
+                409
             );
         }
-        $user = User::create($request->all());
+        $user = new User();
+        $user->name = $request->input("name");
+        $user->email = $request->input("email");
+        $user->password = $request->input("password");
+        $user->rol_id = $request->input("rol_id");
         $user->branch_id = $request->input("branch_id", auth()->user()->branch_id);
         $user->save();
         try {
@@ -101,7 +105,16 @@ class UserController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $user = User::where("branch_id", $request->input("branch_id", auth()->user()->branch_id))->find($id);
+        $user = User::find($id);
+        $user2 = User::where("name", $request->input("name"))->where("active", true)->first();
+        if (!empty($user2) && $user2->id != $user->id) {
+            return response()->json(
+                [
+                    'message' => 'El usuario ya existe.'
+                ],
+                409
+            );
+        }
         if (empty($user)) {
             return response()->json(
                 [
@@ -159,9 +172,8 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = User::where('name', $request->name)->where("active", true)->where("branch_id", $request->input("branch_id"))->first();
+        $user = User::where('name', $request->name)->where("active", true)->first();
 
-        // print_r($data);
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(
                 [

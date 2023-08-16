@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TypeCreated;
+use App\Http\Requests\ListRequest;
 use App\Http\Requests\TypeValidationRequest;
 use App\Models\Type;
 use Illuminate\Http\JsonResponse;
@@ -15,12 +16,15 @@ class TypeController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ListRequest $listRequest): JsonResponse
     {
-        $tipos = Type::all();
+        $tipos = Type::query();
+        if (isset($listRequest->active)) {
+            $tipos->where('active', '=', $listRequest->get('active'));
+        }
         return response()->json([
             'message' => 'success',
-            'tipos' => $tipos
+            'tipos' => $tipos->get()
         ], 200);
     }
 
@@ -32,7 +36,7 @@ class TypeController extends Controller
      */
     public function store(TypeValidationRequest $request): JsonResponse
     {
-        if (Type::where('nombre_tipo', '=', $request->get('nombre_tipo'))->exists()) {
+        if (Type::where('name', '=', $request->get('name'))->exists()) {
             return response()->json(
                 [
                     'message' => ['Uno de los parametros ya exite.']
@@ -85,7 +89,19 @@ class TypeController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $tipo = Type::find($id);
+        $request->validate([
+            'name' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'description' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/'
+        ]);
+        $type = Type::find($id);
+        if ($type->name == "Menu") {
+            return response()->json(
+                [
+                    'message' => ['No se puede modificar el tipo Menu.']
+                ],
+                409
+            );
+        }
         if (empty($tipo)) {
             return response()->json(
                 [
@@ -113,7 +129,24 @@ class TypeController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $tipo = Type::destroy($id);
+        $tipo = Type::find($id);
+        if (empty($tipo)) {
+            return response()->json(
+                [
+                    'message' => ['El tipo no existe.']
+                ],
+                404
+            );
+        }
+        if ($tipo->name == "Menu") {
+            return response()->json(
+                [
+                    'message' => ['No se puede eliminar el tipo Menu.']
+                ],
+                409
+            );
+        }
+        $tipo->delete();
         try {
             broadcast((new TypeCreated($tipo))->broadcastToEveryone());
         } catch (\Throwable) {
@@ -139,6 +172,14 @@ class TypeController extends Controller
                     'message' => 'No se encontro el tipo'
                 ],
                 404
+            );
+        }
+        if ($tipo->name == "Menu") {
+            return response()->json(
+                [
+                    'message' => ['No se puede modificar el tipo Menu.']
+                ],
+                409
             );
         }
         $tipo->active = !$tipo->active;

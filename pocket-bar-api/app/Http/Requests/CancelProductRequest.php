@@ -25,9 +25,9 @@ class CancelProductRequest extends FormRequest
     public function rules()
     {
         return [
-            "ticket_id" => "required|exists:tickets_tbl,id",
+            "ticket_id" => "required|exists:tickets,id",
             "products" => "required|array",
-            "products.*.id" => "required|exists:ticket_details_tbl,id",
+            "products.*.id" => "required",
             "products.*.units" => "required|integer|min:1",
         ];
     }

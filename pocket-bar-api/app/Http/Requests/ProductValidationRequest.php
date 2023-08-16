@@ -33,8 +33,8 @@ class ProductValidationRequest extends FormRequest
             'category_id' => 'required|integer|exists:categories,id',
             'brand_id' => 'required|integer|exists:brands,id',
             'provider_id' => 'nullable|integer|exists:providers,id',
-            'status_id' => 'required|integer|exists:statuses,id',
             'type_id' => 'required|integer|exists:types,id',
+            "branch_id" => "nullable|integer|exists:branches,id",
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Enums\Rol;
 use App\Models\Branch;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Provider;
 use App\Models\Rol as ModelsRol;
@@ -52,7 +53,17 @@ class DatabaseSeeder extends Seeder
             'name' => 'En uso',
         ]);
 
+        Currency::create([
+            "code" => "MXN",
+            "default" => true,
+            "rate" => 1,
+        ]);
 
+        Currency::create([
+            "code" => "USD",
+            "default" => false,
+            "rate" => 20,
+        ]);
 
         \App\Models\User::factory(10)->create();
 
@@ -151,7 +162,7 @@ class DatabaseSeeder extends Seeder
             Product::all()->each(function ($product) use ($branch) {
                 $branch->stock()->create([
                     "product_id" => $product->id,
-                    "units" => rand(0, 100),
+                    "stock" => rand(0, 100),
                 ]);
             });
         }

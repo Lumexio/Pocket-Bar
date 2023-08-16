@@ -11,7 +11,7 @@ use App\Http\Requests\ProductValidationRequest;
 use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Stock;
-use File;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,14 +30,13 @@ class ProductController extends Controller
             ->leftJoin('categories as cat', 'art.category_id', '=', 'cat.id')
             ->leftJoin('brands', 'art.brand_id', '=', 'brands.id')
             ->leftJoin('providers as prov', 'art.provider_id', '=', 'prov.id')
-            ->leftJoin('statuses', 'art.status_id', '=', 'statuses.id')
             ->leftJoin('types', 'art.type_id', '=', 'types.id')
             ->join("stocks", "art.id", "=", "stocks.product_id")
             ->where("stocks.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id));
         if (isset($showActive)) {
             $dat = $showActive ? $dat->whereNull('stocks.deactivated_at') : $dat->whereNotNull('stocks.deactivated_at');
         }
-        $dat = $dat->select('art.id', 'art.name', 'stocks.units', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name', 'brands.name', 'prov.name', 'statuses.name', 'types.name', "stocks.deactivated_at")
+        $dat = $dat->select('art.id', 'art.name', 'stocks.units', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name', 'brands.name', 'prov.name', 'types.name', "stocks.deactivated_at")
             ->get()
             ->map(
                 function ($item) {
@@ -75,7 +74,6 @@ class ProductController extends Controller
             $newProduct->category_id = $request->category_id;
             $newProduct->brand_id = $request->brand_id;
             $newProduct->provider_id = $request->provider_id ?? null;
-            $newProduct->status_id = $request->status_id;
             $newProduct->type_id = $request->type_id;
             $newProduct->user_id = Auth::id();
             if (isset($photo)) {
@@ -88,7 +86,7 @@ class ProductController extends Controller
             Branch::all()->each(function ($branch) use ($newProduct, $request) {
                 $branch->stock()->create([
                     'product_id' => $newProduct->id,
-                    'units' => $branch->id == $request->user()->branch_id ? $request->units : 0,
+                    'units' => $branch->id == $request->input("branch_id", Auth::user()->branch_id) ? $request->units : 0,
                 ]);
             });
             try {
@@ -166,19 +164,26 @@ class ProductController extends Controller
         $request->validate([
             "branch_id" => "nullable|exists:branches,id"
         ]);
-        $articulo = Stock::where("product_id", "=", $id)->where("branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))->first();
-        if (isset($articulo->deactivated_at)) {
-            $articulo->deactivated_at = null;
-            $message = "Articulo Activado";
-        } else {
-            $articulo->deactivated_at = now();
-            $message = "Articulo Desactivado";
+        $stock = Stock::where("product_id", "=", $id)->where("branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))->first();
+
+        if (empty($stock)) {
+            return response()->json(["message" => "Articulo no encontrado"], 404);
         }
-        $articulo->save();
+        $stock = $stock->toArray();
+        if ($stock["deactivated_at"] === null) {
+            $stock["deactivated_at"] = Carbon::now();
+            $message = "Articulo Desactivado";
+        } else {
+            $stock["deactivated_at"] = null;
+            $message = "Articulo Activado";
+        }
+        unset($stock["created_at"]);
+        unset($stock["updated_at"]);
+        Stock::where("product_id", "=", $id)->where("branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))->update($stock);
         try {
-            broadcast((new Product())->broadcastToEveryone());
+            broadcast((new ProductCreated())->broadcastToEveryone());
         } catch (\Exception) {
         }
-        return response()->json(['message' => $message, 'articulo' => $articulo]);
+        return response()->json(['message' => $message, 'articulo' => $stock], 200);
     }
 }

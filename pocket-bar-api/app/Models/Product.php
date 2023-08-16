@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Models\User;
-use App\Models\Categoria;
-use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -33,17 +31,17 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function categoria()
+    public function category()
     {
-        return $this->belongsTo(Categoria::class);
+        return $this->belongsTo(Category::class);
     }
-    public function marca()
+    public function brand()
     {
-        return $this->belongsTo(Marca::class);
+        return $this->belongsTo(Brand::class);
     }
-    public function proveedor()
+    public function provider()
     {
-        return $this->belongsTo(Proveedor::class);
+        return $this->belongsTo(Provider::class);
     }
     public function stock()
     {

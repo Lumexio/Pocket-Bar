@@ -9,11 +9,16 @@ class Stock extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["product_id", "branch_id", "units"];
+    protected $fillable = [
+        'product_id',
+        'branch_id',
+        'stock',
+        'deactivated_at'
+    ];
 
     public function product()
     {
-        return $this->belongsTo(Articulo::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function branch()

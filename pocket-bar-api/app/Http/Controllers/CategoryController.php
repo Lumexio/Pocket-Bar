@@ -40,7 +40,7 @@ class CategoryController extends Controller
      */
     public function store(CategoryValidationRequest $request): JsonResponse
     {
-        if (Category::where('nombre_categoria', '=', $request->get('nombre_categoria'))->exists()) {
+        if (Category::where('name', '=', $request->get('name'))->exists()) {
             return response()->json([
                 'message' => ['Nombre el nombre de la categoria  ya exite.']
             ], 409);

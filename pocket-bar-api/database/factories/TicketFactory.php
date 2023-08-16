@@ -32,7 +32,6 @@ class TicketFactory extends Factory
             $status = $this->faker->randomElement(['En espera', 'En preparacion', "Preparado", 'Recibido']);
             $items[] = [
                 "units" => $units,
-                "unit_price" => $price,
                 "discounts" => 0,
                 "tax" => ($units * $price) * 0.16,
                 "subtotal" => $units * $price,
@@ -61,8 +60,8 @@ class TicketFactory extends Factory
             "discounts" => 0,
             "min_tip" => $subtotal >= 500 ? $subtotal * 0.10 : $subtotal,
             "table_id" => $table,
-            //"nombre_mesa" => $table,
             "status" => $statusTicket,
+            "branch_id" => 1,
             "workshift_id" => 1,
             "closed" => $statusTicket == "Cerrado" ? true : false,
             "created_at" => $date,

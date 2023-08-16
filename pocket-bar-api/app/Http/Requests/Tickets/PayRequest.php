@@ -26,7 +26,7 @@ class PayRequest extends FormRequest
     public function rules()
     {
         return [
-            "ticket_id" => "required|exists:tickets_tbl,id",
+            "ticket_id" => "required|exists:tickets,id",
             "payments" => "required|array",
             "payments.*.payment_type" => "required|in:cash,card,usd",
             "payments.*.amount" => "required|numeric",

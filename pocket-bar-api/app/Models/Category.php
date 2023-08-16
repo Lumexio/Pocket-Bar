@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Articulo;
 
 class Category extends Model
 {
@@ -16,12 +15,12 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'nombre_categoria',
-        'descripcion_categoria'
+        'name',
+        'description'
     ];
 
-    public function articulo()
+    public function products()
     {
-        return $this->hasMany(Articulo::class);
+        return $this->hasMany(Product::class);
     }
 }

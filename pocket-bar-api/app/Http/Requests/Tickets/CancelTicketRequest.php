@@ -25,8 +25,7 @@ class CancelTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            "id" => "required|exists:tickets_tbl,id",
-            // "confirm_ticket" => "nullable|boolean"
+            "id" => "required|exists:tickets,id",
         ];
     }
 }

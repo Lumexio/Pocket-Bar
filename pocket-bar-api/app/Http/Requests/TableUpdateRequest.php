@@ -24,8 +24,8 @@ class TableUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre_mesa' => 'required|string|max:255',
-            'descripcion_mesa' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
             'branch_id' => 'nullable|exists:branches,id'
         ];
     }

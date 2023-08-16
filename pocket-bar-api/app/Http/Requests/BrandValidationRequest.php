@@ -24,9 +24,8 @@ class BrandValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre_marca' => 'required|string',
-            'descripcion_marca' =>
-            'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'name' => 'required|string',
+            'description' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
         ];
     }
 }

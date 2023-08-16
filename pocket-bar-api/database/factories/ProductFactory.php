@@ -27,7 +27,6 @@ class ProductFactory extends Factory
             'description' => $this->faker->text(100),
             'price' => $this->faker->numberBetween(1, 100),
             'category_id' => $this->faker->unique(true)->numberBetween(1, 3),
-            'status_id' => $this->faker->unique(true)->numberBetween(1, 3),
             'type_id' => $this->faker->unique(true)->numberBetween(1, 3),
             'provider_id' => $this->faker->unique(true)->numberBetween(1, 3),
             'brand_id' => $this->faker->unique(true)->numberBetween(1, 3),

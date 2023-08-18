@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', 'ProductController@index');
         Route::get('/{id}', 'ProductController@show');
         Route::put('/activate/{id}', 'ProductController@activate');
+        Route::get('/menu', 'ProductController@menu');
     });
     // Route::put("articulo/activate/{id}", "ProductController@activate");
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
@@ -115,6 +116,19 @@ Mostrar un registro no */
         Route::post('/', 'CurrencyController@store');
         Route::get('/{id}', 'CurrencyController@show');
         Route::put('set-default/{id}', 'CurrencyController@setDefault');
+    });
+
+    Route::prefix("stock")->group(function () {
+        Route::post('/add', 'StockController@addStock');
+        Route::post('/remove', 'StockController@removeStock');
+    });
+
+    Route::prefix("branch")->group(function () {
+        Route::get('/', 'BranchController@index');
+        Route::post('/', 'BranchController@store');
+        Route::get('/{id}', 'BranchController@show');
+        Route::put('/{id}', 'BranchController@update');
+        Route::put('/activate/{id}', 'BranchController@activate');
     });
 });
 

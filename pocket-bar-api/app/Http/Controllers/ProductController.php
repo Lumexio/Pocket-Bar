@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ProductCreated;
+use App\Http\Requests\ListProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ListRequest;
@@ -22,7 +23,7 @@ class ProductController extends Controller
      * @param ListRequest $request
      * @return JsonResponse
      */
-    public function index(ListRequest $request): JsonResponse
+    public function index(ListProductRequest $request): JsonResponse
     {
         $showActive = $request->get('showActive');
         $dat = DB::table('products as art')
@@ -35,6 +36,9 @@ class ProductController extends Controller
             ->where("stocks.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id));
         if (isset($showActive)) {
             $dat = $showActive ? $dat->whereNull('stocks.deactivated_at') : $dat->whereNotNull('stocks.deactivated_at');
+        }
+        if ($request->get('showMenu')) {
+            $dat = $dat->where('types.name', '=', 'Menu');
         }
         $dat = $dat->select('art.id', 'art.name', 'stocks.units', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name', 'brands.name', 'prov.name', 'types.name', "stocks.deactivated_at")
             ->get()

@@ -6,16 +6,14 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Proveedor;
 
-class proveedorCreated implements ShouldBroadcastNow
+class ProviderCreated implements ShouldBroadcast
 {
-    use Dispatchable;
-    use InteractsWithSockets;
-    use SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
@@ -24,7 +22,6 @@ class proveedorCreated implements ShouldBroadcastNow
      */
 
     public $proveedores;
-    public bool $afterCommit = true;
     public function __construct()
     {
         $this->proveedores = \App::call('App\Http\Controllers\ProveedorController@index');
@@ -35,7 +32,7 @@ class proveedorCreated implements ShouldBroadcastNow
      *
      * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function broadcastOn(): Channel|array
+    public function broadcastOn()
     {
         return new Channel('proveedores');
     }

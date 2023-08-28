@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-
-
-
-
 use App\Events\TableCreated;
 use App\Http\Requests\ListRequest;
 use App\Http\Requests\TableUpdateRequest;
@@ -14,7 +9,6 @@ use App\Http\Requests\TableValidationRequest;
 use App\Models\Table;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
 
 class TableController extends Controller
 {

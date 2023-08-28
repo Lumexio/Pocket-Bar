@@ -34,10 +34,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::put("articulo/activate/{id}", "ProductController@activate");
     Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
 
-
-    Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
-    Route::put('/rol/activate/{id}', 'RolController@activate');
-
     // Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
     // Route::put('/rol/activate/{id}', 'RolController@activate');
     /*Crear  si
@@ -63,8 +59,9 @@ Eliminar no
 Mostrar un registro no */
     Route::resource('provider', 'ProviderController')->except(['destroy', 'create', 'edit']);
     Route::put('/provider/activate/{id}', 'ProviderController@activate');
-
-
+    /*Crear  si
+Eliminar no
+Mostrar un registro no */
     // Route::resource('status', 'StatusController')->except(['destroy', 'create', 'edit']);
     // Route::put('/status/activate/{id}', 'StatusController@activate');
     /*Crear  si

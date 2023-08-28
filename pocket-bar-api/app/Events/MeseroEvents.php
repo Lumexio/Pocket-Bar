@@ -8,12 +8,12 @@ use App\Models\Workshift;
 use BeyondCode\LaravelWebSockets\WebSockets\Channels\PrivateChannel;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
-class MeseroEvents implements ShouldBroadcastNow
+class MeseroEvents implements ShouldBroadcast
 {
     use Dispatchable;
     use InteractsWithSockets;

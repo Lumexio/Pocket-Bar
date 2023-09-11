@@ -1,57 +1,28 @@
 <template>
 	<div class="logcard">
-		<v-card
-			v-on:keyup.enter="login()"
-			class="cont-card"
-			elevation="2"
-			:dark="this.$store.getters.hasdarkflag"
-		>
-			<v-card-title class="fade-in-title" style="font-size: 3rem"
-				><code class="font-weight-light">Pocket</code
-				><strong
+		<v-card v-on:keyup.enter="login()" class="cont-card" elevation="2" :dark="this.$store.getters.hasdarkflag">
+			<v-card-title class="fade-in-title" style="font-size: 3rem"><code class="font-weight-light">Pocket</code><strong
 					:class="[
 						$store.getters.hasdarkflag === true
 							? 'black-mode-text'
 							: 'white-mode-text',
-					]"
-				>
+					]">
 					bar
 				</strong>
-				<v-progress-circular
-					:class="[
-						$store.getters.hasdarkflag === true
-							? 'black-mode-text'
-							: 'white-mode-text',
-					]"
-					v-show="cargando == true"
-					:active="cargando"
-					:indeterminate="cargando"
-					:size="30"
-				></v-progress-circular
-			></v-card-title>
+				<v-progress-circular :class="[
+					$store.getters.hasdarkflag === true
+						? 'black-mode-text'
+						: 'white-mode-text',
+				]" v-show="cargando == true" :active="cargando" :indeterminate="cargando"
+					:size="30"></v-progress-circular></v-card-title>
 
 			<v-text-field v-model="name" label="Nombre" required></v-text-field>
-			<v-text-field
-				:append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
-				v-model="password"
-				:type="show3 ? 'text' : 'password'"
-				class="input-group--focused"
-				:counter="8"
-				label="contraseña"
-				:error-messages="passwordErrors"
-				required
-				@click:append="show3 = !show3"
-				@input="$v.password.$touch()"
-				@blur="$v.password.$touch()"
-				loading
-			>
+			<v-text-field :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'" v-model="password"
+				:type="show3 ? 'text' : 'password'" class="input-group--focused" :counter="8" label="contraseña"
+				:error-messages="passwordErrors" required @click:append="show3 = !show3" @input="$v.password.$touch()"
+				@blur="$v.password.$touch()" loading>
 				<template v-slot:progress>
-					<v-progress-linear
-						:value="progress"
-						:color="color"
-						absolute
-						height="2"
-					></v-progress-linear>
+					<v-progress-linear :value="progress" :color="color" absolute height="2"></v-progress-linear>
 				</template>
 			</v-text-field>
 			<v-card-actions>
@@ -59,7 +30,7 @@
 					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
-				<v-btn large color="#4caf50"  :dark="$store.getters.hasdarkflag"  class="mr-4" v-on:click="login()">
+				<v-btn large color="#4caf50" :dark="$store.getters.hasdarkflag" class="mr-4" v-on:click="login()">
 					Iniciar sesión
 				</v-btn>
 			</v-card-actions>
@@ -69,14 +40,7 @@
 
 <script>
 const { required, minLength } = require("vuelidate/lib/validators");
-import axios from "axios";
-
-import store from "@/store";
-import router from "@/router";
-
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL =
-	"http://" + window.location.hostname /*"127.0.0.1"*/ + ":8000";
+import { LogIn } from "@/api/usuarios.js";
 export default {
 	name: "crearusuario",
 	data: () => ({
@@ -116,61 +80,17 @@ export default {
 				name: this.name,
 				password: this.password,
 			};
-
 			this.cargando = true;
-			axios
-				.get("sanctum/csrf-cookie")
-				.then((response) => {
-					response;
-					axios
-						.post("api/login", enviar)
-						.then((response) => {
-							let rol = response.data.user.rol_id;
-							let userId = response.data.user.id;
-
-							store.commit("setrol", rol);
-
-							store.commit("setUserId", userId);
-							let validado = response.request.withCredentials;
-
-							if (validado == true) {
-								this.cargando = false;
-								store.commit("SET_TOKEN", response.data.token);
-								let token = store.state.token;
-								store.dispatch("login", { token });
-								switch (rol) {
-									case 1:
-										router.push("/usuarios").catch(() => {});
-										break;
-									case 2:
-										router.push("/articulos").catch(() => {});
-										break;
-									case 3:
-										router.push("/ordenes").catch(() => {});
-										break;
-									case 4:
-										router.push("/mesero").catch(() => {});
-										break;
-									case 5:
-										router.push("/barra").catch(() => {});
-										break;
-									default:
-										alert("Cuanta no existe o es incorrecta");
-										break;
-								}
-							} else if (validado == false) {
-								alert("Cuanta no existe o es incorrecta");
-							}
-						})
-						.catch((e) => {
-							if (e) {
-								this.cargando = false;
-							}
-						});
-				})
-				.catch((e) => {
-					console.log(e);
-				});
+			LogIn(enviar).then((resp) => {
+				if (resp.response != null) {
+					console.log(resp);
+					this.cargando
+				}
+			}).catch((err) => {
+				this.cargando = false;
+				err;
+				alert("Error al iniciar sesión");
+			});
 		},
 
 		clear() {
@@ -201,10 +121,12 @@ export default {
 	-o-animation: fadeIn 5s;
 	-ms-animation: fadeIn 5s;
 }
+
 @keyframes fadeIn {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -214,6 +136,7 @@ export default {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -223,6 +146,7 @@ export default {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -232,6 +156,7 @@ export default {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -241,13 +166,16 @@ export default {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
 }
+
 .black-mode-text {
 	color: #9acd32;
 }
+
 .white-mode-text {
 	color: black;
 }

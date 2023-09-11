@@ -7,24 +7,25 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 
 
 export function getArticulos(articulosArray) {
+  console.log("getArticulos");
   return new Promise((resolve, reject) => {
     axios
-      .get("api/articulo/list")
+      .get("api/product/")
       .then((response) => {
         const articulos = response.data.articulos;
         const stats = response.status;
         articulos.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_articulo: element.nombre_articulo,
-            cantidad_articulo: element.cantidad_articulo,
-            descripcion_articulo: element.descripcion_articulo, //pendiente
-            precio_articulo: element.precio_articulo, //pendiente
-            nombre_categoria: element.nombre_categoria,
-            nombre_tipo: element.nombre_tipo,
-            nombre_marca: element.nombre_marca,
-            nombre_proveedor: element.nombre_proveedor,
-            nombre_status: element.nombre_status,
+            nombre_articulo: element.name,
+            cantidad_articulo: element.quantity,
+            descripcion_articulo: element.description, //pendiente
+            precio_articulo: element.price, //pendiente
+            nombre_categoria: element.name_categoria,
+            nombre_tipo: element.name_tipo,
+            nombre_marca: element.name_marca,
+            nombre_proveedor: element.name_proveedor,
+            nombre_status: element.name_status,
             deactivated_at: element.deactivated_at,
             foto_articulo: element.foto_articulo,
           };
@@ -40,7 +41,7 @@ export function getArticulos(articulosArray) {
 }
 export function postArticulos(enviar) {
   axios
-    .post("api/articulo/create/", enviar, {
+    .post("api/product/", enviar, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -65,7 +66,7 @@ export function postArticulos(enviar) {
 }
 export function activateArticulos(id) {
   return new Promise((resolve, reject) => {
-    axios.put("api/articulo/activate/" + id).then((response) => {
+    axios.put("api/product/activate/" + id).then((response) => {
       resolve(response);
     }).catch((error) => reject(error));
   });

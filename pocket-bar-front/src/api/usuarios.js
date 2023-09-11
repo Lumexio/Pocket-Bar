@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "@/store";
+import router from "@/router";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
 export function getUsuarios(usersArray) {
@@ -7,28 +8,84 @@ export function getUsuarios(usersArray) {
     axios
       .get("api/user")
       .then((response) => {
-        
+
         let user = response.data.users;
         let stats = response.status;
-        
+        console.log(user);
         user.forEach((element) => {
           let datos = {
             id: element.id,
             name: element.name,
             name_rol: element.name_rol,
             nominas: element.nominas,
-            active: ((element.active===1)?  true:false),
+            active: ((element.active === 1) ? true : false),
           };
           if (!datos) return;
           usersArray.push(datos);
         });
-        
-
         resolve({
           usersArray, stats
         });
       })
       .catch((error) => { console.log(error); reject(error); });
+  })
+}
+export function LogIn(packet) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get("sanctum/csrf-cookie")
+      .then((response) => {
+        response;
+        axios
+          .post("api/login", packet)
+          .then((response) => {
+
+            let rol = response.data.user.rol_id;
+            let userId = response.data.user.id;
+            store.commit("setrol", rol);
+            store.commit("setUserId", userId);
+            let validado = response.request.withCredentials;
+
+            if (validado == true) {
+              store.commit("SET_TOKEN", response.data.token);
+              let token = store.state.token;
+              store.dispatch("login", { token });
+              switch (rol) {
+                case 1:
+                  router.push("/usuarios").catch(() => { });
+                  break;
+                case 2:
+                  router.push("/articulos").catch(() => { });
+                  break;
+                case 3:
+                  router.push("/ordenes").catch(() => { });
+                  break;
+                case 4:
+                  router.push("/mesero").catch(() => { });
+                  break;
+                case 5:
+                  router.push("/barra").catch(() => { });
+                  break;
+                default:
+                  alert("Cuanta no existe o es incorrecta");
+                  break;
+              }
+            } else if (validado == false) {
+              alert("Cuanta no existe o es incorrecta");
+            }
+            resolve({
+              response
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            reject(e);
+          });
+      })
+      .catch((e) => {
+        console.log(e);
+        reject(e);
+      });
   })
 }
 export function Logout() {
@@ -44,7 +101,7 @@ export function Logout() {
       })
       .catch((error) => {
         reject(error.response);
-        if (error.response.status != 400&& error.response.status != 200) {
+        if (error.response.status != 400 && error.response.status != 200) {
           store.commit("setdanger", true);
           setTimeout(function () {
             store.commit("setdanger", null);
@@ -53,4 +110,4 @@ export function Logout() {
       });
   })
 }
-export default { getUsuarios, Logout };
+export default { getUsuarios, Logout, LogIn };

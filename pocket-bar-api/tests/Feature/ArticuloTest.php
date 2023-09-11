@@ -104,7 +104,6 @@ class ArticuloTest extends TestCase
                         "precio_articulo",
                         "descripcion_articulo",
                         "foto_articulo",
-                        "name",
                         "nombre_categoria",
                         "nombre_marca",
                         "nombre_proveedor",

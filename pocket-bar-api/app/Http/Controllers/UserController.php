@@ -28,7 +28,7 @@ class UserController extends Controller
         $users = DB::table('users')->where('users.id', '!=', $loggeduser)
             ->where("users.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id))
             ->leftJoin('rols', 'users.rol_id', '=', 'rols.id')
-            ->select('users.id', 'users.name', 'users.active', 'users.email', 'users.password', 'users.nominas', 'rols.name');
+            ->select('users.id', 'users.name', 'users.active', 'users.email', 'users.password', 'users.nominas', 'rols.name as name_rol');
         if (isset($showActive)) {
             $users = $users->where('users.active', '=', $showActive);
         }

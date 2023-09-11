@@ -18,7 +18,7 @@ class RolController extends Controller
      */
     public function index(): JsonResponse
     {
-        $roles = Rol::all();
+        $roles = Rol::select("id", "name as name_rol", "active")->get();
         return \response()->json([
             "message" => "success",
             "data" => $roles

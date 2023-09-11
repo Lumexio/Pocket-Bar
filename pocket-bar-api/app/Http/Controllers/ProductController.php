@@ -40,7 +40,7 @@ class ProductController extends Controller
         if ($request->get('showMenu')) {
             $dat = $dat->where('types.name', '=', 'Menu');
         }
-        $dat = $dat->select('art.id', 'art.name', 'stocks.units', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name', 'brands.name', 'prov.name', 'types.name', "stocks.deactivated_at")
+        $dat = $dat->select('art.id', 'art.name', 'stocks.units as', 'art.price', 'art.description', 'art.image', 'users.name', 'cat.name as name_categoria', 'brands.name as name_marca', 'prov.name as name_proveedor', 'types.name as name_tipo', "stocks.deactivated_at")
             ->get()
             ->map(
                 function ($item) {

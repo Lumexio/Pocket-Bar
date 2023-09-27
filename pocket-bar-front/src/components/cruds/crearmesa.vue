@@ -1,36 +1,15 @@
 <template>
-	<v-dialog
-		content-class="elevation-0"
-		v-model="dialogmesa"
-		max-width="40rem"
-		persistent
-		:dark="this.$store.getters.hasdarkflag"
-	>
+	<v-dialog content-class="elevation-0" v-model="dialogmesa" max-width="40rem" persistent
+		:dark="this.$store.getters.hasdarkflag">
 		<v-card v-on:keyup.enter="submit()" class="cont-card">
-			<v-toolbar
-				:dark="this.$store.getters.hasdarkflag"
-				flat
-				color="transparent"
-			>
-				<v-btn
-					v-shortkey="['esc']"
-					icon
-					color="dark"
-					@shortkey="onClose()"
-					@click.prevent="onClose()"
-				>
+			<v-toolbar :dark="this.$store.getters.hasdarkflag" flat color="transparent">
+				<v-btn v-shortkey="['esc']" icon color="dark" @shortkey="onClose()" @click.prevent="onClose()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Crear mesas</v-toolbar-title>
 			</v-toolbar>
-			<v-row
-				><v-col>
-					<v-text-field
-						v-model="nombre_mesa"
-						:counter="10"
-						label="Nombre mesa"
-						required
-					></v-text-field>
+			<v-row><v-col>
+					<v-text-field v-model="nombre_mesa" :counter="10" label="Nombre mesa" required></v-text-field>
 				</v-col>
 			</v-row>
 			<v-row>
@@ -47,14 +26,8 @@
 				<v-btn color="grey darken-2" @click.prevent="clear" outlined>
 					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
-				<v-btn
-					color="yellow darken-2"
-					class="mr-4"
-					v-shortkey="['enter']"
-					@shortkey="submit"
-					@click.prevent="submit"
-					outlined
-				>
+				<v-btn color="yellow darken-2" class="mr-4" v-shortkey="['enter']" @shortkey="submit"
+					@click.prevent="submit" outlined>
 					Guardar mesa
 				</v-btn>
 			</v-card-actions>
@@ -87,8 +60,8 @@ export default {
 
 			this.nombre_mesa = upperConverter(this.nombre_mesa);
 			const formdata = new FormData();
-			formdata.append("nombre_mesa", this.nombre_mesa);
-			formdata.append("descripcion_mesa", this.descripcion_mesa);
+			formdata.append("name", this.nombre_mesa);
+			formdata.append("description", this.descripcion_mesa);
 			postMesas(formdata);
 			this.clear();
 		},

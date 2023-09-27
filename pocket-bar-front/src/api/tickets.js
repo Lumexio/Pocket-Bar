@@ -8,7 +8,7 @@ export function getTickets(ticketsArray) {
 
   return new Promise((resolve, reject) => {
     axios
-      .get("api/tickets/list")
+      .get("api/ticket/")
       .then(response => {
         const tickets = response.data.data;
         const stats = response.status;
@@ -40,7 +40,7 @@ export function postTickets(enviar) {
 
   return new Promise((resolve, reject) => {
     axios
-      .post("api/tickets/create", enviar)
+      .post("api/ticket/create", enviar)
       .then((response) => {
         const resp = response.data;
         const stats = response.status;
@@ -72,7 +72,7 @@ export function putTipUpdate(enviar) {
 
   return new Promise((resolve, reject) => {
     axios
-      .put("api/tickets/tip", enviar)
+      .put("api/ticket/tip", enviar)
       .then((response) => {
         const resp = response;
 
@@ -101,7 +101,7 @@ export function putTipUpdate(enviar) {
 export function postAddProducts(enviar) {
   return new Promise((resolve, reject) => {
     axios
-      .post("api/tickets/add/products", enviar)
+      .post("api/ticket/add/products", enviar)
       .then((response) => {
         if (response.status == 200) {
           store.commit("setsuccess", true);
@@ -127,7 +127,7 @@ export function postAddProducts(enviar) {
 export function getTicketsPWA(ticketsPWAArray, status) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/tickets/pwa/list", {
+      .get("api/ticket/pwa/list", {
         params: {
           status: status
         }

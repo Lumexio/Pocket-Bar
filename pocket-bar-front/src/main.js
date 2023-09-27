@@ -22,6 +22,7 @@ Axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.token}`;
 
 
 
+
 // window.Echo = new Echo({
 //   broadcaster: 'pusher',
 //   key: 'local',

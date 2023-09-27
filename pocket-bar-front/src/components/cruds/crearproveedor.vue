@@ -1,59 +1,27 @@
 <template>
-	<v-dialog
-		content-class="elevation-0"
-		v-model="dialogproveedor"
-		max-width="35rem"
-		persistent
-		:dark="this.$store.getters.hasdarkflag"
-	>
+	<v-dialog content-class="elevation-0" v-model="dialogproveedor" max-width="35rem" persistent
+		:dark="this.$store.getters.hasdarkflag">
 		<v-card v-on:keyup.enter="submit()" class="cont-card" elevation="2">
-			<v-toolbar
-				:dark="this.$store.getters.hasdarkflag"
-				flat
-				color="transparent"
-			>
-				<v-btn
-					v-shortkey="['esc']"
-					icon
-					color="dark"
-					@shortkey="onClose"
-					@click.prevent="onClose"
-				>
+			<v-toolbar :dark="this.$store.getters.hasdarkflag" flat color="transparent">
+				<v-btn v-shortkey="['esc']" icon color="dark" @shortkey="onClose" @click.prevent="onClose">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Crear proveedor</v-toolbar-title>
 			</v-toolbar>
 			<v-row>
 				<v-col>
-					<v-text-field
-						v-model="nombre_proveedor"
-						:counter="10"
-						label="Nombre proveedor"
-						required
-					></v-text-field>
+					<v-text-field v-model="nombre_proveedor" :counter="10" label="Nombre proveedor" required></v-text-field>
 				</v-col>
 			</v-row>
-			<v-row
-				><v-col>
-					<v-textarea
-						v-model="descripcion"
-						label="Descrpción"
-						type="text"
-					></v-textarea> </v-col
-			></v-row>
+			<v-row><v-col>
+					<v-textarea v-model="descripcion" label="Descrpción" type="text"></v-textarea> </v-col></v-row>
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn color="grey darken-2" @click.prevent="clear" outlined>
 					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
-				<v-btn
-					color="yellow darken-2"
-					class="mr-4"
-					v-shortkey="['enter']"
-					@shortkey="submit"
-					v-on:click="submit"
-					outlined
-				>
+				<v-btn color="yellow darken-2" class="mr-4" v-shortkey="['enter']" @shortkey="submit" v-on:click="submit"
+					outlined>
 					Guardar proveedor
 				</v-btn>
 			</v-card-actions>
@@ -89,8 +57,8 @@ export default {
 				descripcion: this.descripcion,
 			};
 			const formdata = new FormData();
-			formdata.append("nombre_proveedor", this.nombre_proveedor);
-			formdata.append("descripcion", this.descripcion);
+			formdata.append("name", this.nombre_proveedor);
+			formdata.append("description", this.descripcion);
 			enviar.nombre_proveedor = upperConverter(this.nombre_proveedor);
 
 			postProveedores(formdata);

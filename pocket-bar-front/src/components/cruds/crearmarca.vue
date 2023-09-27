@@ -1,36 +1,16 @@
 <template>
-	<v-dialog
-		content-class="elevation-0"
-		v-model="dialogmarca"
-		max-width="40rem"
-		persistent
-		:dark="this.$store.getters.hasdarkflag"
-	>
+	<v-dialog content-class="elevation-0" v-model="dialogmarca" max-width="40rem" persistent
+		:dark="this.$store.getters.hasdarkflag">
 		<v-card v-on:keyup.enter="submit()" class="cont-card" elevation="2">
-			<v-toolbar
-				:dark="this.$store.getters.hasdarkflag"
-				flat
-				color="transparent"
-			>
-				<v-btn
-					v-shortkey="['esc']"
-					icon
-					color="dark"
-					@shortkey="onClose()"
-					@click.prevent="onClose()"
-				>
+			<v-toolbar :dark="this.$store.getters.hasdarkflag" flat color="transparent">
+				<v-btn v-shortkey="['esc']" icon color="dark" @shortkey="onClose()" @click.prevent="onClose()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Crear marcas</v-toolbar-title>
 			</v-toolbar>
 			<v-row>
 				<v-col sm="6" md="12" lx="13">
-					<v-text-field
-						v-model="nombre_marca"
-						:counter="10"
-						label="Nombre marca"
-						required
-					></v-text-field>
+					<v-text-field v-model="nombre_marca" :counter="10" label="Nombre marca" required></v-text-field>
 				</v-col>
 			</v-row>
 			<v-row>
@@ -47,14 +27,8 @@
 				<v-btn color="grey darken-2" @click.prevent="clear" outlined>
 					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
-				<v-btn
-					color="yellow darken-2"
-					class="mr-4"
-					v-shortkey="['enter']"
-					@shortkey="submit"
-					@click.prevent="submit()"
-					outlined
-				>
+				<v-btn color="yellow darken-2" class="mr-4" v-shortkey="['enter']" @shortkey="submit"
+					@click.prevent="submit()" outlined>
 					Guardar marca
 				</v-btn>
 			</v-card-actions>
@@ -88,8 +62,8 @@ export default {
 
 			this.nombre_marca = upperConverter(this.nombre_marca);
 			const formdata = new FormData();
-			formdata.append("nombre_marca", this.nombre_marca);
-			formdata.append("descripcion_marca", this.descripcion_marca);
+			formdata.append("name", this.nombre_marca);
+			formdata.append("description", this.descripcion_marca);
 			postMarcas(formdata);
 			this.clear();
 		},

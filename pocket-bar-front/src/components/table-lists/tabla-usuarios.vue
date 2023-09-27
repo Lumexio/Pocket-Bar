@@ -47,23 +47,6 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
-			<!-- <v-dialog :dark="$store.getters.hasdarkflag" v-model="dialogActivate" max-width="500px">
-				<v-card>
-					<v-card-title v-show="editedItem.active === false" class="headline">
-						¿Estas seguro de querer habilitarlo?
-					</v-card-title>
-					<v-card-title v-show="editedItem.active === true" class="headline">
-						¿Quieres deshabilitarlo?
-					</v-card-title>
-					<v-card-actions v-on:keyup.enter="activateItemConfirm">
-						<v-spacer></v-spacer>
-						<v-btn @click.prevent="closeDelete">Cancelar</v-btn>
-						<v-btn :color="$store.getters.hasdarkflag ? 'blue darken-1' : 'blue lighten-1'"
-							@click.prevent="activateItemConfirm">Aceptar</v-btn>
-						<v-spacer></v-spacer>
-					</v-card-actions>
-				</v-card>
-			</v-dialog> -->
 			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
 				<template v-slot:titledialog>
 					<span v-show="editedItem.active === false" class="headline">
@@ -75,12 +58,12 @@
 				</template>
 				<template v-slot:buttonsuccess>
 					<v-btn v-on:keyup.enter="activateItemConfirm" large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag
-							? editedItem.active == 1
-								? 'red darken-4'
-								: 'lime darken-2'
-							: editedItem.active == 1
-								? 'red lighten-2'
-								: 'lime accent-4'
+						? editedItem.active == 1
+							? 'red darken-4'
+							: 'lime darken-2'
+						: editedItem.active == 1
+							? 'red lighten-2'
+							: 'lime accent-4'
 						" @click.prevent="activateItemConfirm">
 						<span v-show="cargaDialog == false">confirmar</span>
 						<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
@@ -109,7 +92,7 @@
 				mdi-pencil
 			</v-icon>
 
-			<v-icon v-show="(item.active === true) | (item.active === 1)" small :dark="$store.getters.hasdarkflag"
+			<v-icon v-show="item.active === true || item.active === 1" small :dark="$store.getters.hasdarkflag"
 				@click.prevent="deleteItem(item)">
 				mdi-lightbulb-on
 			</v-icon>
@@ -190,6 +173,7 @@ export default {
 		this.onFocus();
 		window.Echo.channel("users").listen("userCreated", (e) => {
 			this.usersArray = e.users.original.users;
+			console.log(this.usersArray);
 		});
 		window.Echo.channel("roles").listen("rolCreated", (e) => {
 			this.itemsrol = e.roles.original.roles;

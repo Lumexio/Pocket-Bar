@@ -7,20 +7,20 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 export function getTipos(tipoArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/tipo")
+      .get("api/type")
       .then(response => {
         const tipo = response.data.tipos;
         const stats = response.status;
         tipo.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_tipo: element.nombre_tipo,
+            nombre_tipo: element.name,
             active: element.active,
           };
           if (!datos) return;
           tipoArray.push(datos);
         });
-        
+
         resolve({
           stats, tipoArray
         });
@@ -29,26 +29,32 @@ export function getTipos(tipoArray) {
   });
 }
 export function postTipos(enviar) {
-  axios
-    .post("api/tipo", enviar)
-    .then((response) => {
-      if (response.statusText === "Created") {
-        store.commit("setsuccess", true);
-
-      }
-    })
-    .catch((e) => {
-      console.log(e.message);
-      if (e) {
-        store.commit("setdanger", true);
-      }
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .post("api/type", enviar)
+      .then((response) => {
+        const tipo = response;
+        const stats = response.statusText;
+        if (response.statusText === "Created") {
+          store.commit("setsuccess", true);
+        }
+        resolve({
+          stats, tipo
+        });
+      })
+      .catch((e) => {
+        reject(e.message);
+        if (e) {
+          store.commit("setdanger", true);
+        }
+      });
+  });
 }
 export function activationTipos(id) {
   return new Promise((resolve, reject) => {
-    axios.put("api/tipo/activate/" + id).then((response) => {
+    axios.put("api/type/activate/" + id).then((response) => {
       resolve(response);
-    }).catch((error) => reject(error) );
+    }).catch((error) => reject(error));
   });
 }
 export function editTipos(url) {

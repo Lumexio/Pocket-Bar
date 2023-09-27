@@ -3,6 +3,25 @@ import store from "@/store";
 import router from "@/router";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
+export function postUsers(packet) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post("api/user", packet)
+      .then((response) => {
+        if (response.statusText === "Created") {
+          store.commit("setsuccess", true);
+        }
+        const resp = response.data;
+        resolve({
+          resp
+        });
+      })
+      .catch((e) => {
+        reject(e);
+        store.commit("setdanger", true);
+      });
+  })
+}
 export function getUsuarios(usersArray) {
   return new Promise((resolve, reject) => {
     axios
@@ -110,4 +129,4 @@ export function Logout() {
       });
   })
 }
-export default { getUsuarios, Logout, LogIn };
+export default { postUsers, getUsuarios, Logout, LogIn };

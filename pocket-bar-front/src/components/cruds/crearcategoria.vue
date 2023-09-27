@@ -1,45 +1,20 @@
 <template>
-	<v-dialog
-		content-class="elevation-0"
-		v-model="dialogcategoria"
-		max-width="40rem"
-		persistent
-		:dark="this.$store.getters.hasdarkflag"
-	>
+	<v-dialog content-class="elevation-0" v-model="dialogcategoria" max-width="40rem" persistent
+		:dark="this.$store.getters.hasdarkflag">
 		<v-card v-on:keyup.enter="submit()" class="cont-card">
-			<v-toolbar
-				:dark="this.$store.getters.hasdarkflag"
-				flat
-				color="transparent"
-			>
-				<v-btn
-					v-shortkey="['esc']"
-					icon
-					color="dark"
-					@shortkey="onClose()"
-					@click.prevent="onClose()"
-				>
+			<v-toolbar :dark="this.$store.getters.hasdarkflag" flat color="transparent">
+				<v-btn v-shortkey="['esc']" icon color="dark" @shortkey="onClose()" @click.prevent="onClose()">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Crear categorías</v-toolbar-title>
 			</v-toolbar>
-			<v-row
-				><v-col>
-					<v-text-field
-						v-model="nombre_categoria"
-						:counter="10"
-						label="Nombre categoría"
-						required
-					></v-text-field>
+			<v-row><v-col>
+					<v-text-field v-model="nombre_categoria" :counter="10" label="Nombre categoría" required></v-text-field>
 				</v-col>
 			</v-row>
 			<v-row>
 				<v-col>
-					<v-textarea
-						v-model="descripcion_categoria"
-						:counter="120"
-						color="teal"
-					>
+					<v-textarea v-model="descripcion_categoria" :counter="120" color="teal">
 						<template v-slot:label>
 							<div>Descripción categoría <small>(opcional)</small></div>
 						</template>
@@ -51,14 +26,8 @@
 				<v-btn color="grey darken-2" @click.prevent="clear" outlined>
 					<v-icon>mdi-eraser</v-icon>
 				</v-btn>
-				<v-btn
-					color="yellow darken-2"
-					class="mr-4"
-					v-shortkey="['enter']"
-					@shortkey="submit"
-					@click.prevent="submit"
-					outlined
-				>
+				<v-btn color="yellow darken-2" class="mr-4" v-shortkey="['enter']" @shortkey="submit"
+					@click.prevent="submit" outlined>
 					Guardar categoria
 				</v-btn>
 			</v-card-actions>
@@ -90,8 +59,8 @@ export default {
 			store.commit("setdanger", null);
 			this.nombre_categoria = upperConverter(this.nombre_categoria);
 			const formdata = new FormData();
-			formdata.append("nombre_categoria", this.nombre_categoria);
-			formdata.append("descripcion_categoria", this.descripcion_categoria);
+			formdata.append("name", this.nombre_categoria);
+			formdata.append("description", this.descripcion_categoria);
 			postCategorias(formdata);
 			this.clear();
 		},

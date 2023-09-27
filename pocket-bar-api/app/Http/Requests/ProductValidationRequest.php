@@ -29,11 +29,12 @@ class ProductValidationRequest extends FormRequest
             'units' => 'required|integer|min:0',
             'description' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/|max:155',
             'image' => 'nullable|mimes:png,jpg',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|integer|exists:categories,id',
-            'brand_id' => 'required|integer|exists:brands,id',
+            'price' => 'nullable|numeric|min:0',
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'brand_id' => 'nullable|integer|exists:brands,id',
             'provider_id' => 'nullable|integer|exists:providers,id',
-            'type_id' => 'required|integer|exists:types,id',
+            'type_id' => 'nullable|integer|exists:types,id',
+            'status_id' => 'nullable|integer|exists:types,id',
             "branch_id" => "nullable|integer|exists:branches,id",
         ];
     }

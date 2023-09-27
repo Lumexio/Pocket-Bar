@@ -13,7 +13,7 @@ class ListProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -25,7 +25,7 @@ class ListProductRequest extends FormRequest
     {
         return [
             "active" => "nullable|boolean",
-            "branch_id" => "required|integer|exists:branches,id",
+            "branch_id" => "nullable|integer|exists:branches,id",
             "showMenu" => "nullable|boolean|default:false"
         ];
     }

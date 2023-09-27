@@ -22,7 +22,7 @@ class ProductCreated implements ShouldBroadcastNow
     public function __construct()
     {
 
-        $this->articulos = \App::call('App\Http\Controllers\ArticuloController@index');
+        $this->articulos = \App::call('App\Http\Controllers\ProductController@index');
     }
 
     /**

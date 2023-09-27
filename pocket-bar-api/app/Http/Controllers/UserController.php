@@ -23,6 +23,7 @@ class UserController extends Controller
      */
     public function index(ListRequest $request): JsonResponse
     {
+
         $loggeduser = Auth::id();
         $showActive = $request->get('showActive');
         $users = DB::table('users')->where('users.id', '!=', $loggeduser)
@@ -125,6 +126,7 @@ class UserController extends Controller
         }
         $user->update($request->all());
         try {
+            broadcast((new userCreated())->broadcastToEveryone());
             userCreated::dispatch($user);
         } catch (\Throwable) {
         }
@@ -154,10 +156,12 @@ class UserController extends Controller
         }
         $user->active = !$user->active;
         $user->save();
-        try {
-            broadcast((new userCreated())->broadcastToEveryone());
-        } catch (\Exception) {
-        }
+        broadcast((new userCreated())->broadcastToEveryone());
+        userCreated::dispatch($user);
+        // try {
+
+        // } catch (\Exception) {
+        // }
         return response()->json([
             'message' => 'success',
             'user' => $user

@@ -7,15 +7,15 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 export function getProveedores(proveedorArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/proveedor")
+      .get("api/provider/")
       .then(response => {
         const proveedor = response.data.proveedores;
         const stats = response.status;
         proveedor.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_proveedor: element.nombre_proveedor,
-            descripcion: element.descripcion,
+            name: element.name,
+            description: element.description,
             active: element.active,
           };
           if (!datos) return;
@@ -30,7 +30,7 @@ export function getProveedores(proveedorArray) {
 }
 export function postProveedores(enviar) {
   axios
-    .post("api/proveedor", enviar)
+    .post("api/provider/", enviar)
     .then((response) => {
       if (response.statusText === "Created") {
         store.commit("setsuccess", true);
@@ -46,7 +46,7 @@ export function postProveedores(enviar) {
 }
 export function activationProveedores(id) {
   return new Promise((resolve, reject) => {
-    axios.put("api/proveedor/activate/" + id).then((response) => {
+    axios.put("api/provider/activate/" + id).then((response) => {
       response;
       resolve(response);
     }).catch((error) => console.log(reject(error)));

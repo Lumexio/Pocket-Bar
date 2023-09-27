@@ -7,17 +7,17 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 export function getMesas(mesaArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/mesa")
+      .get("api/table/")
       .then(response => {
 
         const mesa = response.data.mesas;
         const stats = response.status;
-        
+
         mesa.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_mesa: element.nombre_mesa,
-            descripcion_mesa: element.descripcion_mesa,
+            nombre_mesa: element.name,
+            descripcion_mesa: element.description,
             active: element.active,
           };
           if (!datos) return;
@@ -33,7 +33,7 @@ export function getMesas(mesaArray) {
 export function postMesas(enviar) {
 
   axios
-    .post("api/mesa", enviar, {
+    .post("api/table/", enviar, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -53,9 +53,10 @@ export function postMesas(enviar) {
 }
 export function activationMesas(id) {
   return new Promise((resolve, reject) => {
-    axios.put("api/mesa/activate/" + id).then((response) => {
+    axios.put("api/table/activate/" + id).then((response) => {
+
       resolve(response);
-    }).catch((error) => reject(error) );
+    }).catch((error) => reject(error));
   });
 }
 export function editMesa(url) {

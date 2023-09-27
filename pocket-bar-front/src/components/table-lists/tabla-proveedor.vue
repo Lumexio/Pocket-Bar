@@ -23,7 +23,7 @@
 							<v-container>
 								<v-row>
 									<v-col cols="12" sm="6" md="4">
-										<v-text-field v-model="editedItem.nombre_proveedor" label="Nombre"></v-text-field>
+										<v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
 									</v-col>
 								</v-row>
 							</v-container>
@@ -50,26 +50,16 @@
 						</span>
 					</template>
 					<template v-slot:buttonsuccess>
-						<v-btn
-							large
-							:disabled="cargaDialog == true"
-							:color="
-							$store.getters.hasdarkflag
-								? editedItem.active == 1
-									? 'red darken-4'
-									: 'lime darken-2'
-								: editedItem.active == 1
+						<v-btn large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag
+							? editedItem.active == 1
+								? 'red darken-4'
+								: 'lime darken-2'
+							: editedItem.active == 1
 								? 'red lighten-2'
-								: 'lime accent-4'"		
-							@click.prevent="activateItemConfirm"
-						>
+								: 'lime accent-4'" @click.prevent="activateItemConfirm">
 							<span v-show="cargaDialog == false">confirmar</span>
-							<v-progress-circular
-								v-show="cargaDialog == true"
-								:active="cargaDialog"
-								:indeterminate="cargaDialog"
-								:size="20"
-							></v-progress-circular>
+							<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog"
+								:indeterminate="cargaDialog" :size="20"></v-progress-circular>
 						</v-btn>
 					</template>
 				</modalConfirmation>
@@ -87,10 +77,12 @@
 					mdi-pencil
 				</v-icon>
 
-				<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
+				<v-icon v-show="item.active === 1" small :dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)">
 					mdi-lightbulb-on
 				</v-icon>
-				<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag" @click.prevent="deleteItem(item)">
+				<v-icon v-show="item.active === 0" small :dark="$store.getters.hasdarkflag"
+					@click.prevent="deleteItem(item)">
 					mdi-lightbulb-on-outline
 				</v-icon>
 			</template>
@@ -100,7 +92,7 @@
 			</template>
 			<template v-slot:expanded-item="{ headers, item }">
 				<td :colspan="headers.length">
-					{{ item.descripcion }}
+					{{ item.description }}
 				</td>
 			</template>
 		</v-data-table>
@@ -116,8 +108,8 @@ import {
 } from "@/api/proveedores.js";
 import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
-	nombre_proveedor: "tabla-proveedor",
-		components: {
+	name: "tabla-proveedor",
+	components: {
 		modalConfirmation,
 	},
 	data: () => ({
@@ -133,7 +125,7 @@ export default {
 				text: "Proveedores",
 				align: "start",
 				sortable: false,
-				value: "nombre_proveedor",
+				value: "name",
 			},
 			{ text: "Status", value: "active", align: "center" },
 			{ text: "Acciones", value: "actions", sortable: false, align: "center" },
@@ -150,18 +142,19 @@ export default {
 		editedIndex: -1,
 		editedItem: {
 			id: "",
-			nombre_proveedor: "",
+			name: "",
 			active: null,
 		},
 		defaultItem: {
 			id: "",
-			nombre_proveedor: "",
+			name: "",
 			active: null,
 		},
 	}),
 	mounted() {
 		this.onFocus();
-		window.Echo.channel("proveedores").listen("proveedorCreated", (e) => {
+		window.Echo.channel("proveedores").listen("ProviderCreated", (e) => {
+			console.log(e.proveedores.original.proveedores);
 			this.proveedorArray = e.proveedores.original.proveedores;
 		});
 
@@ -257,11 +250,11 @@ export default {
 			if (this.editedIndex > -1) {
 				Object.assign(this.proveedorArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
-				send.nombre_proveedor = upperConverter(send.nombre_proveedor);
+				send.name = upperConverter(send.name);
 				let url = "api/proveedor/";
 
 				url = url + send.id;
-				url = `${url}?${"nombre_proveedor=" + send.nombre_proveedor}`;
+				url = `${url}?${"name=" + send.name}`;
 				editProveedores(url);
 			} else {
 				this.proveedorArray.push(this.editedItem);

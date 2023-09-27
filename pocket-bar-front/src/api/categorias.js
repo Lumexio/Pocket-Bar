@@ -7,7 +7,7 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 export function getCategorias(categoriaArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/categoria")
+      .get("api/category")
       .then(response => {
         const categoria = response.data.categorias;
         const stats = response.status;
@@ -15,7 +15,7 @@ export function getCategorias(categoriaArray) {
         categoria.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_categoria: element.nombre_categoria,
+            nombre_categoria: element.name,
             descripcion_categoria: element.descripcion_categoria,
             active: element.active,
 
@@ -34,7 +34,7 @@ export function getCategorias(categoriaArray) {
 export function postCategorias(enviar) {
 
   axios
-    .post("api/categoria", enviar, {
+    .post("api/category", enviar, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -54,7 +54,7 @@ export function postCategorias(enviar) {
 }
 export function activateCategoria(id) {
   return new Promise((resolve, reject) => {
-    axios.put("api/categoria/activate/" + id).then((response) => {
+    axios.put("api/category/activate/" + id).then((response) => {
       response;
       resolve(response);
     }).catch((error) => console.log(reject(error)));

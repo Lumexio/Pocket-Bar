@@ -7,14 +7,14 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 export function getStatus(statusArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/status")
+      .get("api/status/")
       .then(response => {
         const status = response.data.data;
         const stats = response.status;
         status.forEach((element) => {
           let datos = {
             status_id: element.id,
-            nombre_status: element.nombre_status,
+            nombre_status: element.name,
           };
           if (!datos) return;
           statusArray.push(datos);

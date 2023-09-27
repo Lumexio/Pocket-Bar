@@ -7,14 +7,15 @@ axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + "
 export function getMarcas(marcaArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/marca")
+      .get("api/brand")
       .then(response => {
         const marca = response.data.marcas;
+        console.log(marca);
         const stats = response.status;
         marca.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_marca: element.nombre_marca,
+            nombre_marca: element.name,
             active: element.active,
           };
           if (!datos) return;
@@ -29,7 +30,7 @@ export function getMarcas(marcaArray) {
 }
 export function postMarcas(enviar) {
   axios
-    .post("api/marca", enviar, {
+    .post("api/brand", enviar, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -46,7 +47,7 @@ export function postMarcas(enviar) {
 }
 export function avtivationMarcas(id) {
   return new Promise((resolve, reject) => {
-    axios.put("api/marca/activate/" + id).then((response) => {
+    axios.put("api/brand/activate/" + id).then((response) => {
       response;
       resolve(response);
     }).catch((error) => console.log(reject(error)));

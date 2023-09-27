@@ -140,10 +140,7 @@ class ProviderController extends Controller
         }
         $proveedor->active = !$proveedor->active;
         $proveedor->save();
-        try {
-            broadcast((new Provider($proveedor))->broadcastToEveryone());
-        } catch (\Throwable) {
-        }
+        broadcast((new ProviderCreated($proveedor))->broadcastToEveryone());
         return response()->json(
             [
                 'message' => 'success',

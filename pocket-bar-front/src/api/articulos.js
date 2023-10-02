@@ -78,16 +78,23 @@ export function activateArticulos(id) {
   });
 }
 export function editArticulos(url, data) {
-
-  axios
-    .put(url, data)
-    .then((response) => {
-
-      if (response.statusText === "Created") {
-        store.commit("setsuccess", true);
-      }
-    })
-    .catch((error) => console.log(error));
+  return new Promise((resolve, reject) => {
+    axios
+      .put(url, data)
+      .then((response) => {
+        const stats = response.statusText;
+        if (response.statusText === "Created") {
+          store.commit("setsuccess", true);
+        }
+        resolve({ stats });
+      })
+      .catch((error) => {
+        reject({ error });
+        if (error) {
+          store.commit("setdanger", true);
+        }
+      });
+  });
 }
 
 export default { getArticulos, postArticulos, activateArticulos, editArticulos }

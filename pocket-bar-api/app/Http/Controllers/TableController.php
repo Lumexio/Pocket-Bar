@@ -173,10 +173,7 @@ class TableController extends Controller
         }
         $mesa->active = !$mesa->active;
         $mesa->save();
-        try {
-            broadcast((new TableCreated($mesa))->broadcastToEveryone());
-        } catch (\Throwable) {
-        }
+        broadcast((new TableCreated($mesa))->broadcastToEveryone());
         return response()->json(
             [
                 'message' => 'success',

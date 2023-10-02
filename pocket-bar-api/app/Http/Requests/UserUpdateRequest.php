@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Rol;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\Rol;
 
-class UserValidationRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,8 @@ class UserValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
-            'email' => 'nullable|email',
-            'password' => 'required',
-            'rol_id' => 'required',
-            'branch_id' => 'nullable|exists:branches,id'
+            'name' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'password' => 'nullable',
         ];
     }
 }

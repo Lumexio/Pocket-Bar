@@ -10,44 +10,40 @@
 					id="onsearch"></v-text-field>
 			</v-toolbar>
 			<v-progress-linear height="6" indeterminate color="cyan" :active="cargando"></v-progress-linear>
-			<v-dialog :dark="$store.getters.hasdarkflag" v-model="dialog" max-width="500px">
-				<v-card>
-					<v-card-title>
-						<h1 class="headline">{{ formTitle }}</h1>
-					</v-card-title>
-
-					<v-card-text>
-						<v-container>
-							<v-row>
-								<v-col cols="12">
-									<v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
-								</v-col>
-
-								<v-col cols="12">
-									<v-select v-model="selectrol" :items="itemsrol" v-on="usersync()" item-text="name_rol"
-										item-value="rol_id" label="Rol"></v-select>
-								</v-col>
-							</v-row>
-							<v-row>
-								<v-col cols="12">
-									<v-text-field :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
-										v-model="editedItem.password" :type="show3 ? 'text' : 'password'"
-										hint="Minimo 8 caracteres" :counter="8" @click:append="show3 = !show3"
-										label="Contraseña" placeholder="Contraseña">
-									</v-text-field>
-								</v-col>
-							</v-row>
-						</v-container>
-					</v-card-text>
-
-					<v-card-actions v-on:keyup.enter="save">
-						<v-spacer></v-spacer>
-						<v-btn @click.prevent="close"> Cancelar </v-btn>
-						<v-btn color="blue darken-1" @click.prevent="save"> Guardar </v-btn>
-					</v-card-actions>
-				</v-card>
-			</v-dialog>
+			<modalConfirmation :dialogConfirmation.sync="dialog">
+				<template v-slot:titledialog>
+					<h1 class="headline">{{ formTitle }}</h1>
+				</template>
+				<template v-slot:textmoneygeneral>
+					<v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
+					<v-select v-model="selectrol" :items="itemsrol" v-on="usersync()" item-text="name_rol"
+						item-value="rol_id" label="Rol"></v-select>
+					<v-text-field :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'" v-model="passwordFake"
+						:type="show3 ? 'text' : 'password'" hint="Minimo 8 caracteres" :counter="8"
+						@click:append="show3 = !show3" label="Contraseña" placeholder="Contraseña">
+					</v-text-field>
+					<v-text-field :disabled="passwordFake.length < 1" :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
+						v-model="password" :type="show3 ? 'text' : 'password'" hint="Minimo 8 caracteres" :counter="8"
+						@click:append="show3 = !show3" label="Confirmar contraseña" placeholder="Confirmar contraseña">
+					</v-text-field>
+				</template>
+				<template v-slot:buttonsuccess>
+					<v-btn v-on:keyup.enter="save" large :disabled="cargaDialog == true" :color="$store.getters.hasdarkflag
+						? editedItem.active == 1
+							? 'lime darken-4'
+							: 'lime darken-2'
+						: editedItem.active == 1
+							? 'lime lighten-2'
+							: 'lime accent-4'
+						" @click.prevent="save">
+						<span v-show="cargaDialog == false">confirmar</span>
+						<v-progress-circular v-show="cargaDialog == true" :active="cargaDialog" :indeterminate="cargaDialog"
+							:size="20"></v-progress-circular>
+					</v-btn>
+				</template>
+			</modalConfirmation>
 			<modalConfirmation :dialogConfirmation.sync="dialogActivate">
+
 				<template v-slot:titledialog>
 					<span v-show="editedItem.active === false" class="headline">
 						¿Estas seguro de querer habilitarlo?
@@ -110,9 +106,7 @@
 <script>
 import modalConfirmation from "../global/modal-confirmation.vue";
 import axios from "axios";
-import store from "@/store";
-import { upperConverter } from "@/special/uppercases-converter.js";
-import { getUsuarios } from "@/api/usuarios.js";
+import { getUsuarios, putUsers } from "@/api/usuarios.js";
 import { getRol } from "@/api/rol.js";
 //axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
@@ -127,6 +121,8 @@ export default {
 		dialogActivate: false,
 		search: "",
 		password: "",
+		passwordFake: "",
+		passwordReal: "",
 		cargando: true,
 		cargaDialog: false,
 		show3: false,
@@ -173,7 +169,6 @@ export default {
 		this.onFocus();
 		window.Echo.channel("users").listen("userCreated", (e) => {
 			this.usersArray = e.users.original.users;
-			console.log(this.usersArray);
 		});
 		window.Echo.channel("roles").listen("rolCreated", (e) => {
 			this.itemsrol = e.roles.original.roles;
@@ -210,6 +205,13 @@ export default {
 	},
 
 	watch: {
+		password(val) {
+			if (val === this.passwordFake) {
+
+				this.passwordReal = val;
+				console.log("iguales", val, this.passwordFake, "To send:", this.passwordReal);
+			}
+		},
 		dialog(val) {
 			val || this.close();
 		},
@@ -336,27 +338,20 @@ export default {
 		},
 
 		save() {
-			if (this.editedIndex > -1) {
-				Object.assign(this.usersArray[this.editedIndex], this.editedItem);
-				let send = this.editedItem;
-				send.name = upperConverter(send.name);
-				let url = "api/user/";
-
-				url = url + send.id;
-				url = `${url}?${"name=" + send.name}&${"password=" + send.password}&${"rol_id=" + this.selectrol
-					}`;
-
-				axios
-					.put(url)
-					.then((response) => {
-						response;
-						store.commit("increment", 1);
-					})
-					.catch((error) => console.log(error));
-			} else {
-				this.usersArray.push(this.editedItem);
-			}
-			this.close();
+			Object.assign(this.usersArray[this.editedIndex], this.editedItem);
+			let send = this.editedItem;
+			this.cargaDialog = true;
+			putUsers(send.id, {
+				name: send.name,
+				password: this.passwordReal,
+				rol_id: this.selectrol,
+			}).then((response) => {
+				if (response.resp.message === "success") {
+					this.close();
+					this.cargaDialog = false;
+				}
+			})
+				.catch((error) => console.log(error));
 		},
 	},
 };

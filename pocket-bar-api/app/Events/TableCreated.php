@@ -23,7 +23,7 @@ class TableCreated implements ShouldBroadcastNow
     public $afterCommit = true;
     public function __construct()
     {
-        $this->mesas = \App::call('App\Http\Controllers\MesaController@index');
+        $this->mesas = \App::call('App\Http\Controllers\TableController@index');
     }
 
     /**

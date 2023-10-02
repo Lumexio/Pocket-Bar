@@ -3,6 +3,35 @@ import store from "@/store";
 import router from "@/router";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://" + window.location.hostname/*"127.0.0.1"*/ + ":8000";
+export function putUsers(id, packet) {
+  return new Promise((resolve, reject) => {
+    axios
+      .put("api/user/" + id, packet)
+      .then((response) => {
+
+        if (response.status === 200) {
+          store.commit("setsuccess", true);
+          setTimeout(function () {
+            store.commit("setsuccess", false);
+          }, 2000);
+        }
+        const resp = response.data;
+        resolve({
+          resp
+        });
+      })
+      .catch((error) => {
+        reject(error.response);
+        if (error.response.status != 400 && error.response.status != 200) {
+          store.commit("setdanger", true);
+          setTimeout(function () {
+            store.commit("setdanger", false);
+          }, 2000);
+        }
+      }
+      );
+  })
+}
 export function postUsers(packet) {
   return new Promise((resolve, reject) => {
     axios
@@ -16,9 +45,14 @@ export function postUsers(packet) {
           resp
         });
       })
-      .catch((e) => {
-        reject(e);
-        store.commit("setdanger", true);
+      .catch((error) => {
+        reject(error.response);
+        if (error.response.status != 400 && error.response.status != 200) {
+          store.commit("setdanger", true);
+          setTimeout(function () {
+            store.commit("setdanger", null);
+          }, 2000);
+        }
       });
   })
 }
@@ -27,10 +61,8 @@ export function getUsuarios(usersArray) {
     axios
       .get("api/user")
       .then((response) => {
-
         let user = response.data.users;
         let stats = response.status;
-        console.log(user);
         user.forEach((element) => {
           let datos = {
             id: element.id,
@@ -46,7 +78,15 @@ export function getUsuarios(usersArray) {
           usersArray, stats
         });
       })
-      .catch((error) => { console.log(error); reject(error); });
+      .catch((error) => {
+        reject(error.response);
+        if (error.response.status != 400 && error.response.status != 200) {
+          store.commit("setdanger", true);
+          setTimeout(function () {
+            store.commit("setdanger", null);
+          }, 2000);
+        }
+      });
   })
 }
 export function LogIn(packet) {
@@ -96,14 +136,24 @@ export function LogIn(packet) {
               response
             });
           })
-          .catch((e) => {
-            console.log(e);
-            reject(e);
+          .catch((error) => {
+            reject(error.response);
+            if (error.response.status != 400 && error.response.status != 200) {
+              store.commit("setdanger", true);
+              setTimeout(function () {
+                store.commit("setdanger", null);
+              }, 2000);
+            }
           });
       })
       .catch((e) => {
-        console.log(e);
-        reject(e);
+        reject(e.response);
+        if (e.response.status != 400 && e.response.status != 200) {
+          store.commit("setdanger", true);
+          setTimeout(function () {
+            store.commit("setdanger", null);
+          }, 2000);
+        }
       });
   })
 }
@@ -129,4 +179,4 @@ export function Logout() {
       });
   })
 }
-export default { postUsers, getUsuarios, Logout, LogIn };
+export default { postUsers, getUsuarios, putUsers, Logout, LogIn };

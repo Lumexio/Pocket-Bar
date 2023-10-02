@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\userCreated;
 use App\Http\Requests\ListRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UserValidationRequest;
 use App\Http\Requests\UsuarioValidationRequest;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +105,7 @@ class UserController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(int $id, UserUpdateRequest $request): JsonResponse
     {
         $user = User::find($id);
         $user2 = User::where("name", $request->input("name"))->where("active", true)->first();

@@ -16,8 +16,8 @@ export function getMesas(mesaArray) {
         mesa.forEach((element) => {
           let datos = {
             id: element.id,
-            nombre_mesa: element.name,
-            descripcion_mesa: element.description,
+            name: element.name,
+            description: element.description,
             active: element.active,
           };
           if (!datos) return;

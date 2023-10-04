@@ -14,7 +14,7 @@ export function getStatus(statusArray) {
         status.forEach((element) => {
           let datos = {
             status_id: element.id,
-            nombre_status: element.name,
+            name: element.name,
           };
           if (!datos) return;
           statusArray.push(datos);

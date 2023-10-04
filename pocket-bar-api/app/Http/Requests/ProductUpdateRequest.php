@@ -26,12 +26,12 @@ class ProductUpdateRequest extends FormRequest
         return [
             'name' => 'string|max:255',
             'description' => 'nullable|string',
-            'price' => 'numeric',
-            'cetegory_id' => 'integer|exists:categories,id',
-            'brand_id' => 'integer|exists:brands,id',
+            'price' => 'nullable|numeric',
+            'cetegory_id' => 'nullable|integer|exists:categories,id',
+            'brand_id' => 'nullable|integer|exists:brands,id',
             'image' => 'nullable|mimes:png,jpg',
-            'provider_id' => 'integer|exists:providers,id',
-            'type_id' => 'integer|exists:types,id',
+            'provider_id' => 'nullable|integer|exists:providers,id',
+            'type_id' => 'nullable|integer|exists:types,id',
         ];
     }
 }

@@ -83,16 +83,12 @@ class TypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param TypeValidationRequest $request
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(TypeValidationRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'name' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/',
-            'description' => 'nullable|regex:/(^[A-Za-z0-9 ]+$)+/'
-        ]);
         $type = Type::find($id);
         if ($type->name == "Menu") {
             return response()->json(

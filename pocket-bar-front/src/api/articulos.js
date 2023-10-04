@@ -77,10 +77,10 @@ export function activateArticulos(id) {
     }).catch((error) => reject(error));
   });
 }
-export function editArticulos(url, data) {
+export function editArticulos(id, data) {
   return new Promise((resolve, reject) => {
     axios
-      .put(url, data)
+      .put("api/product/" + id, data)
       .then((response) => {
         const stats = response.statusText;
         if (response.statusText === "Created") {

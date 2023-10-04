@@ -16,43 +16,20 @@
 					<v-card-title>
 						<h1 class="headline">{{ formTitle }}</h1>
 					</v-card-title>
-
 					<v-card-text>
-						<v-container>
-							<v-row>
-								<v-col sm="4" md="6">
-									<v-text-field v-model="editedItem.nombre_articulo" label="Nombre"></v-text-field>
-								</v-col>
-								<v-col sm="1" md="2">
-									<v-text-field v-model="editedItem.cantidad_articulo" type="number"
-										label="Cantidad"></v-text-field>
-								</v-col>
-								<v-col sm="3" md="4">
-									<v-select v-model="selectc" :items="itemsc" item-text="nombre_categoria" item-value="id"
-										label="Categoría"></v-select>
-								</v-col>
-								<v-col sm="4" md="6">
-									<v-select v-model="selectt" :items="itemstt" item-text="nombre_tipo" item-value="id"
-										label="Tipo">
-									</v-select>
-								</v-col>
-								<v-col sm="4" md="6">
-									<v-select v-model="selectm" :items="itemstm" item-text="nombre_marca" item-value="id"
-										label="Marca" required></v-select>
-								</v-col>
-								<v-col sm="4" md="6">
-									<v-select v-model="selectp" :items="itemsp" item-text="nombre_proveedor" item-value="id"
-										label="Proveedor" required></v-select>
-								</v-col>
-								<v-col sm="4" md="6">
-									<v-select v-model="selectst" :items="itemstst" item-text="name_status"
-										item-value="status_id" label="Estatus" required></v-select>
-								</v-col>
-							</v-row>
-							<v-row><v-col>
-									<v-textarea v-model="editedItem.descripcion_articulo" label="Descrpción"
-										type="text"></v-textarea> </v-col></v-row>
-						</v-container>
+						<v-text-field v-model="editedItem.nombre_articulo" label="Nombre"></v-text-field>
+						<v-text-field v-model="editedItem.cantidad_articulo" type="number" label="Cantidad"></v-text-field>
+						<v-select v-model="selectc" :items="itemsc" item-text="nombre_categoria" item-value="id"
+							label="Categoría"></v-select>
+						<v-select v-model="selectt" :items="itemstt" item-text="nombre_tipo" item-value="id" label="Tipo">
+						</v-select>
+						<v-select v-model="selectm" :items="itemstm" item-text="nombre_marca" item-value="id" label="Marca"
+							required></v-select>
+						<v-select v-model="selectp" :items="itemsp" item-text="name" item-value="id" label="Proveedor"
+							required></v-select>
+						<v-select v-model="selectst" :items="itemstst" item-text="name" item-value="status_id"
+							label="Estatus" required></v-select>
+						<v-textarea v-model="editedItem.descripcion_articulo" label="Descrpción" type="text"></v-textarea>
 					</v-card-text>
 
 					<v-card-actions v-on:keyup.enter="save">
@@ -216,7 +193,7 @@ export default {
 		selectc: "", //categoria
 		selectt: "", //tipo
 		selectp: "", //proveedor
-		selectm: "", //marca
+		selectm: null, //marca
 		selectst: "", //status
 
 		//Array en el que se deposita de los selectores.
@@ -434,19 +411,18 @@ export default {
 				Object.assign(this.articulosArray[this.editedIndex], this.editedItem);
 				let send = this.editedItem;
 				send.nombre_articulo = upperConverter(send.nombre_articulo);
-				let url = "api/articulo/update/" + send.id;
 				const pack = {
-					nombre_articulo: send.nombre_articulo,
-					cantidad_articulo: send.cantidad_articulo,
-					categoria_id: this.selectc,
-					proveedor_id: this.selectp,
-					tipo_id: this.selectt,
+					name: send.nombre_articulo,
+					quantity: send.cantidad_articulo,
+					category_id: this.selectc,
+					provider_id: this.selectp,
+					tipe_id: this.selectt,
 					status_id: this.selectst,
-					marca_id: this.selectm,
-					descripcion_articulo: send.descripcion_articulo,
+					brand_id: this.selectm,
+					description: send.descripcion_articulo,
 				};
 
-				editArticulos(url, pack);
+				editArticulos(send.id, pack);
 			} else {
 				this.articulosArray.push(this.editedItem);
 			}

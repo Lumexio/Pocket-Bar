@@ -100,7 +100,7 @@ class TableController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function update(TableUpdateRequest $request, int $id): JsonResponse
+    public function update(int $id, TableUpdateRequest $request): JsonResponse
     {
         $mesa = Table::find($id);
         if (empty($mesa)) {

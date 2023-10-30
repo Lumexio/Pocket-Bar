@@ -118,7 +118,6 @@
 <script>
 import modalConfirmation from "../global/modal-confirmation.vue";
 import { getMesas, activationMesas, editMesa } from "@/api/mesas.js";
-import { upperConverter } from "@/special/uppercases-converter.js";
 export default {
 	name: "tabla-mesa",
 	components: {
@@ -257,13 +256,7 @@ export default {
 		save() {
 			if (this.editedIndex > -1) {
 				Object.assign(this.mesaArray[this.editedIndex], this.editedItem);
-				let send = this.editedItem;
-				send.name = upperConverter(send.name);
-				let url = "api/mesa/";
-				url = url + send.id;
-				url = `${url}?${"name=" + send.name}&${"description=" + send.description
-					}`;
-				editMesa(url);
+				editMesa(this.editedItem.id, { name: this.editedItem.name, description: this.editedItem.description });
 			} else {
 				this.mesaArray.push(this.editedItem);
 			}

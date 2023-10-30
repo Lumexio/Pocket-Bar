@@ -59,13 +59,16 @@ export function activationMesas(id) {
     }).catch((error) => reject(error));
   });
 }
-export function editMesa(url) {
-  axios
-    .put(url)
-    .then((response) => {
-      response;
-    })
-    .catch((error) => console.log(error));
+export function editMesa(id, pack) {
+  console.log(id, pack);
+  return new Promise((resolve, reject) => {
+    axios
+      .put("api/table/" + id, pack)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => reject(error));
+  });
 }
 
 export default { getMesas, postMesas, activationMesas, editMesa }

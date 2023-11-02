@@ -22,6 +22,7 @@
         "pusher/pusher-php-server": "^4.0|^5.0|^6.0|^7.0",
         "rakutentech/laravel-request-docs": "^2.16",
         "spatie/laravel-activitylog": "^4.4",
+        "stancl/tenancy": "^3.6",
         "symfony/mailer": "^6.0"
     },
     "require-dev": {

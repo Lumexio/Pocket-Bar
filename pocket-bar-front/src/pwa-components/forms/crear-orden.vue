@@ -5,7 +5,7 @@
 				down: () => swipe('Down'),
 			}">
 				<v-btn icon :dark="this.$store.getters.hasdarkflag === true" @click.prevent="close()" large>
-					<v-icon>mdi-close-circle</v-icon>
+					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Nueva orden</v-toolbar-title>
 			</v-toolbar>
@@ -42,69 +42,28 @@
 								</v-toolbar>
 							</template>
 
-							<template>
-								<v-row v-for="(item, index) in articulosArray" :key="index">
-
-									<v-card :class="[
-										cambio(item) === '#272727' || cambio(item) === 'success'
-											? 'wt'
-											: 'blt',
-									]" :color="cambio(item)" class="card-p ml-4 mr-4 mb-1" :disabled="item.quantity == 0">
-										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="500"
-											v-bind:src="item.image">
-										</v-img>
-										<v-card-title style="flex-wrap: nowrap;" :class="[
+							<template v-slot:default="props">
+								<v-row v-for="item in props.items" :key="item.id">
+									<v-card :color="cambio(item)" @click.prevent="cajaProductos(item)"
+										class="card-p ml-4 mr-4 mb-1" :disabled="item.quantity == 0">
+										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="600"
+											v-bind:src="item.image"></v-img>
+										<v-card-title class="subheading font-weight-bold card-prod" :class="[
 											cambio(item) === '#272727' || cambio(item) === 'success'
 												? 'wt'
 												: 'blt',
 										]">
-											{{ item.name
-											}}
-											<v-spacer></v-spacer>
-											<v-btn icon @click.prevent="cajaProductos(item)">
-												<span :class="[
-													cambio(item) === '#272727' ||
-														cambio(item) === 'success'
-														? 'wt'
-														: 'blt',
-												]"><v-icon>mdi-plus-circle</v-icon></span>
-											</v-btn>
+											{{ item.name }} <v-spacer></v-spacer>{{ item.quantity }}
 										</v-card-title>
-										<v-card-actions :key="refresher">
-											<v-btn
-												:disabled="item.units > 1 && pedidoArray.includes(item) === true ? false : true"
-												icon @click.prevent="sumaresta('resta', item, index)">
-												<span :class="[
-													cambio(item) === '#272727' ||
-														cambio(item) === 'success'
-														? 'wt'
-														: 'blt',
-												]">
-													<v-icon>
-														mdi-chevron-left-circle
-													</v-icon>
-												</span>
-											</v-btn>
-											<span class="ma-2">{{ item.units }}
-											</span>
-											<v-btn icon :disabled="pedidoArray.includes(item) === true ? false : true"
-												@click.prevent="sumaresta('suma', item, index)">
-												<span :class="[
-													cambio(item) === '#272727' ||
-														cambio(item) === 'success'
-														? 'wt'
-														: 'blt',
-												]">
-													<v-icon>
-														mdi-chevron-right-circle
-													</v-icon>
-												</span>
-											</v-btn>
-											<v-spacer></v-spacer>
-											<span class="text font-weight-regular">
-												${{ item.price }}
-											</span>
-										</v-card-actions>
+										<v-card-text class="text font-weight-regular" style="text-align: end">
+											<span :class="[
+												cambio(item) === '#272727' ||
+													cambio(item) === 'success'
+													? 'wt'
+													: 'blt',
+											]">
+												${{ item.price }}</span>
+										</v-card-text>
 									</v-card>
 								</v-row>
 							</template>
@@ -143,17 +102,17 @@
 							:key="index">
 							<v-row>
 								<v-col>
-									<v-btn icon @click.prevent="deleteProduct(index)">
-										<v-icon>mdi-close-circle</v-icon>
+									<v-btn icon large @click.prevent="deleteProduct(index)">
+										<v-icon>mdi-close</v-icon>
 									</v-btn></v-col>
 								<v-col cols="6"><span>{{ item.name }}</span></v-col><v-spacer></v-spacer><v-col><span
 										class="pr-2">${{ item.price }}</span></v-col>
 							</v-row>
 							<v-card-actions :key="refresher" class="arrowscounter">
-								<v-btn :disabled="item.units > 1 ? false : true" icon
-									@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left-circle</v-icon></v-btn><span
-									class="ma-2">{{ item.units }} </span><v-btn icon
-									@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right-circle</v-icon></v-btn>
+								<v-btn v-if="item.piezas > 1" text
+									@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left</v-icon></v-btn><span
+									class="ma-2">{{ item.piezas }} </span><v-btn text
+									@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right</v-icon></v-btn>
 							</v-card-actions>
 						</v-card>
 						<div class="pa-5">

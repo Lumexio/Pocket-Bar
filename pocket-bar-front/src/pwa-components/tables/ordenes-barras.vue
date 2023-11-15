@@ -1,41 +1,23 @@
 <template >
 	<v-expansion-panels :dark="darkonchange" popout>
-		<v-expansion-panel
-			class="sizes"
-			v-for="item in ticketsPWAArray"
-			:key="item.id"
-			v-show="item.status == hasstatus"
-		>
+		<v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"
+			:active="carga"></v-progress-linear>
+		<v-expansion-panel class="sizes" v-for="item in ticketsPWAArray" :key="item.id" v-show="item.status == hasstatus">
 			<v-expansion-panel-header>
 				<span>
 					<span style="font-size: 18px">
-						<b>Titular: </b>{{ item.titular }}</span
-					>
+						<b>Titular: </b>{{ item.titular }}</span>
 					<br />
-					<span style="font-size: 18px"
-						><b>Mesa: </b>{{ item.nombre_mesa }}</span
-					>
+					<span style="font-size: 18px"><b>Mesa: </b>{{ item.nombre_mesa }}</span>
 					<br />
 					<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
 				</span>
-				<v-btn
-					class="mr-1"
-					max-width="25px"
-					large
-					:dark="darkonchange"
-					color="cyan darken-3"
-					@click.prevent="(dialogticketviewer = true),(onticket=item)"
-					><v-icon>mdi-eye-circle</v-icon>
+				<v-btn class="mr-1" max-width="25px" large :dark="darkonchange" color="cyan darken-3"
+					@click.prevent="(dialogticketviewer = true), (onticket = item)"><v-icon>mdi-eye-circle</v-icon>
 				</v-btn>
-				<v-btn
-					class="mr-2"
-					max-width="25px"
-					large
-					:dark="darkonchange"
-					color="#1E88E5"
+				<v-btn class="mr-2" max-width="25px" large :dark="darkonchange" color="#1E88E5"
 					v-if="item.status != 'Cerrado'"
-					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
-					><v-icon>mdi-plus</v-icon>
+					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"><v-icon>mdi-plus</v-icon>
 				</v-btn>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
@@ -60,31 +42,25 @@
 					</template>
 				</v-simple-table>
 				<v-col class="pa-4">
-				<div v-if="item.tip>0" class="d-flex flex-row justify-space-between align-center">
-					<span > Propina:</span>
-					<v-divider></v-divider> 
-					<b>{{ item.tip }}% </b>
-				</div>
-				<div v-if="item.specifictip>0" class="d-flex flex-row justify-space-between align-center">
-					<span > Propina directa:</span> 
-					<v-divider></v-divider> 
-					<b>${{ item.specifictip }} </b>
-				</div>
-				<div class="d-flex flex-row justify-space-between align-center">
-					<span > Subtotal:</span><v-divider></v-divider> <b> ${{ item.total }}</b>
-				</div>
-			</v-col>
+					<div v-if="item.tip > 0" class="d-flex flex-row justify-space-between align-center">
+						<span> Propina:</span>
+						<v-divider></v-divider>
+						<b>{{ item.tip }}% </b>
+					</div>
+					<div v-if="item.specifictip > 0" class="d-flex flex-row justify-space-between align-center">
+						<span> Propina directa:</span>
+						<v-divider></v-divider>
+						<b>${{ item.specifictip }} </b>
+					</div>
+					<div class="d-flex flex-row justify-space-between align-center">
+						<span> Subtotal:</span><v-divider></v-divider> <b> ${{ item.total }}</b>
+					</div>
+				</v-col>
 			</v-expansion-panel-content>
-		
+
 		</v-expansion-panel>
-		<ticketViewer
-				:dialogticketviewer.sync="dialogticketviewer"
-				:ticket="onticket"
-			/>
-		<addProducts
-			:dialogaddproduct.sync="dialogaddproduct"
-			:ticket_id="ticket_id"
-		/>
+		<ticketViewer :dialogticketviewer.sync="dialogticketviewer" :ticket="onticket" />
+		<addProducts :dialogaddproduct.sync="dialogaddproduct" :ticket_id="ticket_id" />
 	</v-expansion-panels>
 </template>
 <script>
@@ -104,6 +80,7 @@ export default {
 		dialogaddproduct: false,
 		dialogticketviewer: false,
 		ticketsPWAArray: [],
+		carga: false,
 	}),
 	whatch: {
 		ticketsPWAArray(val) {
@@ -120,7 +97,13 @@ export default {
 				this.ticketsPWAArray = e.tickets;
 			}
 		);
-		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus);
+		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus).then(
+			(response) => {
+				response.stats === 200 ? this.carga = false : this.carga = true;
+			}
+		).catch((error) => {
+			console.error(error);
+		});
 	},
 	computed: {
 		darkonchange() {
@@ -139,10 +122,12 @@ export default {
 
 	max-height: 10% !important;
 }
+
 .row {
 	display: flex;
 	flex-direction: row;
 }
+
 .sizes {
 	max-width: calc(100% - 0px) !important;
 }

@@ -1,24 +1,10 @@
 <template>
-	<v-dialog
-		v-model="dialogorden"
-		fullscreen
-		hide-overlay
-		transition="dialog-bottom-transition"
-	>
+	<v-dialog v-model="dialogorden" fullscreen hide-overlay transition="dialog-bottom-transition">
 		<v-card :dark="this.$store.getters.hasdarkflag === true">
-			<v-toolbar
-				prominent
-				color="transparent"
-				v-touch="{
-					down: () => swipe('Down'),
-				}"
-			>
-				<v-btn
-					icon
-					:dark="this.$store.getters.hasdarkflag === true"
-					@click.prevent="close()"
-					large
-				>
+			<v-toolbar prominent color="transparent" v-touch="{
+				down: () => swipe('Down'),
+			}">
+				<v-btn icon :dark="this.$store.getters.hasdarkflag === true" @click.prevent="close()" large>
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 				<v-toolbar-title>Nueva orden</v-toolbar-title>
@@ -37,100 +23,46 @@
 
 					<v-stepper-content class="pa-0" step="1">
 						<div class="ma-2 buttonsproced">
-							<v-btn
-								large
-								dark
-								color="red"
-								v-if="pedidoArray.length > 0"
-								@click.prevent="cancelarPedido()"
-							>
+							<v-btn large dark color="red" v-if="pedidoArray.length > 0" @click.prevent="cancelarPedido()">
 								<v-icon>mdi-trash-can-outline </v-icon>
 							</v-btn>
 							<v-spacer></v-spacer>
-							<v-badge
-								overlap
-								color="green"
-								v-if="countproductos != 0"
-								:content="countproductos"
-							>
-								<v-btn
-									large
-									color="primary"
-									dark
-									v-if="pedidoArray.length > 0"
-									@click.prevent="e6 = 2"
-								>
+							<v-badge overlap color="green" v-if="countproductos != 0" :content="countproductos">
+								<v-btn large color="primary" dark v-if="pedidoArray.length > 0" @click.prevent="e6 = 2">
 									<v-icon>mdi-cart-variant</v-icon>
 								</v-btn>
 							</v-badge>
 						</div>
-						<v-data-iterator
-							:items="articulosArray"
-							:items-per-page.sync="itemsPerPage"
-							:page.sync="page"
-							:search="search"
-							:sort-by="sortBy.toLowerCase()"
-							:sort-desc="sortDesc"
-							hide-default-footer
-						>
+						<v-data-iterator :items="articulosArray" :items-per-page.sync="itemsPerPage" :page.sync="page"
+							:search="search" :sort-by="sortBy.toLowerCase()" :sort-desc="sortDesc" hide-default-footer>
 							<template v-slot:header>
-								<v-toolbar
-									flat
-									light
-									class="mb-1"
-									:dark="$store.getters.hasdarkflag"
-									color="transparent"
-								>
-									<v-text-field
-										v-model="search"
-										clearable
-										flat
-										hide-details
-										prepend-inner-icon="mdi-magnify"
-										label="Buscar"
-									></v-text-field>
+								<v-toolbar flat light class="mb-1" :dark="$store.getters.hasdarkflag" color="transparent">
+									<v-text-field v-model="search" clearable flat hide-details
+										prepend-inner-icon="mdi-magnify" label="Buscar"></v-text-field>
 								</v-toolbar>
 							</template>
 
 							<template v-slot:default="props">
 								<v-row v-for="item in props.items" :key="item.id">
-									<v-card
-										:color="cambio(item)"
-										@click.prevent="cajaProductos(item)"
-										class="card-p ml-4 mr-4 mb-1"
-										:disabled="item.cantidad_articulo == 0"
-									>
-										<v-img
-											v-bind:lazy-src="item.foto_articulo"
-											max-height="500"
-											max-width="600"
-											v-bind:src="item.foto_articulo"
-										></v-img>
-										<v-card-title
-											class="subheading font-weight-bold card-prod"
-											:class="[
-												cambio(item) === '#272727' || cambio(item) === 'success'
+									<v-card :color="cambio(item)" @click.prevent="cajaProductos(item)"
+										class="card-p ml-4 mr-4 mb-1" :disabled="item.quantity == 0">
+										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="600"
+											v-bind:src="item.image"></v-img>
+										<v-card-title class="subheading font-weight-bold card-prod" :class="[
+											cambio(item) === '#272727' || cambio(item) === 'success'
+												? 'wt'
+												: 'blt',
+										]">
+											{{ item.name }} <v-spacer></v-spacer>{{ item.quantity }}
+										</v-card-title>
+										<v-card-text class="text font-weight-regular" style="text-align: end">
+											<span :class="[
+												cambio(item) === '#272727' ||
+													cambio(item) === 'success'
 													? 'wt'
 													: 'blt',
-											]"
-										>
-											{{ item.nombre_articulo }} <v-spacer></v-spacer
-											>{{ item.cantidad_articulo }}
-										</v-card-title>
-										<v-card-text
-											class="text font-weight-regular"
-											style="text-align: end"
-										>
-											<span
-												:class="[
-													cambio(item) === '#272727' ||
-													cambio(item) === 'success'
-														? 'wt'
-														: 'blt',
-												]"
-											>
-												${{ item.precio_articulo }}</span
-											>
+											]">
+												${{ item.price }}</span>
 										</v-card-text>
 									</v-card>
 								</v-row>
@@ -141,18 +73,10 @@
 									<span class="mr-4 grey--text">
 										Page {{ page }} of {{ numberOfPages }}
 									</span>
-									<v-btn
-										:dark="$store.getters.hasdarkflag"
-										class="mr-1"
-										@click.prevent="formerPage"
-									>
+									<v-btn :dark="$store.getters.hasdarkflag" class="mr-1" @click.prevent="formerPage">
 										<v-icon>mdi-chevron-left</v-icon>
 									</v-btn>
-									<v-btn
-										:dark="$store.getters.hasdarkflag"
-										class="ml-1"
-										@click.prevent="nextPage"
-									>
+									<v-btn :dark="$store.getters.hasdarkflag" class="ml-1" @click.prevent="nextPage">
 										<v-icon>mdi-chevron-right</v-icon>
 									</v-btn>
 								</v-row>
@@ -163,87 +87,39 @@
 
 					<v-stepper-content class="pa-0" step="2">
 						<div class="back">
-							<v-btn
-								large
-								color="primary"
-								dark
-								@click.prevent="e6 = 1"
-								class="mb-4 ml-2"
-							>
+							<v-btn large color="primary" dark @click.prevent="e6 = 1" class="mb-4 ml-2">
 								<v-icon>mdi-chevron-left</v-icon>
 							</v-btn>
 						</div>
-						<v-select
-							v-show="$store.getters.hasrol == 4"
-							v-model="selectmesa"
-							append-icon="mdi-table-furniture"
-							:items="itemsmesa"
-							item-text="nombre_mesa"
-							item-value="id"
-							label="Mesa"
-							outlined
-							class="ma-2"
-						>
+						<v-select v-show="$store.getters.hasrol == 4" v-model="selectmesa" append-icon="mdi-table-furniture"
+							:items="itemsmesa" item-text="nombre_mesa" item-value="id" label="Mesa" outlined class="ma-2">
 						</v-select>
-						<!-- <v-select
-							v-model="selectip"
-							:items="itemstip"
-							append-icon="mdi-percent-circle-outline"
-							label="Propina %"
-							outlined
-							class="ma-2"
-						>
-						</v-select> -->
-						<v-text-field
-							label="Titular"
-							append-icon="mdi-account-circle-outline"
-							class="ma-2"
-							v-model="titular"
-							outlined
-						></v-text-field>
 
-						<v-card
-							class="mt-4 mb-4"
-							style="inline-size: 100%"
-							v-for="(item, index) in pedidoArray"
-							:key="index"
-						>
+						<v-text-field label="Titular" append-icon="mdi-account-circle-outline" class="ma-2"
+							v-model="titular" outlined></v-text-field>
+
+						<v-card class="mt-4 mb-4" style="inline-size: 100%" v-for="(item, index) in pedidoArray"
+							:key="index">
 							<v-row>
 								<v-col>
 									<v-btn icon large @click.prevent="deleteProduct(index)">
 										<v-icon>mdi-close</v-icon>
-									</v-btn></v-col
-								>
-								<v-col cols="6"
-									><span>{{ item.nombre_articulo }}</span></v-col
-								><v-spacer></v-spacer
-								><v-col
-									><span class="pr-2">${{ item.precio_articulo }}</span></v-col
-								>
+									</v-btn></v-col>
+								<v-col cols="6"><span>{{ item.name }}</span></v-col><v-spacer></v-spacer><v-col><span
+										class="pr-2">${{ item.price }}</span></v-col>
 							</v-row>
 							<v-card-actions :key="refresher" class="arrowscounter">
-								<v-btn
-									v-if="item.piezas > 1"
-									text
-									@click.prevent="sumaresta('resta', item, index)"
-									><v-icon>mdi-chevron-left</v-icon></v-btn
-								><span class="ma-2">{{ item.piezas }} </span
-								><v-btn text @click.prevent="sumaresta('suma', item, index)"
-									><v-icon>mdi-chevron-right</v-icon></v-btn
-								>
+								<v-btn v-if="item.piezas > 1" text
+									@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left</v-icon></v-btn><span
+									class="ma-2">{{ item.piezas }} </span><v-btn text
+									@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right</v-icon></v-btn>
 							</v-card-actions>
 						</v-card>
 						<div class="pa-5">
 							<b>Total:</b><span> ${{ totalPedido }}</span>
 						</div>
 
-						<v-btn
-							dark
-							block
-							large
-							color="success"
-							@click.prevent="crearTicket()"
-						>
+						<v-btn dark block large color="success" @click.prevent="crearTicket()">
 							Procesar pedido
 							<v-icon class="ml-2">mdi-check </v-icon>
 						</v-btn>
@@ -583,15 +459,18 @@ export default {
 	flex-direction: row;
 	justify-content: flex-end;
 }
+
 .buttonsproced {
 	display: flex;
 	flex-direction: row;
 }
+
 .back {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 }
+
 .card-p {
 	inline-size: 100%;
 }
@@ -599,9 +478,11 @@ export default {
 .card-prod {
 	text-align: start;
 }
+
 .blt {
 	color: #272727;
 }
+
 .wt {
 	color: #fff;
 }

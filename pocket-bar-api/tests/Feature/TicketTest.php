@@ -390,7 +390,7 @@ class TicketTest extends TestCase
             "status",
             "error",
         ]);
-        $this->assertDatabaseHas("tickets_tbl", [
+        $this->assertDatabaseHas("tickets", [
             "id" => $ticket->id,
             "status" => TicketStatus::Canceled,
         ]);

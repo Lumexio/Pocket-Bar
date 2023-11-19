@@ -248,7 +248,7 @@ class TicketTest extends TestCase
                 "tax",
                 "discounts",
                 "tip",
-                "specifictip",
+
                 "min_tip",
                 "client_name",
                 "cashier_name",
@@ -321,7 +321,7 @@ class TicketTest extends TestCase
                 "tax",
                 "discounts",
                 "tip",
-                "specifictip",
+
                 "min_tip",
                 "client_name",
                 "cashier_name",

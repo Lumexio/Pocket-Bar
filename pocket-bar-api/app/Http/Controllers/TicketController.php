@@ -75,7 +75,7 @@ class TicketController extends Controller
         }
 
         $ticket->tip = $request->input('tip') ?? 0;
-        $ticket->specifictip = $request->input('specifictip') ?? 0;
+
         $ticket->min_tip = round(($ticket->subtotal * $request->input('tip')) / 100, 2);
         $ticket->save();
         try {
@@ -215,7 +215,7 @@ class TicketController extends Controller
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["tip"] = $ticket->tip;
-                $data["specifictip"] = $ticket->specifictip;
+
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");

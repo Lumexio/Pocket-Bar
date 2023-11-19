@@ -142,7 +142,6 @@ export function getTicketsPWA(ticketsPWAArray, status) {
             titular: element.titular,
             total: element.total,
             tip: element.tip,
-            specifictip: element.specifictip,
             productos: element.productos,
             status: element.status,
             nombre_mesa: element.nombre_mesa,

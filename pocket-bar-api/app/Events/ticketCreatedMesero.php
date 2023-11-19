@@ -42,7 +42,7 @@ class TicketCreatedMesero implements ShouldBroadcastNow
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["tip"] = $ticket->tip;
-                $data["specifictip"] = $ticket->specifictip;
+
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");

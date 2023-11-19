@@ -151,6 +151,13 @@ Mostrar un registro no */
 Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class, VerifyTenantSuscription::class])->group(function () {
     Route::post('login', [UserController::class, 'login']);
     Route::get('logout', [UserController::class, 'logout']);
+    // test route
+    Route::get('test', function () {
+        return response()->json([
+            'message' => 'Hello World!',
+            "tenant" => tenant()
+        ], 200);
+    });
 });
 
 #endregion

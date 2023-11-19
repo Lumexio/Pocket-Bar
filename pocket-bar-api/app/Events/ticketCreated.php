@@ -28,7 +28,6 @@ class TicketCreated implements ShouldBroadcastNow
     public function __construct()
     {
 
-
         $this->tickets = Ticket::with(['details.product:id,name,price', "workshift", "payments"])
             ->leftJoin('tables', 'tickets.table_id', '=', 'tables.id')
             ->select('tickets.id', 'tickets.status', 'tickets.client_name', 'tickets.user_name', 'tickets.ticket_date', 'tickets.total', 'tickets.tip', 'tickets.cancel_confirm', 'tables.name')

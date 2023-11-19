@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\VerifyTenantSuscription;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -23,6 +24,7 @@ Route::group(['middleware' => [
     'api',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
+    VerifyTenantSuscription::class,
 ]], function () {
     Route::prefix('product')->group(function () {
         Route::post('/', 'ProductController@store');
@@ -135,8 +137,16 @@ Route::group([
         "api",
         InitializeTenancyByDomain::class,
         PreventAccessFromCentralDomains::class,
+        VerifyTenantSuscription::class
     ]
 ], function () {
     Route::post('login', [UserController::class, 'login']);
     Route::get('logout', [UserController::class, 'logout']);
+    // test route
+    Route::get('test', function () {
+        return response()->json([
+            'message' => 'Hello World!',
+            "tenant" => tenant()
+        ], 200);
+    });
 });

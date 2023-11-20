@@ -248,7 +248,7 @@ class TicketTest extends TestCase
                 "tax",
                 "discounts",
                 "tip",
-                "specifictip",
+
                 "min_tip",
                 "client_name",
                 "cashier_name",
@@ -321,7 +321,7 @@ class TicketTest extends TestCase
                 "tax",
                 "discounts",
                 "tip",
-                "specifictip",
+
                 "min_tip",
                 "client_name",
                 "cashier_name",
@@ -390,7 +390,7 @@ class TicketTest extends TestCase
             "status",
             "error",
         ]);
-        $this->assertDatabaseHas("tickets_tbl", [
+        $this->assertDatabaseHas("tickets", [
             "id" => $ticket->id,
             "status" => TicketStatus::Canceled,
         ]);

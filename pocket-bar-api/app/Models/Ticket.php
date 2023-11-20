@@ -48,6 +48,6 @@ class Ticket extends Model
 
     public function table()
     {
-        return $this->belongsTo(Table::class, 'mesa_id');
+        return $this->belongsTo(Table::class, 'table_id');
     }
 }

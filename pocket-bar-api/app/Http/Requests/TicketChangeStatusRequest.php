@@ -28,7 +28,7 @@ class TicketChangeStatusRequest extends FormRequest
     {
         //",En preparación,Entregado,Recibido"
         return [
-            "id" => "required|integer|exists:tickets_tbl,id",
+            "id" => "required|integer|exists:tickets,id",
             "subStatus" => "required|string|in:" . TicketItemStatus::Standby->value . "," . TicketItemStatus::InPreparation->value . "," . TicketItemStatus::Prepared->value . "," . TicketItemStatus::Received->value,
         ];
     }

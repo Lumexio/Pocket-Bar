@@ -21,7 +21,7 @@ class TicketDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, "articulos_tbl_id");
+        return $this->belongsTo(Product::class, "product_id");
     }
 
     public function mesero()
@@ -39,14 +39,14 @@ class TicketDetail extends Model
         $actualWorkshift = Workshift::where('active', 1)->first();
 
         $users = [$userId];
-        $relations = ["articulo", "barra", "mesero"];
+        $relations = ["product", "barra", "mesero"];
 
         /**
          * Preguntamos si es un barra o un mesero
          */
         if ($roleId == 5) {
             array_push($users, ...array_column(User::where("rol_id", "!=", 5)->get(["id"])->toArray(), "id"));
-            $relations = ["articulo", "mesero"];
+            $relations = ["product", "mesero"];
             $ticketDetails = self::with($relations)
                 ->whereIn("waiter_id", $users);
         } else {
@@ -55,21 +55,21 @@ class TicketDetail extends Model
         }
 
         $ticketDetails = $ticketDetails
-            ->join("tickets_tbl", function ($join) use ($actualWorkshift) {
-                $join->on("tickets_tbl.id", "=", "ticket_details_tbl.ticket_id")
-                    ->where("tickets_tbl.workshift_id", "=", $actualWorkshift->id)
-                    ->where("tickets_tbl.status", "!=", "Cerrado");
+            ->join("tickets", function ($join) use ($actualWorkshift) {
+                $join->on("tickets.id", "=", "ticket_details.ticket_id")
+                    ->where("tickets.workshift_id", "=", $actualWorkshift->id)
+                    ->where("tickets.status", "!=", "Cerrado");
             })
-            ->selectRaw("ticket_details_tbl.*");
+            ->selectRaw("ticket_details.*");
 
         if ($roleId == 5) {
-            $ticketDetails = $ticketDetails->whereIn("ticket_details_tbl.status", ["En espera", "En preparacion"]);
+            $ticketDetails = $ticketDetails->whereIn("ticket_details.status", ["En espera", "En preparacion"]);
         } else {
-            $ticketDetails = $ticketDetails->where("ticket_details_tbl.status", "Preparado");
+            $ticketDetails = $ticketDetails->where("ticket_details.status", "Preparado");
         }
 
         if ($status) {
-            $ticketDetails = $ticketDetails->where("ticket_details_tbl.status", $status);
+            $ticketDetails = $ticketDetails->where("ticket_details.status", $status);
         }
 
         return $ticketDetails->get();

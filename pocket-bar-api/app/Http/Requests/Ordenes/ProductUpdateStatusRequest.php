@@ -24,7 +24,7 @@ class ProductUpdateStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            "id" => "required|integer|exists:ticket_details_tbl,id",
+            "id" => "required|integer|exists:ticket_details,id",
             "status" => "required|string|in:En espera,En preparacion,Preparado,Recibido",
         ];
     }

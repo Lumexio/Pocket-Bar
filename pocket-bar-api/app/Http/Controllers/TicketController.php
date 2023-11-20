@@ -75,7 +75,7 @@ class TicketController extends Controller
         }
 
         $ticket->tip = $request->input('tip') ?? 0;
-        $ticket->specifictip = $request->input('specifictip') ?? 0;
+
         $ticket->min_tip = round(($ticket->subtotal * $request->input('tip')) / 100, 2);
         $ticket->save();
         try {
@@ -199,26 +199,32 @@ class TicketController extends Controller
             ->where("status", $request->input("status"))
             ->where("user_id", $user->id)
             ->where("workshift_id", $actualWorkshift->id ?? null)
+            ->get();
+        $tickets = Ticket::with(['user', 'table', 'details.product', "workshift", "payments"])
+            ->orderBy("ticket_date", "desc")
+            ->where("status", $request->input("status"))
+            ->where("user_id", $user->id)
+            ->where("workshift_id", $actualWorkshift->id ?? null)
             ->get()
             ->map(function (Ticket $ticket) {
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
-                $data["nombre_mesa"] = $ticket->nombre_mesa;
+                $data["nombre_mesa"] = $ticket->table->name;
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["tip"] = $ticket->tip;
-                $data["specifictip"] = $ticket->specifictip;
+
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");
                 $data["productos"] = $ticket->details->map(function ($item) {
                     return [
                         "id" => $item->id,
-                        "nombre" => $item->articulo->nombre_articulo,
+                        "nombre" => $item->product->name,
                         "cantidad" => $item->units,
-                        "precio" => $item->unit_price,
+                        "precio" => $item->product->price,
                         "subtotal" => $item->subtotal,
                         "total" => $item->total,
                         "descuento" => $item->discounts,

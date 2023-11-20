@@ -28,7 +28,7 @@ class TicketCreatedBarra implements ShouldBroadcastNow
     public function __construct($id_actual)
     {
         $actualWorkshift = Workshift::where("active", 1)->where("branch_id", auth()->user()->branch_id)->first();
-        $this->tickets = Ticket::with(['user', 'table', 'details.articulo', "workshift", "payments"])
+        $this->tickets = Ticket::with(['user', 'table', 'details.product', "workshift", "payments"])
             ->orderBy("ticket_date", "desc")
             ->where("user_id", $id_actual)
             ->where("workshift_id", $actualWorkshift->id)
@@ -42,7 +42,7 @@ class TicketCreatedBarra implements ShouldBroadcastNow
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["tip"] = $ticket->tip;
-                $data["specifictip"] = $ticket->specifictip;
+
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");

@@ -127,13 +127,12 @@ export function postAddProducts(enviar) {
 export function getTicketsPWA(ticketsPWAArray, status) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/ticket/pwa/list", {
+      .get("api/ticket/pwa", {
         params: {
           status: status
         }
       })
       .then(response => {
-
         const tickets = response.data.data;
         const stats = response.status;
         tickets.forEach((element) => {
@@ -143,7 +142,6 @@ export function getTicketsPWA(ticketsPWAArray, status) {
             titular: element.titular,
             total: element.total,
             tip: element.tip,
-            specifictip: element.specifictip,
             productos: element.productos,
             status: element.status,
             nombre_mesa: element.nombre_mesa,
@@ -151,8 +149,6 @@ export function getTicketsPWA(ticketsPWAArray, status) {
           if (!datos) return;
           ticketsPWAArray.push(datos);
         });
-
-
         resolve({
           stats, ticketsPWAArray
         });
@@ -163,12 +159,12 @@ export function getTicketsPWA(ticketsPWAArray, status) {
 export function getTicketsNotiPWA(ticketsPWANotiArray) {
   return new Promise((resolve, reject) => {
     axios
-      .get("api/ordenes/notificacion/productos")
+      .get("api/order/notificacion/productos")
       .then(response => {
         const tickets = response.data;
         tickets.forEach((element) => {
           let datos = {
-            nombre_articulo: element.articulo.nombre_articulo,
+            nombre_articulo: element.product.name,
             id: element.id,
             units: element.units,
             status: element.status,
@@ -189,7 +185,7 @@ export function getTicketsNotiPWA(ticketsPWANotiArray) {
 export function postTicketsNotiPWA(enviar) {
   return new Promise((resolve, reject) => {
     axios
-      .put("api/ordenes/notificacion/productos", enviar)
+      .put("api/order/notificacion/productos", enviar)
       .then((response) => {
         if (response.status == 200) {
           store.commit("setsuccess", true);

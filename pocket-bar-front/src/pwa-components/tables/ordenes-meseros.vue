@@ -1,40 +1,23 @@
 <template >
 	<v-expansion-panels :dark="darkonchange" popout>
-		<v-expansion-panel
-			class="sizes"
-			v-for="item in ticketsPWAArray"
-			:key="item.id"
-			v-show="item.status == hasstatus"
-		>
-			<v-expansion-panel-header >
+		<v-expansion-panel class="sizes" v-for="item in ticketsPWAArray" :key="item.id" v-show="item.status == hasstatus">
+			<v-expansion-panel-header>
 				<div class="grid-show">
-				<span style="grid-column: span 3;">
-					<span style="font-size: 18px">
-						<b>Titular: </b>{{ item.titular }}</span
-					>
-					<br />
-					<span style="font-size: 18px"
-						><b>Mesa: </b>{{ item.nombre_mesa }}</span
-					>
-					<br />
-					<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
-				</span>
-				<v-btn
-				class="button-list"
-					:dark="darkonchange"
-					color="cyan darken-3"
-					@click.prevent="(dialogticketviewer = true),(onticket=item)"
-					><v-icon>mdi-eye-circle</v-icon>
-				</v-btn>
-				<v-btn
-				class="button-list"
-					:dark="darkonchange"
-					color="#1E88E5"
-					v-if="item.status != 'Cerrado'"
-					@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"
-					><v-icon>mdi-plus</v-icon>
-				</v-btn>
-			</div>
+					<span style="grid-column: span 3;">
+						<span style="font-size: 18px">
+							<b>Titular: </b>{{ item.titular }}</span>
+						<br />
+						<span style="font-size: 18px"><b>Mesa: </b>{{ item.nombre_mesa }}</span>
+						<br />
+						<span style="font-size: 18px"> <b>Fecha: </b>{{ item.fecha }}</span>
+					</span>
+					<v-btn class="button-list" :dark="darkonchange" color="cyan darken-3"
+						@click.prevent="(dialogticketviewer = true), (onticket = item)"><v-icon>mdi-eye-circle</v-icon>
+					</v-btn>
+					<v-btn class="button-list" :dark="darkonchange" color="#1E88E5" v-if="item.status != 'Cerrado'"
+						@click.prevent="(dialogaddproduct = true), (ticket_id = item.id)"><v-icon>mdi-plus</v-icon>
+					</v-btn>
+				</div>
 			</v-expansion-panel-header>
 			<v-expansion-panel-content class="expansion-panel">
 				<v-simple-table dense calculate-widths>
@@ -57,33 +40,22 @@
 						</tbody>
 					</template>
 				</v-simple-table>
-				
+
 				<v-col class="pa-4">
-				<div v-if="item.tip>0" class="d-flex flex-row justify-space-between align-center">
-					<span > Propina:</span>
-					<v-divider></v-divider> 
-					<b>{{ item.tip }}% </b>
-				</div>
-				<div v-if="item.specifictip>0" class="d-flex flex-row justify-space-between align-center">
-					<span > Propina directa:</span> 
-					<v-divider></v-divider> 
-					<b>${{ item.specifictip }} </b>
-				</div>
-				<div class="d-flex flex-row justify-space-between align-center">
-					<span > Subtotal:</span><v-divider></v-divider> <b> ${{ item.total }}</b>
-				</div>
-			</v-col>
-				
+					<div v-if="item.tip > 0" class="d-flex flex-row justify-space-between align-center">
+						<span> Propina:</span>
+						<v-divider></v-divider>
+						<b>{{ item.tip }}% </b>
+					</div>
+					<div class="d-flex flex-row justify-space-between align-center">
+						<span> Subtotal:</span><v-divider></v-divider> <b> ${{ item.total }}</b>
+					</div>
+				</v-col>
+
 			</v-expansion-panel-content>
-			<ticketViewer
-				:dialogticketviewer.sync="dialogticketviewer"
-				:ticket="onticket"
-			/>
+			<ticketViewer :dialogticketviewer.sync="dialogticketviewer" :ticket="onticket" />
 		</v-expansion-panel>
-		<addProducts
-			:dialogaddproduct.sync="dialogaddproduct"
-			:ticket_id="ticket_id"
-		/>
+		<addProducts :dialogaddproduct.sync="dialogaddproduct" :ticket_id="ticket_id" />
 	</v-expansion-panels>
 </template>
 <script>
@@ -141,14 +113,17 @@ export default {
 	grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
 	align-items: center;
 }
+
 .v-expansion-panels {
 	gap: 10px;
 	max-block-size: 10% !important;
 }
+
 .row {
 	display: flex;
 	flex-direction: row;
 }
+
 .sizes {
 	max-inline-size: calc(100% - 0px) !important;
 }

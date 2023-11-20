@@ -16,7 +16,7 @@
 				<div v-if="item.tip > 0" class="d-flex flex-row justify-space-between align-center">
 					<span> Propina:</span>
 					<v-divider></v-divider>
-					<b>{{ item.tip }}% </b>
+					<b>${{ item.tip }}</b>
 				</div>
 				<br />
 				<div class="d-flex flex-row justify-space-between align-center">

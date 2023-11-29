@@ -5,7 +5,7 @@
 				down: () => swipe('Down'),
 			}">
 				<v-btn icon :dark="this.$store.getters.hasdarkflag === true" @click.prevent="close()" large>
-					<v-icon>mdi-close</v-icon>
+					<v-icon>mdi-close-circle</v-icon>
 				</v-btn>
 				<v-toolbar-title>Nueva orden</v-toolbar-title>
 			</v-toolbar>
@@ -42,10 +42,10 @@
 								</v-toolbar>
 							</template>
 
-							<template v-slot:default="props">
-								<v-row v-for="item in props.items" :key="item.id">
-									<v-card :color="cambio(item)" @click.prevent="cajaProductos(item)"
-										class="card-p ml-4 mr-4 mb-1" :disabled="item.quantity == 0">
+							<template>
+								<v-row v-for="(item, index) in articulosArray" :key="index">
+									<v-card :color="cambio(item)" class="card-p ml-4 mr-4 mb-1"
+										:disabled="item.quantity == 0">
 										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="600"
 											v-bind:src="item.image"></v-img>
 										<v-card-title class="subheading font-weight-bold card-prod" :class="[
@@ -53,7 +53,10 @@
 												? 'wt'
 												: 'blt',
 										]">
-											{{ item.name }} <v-spacer></v-spacer>{{ item.quantity }}
+											{{ item.name }} <v-spacer></v-spacer>
+											<v-btn icon @click.prevent="cajaProductos(item)">
+												<v-icon>mdi-plus-circle</v-icon>
+											</v-btn>
 										</v-card-title>
 										<v-card-text class="text font-weight-regular" style="text-align: end">
 											<span :class="[
@@ -64,12 +67,21 @@
 											]">
 												${{ item.price }}</span>
 										</v-card-text>
+										<v-card-actions :key="refresher">
+											<v-btn
+												:disabled="item.piezas > 1 && pedidoArray.includes(item) === true ? false : true"
+												icon
+												@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left-circle</v-icon></v-btn><span
+												class="ma-2">{{ item.piezas }} </span><v-btn icon
+												:disabled="pedidoArray.includes(item) === true ? false : true"
+												@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right-circle</v-icon></v-btn>
+										</v-card-actions>
 									</v-card>
 								</v-row>
 							</template>
 
 							<template v-slot:footer>
-								<v-row class="mt-2" align="center" justify="center">
+								<v-row class="mt-2 align-center justify-center">
 									<span class="mr-4 grey--text">
 										Page {{ page }} of {{ numberOfPages }}
 									</span>
@@ -102,17 +114,17 @@
 							:key="index">
 							<v-row>
 								<v-col>
-									<v-btn icon large @click.prevent="deleteProduct(index)">
-										<v-icon>mdi-close</v-icon>
+									<v-btn icon @click.prevent="deleteProduct(index)">
+										<v-icon>mdi-close-circle</v-icon>
 									</v-btn></v-col>
 								<v-col cols="6"><span>{{ item.name }}</span></v-col><v-spacer></v-spacer><v-col><span
 										class="pr-2">${{ item.price }}</span></v-col>
 							</v-row>
 							<v-card-actions :key="refresher" class="arrowscounter">
-								<v-btn v-if="item.piezas > 1" text
-									@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left</v-icon></v-btn><span
-									class="ma-2">{{ item.piezas }} </span><v-btn text
-									@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right</v-icon></v-btn>
+								<v-btn :disabled="item.piezas > 1 ? false : true" icon
+									@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left-circle</v-icon></v-btn><span
+									class="ma-2">{{ item.piezas }} </span><v-btn icon
+									@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right-circle</v-icon></v-btn>
 							</v-card-actions>
 						</v-card>
 						<div class="pa-5">
@@ -174,108 +186,6 @@ export default {
 			],
 			articulosArray: [],
 			ticketParaenviar: [],
-			items: [
-				{
-					name: "Frozen Yogurt",
-					calories: 159,
-					fat: 6.0,
-					carbs: 24,
-					protein: 4.0,
-					sodium: 87,
-					calcium: "14%",
-					iron: "1%",
-				},
-				{
-					name: "Ice cream sandwich",
-					calories: 237,
-					fat: 9.0,
-					carbs: 37,
-					protein: 4.3,
-					sodium: 129,
-					calcium: "8%",
-					iron: "1%",
-				},
-				{
-					name: "Eclair",
-					calories: 262,
-					fat: 16.0,
-					carbs: 23,
-					protein: 6.0,
-					sodium: 337,
-					calcium: "6%",
-					iron: "7%",
-				},
-				{
-					name: "Cupcake",
-					calories: 305,
-					fat: 3.7,
-					carbs: 67,
-					protein: 4.3,
-					sodium: 413,
-					calcium: "3%",
-					iron: "8%",
-				},
-				{
-					name: "Gingerbread",
-					calories: 356,
-					fat: 16.0,
-					carbs: 49,
-					protein: 3.9,
-					sodium: 327,
-					calcium: "7%",
-					iron: "16%",
-				},
-				{
-					name: "Jelly bean",
-					calories: 375,
-					fat: 0.0,
-					carbs: 94,
-					protein: 0.0,
-					sodium: 50,
-					calcium: "0%",
-					iron: "0%",
-				},
-				{
-					name: "Lollipop",
-					calories: 392,
-					fat: 0.2,
-					carbs: 98,
-					protein: 0,
-					sodium: 38,
-					calcium: "0%",
-					iron: "2%",
-				},
-				{
-					name: "Honeycomb",
-					calories: 408,
-					fat: 3.2,
-					carbs: 87,
-					protein: 6.5,
-					sodium: 562,
-					calcium: "0%",
-					iron: "45%",
-				},
-				{
-					name: "Donut",
-					calories: 452,
-					fat: 25.0,
-					carbs: 51,
-					protein: 4.9,
-					sodium: 326,
-					calcium: "2%",
-					iron: "22%",
-				},
-				{
-					name: "KitKat",
-					calories: 518,
-					fat: 26.0,
-					carbs: 65,
-					protein: 7,
-					sodium: 54,
-					calcium: "12%",
-					iron: "6%",
-				},
-			],
 		};
 	},
 	methods: {
@@ -314,15 +224,16 @@ export default {
 				producto.piezas += 1;
 				this.refresher += 1;
 				this.pedidoArray[index] = producto;
-				this.totalPedido += parseFloat(this.pedidoArray[index].precio_articulo);
-				return this.pedidoArray;
+				this.totalPedido += Number(this.pedidoArray[index].price);
+
 			} else if (operacion == "resta") {
 				producto.piezas -= 1;
 				this.refresher -= 1;
 				this.pedidoArray[index] = producto;
-				this.totalPedido -= parseFloat(this.pedidoArray[index].precio_articulo);
-				return this.pedidoArray;
+				this.totalPedido -= Number(this.pedidoArray[index].price);
 			}
+
+			return this.pedidoArray;
 		},
 		cancelarPedido() {
 			(this.pedidoArray = []),
@@ -336,8 +247,8 @@ export default {
 		deleteProduct(index) {
 			this.countproductos -= 1;
 			this.totalPedido -=
-				parseFloat(this.pedidoArray[index].precio_articulo) *
-				this.pedidoArray[index].piezas;
+				Number(this.pedidoArray[index].price) *
+				Number(this.pedidoArray[index].piezas);
 			this.pedidoArray.splice(index, 1);
 		},
 		close() {
@@ -365,7 +276,7 @@ export default {
 				producto.descuento = 0;
 				this.pedidoArray.push(producto);
 				this.countproductos = this.pedidoArray.length;
-				this.totalPedido += parseFloat(producto.precio_articulo);
+				this.totalPedido += Number(producto.price);
 
 				return this.pedidoArray, this.countproductos;
 			} else if (this.pedidoArray.includes(producto) === true) {
@@ -409,7 +320,7 @@ export default {
 				}
 			})
 			.catch((e) => {
-				console.log(e);
+				console.error(e);
 				this.cargando = true;
 			});
 		getArticulos(this.articulosArray)
@@ -427,7 +338,7 @@ export default {
 	},
 	computed: {
 		numberOfPages() {
-			return Math.ceil(this.items.length / this.itemsPerPage);
+			return Math.ceil(this.articulosArray.length / this.itemsPerPage);
 		},
 		filteredKeys() {
 			return this.keys.filter((key) => key !== "Name");

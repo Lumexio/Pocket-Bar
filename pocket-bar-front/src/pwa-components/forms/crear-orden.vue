@@ -44,6 +44,7 @@
 
 							<template>
 								<v-row v-for="(item, index) in articulosArray" :key="index">
+
 									<v-card :color="cambio(item)" class="card-p ml-4 mr-4 mb-1"
 										:disabled="item.quantity == 0">
 										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="600"
@@ -68,11 +69,12 @@
 												${{ item.price }}</span>
 										</v-card-text>
 										<v-card-actions :key="refresher">
+
 											<v-btn
-												:disabled="item.piezas > 1 && pedidoArray.includes(item) === true ? false : true"
+												:disabled="item.units > 1 && pedidoArray.includes(item) === true ? false : true"
 												icon
 												@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left-circle</v-icon></v-btn><span
-												class="ma-2">{{ item.piezas }} </span><v-btn icon
+												class="ma-2">{{ item.units }} </span><v-btn icon
 												:disabled="pedidoArray.includes(item) === true ? false : true"
 												@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right-circle</v-icon></v-btn>
 										</v-card-actions>
@@ -121,9 +123,9 @@
 										class="pr-2">${{ item.price }}</span></v-col>
 							</v-row>
 							<v-card-actions :key="refresher" class="arrowscounter">
-								<v-btn :disabled="item.piezas > 1 ? false : true" icon
+								<v-btn :disabled="item.units > 1 ? false : true" icon
 									@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left-circle</v-icon></v-btn><span
-									class="ma-2">{{ item.piezas }} </span><v-btn icon
+									class="ma-2">{{ item.units }} </span><v-btn icon
 									@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right-circle</v-icon></v-btn>
 							</v-card-actions>
 						</v-card>
@@ -207,6 +209,7 @@ export default {
 			if (store.getters.hasrol == 5) {
 				presend.table_id = 1;
 			}
+			console.log(presend);
 			postTickets(presend).then((response) => {
 				if (response) {
 					this.pedidoArray = [];
@@ -250,7 +253,7 @@ export default {
 			this.countproductos -= 1;
 			this.totalPedido -=
 				Number(this.pedidoArray[index].price) *
-				Number(this.pedidoArray[index].piezas);
+				Number(this.pedidoArray[index].units);
 			this.pedidoArray.splice(index, 1);
 		},
 		close() {

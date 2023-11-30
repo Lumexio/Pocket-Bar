@@ -71,6 +71,7 @@
 											</v-btn>
 										</v-card-title>
 										<v-card-actions :key="refresher">
+
 											<v-btn
 												:disabled="item.units > 1 && pedidoArray.includes(item) === true ? false : true"
 												icon @click.prevent="sumaresta('resta', item, index)">
@@ -236,6 +237,7 @@ export default {
 			if (store.getters.hasrol == 5) {
 				presend.table_id = 1;
 			}
+			console.log(presend);
 			postTickets(presend).then((response) => {
 				if (response) {
 					this.pedidoArray = [];

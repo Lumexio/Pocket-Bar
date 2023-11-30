@@ -40,7 +40,7 @@ export function postTickets(enviar) {
 
   return new Promise((resolve, reject) => {
     axios
-      .post("api/ticket/create", enviar)
+      .post("api/ticket/", enviar)
       .then((response) => {
         const resp = response.data;
         const stats = response.status;

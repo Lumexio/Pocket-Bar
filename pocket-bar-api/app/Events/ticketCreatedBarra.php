@@ -34,10 +34,11 @@ class TicketCreatedBarra implements ShouldBroadcastNow
             ->where("workshift_id", $actualWorkshift->id)
             ->get()
             ->map(function (Ticket $ticket) {
+
                 $data = [];
                 $date = (new Carbon($ticket->ticket_date, "UTC"))->setTimezone($ticket->timezone);
                 $data["id"] = $ticket->id;
-                $data["nombre_mesa"] = $ticket->name;
+                $data["nombre_mesa"] = $ticket->table->name;
                 $data["status"] = $ticket->status;
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
@@ -70,6 +71,6 @@ class TicketCreatedBarra implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('ticketCreatedBarra.' . $this->userId);
+        return new Channel('TicketCreatedBarra');
     }
 }

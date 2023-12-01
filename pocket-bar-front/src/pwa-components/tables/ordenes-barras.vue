@@ -65,10 +65,12 @@ export default {
 		},
 	},
 	mounted() {
-		window.Echo.channel("ticketCreatedBarra.").listen(
-			"ticketCreatedBarra",
+		window.Echo.channel("TicketCreatedBarra").listen(
+			"TicketCreatedBarra",
 			(e) => {
+
 				this.ticketsPWAArray = e.tickets;
+
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus).then(

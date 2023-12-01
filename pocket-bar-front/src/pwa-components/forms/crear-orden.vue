@@ -209,7 +209,6 @@ export default {
 			if (store.getters.hasrol == 5) {
 				presend.table_id = 1;
 			}
-			console.log(presend);
 			postTickets(presend).then((response) => {
 				if (response) {
 					this.pedidoArray = [];

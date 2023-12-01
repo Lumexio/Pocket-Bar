@@ -68,7 +68,9 @@ export default {
 		window.Echo.channel("TicketCreatedBarra").listen(
 			"TicketCreatedBarra",
 			(e) => {
+
 				this.ticketsPWAArray = e.tickets;
+
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus).then(

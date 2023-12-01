@@ -17,7 +17,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Events\ticketCreated;
 use App\Events\ticketCreatedMesero;
-use App\Events\ticketCreatedBarra;
+use App\Events\TicketCreatedBarra;
 use App\Http\Requests\CancelProductRequest;
 use App\Http\Requests\Ordenes\ProductUpdateStatusRequest;
 use App\Http\Requests\Tickets\AddProductsRequest;
@@ -78,16 +78,17 @@ class TicketController extends Controller
 
         $ticket->min_tip = round(($ticket->subtotal * $request->input('tip')) / 100, 2);
         $ticket->save();
-        try {
-            if (auth()->user()->rol_id == 4) {
-                TicketCreatedMesero::dispatch(auth()->user()->id);
-            } elseif (auth()->user()->rol_id == 5) {
-                TicketCreatedBarra::dispatch(auth()->user()->id);
-            }
-            broadcast((new TicketCreated(auth()->user()->id))->broadcastToEveryone());
+
+        if (auth()->user()->rol_id == 4) {
+            TicketCreatedMesero::dispatch(auth()->user()->id);
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-        } catch (\Throwable $th) {
+        } elseif (auth()->user()->rol_id == 5) {
+            TicketCreatedBarra::dispatch(auth()->user()->id);
+            broadcast((new BarraEvents(auth()->user()->id, auth()->user()->rol_id))->broadcastToEveryone());
         }
+        broadcast((new TicketCreated(auth()->user()->id))->broadcastToEveryone());
+        broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
+
         return response()->json([
             "message" => "Se ha actualizado el ticket",
             "ticket" => $ticket
@@ -132,18 +133,16 @@ class TicketController extends Controller
             $this->createTicketDetails($items, $ticket);
             DB::commit();
             //ticketCreated::dispatch(auth()->user()->id);
-            try {
-                if (auth()->user()->rol_id == 4) {
-                    ticketCreatedMesero::dispatch(auth()->user()->id);
-                    broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-                } elseif (auth()->user()->rol_id == 5) {
-                    ticketCreatedBarra::dispatch(auth()->user()->id);
-                    broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-                }
-                broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+
+            if (auth()->user()->rol_id == 4) {
+                ticketCreatedMesero::dispatch(auth()->user()->id);
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
-            } catch (\Throwable $th) {
+            } elseif (auth()->user()->rol_id == 5) {
+                TicketCreatedBarra::dispatch(auth()->user()->id);
+                broadcast((new BarraEvents(auth()->user()->id, auth()->user()->rol_id))->broadcastToEveryone());
             }
+            broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Exception $th) {
             DB::rollBack();
             return response()->json(["status" => 500, "error" => 1, "message" => $th->getMessage()], 500);
@@ -215,7 +214,6 @@ class TicketController extends Controller
                 $data["titular"] = $ticket->client_name;
                 $data["total"] = $ticket->total;
                 $data["tip"] = $ticket->tip;
-
                 $data["fecha"] = $date->toDateString();
                 $data["cantidad_articulos"] = $ticket->details->count();
                 $data["tiempo"] = $date->toTimeString("minute");
@@ -347,7 +345,7 @@ class TicketController extends Controller
             }
             try {
                 broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-                broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new TicketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
             } catch (\Throwable) {
@@ -436,7 +434,7 @@ class TicketController extends Controller
             }
             try {
                 broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-                broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+                broadcast((new TicketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new MeseroEvents($ticketDetail->waiter_id))->broadcastToEveryone());
@@ -502,7 +500,7 @@ class TicketController extends Controller
                 broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
                 broadcast((new ticketCreatedMesero($ticket->user_id))->broadcastToEveryone());
                 broadcast((new MeseroEvents($ticket->user_id))->broadcastToEveryone());
-                broadcast((new ticketCreatedBarra($ticket->user_id))->broadcastToEveryone());
+                broadcast((new TicketCreatedBarra($ticket->user_id))->broadcastToEveryone());
             } catch (\Throwable) {
             }
         } catch (Throwable $th) {
@@ -557,7 +555,7 @@ class TicketController extends Controller
         }
         try {
             broadcast((new ticketCreated(auth()->user()->id))->broadcastToEveryone());
-            broadcast((new ticketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
+            broadcast((new TicketCreatedBarra(auth()->user()->id))->broadcastToEveryone());
             broadcast((new ticketCreatedMesero(auth()->user()->id))->broadcastToEveryone());
             broadcast((new MeseroEvents(auth()->user()->id))->broadcastToEveryone());
         } catch (\Throwable) {

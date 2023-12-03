@@ -68,9 +68,7 @@ export default {
 		window.Echo.channel("TicketCreatedBarra").listen(
 			"TicketCreatedBarra",
 			(e) => {
-
 				this.ticketsPWAArray = e.tickets;
-
 			}
 		);
 		getTicketsPWA(this.ticketsPWAArray, store.getters.hasstatus).then(
@@ -95,7 +93,6 @@ export default {
 <style scoped>
 .v-expansion-panels {
 	gap: 10px;
-
 	max-height: 10% !important;
 }
 

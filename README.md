@@ -29,6 +29,10 @@ php artisan migrate:fresh --seed
 ```properties zsh 
  npm run back-serve-prod
  ```
+#### If you want to run multitenant run this
+```properties zsh
+ php artisan serve --host=localhost 
+```
  #### Socket serve
 ```properties zsh 
  npm run socket-serve-prod

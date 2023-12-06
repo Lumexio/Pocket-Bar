@@ -18,7 +18,7 @@ class TenantUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:tenant_users',
-            'password' => 'required|string|max:255',
+            'password' => 'required|string|max:255|min:8',
         ]);
         //crear el usuario
         $user = new TenantUser();

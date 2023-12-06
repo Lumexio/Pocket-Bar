@@ -52,6 +52,8 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
 
         ],
+
+        'universal' => []
     ];
 
     /**

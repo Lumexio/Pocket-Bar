@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Rol;
+use App\Models\Branch;
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Stancl\Tenancy\Facades\Tenancy;
 
 class TenantController extends Controller
 {
@@ -14,6 +18,12 @@ class TenantController extends Controller
     {
         $request->validate([
             'domain' => 'required|string|max:20',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|max:255|min:8',
+            'branch_name' => 'required|string|max:255',
+            'branch_address' => 'required|string|max:255',
+            'branch_phone' => 'required|string|max:255',
         ]);
         // crear tenant
         $tenant = new Tenant();
@@ -21,12 +31,36 @@ class TenantController extends Controller
         $tenant->expiration_date = now()->addDays(30);
         $tenant->save();
         $tenant->domains()->create(['domain' => $request->domain]);
+        // crear un usaurio en la app tenant
+        Tenancy::initialize($tenant);
+
+        $branch = new Branch();
+        $branch->name = $request->branch_name;
+        $branch->address = $request->branch_address;
+        $branch->phone = $request->branch_phone;
+        $branch->save();
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $password = $request->password;
+        $user->password = $password;
+        $user->rol_id = Rol::Administrativo->value;
+        $user->branch_id = $branch->id;
+        $user->save();
+        // volver a la app central
+        Tenancy::end();
+
+
         //retornar el usuario creado
         return response()->json(
             [
                 'message' => 'Tenant creado',
                 'tenant' => $tenant,
-                'domains' => $tenant->domains()->get()
+                'domains' => $tenant->domains()->get(),
+                'user_name' => $user->name,
+                'user_email' => $user->email,
+                'user_password' => $password
             ],
             201
         );

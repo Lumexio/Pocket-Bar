@@ -195,8 +195,10 @@ class UserController extends Controller
             auth()->setUser($user);
             $request->session()->regenerate();
             $response = [
+                'message' => $user->must_change_password ? 'Debe cambiar su contraseña' : 'success',
                 'user' => $user,
                 'token' => $token,
+                'cambiar_password' => $user->must_change_password,
             ];
 
             Auth::login($user, true);

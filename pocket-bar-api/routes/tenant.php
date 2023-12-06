@@ -2,8 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CashDeskController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\NominasController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\TableController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkshiftController;
 use App\Http\Middleware\VerifyTenantSuscription;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -19,134 +35,119 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
-Route::group(['middleware' => [
-    'auth:sanctum',
-    'api',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-    VerifyTenantSuscription::class,
-]], function () {
+Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class, VerifyTenantSuscription::class, "auth:sanctum"])->group(function () {
     Route::prefix('product')->group(function () {
-        Route::post('/', 'ProductController@store');
-        Route::put('/{id}', 'ProductController@update');
-        Route::get('/', 'ProductController@index');
-        Route::get('/{id}', 'ProductController@show');
-        Route::put('/activate/{id}', 'ProductController@activate');
-        Route::get('/menu', 'ProductController@menu');
+        Route::post('/', [ProductController::class, 'store']);
+        Route::put('/{id}', [ProductController::class, 'update']);
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/{id}', [ProductController::class, 'show']);
+        Route::put('/activate/{id}', [ProductController::class, 'activate']);
+        Route::get('/menu', [ProductController::class, 'menu']);
     });
     // Route::put("articulo/activate/{id}", "ProductController@activate");
-    Route::post('/updatephoto/{id}', 'PhotoController@updatephoto');
+    Route::post('/updatephoto/{id}', [PhotoController::class, 'updatephoto']);
 
-    Route::resource('rol', 'RolController')->except(['destroy', 'create', 'edit']);
-    Route::put('/rol/activate/{id}', 'RolController@activate');
+    Route::resource('rol', RolController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/rol/activate/{id}', [RolController::class, 'activate']);
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
-    Route::resource('brand', 'BrandController')->except(['destroy', 'create', 'edit']);
-    Route::put('/brand/activate/{id}', 'BrandController@activate');
+    Route::resource('brand', BrandController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/brand/activate/{id}', [BrandController::class, 'activate']);
     /*Crear  si
     Eliminar no
     Mostrar un registro no */
-    Route::resource('category', 'CategoryController')->except(['destroy', 'create', 'edit']);
-    Route::put('/category/activate/{id}', 'CategoryController@activate');
-    Route::resource('table', 'TableController')->except(['destroy', 'create', 'edit']);
-    Route::put('/table/activate/{id}', 'TableController@activate');
+    Route::resource('category', CategoryController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/category/activate/{id}', [CategoryController::class, 'activate']);
+    Route::resource('table', TableController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/table/activate/{id}', [TableController::class, 'activate']);
 
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('type', 'TypeController')->except(['destroy', 'create', 'edit']);
-    Route::put('/type/activate/{id}', 'TypeController@activate');
+    Route::resource('type', TypeController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/type/activate/{id}', [TypeController::class, 'activate']);
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('provider', 'ProviderController')->except(['destroy', 'create', 'edit']);
-    Route::put('/provider/activate/{id}', 'ProviderController@activate');
+    Route::resource('provider', ProviderController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/provider/activate/{id}', [ProviderController::class, 'activate']);
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('status', 'StatusController')->except(['destroy', 'create', 'edit']);
-    Route::put('/status/activate/{id}', 'StatusController@activate');
+    Route::resource('status', StatusController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/status/activate/{id}', [StatusController::class, 'activate']);
     /*Crear  si
 Eliminar no
 Mostrar un registro no */
-    Route::resource('user', 'UserController')->except(['destroy', 'create', 'edit']);
-    Route::put('/user/activate/{id}', 'UserController@activate');
-    Route::resource('activitylog', 'ActivitylogController')->except(['destroy', 'update', 'store', 'create', 'edit', 'show']);
+    Route::resource('user', UserController::class)->except(['destroy', 'create', 'edit']);
+    Route::put('/user/activate/{id}', [UserController::class, 'activate']);
+    Route::resource('activitylog', ActivitylogController::class)->except(['destroy', 'update', 'store', 'create', 'edit', 'show']);
 
     Route::prefix('ticket')->group(function () {
-        Route::get('/', 'TicketController@index'); //Lista para deskstop
-        Route::get('/pwa', 'TicketController@indexPwa'); //Lista para pantallas moviles
-        Route::post('/', 'TicketController@store'); //Crear ticket
-        Route::put('/tip', 'TicketController@tipUpdate'); //Crear ticket
-        Route::post('/pay', 'TicketController@pay'); //pagar cuenta
-        Route::put("/cancel-product", 'TicketController@cancelProduct'); //Cancelar producto
-        Route::post("/cancel", 'TicketController@cancelTicket');
-        Route::put('/add-products', 'TicketController@addProducts');
+        Route::get('/', [TicketController::class, 'index']); //Lista para deskstop
+        Route::get('/pwa', [TicketController::class, 'indexPWA']); //Lista para pwa
+        Route::post('/', [TicketController::class, 'store']); //Crear ticket
+        Route::put('/tip', [TicketController::class, 'tipUpdate']); //Agregar propina
+        Route::post('/pay', [TicketController::class, 'pay']); //Pagar ticket
+        Route::put("/cancel-product", [TicketController::class, 'cancelProduct']); //Cancelar producto
+        Route::post("/cancel", [TicketController::class, 'cancelTicket']); //Cancelar ticket
+        Route::put('/add-products', [TicketController::class, 'addProducts']); //Agregar productos
     });
 
     Route::prefix('order')->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
         /**
          * *listo
          */
-        Route::get('/notificacion/productos', 'OrdersController@index');
+        Route::get('/notificacion/productos', [OrdersController::class, 'index']);
 
-        Route::put('/notificacion/productos', 'TicketController@updateStatus');
+        Route::put('/notificacion/productos', [TicketController::class, 'updateStatus']);
     });
 
     Route::prefix("cashdesk")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        Route::post("add-money", "CashDeskController@addMoney"); //Agregar dinero a caja
-        Route::post("remove-money", "CashDeskController@removeMoney"); //Quitar dinero a caja
+        Route::post("add-money", [CashDeskController::class, 'addMoney']); //Agregar dinero a caja
+        Route::post("remove-money", [CashDeskController::class, 'removeMoney']); //Quitar dinero a caja
 
-        Route::get('/mustbe', 'CashDeskController@getMustBe');
-        Route::post('/close', 'CashDeskController@close'); //Lo que debo de tener en caja enviando desde el front para comparar
+        Route::get('/mustbe', [CashDeskController::class, 'getMustBe']);
+        Route::post('/close', [CashDeskController::class, 'close']); //Lo que debo de tener en caja enviando desde el front para comparar
     });
 
     Route::prefix("nominas")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        Route::post('/pay', 'NominasController@nominasToPay');
+        Route::post('/pay', [NominasController::class, 'nominasToPay']); //Pagar nominas
     });
 
     Route::prefix("workshift")->middleware(['auth:sanctum', \Fruitcake\Cors\HandleCors::class])->group(function () {
-        Route::post('/start', 'WorkshiftController@start');
-        Route::put('/close', 'WorkshiftController@close');
+        Route::post('/start', [WorkshiftController::class, 'start']); //Iniciar turno
+        Route::put('/close', [WorkshiftController::class, 'close']); //Cerrar turno
     });
 
     Route::prefix("currency")->group(function () {
-        Route::get('/', 'CurrencyController@index');
-        Route::post('/', 'CurrencyController@store');
-        Route::get('/{id}', 'CurrencyController@show');
-        Route::put('set-default/{id}', 'CurrencyController@setDefault');
+        Route::get('/', [CurrencyController::class, 'index']);
+        Route::post('/', [CurrencyController::class, 'store']);
+        Route::get('/{id}', [CurrencyController::class, 'show']);
+        Route::put('set-default/{id}', [CurrencyController::class, 'setDefault']);
     });
 
     Route::prefix("stock")->group(function () {
-        Route::post('/add', 'StockController@addStock');
-        Route::post('/remove', 'StockController@removeStock');
+        Route::post('/add', [StockController::class, 'addStock']);
+        Route::post('/remove', [StockController::class, 'removeStock']);
     });
 
     Route::prefix("branch")->group(function () {
-        Route::get('/', 'BranchController@index');
-        Route::post('/', 'BranchController@store');
-        Route::get('/{id}', 'BranchController@show');
-        Route::put('/{id}', 'BranchController@update');
-        Route::put('/activate/{id}', 'BranchController@activate');
+        Route::get('/', [BranchController::class, 'index']);
+        Route::post('/', [BranchController::class, 'store']);
+        Route::get('/{id}', [BranchController::class, 'show']);
+        Route::put('/{id}', [BranchController::class, 'update']);
+        Route::put('/activate/{id}', [BranchController::class, 'activate']);
     });
 });
 
-Route::group([
-    "middleware" => [
-        "api",
-        InitializeTenancyByDomain::class,
-        PreventAccessFromCentralDomains::class,
-        VerifyTenantSuscription::class
-    ]
-], function () {
+Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class, VerifyTenantSuscription::class])->group(function () {
     Route::post('login', [UserController::class, 'login']);
     Route::get('logout', [UserController::class, 'logout']);
-    // test route
-    Route::get('test', function () {
-        return response()->json([
-            'message' => 'Hello World!',
-            "tenant" => tenant()
-        ], 200);
-    });
+});
+
+Route::middleware(['universal'])->group(function () {
+    Route::get('/csrf-cookie', [CsrfCookieController::class, 'show'])
+        ->name('sanctum.csrf-cookie');
 });

@@ -153,6 +153,8 @@ Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, Preve
     Route::get('logout', [UserController::class, 'logout']);
 });
 
+#endregion
+
 Route::middleware(['universal'])->group(function () {
     Route::get('/csrf-cookie', [CsrfCookieController::class, 'show'])
         ->name('sanctum.csrf-cookie');

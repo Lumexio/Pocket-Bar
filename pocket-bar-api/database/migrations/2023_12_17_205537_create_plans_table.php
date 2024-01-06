@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTenantUsersTable extends Migration
+class CreatePlansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateTenantUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('tenant_users', function (Blueprint $table) {
+        // stripe plans for suscriptions
+        Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('customer_id')->nullable();
-            $table->timestamp('trial_ends_at')->nullable();
+            $table->string('stripe_id');
+            $table->string('interval');
+            $table->string('currency');
+            $table->integer('amount');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateTenantUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tenant_users');
+        Schema::dropIfExists('plans');
     }
 }

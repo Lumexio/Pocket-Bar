@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\TenantUser;
-use Auth;
 use Hash;
 use Illuminate\Http\Request;
+use Stripe\Stripe;
 
 class TenantUserController extends Controller
 {
@@ -20,11 +20,19 @@ class TenantUserController extends Controller
             'email' => 'required|string|max:255|unique:tenant_users',
             'password' => 'required|string|max:255|min:8',
         ]);
+        // crear el customer en stripe
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $stripeCustomer = \Stripe\Customer::create([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
         //crear el usuario
         $user = new TenantUser();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password =  $request->password;
+        $user->customer_id = $stripeCustomer->id;
         $user->save();
         //retornar el usuario creado
         return response()->json($user, 201);

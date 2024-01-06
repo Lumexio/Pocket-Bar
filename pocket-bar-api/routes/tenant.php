@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ActivitylogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CashDeskController;
@@ -10,11 +11,15 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\NominasController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\StatusController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkshiftController;
 use App\Http\Middleware\VerifyTenantSuscription;
@@ -35,6 +40,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
+#region PocketBarAPI
 Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class, VerifyTenantSuscription::class, "auth:sanctum"])->group(function () {
     Route::prefix('product')->group(function () {
         Route::post('/', [ProductController::class, 'store']);
@@ -146,6 +152,8 @@ Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, Preve
     Route::post('login', [UserController::class, 'login']);
     Route::get('logout', [UserController::class, 'logout']);
 });
+
+#endregion
 
 Route::middleware(['universal'])->group(function () {
     Route::get('/csrf-cookie', [CsrfCookieController::class, 'show'])

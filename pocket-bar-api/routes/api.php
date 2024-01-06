@@ -2,6 +2,7 @@
 
 //use App\Http\Controllers\ProductController;
 
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantUserController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('user/update', [TenantUserController::class, 'update']);
     Route::delete('user/delete', [TenantUserController::class, 'destroy']);
 });
+Route::get('plans/', [PlanController::class, 'index']);
+Route::get('plans/{id}', [PlanController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('tenant', [TenantController::class, 'store']);

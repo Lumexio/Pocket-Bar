@@ -23,6 +23,7 @@
         "rakutentech/laravel-request-docs": "^2.16",
         "spatie/laravel-activitylog": "^4.4",
         "stancl/tenancy": "^3.6",
+        "stripe/stripe-php": "^13.6",
         "symfony/mailer": "^6.0"
     },
     "require-dev": {

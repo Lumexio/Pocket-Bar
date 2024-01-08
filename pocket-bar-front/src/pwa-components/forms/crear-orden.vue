@@ -45,38 +45,65 @@
 							<template>
 								<v-row v-for="(item, index) in articulosArray" :key="index">
 
-									<v-card :color="cambio(item)" class="card-p ml-4 mr-4 mb-1"
-										:disabled="item.quantity == 0">
-										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="600"
-											v-bind:src="item.image"></v-img>
-										<v-card-title class="subheading font-weight-bold card-prod" :class="[
+									<v-card :class="[
+										cambio(item) === '#272727' || cambio(item) === 'success'
+											? 'wt'
+											: 'blt',
+									]" :color="cambio(item)" class="card-p ml-4 mr-4 mb-1" :disabled="item.quantity == 0">
+										<v-img v-bind:lazy-src="item.image" max-height="500" max-width="500"
+											v-bind:src="item.image">
+										</v-img>
+										<v-card-title style="flex-wrap: nowrap;" :class="[
 											cambio(item) === '#272727' || cambio(item) === 'success'
 												? 'wt'
 												: 'blt',
 										]">
-											{{ item.name }} <v-spacer></v-spacer>
+											{{ item.name
+											}}
+											<v-spacer></v-spacer>
 											<v-btn icon @click.prevent="cajaProductos(item)">
-												<v-icon>mdi-plus-circle</v-icon>
+												<span :class="[
+													cambio(item) === '#272727' ||
+														cambio(item) === 'success'
+														? 'wt'
+														: 'blt',
+												]"><v-icon>mdi-plus-circle</v-icon></span>
 											</v-btn>
 										</v-card-title>
-										<v-card-text class="text font-weight-regular" style="text-align: end">
-											<span :class="[
-												cambio(item) === '#272727' ||
-													cambio(item) === 'success'
-													? 'wt'
-													: 'blt',
-											]">
-												${{ item.price }}</span>
-										</v-card-text>
 										<v-card-actions :key="refresher">
-
 											<v-btn
 												:disabled="item.units > 1 && pedidoArray.includes(item) === true ? false : true"
-												icon
-												@click.prevent="sumaresta('resta', item, index)"><v-icon>mdi-chevron-left-circle</v-icon></v-btn><span
-												class="ma-2">{{ item.units }} </span><v-btn icon
-												:disabled="pedidoArray.includes(item) === true ? false : true"
-												@click.prevent="sumaresta('suma', item, index)"><v-icon>mdi-chevron-right-circle</v-icon></v-btn>
+												icon @click.prevent="sumaresta('resta', item, index)">
+												<span :class="[
+													cambio(item) === '#272727' ||
+														cambio(item) === 'success'
+														? 'wt'
+														: 'blt',
+												]">
+													<v-icon>
+														mdi-chevron-left-circle
+													</v-icon>
+												</span>
+											</v-btn>
+											<span class="ma-2">{{ item.units }}
+											</span>
+											<v-btn icon :disabled="pedidoArray.includes(item) === true ? false : true"
+												@click.prevent="sumaresta('suma', item, index)">
+												<span :class="[
+													cambio(item) === '#272727' ||
+														cambio(item) === 'success'
+														? 'wt'
+														: 'blt',
+												]">
+													<v-icon>
+														mdi-chevron-right-circle
+													</v-icon>
+												</span>
+											</v-btn>
+											<v-spacer></v-spacer>
+											<span class="text font-weight-regular">
+												${{ item.price }}
+											</span>
 										</v-card-actions>
 									</v-card>
 								</v-row>
@@ -263,6 +290,7 @@ export default {
 				if (store.getters.hasdarkflag === true) {
 					return "success";
 				} else if (store.getters.hasdarkflag === false) {
+					console.log("#272727");
 					return "#272727";
 				}
 			} else if (this.pedidoArray.includes(producto) === false) {

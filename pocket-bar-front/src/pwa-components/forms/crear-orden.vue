@@ -71,7 +71,6 @@
 											</v-btn>
 										</v-card-title>
 										<v-card-actions :key="refresher">
-
 											<v-btn
 												:disabled="item.units > 1 && pedidoArray.includes(item) === true ? false : true"
 												icon @click.prevent="sumaresta('resta', item, index)">

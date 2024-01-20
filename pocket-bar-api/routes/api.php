@@ -2,7 +2,9 @@
 
 //use App\Http\Controllers\ProductController;
 
+use App\Http\Controllers\PaymentMethodsController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SuscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantUserController;
 use Illuminate\Support\Facades\Route;
@@ -23,20 +25,33 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [TenantUserController::class, 'store']);
 Route::post('login', [TenantUserController::class, 'login']);
 Route::post('logout', [TenantUserController::class, 'logout']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user/show', [TenantUserController::class, 'show']);
-    Route::put('user/update', [TenantUserController::class, 'update']);
-    Route::delete('user/delete', [TenantUserController::class, 'destroy']);
-});
 Route::get('plans/', [PlanController::class, 'index']);
 Route::get('plans/{id}', [PlanController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('tenant', [TenantController::class, 'store']);
-    Route::post('tenant/{id}/domain', [TenantController::class, 'addDomain']);
-    Route::put('tenant/{id}/domain/{domainId}', [TenantController::class, 'update']);
-    Route::delete('tenant/{id}/', [TenantController::class, 'destroy']);
-    Route::delete('tenant/{id}/domain/{domainId}', [TenantController::class, 'deleteDomain']);
-    Route::get('tenant/{id}', [TenantController::class, 'show']);
-    Route::get('tenant', [TenantController::class, 'index']);
+    Route::group(['prefix' => 'tenant'], function () {
+        Route::post('/', [TenantController::class, 'store']);
+        Route::post('/{id}/domain', [TenantController::class, 'addDomain']);
+        Route::put('/{id}/domain/{domainId}', [TenantController::class, 'update']);
+        Route::delete('/{id}', [TenantController::class, 'destroy']);
+        Route::delete('/{id}/domain/{domainId}', [TenantController::class, 'deleteDomain']);
+        Route::get('/{id}', [TenantController::class, 'show']);
+        Route::get('/', [TenantController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/show', [TenantUserController::class, 'show']);
+        Route::put('/update', [TenantUserController::class, 'update']);
+        Route::delete('/delete', [TenantUserController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'payment-method'], function () {
+        Route::post('/create-setup-intent', [PaymentMethodsController::class, 'createSetupIntent']);
+        Route::post('/attach-payment-method', [PaymentMethodsController::class, 'attachPaymentMethod']);
+        Route::get('/', [PaymentMethodsController::class, 'index']);
+    });
+
+    Route::group(['prefix' => 'subscription'], function () {
+        Route::post('/create-subscription', [SuscriptionController::class, 'createSubscription']);
+    });
 });

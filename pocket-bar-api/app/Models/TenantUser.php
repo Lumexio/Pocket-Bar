@@ -11,6 +11,10 @@ class TenantUser extends Model
 {
     use HasFactory, HasApiTokens;
 
+    protected $hidden = [
+        'password',
+    ];
+
     // crear un mutador para encriptar la contraseña
     public function setPasswordAttribute($value)
     {
@@ -21,5 +25,15 @@ class TenantUser extends Model
     public function tenants()
     {
         return $this->hasMany(Tenant::class);
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethods::class);
+    }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
     }
 }

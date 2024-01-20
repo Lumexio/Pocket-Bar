@@ -149,17 +149,15 @@ class TenantController extends Controller
     public function show($id)
     {
         //buscar el usuario
-        $tenant = Tenant::find($id);
+        $tenant = Tenant::with('domains')->find($id);
         if (!$tenant) {
             return response()->json(['message' => 'Tenant no encontrado'], 404);
         }
-        $domains = $tenant->domains()->get();
         //retornar el usuario
         return response()->json(
             [
                 'message' => 'Tenant encontrado',
-                'tenant' => $tenant,
-                'domains' => $domains
+                'tenant' => $tenant
             ],
             200
         );
@@ -169,7 +167,7 @@ class TenantController extends Controller
     public function index(Request $request)
     {
         //buscar el usuario
-        $tenants = $request->user()->tenants()->get();
+        $tenants = $request->user()->tenants()->with('domains')->get();
         //retornar el usuario
         return response()->json(
             [

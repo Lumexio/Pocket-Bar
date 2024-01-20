@@ -14,7 +14,7 @@ class CreateSuscriptionsTable extends Migration
     public function up()
     {
         // stripe suscriptions
-        Schema::create('suscriptions', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('tenant_user_id');

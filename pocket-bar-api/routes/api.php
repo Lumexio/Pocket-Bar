@@ -4,7 +4,7 @@
 
 use App\Http\Controllers\PaymentMethodsController;
 use App\Http\Controllers\PlanController;
-use App\Http\Controllers\SuscriptionController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantUserController;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +52,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::group(['prefix' => 'subscription'], function () {
-        Route::post('/create-subscription', [SuscriptionController::class, 'createSubscription']);
+        Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
     });
 });

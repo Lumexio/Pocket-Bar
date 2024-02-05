@@ -187,8 +187,6 @@ class UserController extends Controller
                 404
             );
         }
-
-
         if (Auth::attempt($credentials)) {
             $token = $user->createToken('my-app-token')->plainTextToken;
             //Auth::setUser($user);

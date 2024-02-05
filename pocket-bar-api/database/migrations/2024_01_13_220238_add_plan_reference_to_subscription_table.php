@@ -13,7 +13,7 @@ class AddPlanReferenceToSubscriptionTable extends Migration
      */
     public function up()
     {
-        Schema::table('subscription', function (Blueprint $table) {
+        Schema::table('subscriptions', function (Blueprint $table) {
             $table->foreignId('plan_id')->after('tenant_user_id')->constrained('plans');
         });
     }
@@ -25,7 +25,7 @@ class AddPlanReferenceToSubscriptionTable extends Migration
      */
     public function down()
     {
-        Schema::table('subscription', function (Blueprint $table) {
+        Schema::table('subscriptions', function (Blueprint $table) {
             $table->dropForeign(['plan_id']);
             $table->dropColumn('plan_id');
         });

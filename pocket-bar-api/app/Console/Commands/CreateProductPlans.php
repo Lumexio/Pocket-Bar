@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Plan;
 use Illuminate\Console\Command;
 use Stripe\Stripe;
+use \Stripe\Product;
 
 class CreateProductPlans extends Command
 {
@@ -19,7 +21,7 @@ class CreateProductPlans extends Command
      *
      * @var string
      */
-    protected $description = 'Create the product plans for the tenant suscriptions in stripe';
+    protected $description = 'Create the product plans for the tenant subscriptions in stripe';
 
     /**
      * Create a new command instance.
@@ -38,21 +40,30 @@ class CreateProductPlans extends Command
      */
     public function handle()
     {
+        // **Los ultimos dos digitos de la propierdad amount son los centavos
         Stripe::setApiKey(env('STRIPE_SECRET'));
+        // $product = \Stripe\Product::retrieve([
+        //     'id' => 'prod_PSgrmpZCPmOTIi',
+
+        // ]);
+        // if (empty($product)) {
+
+        // }
+        // echo $product->name;
         $product = \Stripe\Product::create([
-            'name' => 'Pocket Bar Suscription',
+            'name' => 'Beer Tier',
         ]);
         // crear el plan mensual y anual de 10 y 100 dolares respectivamente
         $stripePlan = \Stripe\Plan::create([
             'product' => $product->id,
-            'nickname' => 'Pocket Bar Monthly',
+            'nickname' => 'Beer Monthly',
             'interval' => 'month',
             'currency' => 'usd',
             'amount' => 1000,
         ]);
         // insertar los planes en la base de datos
         $plan = new \App\Models\Plan();
-        $plan->name = 'Pocket Bar Monthly';
+        $plan->name = $stripePlan->nickname;
         $plan->stripe_id = $stripePlan->id;
         $plan->interval = $stripePlan->interval;
         $plan->currency = $stripePlan->currency;
@@ -60,14 +71,48 @@ class CreateProductPlans extends Command
         $plan->save();
         $stripePlan = \Stripe\Plan::create([
             'product' => $product->id,
-            'nickname' => 'Pocket Bar Annual',
+            'nickname' => 'Beer Annual',
             'interval' => 'year',
             'currency' => 'usd',
             'amount' => 10000,
         ]);
         // insertar los planes en la base de datos
         $plan = new \App\Models\Plan();
-        $plan->name = 'Pocket Bar Annual';
+        $plan->name = $stripePlan->nickname;
+        $plan->stripe_id = $stripePlan->id;
+        $plan->interval = $stripePlan->interval;
+        $plan->currency = $stripePlan->currency;
+        $plan->amount = $stripePlan->amount;
+        $plan->save();
+        $product = \Stripe\Product::create([
+            'name' => 'Mojito Tier',
+        ]);
+        // crear el plan mensual y anual de 10 y 100 dolares respectivamente
+        $stripePlan = \Stripe\Plan::create([
+            'product' => $product->id,
+            'nickname' => 'Mojito Monthly',
+            'interval' => 'month',
+            'currency' => 'usd',
+            'amount' => 2000,
+        ]);
+        // insertar los planes en la base de datos
+        $plan = new \App\Models\Plan();
+        $plan->name = $stripePlan->nickname;
+        $plan->stripe_id = $stripePlan->id;
+        $plan->interval = $stripePlan->interval;
+        $plan->currency = $stripePlan->currency;
+        $plan->amount = $stripePlan->amount;
+        $plan->save();
+        $stripePlan = \Stripe\Plan::create([
+            'product' => $product->id,
+            'nickname' => 'Mojito Annual',
+            'interval' => 'year',
+            'currency' => 'usd',
+            'amount' => 20000,
+        ]);
+        // insertar los planes en la base de datos
+        $plan = new \App\Models\Plan();
+        $plan->name = $stripePlan->nickname;
         $plan->stripe_id = $stripePlan->id;
         $plan->interval = $stripePlan->interval;
         $plan->currency = $stripePlan->currency;

@@ -13,7 +13,7 @@ class CreatePlansTable extends Migration
      */
     public function up()
     {
-        // stripe plans for suscriptions
+        // stripe plans for subscriptions
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');

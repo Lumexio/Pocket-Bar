@@ -43,7 +43,7 @@ class PlanController extends Controller
                 ],
                 'benefits' => explode(',', $yearly->benefits),
             ];
-        })->values()->all();
+        });
         return response()->json(['message' => 'success', 'data' => $plans]);
     }
 

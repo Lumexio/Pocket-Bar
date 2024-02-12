@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Log;
 use Stripe\Stripe;
 
 class SubscriptionController extends Controller
@@ -46,16 +47,22 @@ class SubscriptionController extends Controller
         $stripe_customer_id = $request->user()->customer_id;
         $payment_method = $request->payment_method;
 
-        $stripeSuscription = \Stripe\Subscription::create([
-            'customer' => $stripe_customer_id,
-            'items' => [
-                [
-                    'plan' => $plan->stripe_id,
+        try {
+            $stripeSuscription = \Stripe\Subscription::create([
+                'customer' => $stripe_customer_id,
+                'items' => [
+                    [
+                        'plan' => $plan->stripe_id,
+                    ],
                 ],
-            ],
-            'default_payment_method' => $payment_method,
-            'expand' => ['latest_invoice.payment_intent'],
-        ]);
+                'default_payment_method' => $payment_method,
+                'expand' => ['latest_invoice.payment_intent'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
 
         if ($stripeSuscription->latest_invoice->payment_intent->status == 'succeeded') {
             $suscription = new \App\Models\Subscription();

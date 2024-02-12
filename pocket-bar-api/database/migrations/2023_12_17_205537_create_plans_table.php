@@ -21,6 +21,7 @@ class CreatePlansTable extends Migration
             $table->string('interval');
             $table->string('currency');
             $table->integer('amount');
+            $table->string('benefits');
             $table->timestamps();
         });
     }

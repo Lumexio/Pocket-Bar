@@ -27,7 +27,6 @@ class TicketTipUpdateRequest extends FormRequest
         return [
             'tip' => 'nullable|numeric|min:0',
             "id" => "required|exists:tickets,id",
-            "specifictip" => "nullable|numeric|min:0",
         ];
     }
 }

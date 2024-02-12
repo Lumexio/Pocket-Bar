@@ -27,6 +27,7 @@ Route::post('login', [TenantUserController::class, 'login']);
 Route::post('logout', [TenantUserController::class, 'logout']);
 Route::get('plans/', [PlanController::class, 'index']);
 Route::get('plans/{id}', [PlanController::class, 'show']);
+Route::post('stripe-webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'tenant'], function () {

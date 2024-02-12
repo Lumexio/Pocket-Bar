@@ -26,7 +26,10 @@ class PlanController extends Controller
             ]
         },
         */
-        $plans = collect(Plan::all())->groupBy('name')->map(function ($plan) {
+        $plans = collect(Plan::all())->groupBy(function ($plan) {
+            // get the first part of the plan name
+            return explode(' ', $plan->name)[0];
+        })->map(function ($plan) {
             $yearly = $plan->where('interval', 'year')->first();
             $monthly = $plan->where('interval', 'month')->first();
             return [

@@ -51,15 +51,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/create-setup-intent', [PaymentMethodsController::class, 'createSetupIntent']);
         Route::post('/attach-payment-method', [PaymentMethodsController::class, 'attachPaymentMethod']);
         Route::get('/', [PaymentMethodsController::class, 'index']);
-    Route::group(['prefix' => 'payment-method'], function () {
-        Route::post('/create-setup-intent', [PaymentMethodsController::class, 'createSetupIntent']);
-        Route::post('/attach-payment-method', [PaymentMethodsController::class, 'attachPaymentMethod']);
-        Route::get('/', [PaymentMethodsController::class, 'index']);
-    });
+        Route::group(['prefix' => 'payment-method'], function () {
+            Route::post('/create-setup-intent', [PaymentMethodsController::class, 'createSetupIntent']);
+            Route::post('/attach-payment-method', [PaymentMethodsController::class, 'attachPaymentMethod']);
+            Route::get('/', [PaymentMethodsController::class, 'index']);
+        });
 
-    Route::group(['prefix' => 'subscription'], function () {
-        Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
-    Route::group(['prefix' => 'subscription'], function () {
-        Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
+        Route::group(['prefix' => 'subscription'], function () {
+            Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
+            Route::group(['prefix' => 'subscription'], function () {
+                Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
+            });
+        });
     });
 });

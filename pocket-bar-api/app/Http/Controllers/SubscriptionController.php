@@ -8,32 +8,9 @@ use Stripe\Stripe;
 
 class SubscriptionController extends Controller
 {
-    /**
-     * @deprecated
-     */
-    public function createPaymentIntent(Request $request)
+    public function __construct()
     {
-        $request->validate([
-            'plan' => 'required|string|exists:plans,id',
-        ]);
         Stripe::setApiKey(env('STRIPE_SECRET'));
-        $stripe_customer_id = $request->user()->customer_id;
-        $plan_id = $request->plan;
-        $plan = \App\Models\Plan::find($plan_id);
-        $intent = \Stripe\PaymentIntent::create([
-            'amount' => 1099,
-            'currency' => 'usd',
-            'payment_method_types' => ['card'],
-            'customer' => $stripe_customer_id,
-            'metadata' => [
-                'plan_id' => $plan->id,
-                'plan_stripe_id' => $plan->stripe_id,
-            ]
-        ]);
-
-        return response()->json([
-            'client_secret' => $intent->client_secret,
-        ]);
     }
 
     public function createSubscription(Request $request)
@@ -80,5 +57,20 @@ class SubscriptionController extends Controller
                 'message' => 'The payment was not successful',
             ], 400);
         }
+    }
+
+    public function cancelSubscription(Request $request)
+    {
+        $request->validate([
+            'subscription' => 'required|string|exists:subscriptions,stripe_id',
+        ]);
+
+        $stripe_subscription_id = $request->subscription;
+        $stripe_subscription = \Stripe\Subscription::retrieve($stripe_subscription_id);
+        $stripe_subscription->cancel();
+
+        return response()->json([
+            'message' => 'Subscription canceled',
+        ]);
     }
 }

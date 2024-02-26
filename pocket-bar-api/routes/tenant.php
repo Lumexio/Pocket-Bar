@@ -159,3 +159,10 @@ Route::middleware(['universal'])->group(function () {
     Route::get('/csrf-cookie', [CsrfCookieController::class, 'show'])
         ->name('sanctum.csrf-cookie');
 });
+
+#endregion
+
+Route::middleware(['universal'])->group(function () {
+    Route::get('/csrf-cookie', [CsrfCookieController::class, 'show'])
+        ->name('sanctum.csrf-cookie');
+});

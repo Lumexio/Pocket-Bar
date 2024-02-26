@@ -53,12 +53,19 @@ class CreateProductPlans extends Command
         $product = \Stripe\Product::create([
             'name' => 'Beer Tier',
         ]);
+        $benefits = [
+            'Gestion de inventarios',
+            'Toma de ordenes',
+            'Cobro de cover',
+            'Comandas digitales',
+        ];
         // crear el plan mensual y anual de 10 y 100 dolares respectivamente
         $stripePlan = \Stripe\Plan::create([
             'product' => $product->id,
             'nickname' => 'Beer Monthly',
             'interval' => 'month',
             'currency' => 'usd',
+            'metadata' => $benefits,
             'amount' => 1000,
         ]);
         // insertar los planes en la base de datos
@@ -68,12 +75,14 @@ class CreateProductPlans extends Command
         $plan->interval = $stripePlan->interval;
         $plan->currency = $stripePlan->currency;
         $plan->amount = $stripePlan->amount;
+        $plan->benefits =  \implode(',', $benefits);
         $plan->save();
         $stripePlan = \Stripe\Plan::create([
             'product' => $product->id,
             'nickname' => 'Beer Annual',
             'interval' => 'year',
             'currency' => 'usd',
+            'metadata' => $benefits,
             'amount' => 10000,
         ]);
         // insertar los planes en la base de datos
@@ -83,16 +92,21 @@ class CreateProductPlans extends Command
         $plan->interval = $stripePlan->interval;
         $plan->currency = $stripePlan->currency;
         $plan->amount = $stripePlan->amount;
+        $plan->benefits = \implode(',', $benefits);
         $plan->save();
         $product = \Stripe\Product::create([
             'name' => 'Mojito Tier',
         ]);
+        $benefits = [
+            'Gestion de inventarios', 'Toma de ordenes', 'Cobro de cover'
+        ];
         // crear el plan mensual y anual de 10 y 100 dolares respectivamente
         $stripePlan = \Stripe\Plan::create([
             'product' => $product->id,
             'nickname' => 'Mojito Monthly',
             'interval' => 'month',
             'currency' => 'usd',
+            'metadata' => $benefits,
             'amount' => 2000,
         ]);
         // insertar los planes en la base de datos
@@ -102,12 +116,14 @@ class CreateProductPlans extends Command
         $plan->interval = $stripePlan->interval;
         $plan->currency = $stripePlan->currency;
         $plan->amount = $stripePlan->amount;
+        $plan->benefits =  \implode(',', $benefits);
         $plan->save();
         $stripePlan = \Stripe\Plan::create([
             'product' => $product->id,
             'nickname' => 'Mojito Annual',
             'interval' => 'year',
             'currency' => 'usd',
+            'metadata' => $benefits,
             'amount' => 20000,
         ]);
         // insertar los planes en la base de datos
@@ -117,6 +133,7 @@ class CreateProductPlans extends Command
         $plan->interval = $stripePlan->interval;
         $plan->currency = $stripePlan->currency;
         $plan->amount = $stripePlan->amount;
+        $plan->benefits =  \implode(',', $benefits);
         $plan->save();
     }
 }

@@ -60,7 +60,6 @@ class TenantController extends Controller
                 'domains' => $tenant->domains()->get(),
                 'user_name' => $user->name,
                 'user_email' => $user->email,
-                'user_password' => $password
             ],
             201
         );

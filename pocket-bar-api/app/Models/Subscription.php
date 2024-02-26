@@ -9,6 +9,11 @@ class Subscription extends Model
 {
     use HasFactory;
 
+    public function subscription_expired()
+    {
+        return $this->ends_at < now();
+    }
+
     public function tenantUser()
     {
         return $this->belongsTo(TenantUser::class);

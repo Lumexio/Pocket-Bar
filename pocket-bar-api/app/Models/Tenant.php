@@ -20,11 +20,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         ];
     }
 
-    public function suscription_expired()
-    {
-        return $this->expiration_date < now();
-    }
-
     // crear una relación con el modelo TenantUser de muchos a uno
     public function tenantUser()
     {

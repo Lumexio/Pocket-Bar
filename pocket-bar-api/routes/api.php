@@ -8,6 +8,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantUserController;
+use App\Http\Middleware\VerifyTenantSuscription;
 use Illuminate\Support\Facades\Route;
 
 //use Spatie\Activitylog\Models\Activity;
@@ -54,9 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/set-default', [PaymentMethodsController::class, 'setDefault']);
     });
 
-
-    Route::group(['prefix' => 'subscription'], function () {
-        Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
-        Route::post('/cancel-subscription', [SubscriptionController::class, 'cancelSubscription']);
+    Route::middleware(VerifyTenantSuscription::class)->group(function () {
+        Route::group(['prefix' => 'subscription'], function () {
+            Route::post('/create-subscription', [SubscriptionController::class, 'createSubscription']);
+            Route::post('/cancel-subscription', [SubscriptionController::class, 'cancelSubscription']);
+        });
     });
 });

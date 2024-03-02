@@ -48,7 +48,7 @@ Route::prefix('api')->middleware(["api", InitializeTenancyByDomain::class, Preve
         Route::get('/', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
         Route::put('/activate/{id}', [ProductController::class, 'activate']);
-        Route::get('/menu', [ProductController::class, 'menu']);
+        // Route::get('/menu', [ProductController::class, 'menu']);
     });
     // Route::put("articulo/activate/{id}", "ProductController@activate");
     Route::post('/updatephoto/{id}', [PhotoController::class, 'updatephoto']);
@@ -82,7 +82,7 @@ Mostrar un registro no */
 Eliminar no
 Mostrar un registro no */
     Route::resource('status', StatusController::class)->except(['destroy', 'create', 'edit']);
-    Route::put('/status/activate/{id}', [StatusController::class, 'activate']);
+    // Route::put('/status/activate/{id}', [StatusController::class, 'activate']);
     /*Crear  si
 Eliminar no
 Mostrar un registro no */

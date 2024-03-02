@@ -24,12 +24,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/**
- * *This file contains the routes for the central application (not PB).
- * *This routes are used to manage the tenants, users, plans, subscriptions and payment methods.
- * *The routes for PB application are in the routes/tentant.php file.
- */
-
 Route::post('register', [TenantUserController::class, 'store']);
 Route::post('login', [TenantUserController::class, 'login']);
 Route::post('logout', [TenantUserController::class, 'logout']);

@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Provider;
 use App\Models\Rol as ModelsRol;
 use App\Models\Table;
+use App\Models\TenantUser;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
 use App\Models\Type;
@@ -30,6 +31,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // empezamos por crear un tenant user
+        $user = new TenantUser([
+            'name' => 'admin',
+            'email' => 'admin123@gmail.com',
+            'password' => '12345678',
+        ]);
+        $user->save();
+
+        // creamos un tenant
+        $tenant = new \App\Models\Tenant([
+            'tenant_user_id' => $user->id,
+        ]);
+        $tenant->save();
+
+        // creamos un dominio para el tenant
+        $domain = $tenant->domains()->create([
+            'domain' => 'admin.localhost',
+        ]);
+
+        // Inicializamos el tenant
+        tenancy()->initialize($tenant);
+
+
         Branch::create([
             'name' => 'Sucursal 1',
             'address' => 'Calle 1',
@@ -201,5 +225,7 @@ class DatabaseSeeder extends Seeder
                 "description" => $descripcion,
             ]);
         }
+
+        tenancy()->end();
     }
 }

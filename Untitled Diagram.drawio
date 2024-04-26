@@ -1,9 +1,33 @@
-<mxfile host="app.diagrams.net" modified="2024-04-26T00:42:47.396Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0" version="24.3.0" etag="17eW5Ek_NwPIApHeMlhZ" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-26T00:55:29.408Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0" etag="gi4_qLthFBOwpaRcWszg" version="24.3.0" type="github">
   <diagram name="Page-1" id="R7Dt5O7w519UJ2izKHSo">
-    <mxGraphModel>
+    <mxGraphModel dx="1050" dy="549" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="gKEfPc21dKhayjmL1_lY-1" value="Productos menu" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-2" value="Productos_crudo" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-3" value="fk_producto" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="40" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-4" value="cant_producto" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-6" value="fk_tipo" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="100" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-8" value="units_values" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-9" value="unit" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="250" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="gKEfPc21dKhayjmL1_lY-10" value="quantity" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="350" width="120" height="80" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

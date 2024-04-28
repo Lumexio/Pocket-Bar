@@ -131,6 +131,24 @@ class CreateProductPlans extends Command
             $plan->save();
         } else {
             echo 'Products already created on stripe';
+            // valiedate if the plans are already created
+            $plans = Plan::all();
+            if (empty($plans)) {
+                $product = \Stripe\Product::all();
+                foreach ($product->data as $prod) {
+                    $plans = \Stripe\Plan::all(['product' => $prod->id]);
+                    foreach ($plans->data as $plan) {
+                        $plan = new \App\Models\Plan();
+                        $plan->name = $plan->nickname;
+                        $plan->stripe_id = $plan->id;
+                        $plan->interval = $plan->interval;
+                        $plan->currency = $plan->currency;
+                        $plan->amount = $plan->amount;
+                        $plan->benefits =  \implode(',', $plan->metadata);
+                        $plan->save();
+                    }
+                }
+            }
         }
     }
 }

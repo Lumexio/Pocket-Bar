@@ -1,5 +1,5 @@
 # Pocket-Bar
-
+### Sales web application
 Point of sale with stock management web system
 ## Instalation
 ### /pocket-bar-front

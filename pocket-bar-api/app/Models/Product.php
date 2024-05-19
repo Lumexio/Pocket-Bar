@@ -27,24 +27,51 @@ class Product extends Model
     {
         return LogOptions::defaults();
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
+
     public function brand()
     {
         return $this->belongsTo(Brand::class);
     }
+
     public function provider()
     {
         return $this->belongsTo(Provider::class);
     }
+
     public function stock()
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Product::class, 'ingredients', 'base_product_id', 'ingredient_product_id')
+            ->withPivot('quantity', 'unit')
+            ->withTimestamps();
+    }
+
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class);
     }
 }

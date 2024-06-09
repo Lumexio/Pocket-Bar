@@ -15,7 +15,7 @@ class CreateStockTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate("cascade");
+            $table->foreignId('product_id')->references('id')->on('product_variants')->onDelete('cascade')->onUpdate("cascade");
             $table->foreignId('branch_id')->references('id')->on('branches')->onDelete('cascade')->onUpdate("cascade");
             $table->integer('stock')->default(0)->nullable('NULL');
             $table->date("deactivated_at")->nullable("NULL");

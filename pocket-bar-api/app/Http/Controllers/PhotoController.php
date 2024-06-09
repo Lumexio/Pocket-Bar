@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\ProductCreated;
-use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use File;
@@ -15,16 +14,11 @@ class PhotoController extends Controller
     {
         $request->validate([
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'type' => 'required|string|in:product,product_variant'
         ]);
-        if ($request->type == 'product') {
-            $product = Product::with('photo')->find($id);
-        } else {
-            $product = ProductVariant::with('photo')->find($id);
-        }
+        $product = ProductVariant::with('photo')->find($id);
 
         if ($product->photo) {
-            File::delete(storage_path('app/public/' . $product->photo->path));
+            unlink(storage_path('app/public/' . $product->photo->path));
             $product->photo->delete();
         }
 
@@ -37,9 +31,9 @@ class PhotoController extends Controller
             'path' => $path
         ]);
 
-        if ($request->type == 'product') {
-            event(new ProductCreated($product));
-        }
+        // if ($request->type == 'product') {
+        //     event(new ProductCreated($product));
+        // }
 
         return response()->json(["message" => "success"], 200);
     }

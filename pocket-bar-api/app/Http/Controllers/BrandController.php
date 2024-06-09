@@ -103,16 +103,6 @@ class BrandController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return int
-     */
-    // public function destroy($id): int
-    // {
-    //     return Marca::destroy($id);
-    // }
-    /**
      * @param int $id
      * @return JsonResponse
      */

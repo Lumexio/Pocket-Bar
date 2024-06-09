@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonalAccessTokensTable extends Migration
+class CreateTiposTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreatePersonalAccessTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('personal_access_tokens', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->morphs('tokenable');
+        Schema::create('types', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('restrict');
             $table->string('name');
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable();
-            $table->timestamp('last_used_at')->nullable();
+            $table->longText('description')->nullable();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 
@@ -31,6 +30,6 @@ class CreatePersonalAccessTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::dropIfExists('types');
     }
 }

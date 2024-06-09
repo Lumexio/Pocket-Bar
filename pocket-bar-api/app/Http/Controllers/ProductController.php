@@ -31,10 +31,7 @@ class ProductController extends Controller
             ->leftJoin('categories as cat', 'art.category_id', '=', 'cat.id')
             ->leftJoin('brands', 'art.brand_id', '=', 'brands.id')
             ->leftJoin('providers as prov', 'art.provider_id', '=', 'prov.id')
-            ->leftJoin('types', 'art.type_id', '=', 'types.id')
-            ->leftJoin('statuses', 'art.status_id', '=', 'statuses.id')
-            ->join("stocks", "art.id", "=", "stocks.product_id")
-            ->where("stocks.branch_id", "=", $request->input("branch_id", Auth::user()->branch_id));
+            ->leftJoin('types', 'art.type_id', '=', 'types.id');
         if (isset($showActive)) {
             $dat = $showActive ? $dat->whereNull('stocks.deactivated_at') : $dat->whereNotNull('stocks.deactivated_at');
         }
@@ -42,13 +39,7 @@ class ProductController extends Controller
             $dat = $dat->where('types.name', '=', 'Menu');
         }
         $dat = $dat->select('art.id', 'art.name', 'stocks.stock as quantity', 'art.price', 'art.description', 'art.image', 'users.name as name_user', 'cat.name as name_categoria', 'brands.name as name_marca', 'prov.name as name_proveedor', 'types.name as name_tipo', 'statuses.name as name_status', "stocks.deactivated_at")
-            ->get()
-            ->map(
-                function ($item) {
-                    $item->image = url("images/$item->image");
-                    return $item;
-                }
-            );
+            ->get();
         return response()->json(["message" => "success", "articulos" => $dat]);
     }
 

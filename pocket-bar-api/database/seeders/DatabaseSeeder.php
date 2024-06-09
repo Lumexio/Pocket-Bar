@@ -14,13 +14,10 @@ use App\Models\Table;
 use App\Models\TenantUser;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
-use App\Models\Type;
 use App\Models\User;
 use App\Models\Workshift;
 use Database\Factories\TicketFactory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -67,15 +64,15 @@ class DatabaseSeeder extends Seeder
         /**
          * *Status de articulos
          */
-        DB::table('statuses')->insert([
-            'name' => 'Disponible',
-        ]);
-        DB::table('statuses')->insert([
-            'name' => 'Agotado',
-        ]);
-        DB::table('statuses')->insert([
-            'name' => 'En uso',
-        ]);
+        // DB::table('statuses')->insert([
+        //     'name' => 'Disponible',
+        // ]);
+        // DB::table('statuses')->insert([
+        //     'name' => 'Agotado',
+        // ]);
+        // DB::table('statuses')->insert([
+        //     'name' => 'En uso',
+        // ]);
 
         Currency::create([
             "code" => "MXN",
@@ -108,56 +105,155 @@ class DatabaseSeeder extends Seeder
         /**
          * [Insersiones a categorias]
          */
-        Category::create([
-            'name' => 'Plomería',
-            'description' => 'Categoria de plomería',
+        $jugoCat = new Category([
+            'name' => 'Jugo',
+            'description' => 'Jugos de frutas naturales',
         ]);
-        Category::create([
-            'name' => 'Electrícidad',
-            'description' => 'Categoria de electrícidad',
+        $jugoCat->save();
+
+        $jugoCat->types()->create([
+            'name' => 'Naranja',
+            'description' => 'Jugo de naranja natural',
         ]);
-        Category::create([
-            'name' => 'General',
-            'description' => 'Categoria de uso general',
+        $jugoCat->types()->create([
+            'name' => 'Manzana',
+            'description' => 'Jugo de manzana natural',
+        ]);
+
+        $licorCat = new Category([
+            'name' => 'Licor',
+            'description' => 'Bebidas alcoholicas',
+        ]);
+        $licorCat->save();
+
+        $licorCat->types()->create([
+            'name' => 'Vodka',
+            'description' => 'Bebida alcoholica de vodka',
+        ]);
+        $licorCat->types()->create([
+            'name' => 'Tequila',
+            'description' => 'Bebida alcoholica de tequila',
+        ]);
+        $licorCat->types()->create([
+            'name' => 'Whisky',
+            'description' => 'Bebida alcoholica de whisky',
+        ]);
+
+        $cervezaCat = new Category([
+            'name' => 'Cerveza',
+            'description' => 'Cervezas nacionales e importadas',
+        ]);
+        $cervezaCat->save();
+
+        $cervezaCat->types()->create([
+            'name' => 'Clara',
+            'description' => 'Cerveza clara',
+        ]);
+
+        $cervezaCat->types()->create([
+            'name' => 'Oscura',
+            'description' => 'Cerveza oscura',
+        ]);
+
+        $cervezaCat->types()->create([
+            'name' => 'Artesanal',
+            'description' => 'Cerveza artesanal',
+        ]);
+
+        $refrescoCat = new Category([
+            'name' => 'Refresco',
+            'description' => 'Refrescos de cola y saborizados',
+        ]);
+        $refrescoCat->save();
+
+        $refrescoCat->types()->create([
+            'name' => 'Cola',
+            'description' => 'Refresco de cola',
+        ]);
+
+        $refrescoCat->types()->create([
+            'name' => 'Saborizado',
+            'description' => 'Refresco saborizado',
         ]);
 
         Brand::create([
-            'name' => 'Honda',
-            'description' => 'Marca de motocicletas y autos',
-        ]);
-        Brand::create([
-            'name' => 'Yamaha',
-            'description' => 'Marca de motocicletas',
-        ]);
-        Brand::create([
-            'name' => 'Asus',
-            'description' => 'Marca de computadoras',
+            'name' => 'Coca Cola',
+            'description' => 'Marca de refrescos',
         ]);
 
-        Type::create([
-            'name' => 'Consumible',
-            'description' => 'Productos de consumo diario',
+        Brand::create([
+            'name' => 'Pepsi',
+            'description' => 'Marca de refrescos',
         ]);
-        Type::create([
-            'name' => 'Herramienta',
-            'description' => 'Herraientas de trabajo',
+
+        Brand::create([
+            'name' => 'Modelo',
+            'description' => 'Marca de cerveza',
         ]);
-        Type::create([
-            'name' => 'General',
-            'description' => 'Productos de uso general',
+
+        Brand::create([
+            'name' => 'Corona',
+            'description' => 'Marca de cerveza',
+        ]);
+
+        Brand::create([
+            'name' => 'Jose Cuervo',
+            'description' => 'Marca de tequila',
+        ]);
+
+        Brand::create([
+            'name' => 'Absolut',
+            'description' => 'Marca de vodka',
+        ]);
+
+        Brand::create([
+            'name' => 'Jack Daniels',
+            'description' => 'Marca de whisky',
+        ]);
+
+        Brand::create([
+            'name' => 'Jumex',
+            'description' => 'Marca de jugos',
         ]);
 
         Provider::create([
-            'name' => 'Honda',
-            'description' => 'Proveedor de motocicletas y autos',
+            'name' => 'Coca Cola',
+            'description' => 'Proveedor de refrescos',
         ]);
+
         Provider::create([
-            'name' => 'Yamaha',
-            'description' => 'Proveedor de motocicletas',
+            'name' => 'Pepsi',
+            'description' => 'Proveedor de refrescos',
         ]);
+
         Provider::create([
-            'name' => 'Asus',
-            'description' => 'Proveedor de computadoras',
+            'name' => 'Modelo',
+            'description' => 'Proveedor de cerveza',
+        ]);
+
+        Provider::create([
+            'name' => 'Corona',
+            'description' => 'Proveedor de cerveza',
+        ]);
+
+        Provider::create([
+            'name' => 'Jose Cuervo',
+            'description' => 'Proveedor de tequila',
+        ]);
+
+        Provider::create([
+            'name' => 'Absolut',
+            'description' => 'Proveedor de vodka',
+        ]);
+
+        Provider::create([
+            'name' => 'Jack Daniels',
+            'description' => 'Proveedor de whisky',
+        ]);
+
+        Provider::create([
+            'name' => 'Jumex',
+            'description' => 'Proveedor de jugos',
         ]);
 
         //Mesas
@@ -180,7 +276,23 @@ class DatabaseSeeder extends Seeder
             "branch_id" => 1,
         ]);
 
-        \App\Models\Product::factory(10)->create();
+        // crear los productos y sus variantes
+        Product::factory(10)->create();
+
+        foreach (Product::all() as $product) {
+            $product->productVariants()->create([
+                "price" => 100,
+                "presentation" => 1,
+                "unit" => "UNIT",
+                "user_id" => 1,
+            ]);
+            $product->productVariants()->create([
+                "price" => 200,
+                "presentation" => 1,
+                "unit" => "UNIT",
+                "user_id" => 1,
+            ]);
+        }
 
         foreach (Branch::all() as $branch) {
             Product::all()->each(function ($product) use ($branch) {

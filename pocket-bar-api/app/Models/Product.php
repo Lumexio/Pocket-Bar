@@ -13,9 +13,8 @@ class Product extends Model
     use HasFactory, LogsActivity;
 
     /**
-     ** The attributes that are mass assignable.
-     *
-     @var array
+     * The attributes that are mass assignable.
+     * @var array
      *Aqui se especifica los campos de entrada o permitidos para llenar la tabla artículos con los campos de las tablas *foraneas
      */
     protected $fillable = [
@@ -68,10 +67,5 @@ class Product extends Model
         return $this->belongsToMany(Product::class, 'ingredients', 'base_product_id', 'ingredient_product_id')
             ->withPivot('quantity', 'unit')
             ->withTimestamps();
-    }
-
-    public function photo()
-    {
-        return $this->belongsTo(Photo::class);
     }
 }

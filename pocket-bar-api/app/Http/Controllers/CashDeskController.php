@@ -14,7 +14,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Throwable;
-use Validator;
 
 class CashDeskController extends Controller
 {

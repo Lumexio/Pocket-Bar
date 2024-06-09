@@ -18,9 +18,4 @@ class Photo extends Model
     {
         return $this->hasOne(ProductVariant::class);
     }
-
-    public function product()
-    {
-        return $this->hasOne(Product::class);
-    }
 }

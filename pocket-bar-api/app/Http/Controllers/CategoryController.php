@@ -18,13 +18,10 @@ class CategoryController extends Controller
      */
     public function index(ListRequest $request): JsonResponse
     {
-        $categorias = Category::query();
+        $categorias = Category::with('types');
         $active = $request->get('active');
         if (isset($active)) {
             $categorias->where('active', $request->get('active'));
-        } else {
-            $categorias->where('active', true)
-                ->orWhere('active', false);
         }
         return response()->json([
             'message' => 'success',
@@ -46,7 +43,6 @@ class CategoryController extends Controller
             ], 409);
         } else {
             $categoria = Category::create($request->all());
-            // categoriaCreated::dispatch($categoria);
             try {
                 broadcast((new CategoryCreated($categoria))->broadcastToEveryone());
             } catch (\Throwable) {

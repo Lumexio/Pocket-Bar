@@ -263,6 +263,7 @@ class TicketController extends Controller
 
     public function updateArticulo($id, $units, $sum = false)
     {
+        // TODO: Cambiar el meotdo para tomar en cuenta los ingredientes,y descontar los ml o la unidad de los ingredientes
         $stock = Stock::where("branch_id", auth()->user()->branch_id)->where("product_id", $id)->first();
         if ($sum) {
             $stock->stock += $units;

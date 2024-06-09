@@ -13,12 +13,14 @@ class Stock extends Model
         'product_id',
         'branch_id',
         'stock',
+        'stock_eq',
+        'minimum_stock',
         'deactivated_at'
     ];
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
     public function branch()

@@ -20,7 +20,7 @@ class CreateTicketDetailsTable extends Migration
             $table->decimal("tax", 10, 2);
             $table->decimal("subtotal", 10, 2)->nullable(false);
             $table->decimal("total", 10, 2)->nullable(false);
-            $table->foreignId("product_id")->nullable(false)->references("id")->on("products");
+            $table->foreignId("product_variant_id")->nullable(false)->references("id")->on("product_variants");
             $table->string("status")->default("En espera");
             $table->foreignId("barTender_id")->nullable(true)->references("id")->on("users");
             $table->foreignId("waiter_id")->nullable(false)->references("id")->on("users");

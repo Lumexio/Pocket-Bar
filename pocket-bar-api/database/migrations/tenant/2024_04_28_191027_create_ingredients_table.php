@@ -15,9 +15,9 @@ class CreateIngredientsTable extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('base_product_id');
+            $table->unsignedBigInteger('base_product_id')->comment('Product that contains the ingredient');
             $table->foreign('base_product_id')->references('id')->on('products');
-            $table->unsignedBigInteger('ingredient_product_id');
+            $table->unsignedBigInteger('ingredient_product_id')->comment('Product that is the ingredient');
             $table->foreign('ingredient_product_id')->references('id')->on('products');
             $table->decimal('quantity', 10, 2);
             $table->enum('unit', ['ML', 'OZ', 'L', 'UNIT']);

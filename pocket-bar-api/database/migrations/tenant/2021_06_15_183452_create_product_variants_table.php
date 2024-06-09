@@ -15,7 +15,7 @@ class CreateProductVariantsTable extends Migration
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('restrict')->onUpdate('cascade');
             $table->decimal('price', 10, 2)->nullable('NULL');
             $table->string('image')->nullable('NULL');
             $table->integer('presentation');

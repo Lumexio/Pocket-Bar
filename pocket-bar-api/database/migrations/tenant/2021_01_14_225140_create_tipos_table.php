@@ -15,7 +15,7 @@ class CreateTiposTable extends Migration
     {
         Schema::create('types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->comment('Nombre del tipo de producto. Ej: Vodka, Ron, Whisky, etc.');
             $table->longText('description')->nullable();
             $table->timestamps();
             $table->engine = 'InnoDB';

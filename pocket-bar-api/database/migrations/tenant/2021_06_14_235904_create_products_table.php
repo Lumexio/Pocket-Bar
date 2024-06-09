@@ -16,14 +16,11 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // $table->decimal('price', 10, 2)->nullable('NULL'); Move to product_variants
             $table->longText('description')->nullable('NULL');
             $table->foreignId('category_id')->nullable('NULL')->references('id')->on('categories');
             $table->foreignId('brand_id')->nullable('NULL')->references('id')->on('brands');
             $table->foreignId('provider_id')->nullable('NULL')->references('id')->on('providers');
             $table->foreignId('type_id')->nullable('NULL')->references('id')->on('types');
-            // $table->foreignId('status_id')->nullable('NULL')->references('id')->on('statuses');
-            // $table->string('image')->nullable('NULL'); Move to product_variants
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('photo_id')->nullable('NULL')->constrained()->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
